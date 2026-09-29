@@ -82,8 +82,31 @@ def write_ingest_summary():
     }, indent=1))
 
 
+def write_ruling_changes():
+    """The watcher's change log, compact, for the page that explains 'pending' decisions.
+
+    `data/ingest/ruling_changes.csv` is the permanent record written by tools/watch_rulings.py in CI.
+    An empty table is a real result, not a missing file: it means no ruling in the watched window has
+    changed since it was first observed.
+    """
+    rows = load_csv(ROOT / 'data' / 'ingest' / 'ruling_changes.csv')
+    snap = load_csv(ROOT / 'data' / 'ingest' / 'ruling_snapshot.csv')
+    dates = [r.get('date', '') for r in snap if r.get('date')]
+    (DATA / 'ruling_changes.json').write_text(json.dumps({
+        'available': True,
+        'source': 'data/ingest/ruling_changes.csv + ruling_snapshot.csv (tools/watch_rulings.py, CI)',
+        'watched': {'plays': len(snap), 'window': [min(dates), max(dates)] if dates else []},
+        'changes': len(rows),
+        'rows': [{k: r.get(k, '') for k in ('detected_utc', 'date', 'matchup', 'inning', 'half', 'at_bat',
+                                            'play_id', 'batter', 'field', 'from', 'to', 'rbi_from', 'rbi_to',
+                                            'rbi_note', 'reviewed', 'overturned', 'feed_url')}
+                 for r in rows[-200:]],
+    }, indent=1))
+
+
 def main():
     write_ingest_summary()
+    write_ruling_changes()
     reps = load_csv(DATA / 'replays.csv')
     vids = {(v['game_pk'], v['play_id']): v for v in load_csv(DATA / 'replay_videos.csv')}
     summary = json.loads((DATA / 'ingest_summary.json').read_text()) \

@@ -519,18 +519,21 @@ check('roadmap records the self-weighting correction as history',
 
 # --- every page's data dependency must exist and be the artifact it claims ---
 DATA_FILES = {
-    'index': ['data/model.json', 'data/live_now.json'],
-    'live': ['data/live_now.json'],
+    'index': ['data/model.json', 'data/live_now.json', 'data/live_slate.json'],
+    'live': ['data/live_now.json', 'data/live_slate.json'],
     'replays': ['data/replays_site.json', 'data/replays.csv', 'data/replay_videos.csv'],
     'model': ['data/model.json'],
     'overturned': ['data/nydn_site.json'],
-    'methods': ['data/ingest_summary.json'],
+    'methods': ['data/ingest_summary.json', 'data/ruling_changes.json'],
 }
 for page, files in DATA_FILES.items():
     src = PAGES[page]
     for f in files:
-        check(f'{page}: loads {f} and it exists',
-              f in src and (ROOT / 'docs' / f).exists(),
+        # a file produced only by CI (live_slate.json, ingest_summary.json) may legitimately be
+        # absent from a fresh checkout; the page must still cite it and fall back to a committed file
+        ci_only = f.endswith(('live_slate.json',))
+        check(f'{page}: loads {f}' + ('' if ci_only else ' and it exists'),
+              f in src and (ci_only or (ROOT / 'docs' / f).exists()),
               f'cited={f in src} exists={(ROOT / "docs" / f).exists()}')
 
 # --- numbers printed on pages must exist in the artifacts they load ----------
@@ -610,6 +613,12 @@ check('rules page carries both verbatim glossary quotations',
       in rules_txt)
 check('methods page publishes the ingest report and the dataset separation',
       'data/ingest_summary.json' in met and 'bip_official.csv' in met)
+check('methods page explains how a pending decision becomes observable',
+      'watch_rulings.py' in met and 'ruling_changes.csv' in met and 'ruling_snapshot.csv' in met
+      and 'pending' in flat(met).lower())
+check('ruling_changes.json is published with a real (possibly empty) record',
+      (lambda rc: rc['available'] is True and rc['changes'] == len(rc['rows'])
+       or rc['changes'] > 200)(load_json(ROOT / 'docs/data/ruling_changes.json')))
 check('roadmap lists an ordered backlog and its limitations',
       'Next-session backlog' in rdm or 'backlog' in rdm.lower())
 rd = (ROOT / 'README.md').read_text()
@@ -638,6 +647,12 @@ check('no page cites a non-official source as official',
 # ---------------------------------------------------------------- H. page/data contracts
 print('== H. page <-> data contracts (the fields the pages actually read) ==')
 live = load_json(ROOT / 'docs/data/live_now.json')
+slate_path = ROOT / 'docs/data/live_slate.json'
+if slate_path.exists():
+    check('live_slate.json (CI output) has the same contract as the offline fallback',
+          all(all(k in g for k in ['model_rows', 'away_abbr', 'home_abbr', 'batted_balls', 'verified'])
+              for g in load_json(slate_path)['games'])
+          and load_json(slate_path)['mode'] == 'live-slate')
 GAME_KEYS = ['model_rows', 'pk', 'game_pk', 'away_abbr', 'home_abbr', 'state', 'batted_balls', 'errors',
              'top_pick_agrees', 'risp_runs_at_stake', 'overturned_reviews', 'verified', 'url', 'savant']
 check('live_now.json: every game carries the fields the slate tables read',

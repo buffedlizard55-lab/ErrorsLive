@@ -188,13 +188,15 @@ function preset(p) {
   ['ev', 'la', 'dist', 'traj', 'hard', 'outs', 'b1', 'b2', 'b3'].forEach(id => $(id).addEventListener('input', render));
   render();
 
-  const live = await loadMaybe('data/live_now.json');
+  const live = (await loadMaybe('data/live_slate.json'))
+    || (await loadMaybe('data/live_now.json'));
   if (!live) { $('slate').innerHTML = '<div class="note">No snapshot yet — run <code>python3 tools/fetch_live.py</code> (or the CI job) to produce <code>data/live_now.json</code>.</div>'; return; }
   const s = live.summary;
   $('slate').innerHTML = `
-    <div class="note">Snapshot generated <b>${esc(live.generated_utc)}</b> for game date <b>${esc(live.game_date)}</b> from
-      the official Stats API; ${s.games_verified_vs_linescore}/${s.games} games re-checked against the league's own
-      linescore endpoint. <a href="live.html">Open the full board →</a></div>
+    <div class="note">Snapshot generated <b>${esc(live.generated_utc || 'offline build')}</b> for game date
+      <b>${esc(live.game_date)}</b>; ${s.games_verified_vs_linescore}/${s.games} games re-checked against the league's own
+      linescore endpoint. Mode: <b>${esc(live.mode || 'unknown')}</b> — <span class="muted">${esc(live.note || '')}</span>
+      <a href="live.html">Open the full board →</a></div>
     ${flagBox(live.flags)}
     <div class="grid cols3" style="margin-top:12px">
       ${kpiCard(s.games, 'games on the slate')}

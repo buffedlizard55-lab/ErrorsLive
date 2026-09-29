@@ -69,15 +69,17 @@ let LIVE = null, ROWS = [];
 const $ = id => document.getElementById(id);
 
 (async function () {
-  LIVE = await loadMaybe('data/live_now.json');
+  LIVE = (await loadMaybe('data/live_slate.json'))
+    || (await loadMaybe('data/live_now.json'));
   if (!LIVE) {
     $('kpis').innerHTML = '<div class="warn">No snapshot yet. Run <code>python3 tools/fetch_live.py</code> (needs network) or dispatch the CI <b>ingest</b> workflow.</div>';
     return;
   }
   ROWS = LIVE.games.flatMap(g => g.model_rows.map(r => ({ ...r, matchup: `${g.away_abbr || g.away} @ ${g.home_abbr || g.home}`, game_state: g.state })));
   const s = LIVE.summary;
-  $('meta').innerHTML = `<div class="note">Snapshot generated <b>${esc(LIVE.generated_utc)}</b> for game date
-    <b>${esc(LIVE.game_date)}</b>. Source: <code>${esc(LIVE.source)}</code>.
+  $('meta').innerHTML = `<div class="note">Snapshot generated <b>${esc(LIVE.generated_utc || 'offline build')}</b>
+    for game date <b>${esc(LIVE.game_date)}</b>. Mode: <b>${esc(LIVE.mode || 'unknown')}</b> — ${esc(LIVE.note || '')}
+    Source: <code>${esc(LIVE.source)}</code>.
     ${s.games_verified_vs_linescore}/${s.games} games re-checked against the official linescore endpoint.</div>`;
   $('flags').innerHTML = flagBox(LIVE.flags);
   $('kpis').innerHTML =

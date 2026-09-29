@@ -110,12 +110,29 @@
     </ul>
   </div>
 
+  <h2>“Pending” scoring decisions — how this project answers that part of the brief</h2>
+  <p class="muted">A scorer's open judgement is not published anywhere: there is no queue to read. What
+  <i>is</i> observable is the moment a decision lands. <code>tools/watch_rulings.py</code> re-reads the
+  official play-by-play for a rolling window of recent dates and compares every scoring-relevant play
+  (event type, RBI and description) with the last observation stored in
+  <code>data/ingest/ruling_snapshot.csv</code>. A row whose ruling differs was, by definition, still open when
+  it was first seen — the before/after pair is appended to <code>data/ingest/ruling_changes.csv</code> with the
+  official feed link, so it can be re-checked by hand. The table below is that record, regenerated from the
+  files. An empty table is a real result, not a missing feature.</p>
+  <div id="pending"><div class="card">Loading <code>data/ruling_changes.json</code>…</div></div>
+  <p class="muted" style="font-size:.9rem">RBI consequences are stated under MLB's own rules, quoted verbatim on
+  <a href="rules.html">Rules &amp; RBI</a>: a run that scores only because of a misplay carries <b>no RBI</b>
+  ("batters do not receive RBIs for any runs that would not have scored without the help of an error"), while
+  the same run on a hit — or on a run-scoring fielder's choice — can put an RBI on the batter's line.</p>
+
   <h2>Provenance files</h2>
   <div class="scroll">
   <table>
     <tr><th>File</th><th>Contents</th></tr>
     <tr><td><code>data/ingest/games.csv</code></td><td>One row per ingested game: score, feed/linescore URLs, byte counts, review and overturn counts, verification result.</td></tr>
     <tr><td><code>data/ingest/ingest_report.json</code></td><td>The ingest run's own report: endpoints, windows, counts, flags, failures, and the exact run-removal rule text.</td></tr>
+    <tr><td><code>data/ingest/ruling_snapshot.csv</code></td><td>The watcher's rolling record of every scoring-relevant play it has observed (ruling + description hash + first/last seen).</td></tr>
+    <tr><td><code>data/ingest/ruling_changes.csv</code></td><td>Every ruling that changed between observations, with from/to values, the RBI consequence and the official feed URL.</td></tr>
     <tr><td><code>data/ingest/probe_report.json</code></td><td>Read-only probe of the official endpoints: status codes, CORS headers, byte sizes, per-era <code>reviewDetails</code> coverage.</td></tr>
     <tr><td><code>data/verified_linescores.json</code></td><td>The 24-game official verification ledger (one official URL per game).</td></tr>
     <tr><td><code>data/nydn_quality.json</code></td><td>Every source irregularity in the 2014–18 archive, with counts; nothing repaired silently.</td></tr>
@@ -150,6 +167,23 @@
     ${flagBox((s.flags || []).concat(w.games_unverified.map(g => `game ${g}: linescore mismatch`)))}
     <details style="margin-top:10px"><summary class="muted">run-removal rule text (verbatim from the run)</summary>
       <p class="legend">${esc(s.run_removal_rule)}</p></details>`;
+
+  const rc = await loadMaybe('data/ruling_changes.json');
+  const host = document.getElementById('pending');
+  if (!rc) { host.innerHTML = '<div class="note">No watcher output committed yet.</div>'; return; }
+  host.innerHTML = `<div class="grid cols3">
+      ${kpiCard((rc.watched.plays || 0).toLocaleString(), 'scoring-relevant plays currently watched')}
+      ${kpiCard(rc.changes.toLocaleString(), 'rulings that changed after first observation')}
+      ${kpiCard(esc((rc.watched.window || []).join(' → ') || '—'), 'window covered by the snapshot')}
+    </div>` + (rc.rows.length ? `<div class="scroll" style="margin-top:12px"><table class="compact">
+      <tr><th>Detected</th><th>Game</th><th>Inn</th><th>Batter</th><th>Field</th><th>From → to</th><th>RBI</th><th>Official</th></tr>
+      ${rc.rows.slice().reverse().map(r => `<tr><td class="nowrap">${esc(r.detected_utc)}</td>
+        <td class="nowrap">${esc(r.date)} ${esc(r.matchup)}</td><td class="nowrap">${esc(r.inning)}${esc((r.half || '').charAt(0))}</td>
+        <td>${esc(r.batter)}</td><td class="muted">${esc(r.field)}</td>
+        <td>${esc(r.from)} <b>→</b> ${esc(r.to)}${r.rbi_note ? '<br><span class="muted">' + esc(r.rbi_note) + '</span>' : ''}</td>
+        <td class="nowrap">${esc(r.rbi_from)} → ${esc(r.rbi_to)}</td>
+        <td>${linkOut(r.feed_url, 'feed')}</td></tr>`).join('')}
+    </table></div>` : '<p class="legend" style="margin-top:10px">No ruling change has been detected yet in the watched window: either the window is too new, or no open decision has been revised since the watcher first saw it.</p>');
 })();
 </script>
 </body>
