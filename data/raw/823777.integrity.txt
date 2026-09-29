@@ -1,0 +1,1 @@
+seam-gap: chunker dropped ~28 chars between chunk0/chunk1; dropped 2 straddling plays (one field_out with hitData EV=87.5 LA=24.0 dist=302.0 [partially captured] and one strikeout). No values invented.

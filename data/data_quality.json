@@ -1,0 +1,327 @@
+{
+ "games": {
+  "822722": {
+   "plays": 71,
+   "bip": 56,
+   "field_error_plays": 0,
+   "fc_plays": 1,
+   "healed": false,
+   "final": [
+    1,
+    10
+   ],
+   "score_checked": true,
+   "pool_eT": 3
+  },
+  "822794": {
+   "plays": 82,
+   "bip": 51,
+   "field_error_plays": 0,
+   "fc_plays": 1,
+   "healed": false,
+   "final": [
+    7,
+    4
+   ],
+   "score_checked": true,
+   "pool_eT": 1
+  },
+  "822801": {
+   "plays": 82,
+   "bip": 61,
+   "field_error_plays": 0,
+   "fc_plays": 1,
+   "healed": true,
+   "final": [
+    8,
+    3
+   ],
+   "score_checked": true,
+   "pool_eT": 2
+  },
+  "822885": {
+   "plays": 83,
+   "bip": 50,
+   "field_error_plays": 0,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    6,
+    4
+   ],
+   "score_checked": true,
+   "pool_eT": 2
+  },
+  "823038": {
+   "plays": 74,
+   "bip": 54,
+   "field_error_plays": 0,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    5,
+    1
+   ],
+   "score_checked": true,
+   "pool_eT": 0
+  },
+  "823126": {
+   "plays": 71,
+   "bip": 39,
+   "field_error_plays": 1,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    5,
+    1
+   ],
+   "score_checked": true,
+   "pool_eT": 2
+  },
+  "823283": {
+   "plays": 88,
+   "bip": 67,
+   "field_error_plays": 1,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    15,
+    3
+   ],
+   "score_checked": true,
+   "pool_eT": 1
+  },
+  "823368": {
+   "plays": 79,
+   "bip": 46,
+   "field_error_plays": 2,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    4,
+    2
+   ],
+   "score_checked": true,
+   "pool_eT": 2
+  },
+  "823441": {
+   "plays": 75,
+   "bip": 46,
+   "field_error_plays": 1,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    1,
+    6
+   ],
+   "score_checked": true,
+   "pool_eT": 4
+  },
+  "823531": {
+   "plays": 72,
+   "bip": 49,
+   "field_error_plays": 0,
+   "fc_plays": 0,
+   "healed": true,
+   "final": [
+    4,
+    1
+   ],
+   "score_checked": true,
+   "pool_eT": 2
+  },
+  "823532": {
+   "plays": 86,
+   "bip": 60,
+   "field_error_plays": 2,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    10,
+    2
+   ],
+   "score_checked": true,
+   "pool_eT": 3
+  },
+  "823615": {
+   "plays": 76,
+   "bip": 54,
+   "field_error_plays": 1,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    1,
+    8
+   ],
+   "score_checked": true,
+   "pool_eT": 3
+  },
+  "823763": {
+   "plays": 81,
+   "bip": 47,
+   "field_error_plays": 2,
+   "fc_plays": 1,
+   "healed": false,
+   "final": [
+    6,
+    8
+   ],
+   "score_checked": true,
+   "pool_eT": 3
+  },
+  "823777": {
+   "plays": 64,
+   "bip": 52,
+   "field_error_plays": 1,
+   "fc_plays": 1,
+   "healed": true,
+   "final": [
+    0,
+    4
+   ],
+   "score_checked": true,
+   "pool_eT": 2
+  },
+  "823854": {
+   "plays": 79,
+   "bip": 50,
+   "field_error_plays": 2,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    3,
+    6
+   ],
+   "score_checked": true,
+   "pool_eT": 3
+  },
+  "823937": {
+   "plays": 72,
+   "bip": 45,
+   "field_error_plays": 1,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    3,
+    2
+   ],
+   "score_checked": true,
+   "pool_eT": 1
+  },
+  "824263": {
+   "plays": 72,
+   "bip": 48,
+   "field_error_plays": 0,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    1,
+    4
+   ],
+   "score_checked": true,
+   "pool_eT": 2
+  },
+  "824581": {
+   "plays": 69,
+   "bip": 48,
+   "field_error_plays": 2,
+   "fc_plays": 1,
+   "healed": false,
+   "final": [
+    1,
+    2
+   ],
+   "score_checked": true,
+   "pool_eT": 2
+  },
+  "824738": {
+   "plays": 72,
+   "bip": 49,
+   "field_error_plays": 1,
+   "fc_plays": 0,
+   "healed": true,
+   "final": [
+    6,
+    7
+   ],
+   "score_checked": true,
+   "pool_eT": 3
+  },
+  "824823": {
+   "plays": 76,
+   "bip": 54,
+   "field_error_plays": 1,
+   "fc_plays": 1,
+   "healed": false,
+   "final": [
+    5,
+    2
+   ],
+   "score_checked": true,
+   "pool_eT": 3
+  },
+  "824825": {
+   "plays": 86,
+   "bip": 54,
+   "field_error_plays": 1,
+   "fc_plays": 1,
+   "healed": false,
+   "final": [
+    4,
+    3
+   ],
+   "score_checked": true,
+   "pool_eT": 3
+  },
+  "824890": {
+   "plays": 75,
+   "bip": 54,
+   "field_error_plays": 2,
+   "fc_plays": 1,
+   "healed": false,
+   "final": [
+    3,
+    8
+   ],
+   "score_checked": true,
+   "pool_eT": 4
+  },
+  "824903": {
+   "plays": 85,
+   "bip": 58,
+   "field_error_plays": 1,
+   "fc_plays": 1,
+   "healed": false,
+   "final": [
+    3,
+    14
+   ],
+   "score_checked": true,
+   "pool_eT": 2
+  },
+  "824994": {
+   "plays": 98,
+   "bip": 79,
+   "field_error_plays": 2,
+   "fc_plays": 0,
+   "healed": false,
+   "final": [
+    23,
+    9
+   ],
+   "score_checked": true,
+   "pool_eT": 2
+  }
+ },
+ "flags": [],
+ "totals": {
+  "plays": 1868,
+  "bip": 1271,
+  "bip_numeric": 1259,
+  "errors": 24,
+  "multi_hitdata": 0,
+  "missing_numeric": 12,
+  "other_class": 1
+ },
+ "rule": "labels = official play-result eventType; rows never imputed; final scores re-verified vs linescore pool; healed games keep integrity notes"
+}
