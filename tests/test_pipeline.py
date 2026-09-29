@@ -74,6 +74,16 @@ mod = (ROOT / 'docs/model.html').read_text()
 ovt = (ROOT / 'docs/overturned.html').read_text()
 rul = (ROOT / 'docs/rules.html').read_text()
 met = (ROOT / 'docs/methods.html').read_text()
+def _negated(s):
+    import re
+    plain = re.sub('<[^>]+>', '', s)
+    return all(
+        ('not self-weighting' in plain[max(0, m.start() - 120):m.start() + 16]) or
+        ('scrubbed' in plain[max(0, m.start() - 120):m.start() + 16].lower())
+        for m in re.finditer('self-weighting', plain))
+check('no page still claims self-weighting except in corrected/negated narrative',
+      all(_negated(pg) for pg in [idx, mod, rul, ovt, met]))
+
 check('index KPI ids', all(f'id="{i}"' in idx for i in ['kMeta', 'kAuc', 'kCoef']))
 check('index copy: labels+filters', 'Labeled hits' in idx and 'Labeled FC' in idx and 'Labeled outs' in idx)
 check('index filmroom chips + explainer', 'filmroom' in idx and 'No other ' in idx)
