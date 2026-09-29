@@ -1,12 +1,28 @@
 {
-  "_comment": "Scope for tools/ingest_official.py. The CI job (.github/workflows/ingest.yml) runs it and commits only the derived CSVs/JSON - never the raw feeds. bip_window bounds the published modelling CSV so the repo stays a sane size; the replay ledger covers the whole window list.",
+  "_comment": "Scope for tools/ingest_official.py. The CI job (.github/workflows/ingest.yml) runs it and commits only the derived CSVs/JSON - never the raw feeds. bip_window bounds the published modelling CSV so the repo stays a sane size; the replay ledger and the archive link resolution cover the whole window list and resume across runs.",
   "windows": [
-    {"start": "2026-03-25", "end": "2026-09-27", "game_types": ["R", "F", "D", "L", "W", "S", "E", "A"]}
+    {
+      "start": "2026-03-25",
+      "end": "2026-09-27",
+      "game_types": [
+        "R",
+        "F",
+        "D",
+        "L",
+        "W"
+      ]
+    }
   ],
-  "bip_window": {"start": "2026-08-01", "end": "2026-09-27"},
-  "replays_window": {"start": "2026-03-25", "end": "2026-09-27"},
+  "bip_window": {
+    "start": "2026-08-15",
+    "end": "2026-09-27"
+  },
+  "replays_window": {
+    "start": "2026-03-25",
+    "end": "2026-09-27"
+  },
   "max_games": 3000,
   "workers": 16,
   "videos": false,
-  "link_sample": 900
+  "link_sample": 1200
 }
