@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-29T21:24:32+00:00",
+ "generated_utc": "2026-09-29T21:27:07+00:00",
  "endpoints": {
   "feed": "https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live?fields=liveData,plays,allPlays,about,atBatIndex...",
   "linescore": "https://statsapi.mlb.com/api/v1/game/{pk}/linescore",
@@ -8,28 +8,25 @@
  },
  "windows": [
   {
-   "start": "2026-09-21",
-   "end": "2026-09-28",
+   "start": "2026-03-25",
+   "end": "2026-09-27",
    "game_types": [
+    "A",
     "D",
+    "E",
     "F",
     "L",
     "R",
+    "S",
     "W"
    ],
-   "days_with_games": 7,
-   "final_games_found": 92,
-   "cumulative_unique_games": 91
+   "days_with_games": 185,
+   "final_games_found": 2460,
+   "cumulative_unique_games": 2431
   }
  ],
  "schedule_failures": [],
- "game_failures": [
-  {
-   "pk": 823490,
-   "date": "2026-09-27",
-   "error": "list index out of range"
-  }
- ],
+ "game_failures": [],
  "flags": [],
  "hard_run_removal_examples": [],
  "run_removal_rule": "hard = (#runners whose movement ends at \"score\") - (scoreboard delta); heuristic = overturned review whose text/type concerns a run (HR review turned into a non-HR, runner out at home, scoring/timing review with a runner at the plate)",
@@ -39,53 +36,52 @@
   "game_pk": null
  },
  "summary": {
-  "games": 90,
-  "plays": 6762,
-  "bip": 4548,
-  "errors": 45,
-  "fc": 30,
-  "numeric_ok": 4531,
+  "games": 200,
+  "plays": 15143,
+  "bip": 9946,
+  "errors": 94,
+  "fc": 53,
+  "numeric_ok": 9879,
   "class_counts": {
-   "out": 3009,
-   "hit": 1464,
-   "error": 45,
-   "fielders_choice": 30
+   "out": 6698,
+   "hit": 3101,
+   "fielders_choice": 53,
+   "error": 94
   },
-  "reviews": 437,
-  "overturned": 0,
+  "reviews": 902,
+  "overturned": 487,
   "run_removed_hard_rows": 0,
-  "run_removed_heuristic_rows": 0,
-  "games_verified_vs_linescore": 90,
+  "run_removed_heuristic_rows": 1,
+  "games_verified_vs_linescore": 200,
   "games_unverified": [],
   "review_types": {
-   "NO": 1,
-   "MJ": 390,
-   "NH": 4,
-   "MA": 13,
-   "MV": 1,
-   "MF": 13,
-   "MC": 4,
-   "MO": 1,
-   "MI": 4,
-   "MW": 1,
+   "MJ": 778,
+   "NH": 5,
+   "MF": 44,
+   "MA": 46,
+   "MD": 3,
+   "MC": 7,
+   "MI": 8,
+   "NF": 3,
    "MB": 1,
-   "MS": 1,
+   "NI": 2,
+   "MW": 1,
    "NA": 1,
-   "MN": 1,
-   "MD": 1
+   "MV": 2,
+   "NE": 1
   },
   "dates": [
-   "2026-09-21",
-   "2026-09-27"
+   "2026-03-25",
+   "2026-04-10"
   ],
   "videos_attached": 0,
   "video_rows": 0,
-  "link_rows": 400,
+  "link_rows": 1300,
   "link_status": {
-   "520": 388,
-   "403": 5,
-   "200": 7
+   "520": 1255,
+   "403": 14,
+   "200": 31
   },
-  "elapsed_s": 12.2
+  "elapsed_s": 54.3
  }
 }

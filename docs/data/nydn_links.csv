@@ -399,3 +399,903 @@ date,date_raw,date_repaired,season,game,inning,manager_or_ump,player,initial_cal
 2014-05-28,2014-05-28,0,2014,TEX @ MIN,T7,Gardenhire,L. Martin,Safe at 2nd,Tag play,DiMuro,Layne,Confirmed,0:46,http://t.co/ifvEP0uMYB,0,0,0,2014-mlb-replays.csv,http://t.co/ifvEP0uMYB,520,0,HTTP 520
 2014-05-29,2014-05-29,0,2014,BAL @ HOU,B2,Showalter,Castro,Safe at home,Tag play,Muchlinski,Wegner,Stands,4:22,http://t.co/Wa2eycFDLX,0,0,0,2014-mlb-replays.csv,http://t.co/Wa2eycFDLX,520,0,HTTP 520
 2014-05-29,2014-05-29,0,2014,KC @ TOR,B5,Yost,Gose,Safe at 1st,Tag play,"Johnson, Ad.",Vanover,Overturned,1:36,http://t.co/rWGPoOto4m,1,0,0,2014-mlb-replays.csv,http://t.co/rWGPoOto4m,520,0,HTTP 520
+2014-05-29,2014-05-29,0,2014,KC @ TOR,T6,Yost,Aoki,HBP,HBP,Hernandez,Vanover,Stands,2:29,http://t.co/kbEdliz4aC,0,0,0,2014-mlb-replays.csv,http://t.co/kbEdliz4aC,520,0,HTTP 520
+2014-05-29,2014-05-29,0,2014,PIT @ LAD,T7,Mattingly,S. Marte,Safe at 2nd,Tag play,Cooper,Cooper,Overturned,1:35,http://atmlb.com/1oSavBa,1,0,0,2014-mlb-replays.csv,http://atmlb.com/1oSavBa,403,0,HTTP 403
+2014-05-30,2014-05-30,0,2014,CIN @ ARI,B6,Gibson,Inciarte,Out at 1st,Force play,Danley,Cederstrom,Stands,1:23,http://t.co/vdbujwiVDH,0,0,0,2014-mlb-replays.csv,http://t.co/vdbujwiVDH,520,0,HTTP 520
+2014-05-30,2014-05-30,0,2014,COL @ CLE,B2,Francona,Y. Gomes,Out at 1st,Force play,Davidson,Davidson,Confirmed,1:52,http://t.co/t10RYF077m,0,0,0,2014-mlb-replays.csv,http://t.co/t10RYF077m,520,0,HTTP 520
+2014-05-30,2014-05-30,0,2014,DET @ SEA,T5,McClendon,Hunter,Safe at 1st,Force play,Estabrook,Layne,Overturned,0:49,http://t.co/QZaFJr0jhI,1,0,0,2014-mlb-replays.csv,http://t.co/QZaFJr0jhI,520,0,HTTP 520
+2014-05-30,2014-05-30,0,2014,LAA @ OAK,B2,UMPIRE,Donaldson,Home Run,Potential HR,Culbreth,Culbreth,Confirmed,0:40,http://t.co/3zHEEmvg1e,0,0,0,2014-mlb-replays.csv,http://t.co/3zHEEmvg1e,520,0,HTTP 520
+2014-05-30,2014-05-30,0,2014,NYM @ PHI,T8,Sandberg,B. Abreu,Safe at 2nd,Tag play,O'Nora,O'Nora,Confirmed,0:55,http://t.co/9of1eTTIai,0,0,0,2014-mlb-replays.csv,http://t.co/9of1eTTIai,520,0,HTTP 520
+2014-05-31,2014-05-31,0,2014,CHI @ MIL,T4,Roenicke,Bonifacio,Safe at 2nd,Force play,Emmel,Meals,Stands,1:36,http://t.co/Uh2USsLhsX,0,0,0,2014-mlb-replays.csv,http://t.co/Uh2USsLhsX,520,0,HTTP 520
+2014-05-31,2014-05-31,0,2014,CIN @ ARI,B8,Gibson,Pollock,Foul tip (or HBP?),HBP,Danley,Cederstrom,Overturned,1:46,http://t.co/E6o0Jlo198,1,0,0,2014-mlb-replays.csv,http://t.co/E6o0Jlo198,520,0,HTTP 520
+2014-05-31,2014-05-31,0,2014,KC @ TOR,T6,Gibbons,Hosmer,Safe at 1st,Force play,Vanover,Vanover,Stands,1:47,http://t.co/Kbj12eqY7N,0,0,0,2014-mlb-replays.csv,http://t.co/Kbj12eqY7N,520,0,HTTP 520
+2014-05-31,2014-05-31,0,2014,LAA @ OAK,T2,UMPIRE,Iannetta,7.13/Out at home,7.13,Knight,Culbreth,Confirmed,2:43,http://t.co/9chsdyIanA,0,0,0,2014-mlb-replays.csv,http://t.co/9chsdyIanA,520,0,HTTP 520
+2014-05-31,2014-05-31,0,2014,MIN @ NYY,T3,Gardenhire,E. Escobar,Out at 1st,Force play,Gorman,Gorman,Overturned,0:28,http://t.co/NW7gMTnaEa,1,0,0,2014-mlb-replays.csv,http://t.co/NW7gMTnaEa,520,0,HTTP 520
+2014-05-31,2014-05-31,0,2014,NYM @ PHI,B5,Collins,D. Brown,Safe at 2nd,Tag play,Eddings,O'Nora,Overturned,0:58,http://t.co/iQv4mmK0Fs,1,0,0,2014-mlb-replays.csv,http://t.co/iQv4mmK0Fs,520,0,HTTP 520
+2014-05-31,2014-05-31,0,2014,NYM @ PHI,T9,Collins,Granderson,Out at 2nd,Tag play,Eddings,O'Nora,Confirmed,1:10,http://t.co/lEt5Xfsnxn,0,0,0,2014-mlb-replays.csv,http://t.co/lEt5Xfsnxn,520,0,HTTP 520
+2014-05-31,2014-05-31,0,2014,PIT @ LAD,T1,Hurdle,D. Gordon,Out at 2nd,Force play,Guccione,Cooper,Confirmed,0:43,http://t.co/ttuIXMUquW,0,0,0,2014-mlb-replays.csv,http://t.co/ttuIXMUquW,520,0,HTTP 520
+2014-05-31,2014-05-31,0,2014,SD @ CWS,T4,Black,E. Cabrera,Out at 2nd,Tag play,Iassogna,Scott,Stands,2:56,http://t.co/xQ0Zo5IQQ2,0,0,0,2014-mlb-replays.csv,http://t.co/xQ0Zo5IQQ2,520,0,HTTP 520
+2014-06-01,2014-06-1,1,2014,DET @ SEA,B3,UMPIRE,Bloomquist,7.13/Out at home,7.13,Wendelstedt,Layne,Confirmed,1:29,http://t.co/gLJYsSu86k,0,0,0,2014-mlb-replays.csv,http://t.co/gLJYsSu86k,520,0,HTTP 520
+2014-06-01,2014-06-1,1,2014,KC @ TOR,B8,Yost,Lawrie,Safe at 1st,Force play,Hernandez,Vanover,Overturned,1:38,http://t.co/p67zBU1ndE,1,0,0,2014-mlb-replays.csv,http://t.co/p67zBU1ndE,520,0,HTTP 520
+2014-06-01,2014-06-1,1,2014,LAA @ OAK,T7,Scioscia,Conger,Out at 1st,Force play,Buckminster,Culbreth,Stands,2:10,http://t.co/JAYXBDaBlF,0,0,0,2014-mlb-replays.csv,http://t.co/JAYXBDaBlF,520,0,HTTP 520
+2014-06-01,2014-06-1,1,2014,MIN @ NYY,T3,Gardenhire,Dozier,Out at 1st,Force play,Rackley,Gorman,Stands,2:10,http://t.co/Oyos0wGQsS,0,0,0,2014-mlb-replays.csv,http://t.co/Oyos0wGQsS,520,0,HTTP 520
+2014-06-01,2014-06-1,1,2014,MIN @ NYY,B8,Girardi,Gardner,Out at 1st,Force play,Rackley,Gorman,Stands,1:45,http://t.co/3L5U2jgecQ,0,0,0,2014-mlb-replays.csv,http://t.co/3L5U2jgecQ,520,0,HTTP 520
+2014-06-01,2014-06-1,1,2014,PIT @ LAD,T6,Mattingly,R. Martin,HBP,HBP,Barber,Cooper,Confirmed,1:03,http://t.co/3I9Y3ClTio,0,0,0,2014-mlb-replays.csv,http://t.co/3I9Y3ClTio,520,0,HTTP 520
+2014-06-01,2014-06-1,1,2014,TB @ BOS,B8,UMPIRE,Bogaerts,Foul Ball,Potential HR,T. Barrett,T. Barrett,Stands,3:17,http://atmlb.com/1tEW2J2,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/06/01/mlbtv_33368163_1800K.mp4,200,2048,
+2014-06-01,2014-06-1,1,2014,TEX @ WSH,T1,Washington,Rios,Out at 2nd,Tag play,Barry,Nelson,Confirmed,3:11,http://t.co/MBrZKTOEFm,0,0,0,2014-mlb-replays.csv,http://t.co/MBrZKTOEFm,520,0,HTTP 520
+2014-06-01,2014-06-1,1,2014,TEX @ WSH,T1,Williams,Andrus,Run scored,Timing play,Fagan,Nelson,Overturned,3:32,http://t.co/vEyUgFrkt6,1,1,0,2014-mlb-replays.csv,http://t.co/vEyUgFrkt6,520,0,HTTP 520
+2014-06-02,2014-06-2,1,2014,BOS @ CLE,B3,Farrell,Brantley,Safe at 1st,Force play,Davis,Davis,Overturned,1:23,http://t.co/he6wPZ2Zoe,1,0,0,2014-mlb-replays.csv,http://t.co/he6wPZ2Zoe,520,0,HTTP 520
+2014-06-02,2014-06-2,1,2014,BOS @ CLE,B7,Farrell,Aviles,Safe at 2nd,Tag play,Wolcott,Davis,Stands,3:00,http://t.co/s1KKNnrgqA,0,0,0,2014-mlb-replays.csv,http://t.co/s1KKNnrgqA,520,0,HTTP 520
+2014-06-02,2014-06-2,1,2014,KC @ STL,T7,Matheny,L. Cain,Safe at 1st,Force play,Bucknor,Scott,Stands,2:15,http://t.co/4byXB9Xu4m,0,0,0,2014-mlb-replays.csv,http://t.co/4byXB9Xu4m,520,0,HTTP 520
+2014-06-02,2014-06-2,1,2014,SEA @ NYY,T7,Girardi,Zunino,Safe at 3rd,Force play,Gorman,Gorman,Stands,1:28,http://t.co/KDAbEP9kBS,0,0,0,2014-mlb-replays.csv,http://t.co/KDAbEP9kBS,520,0,HTTP 520
+2014-06-03,2014-06-3,1,2014,ARI @ COL,B2,Gibson,Rosario,Safe at home,Tag play,Layne,Layne,Overturned,1:35,http://t.co/BG7QJkBVNk,1,1,0,2014-mlb-replays.csv,http://t.co/BG7QJkBVNk,520,0,HTTP 520
+2014-06-03,2014-06-3,1,2014,ARI @ COL,B4,UMPIRE,Rosario,Count Check,Record Keeping,Layne,Layne,Record Keeping,2:01,http://t.co/pE2G01kenT,0,0,0,2014-mlb-replays.csv,http://t.co/pE2G01kenT,520,0,HTTP 520
+2014-06-03,2014-06-3,1,2014,KC @ STL,B3,Yost,Taveras,Safe at 1st,Force play,H. Gibson,Scott,Overturned,1:48,http://t.co/CkXzY2IS9k,1,0,0,2014-mlb-replays.csv,http://t.co/CkXzY2IS9k,520,0,HTTP 520
+2014-06-03,2014-06-3,1,2014,PHI @ WSH,T3,Williams,Buchanan,Safe at 1st,Force play,Hickox,Kulpa,Overturned,1:23,http://t.co/GSnEu5eS85,1,0,0,2014-mlb-replays.csv,http://t.co/GSnEu5eS85,520,0,HTTP 520
+2014-06-03,2014-06-3,1,2014,TB @ MIA,T5,Maddon,Y. Escobar,Out at 2nd,Tag play,Conroy,Miller,Stands,2:09,http://t.co/ji3KPrQPnd,0,0,0,2014-mlb-replays.csv,http://t.co/ji3KPrQPnd,520,0,HTTP 520
+2014-06-03,2014-06-3,1,2014,TOR @ DET,T9,Ausmus,Reyes,Safe at 3rd,Tag play,Rackley,Gorman,Confirmed,1:37,http://t.co/N1K3jZNTFZ,0,0,0,2014-mlb-replays.csv,http://t.co/N1K3jZNTFZ,520,0,HTTP 520
+2014-06-04,2014-06-4,1,2014,ARI @ COL,B5,Gibson,Tulowitzki,Safe at home,Tag play,DiMuro,Layne,Confirmed,0:49,http://t.co/h7CfYuTX9v,0,0,0,2014-mlb-replays.csv,http://t.co/h7CfYuTX9v,520,0,HTTP 520
+2014-06-04,2014-06-4,1,2014,BOS @ CLE,B5,Farrell,Aviles,Safe at 1st,Force play,G. Gibson,Davis,Overturned,0:45,http://t.co/vmOfB2GhSd,1,0,0,2014-mlb-replays.csv,http://t.co/vmOfB2GhSd,520,0,HTTP 520
+2014-06-04,2014-06-4,1,2014,CWS @ LAD,B4,Ventura,A. Gonzalez,Safe at 3rd,Tag play,Cederstrom,Cederstrom,Overturned,1:26,http://t.co/ZanlTxFza1,1,0,0,2014-mlb-replays.csv,http://t.co/ZanlTxFza1,520,0,HTTP 520
+2014-06-04,2014-06-4,1,2014,CWS @ LAD,T5,UMPIRE,Dunn,Count Check,Record Keeping,Danley,Cederstrom,Record Keeping,1:46,http://t.co/pQWmXXREa9,0,0,0,2014-mlb-replays.csv,http://t.co/pQWmXXREa9,520,0,HTTP 520
+2014-06-04,2014-06-4,1,2014,MIL @ MIN,B1,Gardenhire,Dozier,Out at 3rd,Tag play,Wegner,Wegner,Overturned,1:46,http://t.co/wS5ZejFgug,1,0,0,2014-mlb-replays.csv,http://t.co/wS5ZejFgug,520,0,HTTP 520
+2014-06-04,2014-06-4,1,2014,MIL @ MIN,B4,UMPIRE,Plouffe,Foul Ball,Potential HR,Wegner,Wegner,Stands,1:36,http://t.co/P0bSDLvWhn,0,0,0,2014-mlb-replays.csv,http://t.co/P0bSDLvWhn,520,0,HTTP 520
+2014-06-04,2014-06-4,1,2014,SEA @ ATL,B9,Gonzalez,J. Upton,Out at 1st,Force play,Little,T. Barrett,Confirmed,0:36,http://t.co/U1XORbPbxX,0,0,0,2014-mlb-replays.csv,http://t.co/U1XORbPbxX,520,0,HTTP 520
+2014-06-04,2014-06-4,1,2014,STL @ KC,B7,Yost,L. Cain,Out at 1st,Force play,Scott,Scott,Stands,1:35,http://t.co/e5tCIX3vnX,0,0,0,2014-mlb-replays.csv,http://t.co/e5tCIX3vnX,520,0,HTTP 520
+2014-06-05,2014-06-5,1,2014,ARI @ COL,T4,UMPIRE,Parra,7.13/Out at home,7.13,Estabrook,Layne,Confirmed,0:57,http://t.co/cPiU8HdCy3,0,0,0,2014-mlb-replays.csv,http://t.co/cPiU8HdCy3,520,0,HTTP 520
+2014-06-05,2014-06-5,1,2014,NYM @ CHI,B2,Renteria,Valbuena,Out at home,Tag play,Fagan,T. Welke,Overturned,1:40,http://t.co/Z8ZL2vpDd2,1,1,0,2014-mlb-replays.csv,http://t.co/Z8ZL2vpDd2,520,0,HTTP 520
+2014-06-05,2014-06-5,1,2014,OAK @ NYY,B1,UMPIRE,Ellsbury,Home Run,Potential HR,Barber,Hallion,Overturned,1:16,http://t.co/3epJAoZFaY,1,1,0,2014-mlb-replays.csv,http://t.co/3epJAoZFaY,520,0,HTTP 520
+2014-06-05,2014-06-5,1,2014,PHI @ WSH,B8,Williams,Lobaton,Out at 1st,Force play,Tumpane,Kulpa,Overturned,3:06,http://t.co/du7U28bOTt,1,0,0,2014-mlb-replays.csv,http://t.co/du7U28bOTt,520,0,HTTP 520
+2014-06-05,2014-06-5,1,2014,SF @ CIN,T3,Price,Posey,Safe at 1st,Force play,Vanover,Vanover,Overturned,2:17,http://t.co/fPVARSGaVQ,1,0,0,2014-mlb-replays.csv,http://t.co/fPVARSGaVQ,520,0,HTTP 520
+2014-06-05,2014-06-5,1,2014,STL @ KC,T5,Matheny,Molina,Out at 2nd,Tag play,Bucknor,Scott,Stands,3:29,http://t.co/duY88UV7pY,0,0,0,2014-mlb-replays.csv,http://t.co/duY88UV7pY,520,0,HTTP 520
+2014-06-05,2014-06-5,1,2014,STL @ KC,T9,UMPIRE,Taveras,Out at 1st,Force play,Iassogna,Scott,Overturned,1:13,http://t.co/OeV23pulIX,1,0,0,2014-mlb-replays.csv,http://t.co/OeV23pulIX,520,0,HTTP 520
+2014-06-06,2014-06-6,1,2014,LAD @ COL,T7,Weiss,Kemp,Safe at 2nd,Tag play,Scott,Scott,Overturned,1:16,http://t.co/U6dSZ53lQX,1,0,0,2014-mlb-replays.csv,http://t.co/U6dSZ53lQX,520,0,HTTP 520
+2014-06-06,2014-06-6,1,2014,MIA @ CHI,T9,Renteria,Bour,Safe at 1st,Force play,Randazzo,Gorman,Overturned,2:55,http://t.co/DxibJd8A9U,1,0,0,2014-mlb-replays.csv,http://t.co/DxibJd8A9U,520,0,HTTP 520
+2014-06-06,2014-06-6,1,2014,MIA @ CHI,T10,Redmond,Schierholtz,Catch,Catch/no catch,Randazzo,Gorman,Overturned,1:37,http://t.co/XFPJZxhve2,1,0,0,2014-mlb-replays.csv,http://t.co/XFPJZxhve2,520,0,HTTP 520
+2014-06-06,2014-06-6,1,2014,NYM @ SF,B5,Bochy,M. Cain,Ball (not HBP),HBP,Drake,West,Overturned,1:12,http://t.co/JSzJrmLi5q,1,0,0,2014-mlb-replays.csv,http://t.co/JSzJrmLi5q,520,0,HTTP 520
+2014-06-06,2014-06-6,1,2014,NYY @ KC,B3,Girardi,Aoki,Safe at 2nd,Tag play,DiMuro,Layne,Overturned,1:42,http://t.co/FdAYXjbjYG,1,0,0,2014-mlb-replays.csv,http://t.co/FdAYXjbjYG,520,0,HTTP 520
+2014-06-06,2014-06-6,1,2014,OAK @ BAL,B10,Showalter,Markakis,Out at home,Tag play,Vanover,Vanover,Confirmed,1:11,http://t.co/qCFvtz68BU,0,0,0,2014-mlb-replays.csv,http://t.co/qCFvtz68BU,520,0,HTTP 520
+2014-06-06,2014-06-6,1,2014,STL @ TOR,T9,Gibbons,Bautista,No catch/Foul Ball,Fan Interference,Culbreth,Culbreth,Overturned,1:56,http://t.co/2mNqtac47B,1,0,0,2014-mlb-replays.csv,http://t.co/2mNqtac47B,520,0,HTTP 520
+2014-06-07,2014-06-7,1,2014,ATL @ ARI,B11,Gonzalez,Inciarte,Safe at 1st,Force play,Fletcher,Wegner,Overturned,1:31,http://atmlb.com/1s0lv4n,1,0,0,2014-mlb-replays.csv,https://www.mlb.com/,200,2048,
+2014-06-07,2014-06-7,1,2014,BOS @ DET,T6,Farrell,Pedroia,Out at 1st,Force play,Hamari,Miller,Overturned,1:33,http://atmlb.com/1oDDl9l,1,0,0,2014-mlb-replays.csv,https://www.mlb.com/,200,2048,
+2014-06-07,2014-06-7,1,2014,BOS @ DET,T9,Ausmus,Bogaerts,Safe at 3rd,Tag play,Miller,Miller,Confirmed,1:24,http://t.co/Kz9SpShEhA,0,0,0,2014-mlb-replays.csv,http://t.co/Kz9SpShEhA,520,0,HTTP 520
+2014-06-07,2014-06-7,1,2014,NYM @ SF,B9,Collins,Pagan,Safe at 1st,Force play,Hoberg,West,Confirmed,1:14,http://atmlb.com/1hJJ8Kj,0,0,0,2014-mlb-replays.csv,https://www.mlb.com/,200,2048,
+2014-06-07,2014-06-7,1,2014,PHI @ CIN,T6,UMPIRE,M. Byrd,7.13/Out at home,7.13,Guccione,Hallion,Confirmed,2:28,http://t.co/tpMqTVrfgv,0,0,0,2014-mlb-replays.csv,http://t.co/tpMqTVrfgv,520,0,HTTP 520
+2014-06-08,2014-06-8,1,2014,CLE @ TEX,B8,Francona,Rios,Safe at 2nd,Tag play,Barksdale,Cederstrom,Overturned,2:29,http://t.co/QEHgAa2PPx,1,0,0,2014-mlb-replays.csv,http://t.co/QEHgAa2PPx,520,0,HTTP 520
+2014-06-08,2014-06-8,1,2014,LAD @ COL,T1,Weiss,Figgins,Safe at 3rd,Tag play,Porter,Scott,Confirmed,1:45,http://t.co/SjWorXmxXL,0,0,0,2014-mlb-replays.csv,http://t.co/SjWorXmxXL,520,0,HTTP 520
+2014-06-08,2014-06-8,1,2014,MIL @ PIT,B1,UMPIRE,N. Walker,7.13/Out at home,7.13,Hickox,Everitt,Stands,2:52,http://t.co/BFObF8dHon,0,0,0,2014-mlb-replays.csv,http://t.co/BFObF8dHon,520,0,HTTP 520
+2014-06-08,2014-06-8,1,2014,MIL @ PIT,B9,Banister (Hurdle),S. Marte,Out at 2nd,Tag play,Tumpane,Everitt,Overturned,1:28,http://t.co/GwI85UBEYu,1,0,0,2014-mlb-replays.csv,http://t.co/GwI85UBEYu,520,0,HTTP 520
+2014-06-08,2014-06-8,1,2014,OAK @ BAL,T3,UMPIRE,Jaso,Home Run,Potential HR,Vanover,Vanover,Overturned,3:13,http://t.co/BKp6U8UWe2,1,1,0,2014-mlb-replays.csv,http://t.co/BKp6U8UWe2,520,0,HTTP 520
+2014-06-08,2014-06-8,1,2014,OAK @ BAL,B9,Melvin,Schoop,Safe at 1st,Force play,Morales,Vanover,Overturned,1:28,http://t.co/dwtAXCDtQm,1,0,0,2014-mlb-replays.csv,http://t.co/dwtAXCDtQm,520,0,HTTP 520
+2014-06-09,2014-06-9,1,2014,BOS @ BAL,B4,Showalter,C. Davis,Out at 1st,Force play,Gorman,Gorman,Overturned,0:27,http://t.co/s8Kl0GdYoa,1,0,0,2014-mlb-replays.csv,http://t.co/s8Kl0GdYoa,520,0,HTTP 520
+2014-06-09,2014-06-9,1,2014,HOU @ ARI,T9,Porter,Altuve,Out at home,Tag play,Foster,West,Confirmed,0:48,http://t.co/XKAIGCuyRu,0,0,0,2014-mlb-replays.csv,http://t.co/XKAIGCuyRu,520,0,HTTP 520
+2014-06-09,2014-06-9,1,2014,LAD @ CIN,B2,UMPIRE,Cozart,Foul Ball,Potential HR,Gonzalez,Reynolds,Confirmed,0:23,http://t.co/nrmLqkxA4r,0,0,0,2014-mlb-replays.csv,http://t.co/nrmLqkxA4r,520,0,HTTP 520
+2014-06-09,2014-06-9,1,2014,LAD @ CIN,T8,Price,M. Rojas,Safe at 1st,Force play,Buckminster,Reynolds,Stands,3:06,http://t.co/g507olWai7,0,0,0,2014-mlb-replays.csv,http://t.co/g507olWai7,520,0,HTTP 520
+2014-06-09,2014-06-9,1,2014,OAK @ LAA,B5,UMPIRE,Trout,Home Run,Potential HR,Davidson,Davidson,Overturned,3:31,http://t.co/n2Jj3dDUZl,1,1,0,2014-mlb-replays.csv,http://t.co/n2Jj3dDUZl,520,0,HTTP 520
+2014-06-09,2014-06-9,1,2014,SEA @ TB,B4,Maddon,D. Jennings,Out at 1st,Force play,Timmons,T. Welke,Stands,1:29,http://t.co/Bt837V7rd0,0,0,0,2014-mlb-replays.csv,http://t.co/Bt837V7rd0,520,0,HTTP 520
+2014-06-10,2014-06-10,0,2014,CLE @ KC,B3,Yost,A. Cabrera,Catch (out),Catch/no catch,Hudson,O'Nora,Overturned,1:03,http://t.co/zbvxqlNlKr,1,0,0,2014-mlb-replays.csv,http://t.co/zbvxqlNlKr,520,0,HTTP 520
+2014-06-10,2014-06-10,0,2014,CLE @ KC,T8,Francona,D. Murphy,Out at 1st,Force play,Blaser,O'Nora,Confirmed,0:35,http://t.co/G8232zQafY,0,0,0,2014-mlb-replays.csv,http://t.co/G8232zQafY,520,0,HTTP 520
+2014-06-10,2014-06-10,0,2014,HOU @ ARI,T6,Gibson,Grossman,Safe at 1st,Force play,Porter,West,Overturned,2:19,http://t.co/7YfcSRjUMH,1,0,0,2014-mlb-replays.csv,http://t.co/7YfcSRjUMH,520,0,HTTP 520
+2014-06-10,2014-06-10,0,2014,LAD @ CIN,T6,Mattingly,Ethier,Out at 1st,Force play,Buckminster,Reynolds,Overturned,2:04,http://t.co/t0JC6PDobf,1,0,0,2014-mlb-replays.csv,http://t.co/t0JC6PDobf,520,0,HTTP 520
+2014-06-10,2014-06-10,0,2014,OAK @ LAA,B8,UMPIRE,H. Kendrick,7.13/Out at home,7.13,Davidson,Davidson,Confirmed,1:16,http://t.co/JhCtEDYrF3,0,0,0,2014-mlb-replays.csv,http://t.co/JhCtEDYrF3,520,0,HTTP 520
+2014-06-10,2014-06-10,0,2014,STL @ TB,B1,Maddon,Kiermaier,Out at 1st,Force play,Layne,Layne,Stands,2:22,http://t.co/1RiLnfAqCf,0,0,0,2014-mlb-replays.csv,http://t.co/1RiLnfAqCf,520,0,HTTP 520
+2014-06-10,2014-06-10,0,2014,STL @ TB,B8,Matheny,J. Sands,HBP,HBP,Estabrook,Layne,Stands,1:48,http://t.co/7j8fnYQZGl,0,0,0,2014-mlb-replays.csv,http://t.co/7j8fnYQZGl,520,0,HTTP 520
+2014-06-10,2014-06-10,0,2014,STL @ TB,B9,UMPIRE,Forsythe,Out at 1st,Force play,Wendelstedt,Layne,Confirmed,0:43,http://t.co/CA5WPgHfZy,0,0,0,2014-mlb-replays.csv,http://t.co/CA5WPgHfZy,520,0,HTTP 520
+2014-06-10,2014-06-10,0,2014,WSH @ SF,B3,Williams,Pagan,Safe at 1st,Force play,Cuzzi,Davis,Stands,2:27,http://t.co/jYeEp5gOHH,0,0,0,2014-mlb-replays.csv,http://t.co/jYeEp5gOHH,520,0,HTTP 520
+2014-06-10,2014-06-10,0,2014,WSH @ SF,T6,Bochy,Desmond,Safe at 1st,Force play,Cuzzi,Davis,Overturned,0:41,http://t.co/0lwAndRvhg,1,0,0,2014-mlb-replays.csv,http://t.co/0lwAndRvhg,520,0,HTTP 520
+2014-06-11,2014-06-11,0,2014,BOS @ BAL,B4,Farrell,Hundley,Safe at 2nd,Force play,Little,Gorman,Overturned,1:51,http://t.co/qKvp0gabnA,1,0,0,2014-mlb-replays.csv,http://t.co/qKvp0gabnA,520,0,HTTP 520
+2014-06-11,2014-06-11,0,2014,DET @ CWS,T3,Ausmus,R. Davis,Out at 2nd,Tag play,Everitt,Nelson,Overturned,1:21,http://t.co/yF40FhtdsB,1,0,0,2014-mlb-replays.csv,http://t.co/yF40FhtdsB,520,0,HTTP 520
+2014-06-11,2014-06-11,0,2014,MIL @ NYM,B5,Collins,Teagarden,Out at 1st,Force play,Hernandez,Cederstrom,Stands,2:01,http://t.co/pWV0ytFjKS,0,0,0,2014-mlb-replays.csv,http://t.co/pWV0ytFjKS,520,0,HTTP 520
+2014-06-11,2014-06-11,0,2014,MIN @ TOR,T6,Gardenhire,K. Suzuki,Out at 2nd,Tag play,Hallion,Hallion,Stands,2:49,http://t.co/mwoUmDQLxZ,0,0,0,2014-mlb-replays.csv,http://t.co/mwoUmDQLxZ,520,0,HTTP 520
+2014-06-12,2014-06-12,0,2014,ARI @ HOU,T3,Porter,D. Peralta,Safe at 3rd,Tag play,Porter,West,Stands,2:51,http://t.co/cN1W7uId8d,0,0,0,2014-mlb-replays.csv,http://t.co/cN1W7uId8d,520,0,HTTP 520
+2014-06-12,2014-06-12,0,2014,CHI @ PIT,B5,Hurdle,McCutchen,Out at 3rd,Tag play,Barry,Kellogg,Stands,1:57,http://t.co/d1SpbvWzcR,0,0,0,2014-mlb-replays.csv,http://t.co/d1SpbvWzcR,520,0,HTTP 520
+2014-06-12,2014-06-12,0,2014,DET @ CWS,T7,Ausmus,V. Martinez,No HBP,HBP,Carlson,Nelson,Stands,4:43,http://t.co/fTUYgsDFLc,0,0,0,2014-mlb-replays.csv,http://t.co/fTUYgsDFLc,520,0,HTTP 520
+2014-06-12,2014-06-12,0,2014,DET @ CWS,B9,Ventura,R. Davis,Catch,Catch/no catch,Nelson,Nelson,Overturned,3:04,http://t.co/9bnhRT8acO,1,0,0,2014-mlb-replays.csv,http://t.co/9bnhRT8acO,520,0,HTTP 520
+2014-06-12,2014-06-12,0,2014,LAD @ CIN,B1,Mattingly,Phillips,Safe at 1st,Force play,Knight,Reynolds,Overturned,2:26,http://t.co/0JYLTcs4gV,1,0,0,2014-mlb-replays.csv,http://t.co/0JYLTcs4gV,520,0,HTTP 520
+2014-06-12,2014-06-12,0,2014,SD @ PHI,B3,Black,Revere,Safe at 1st,Force play,Fagan,T. Welke,Overturned,1:28,http://t.co/PEVjOFlpW5,1,0,0,2014-mlb-replays.csv,http://t.co/PEVjOFlpW5,520,0,HTTP 520
+2014-06-12,2014-06-12,0,2014,SD @ PHI,B6,Sandberg,Mayberry,Out at home,Tag play,Tichenor,T. Welke,Confirmed,1:54,http://t.co/tUd3bIr323,0,0,0,2014-mlb-replays.csv,http://t.co/tUd3bIr323,520,0,HTTP 520
+2014-06-12,2014-06-12,0,2014,TOR @ BAL,T9,Gibbons,Mastroianni,Out at 1st,Force play,DiMuro,Layne,Confirmed,1:12,http://t.co/iAv3rjOgaQ,0,0,0,2014-mlb-replays.csv,http://t.co/iAv3rjOgaQ,520,0,HTTP 520
+2014-06-13,2014-06-13,0,2014,COL @ SF,T9,Bochy,Blackmon,Safe at 2nd,Tag play,Segal,Winters,Overturned,1:36,http://t.co/EnQyuTGXbi,1,0,0,2014-mlb-replays.csv,http://t.co/EnQyuTGXbi,520,0,HTTP 520
+2014-06-13,2014-06-13,0,2014,MIN @ DET,T3,Gardenhire,D. Santana,Out at 3rd,Tag play,Gonzalez,Reynolds,Overturned,1:23,http://t.co/RVUoflWdXf,1,0,0,2014-mlb-replays.csv,http://t.co/RVUoflWdXf,520,0,HTTP 520
+2014-06-13,2014-06-13,0,2014,PIT @ MIA,T4,Redmond,R. Martin,Safe at 2nd,Tag play,T. Welke,T. Welke,Overturned,1;21,http://t.co/C4Rdo5yPc1,1,0,0,2014-mlb-replays.csv,http://t.co/C4Rdo5yPc1,520,0,HTTP 520
+2014-06-13,2014-06-13,0,2014,TOR @ BAL,B8,Showalter,N. Cruz,Out at 1st,Force play,Estabrook,Layne,Stands,2:10,http://t.co/fGUs2W2mwo,0,0,0,2014-mlb-replays.csv,http://t.co/fGUs2W2mwo,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,ARI @ LAD,T1,Mattingly,M. Montero,Safe at 1st,Force play,Davidson,Davidson,Overturned,0:53,http://t.co/cxTiKYoQXE,1,0,0,2014-mlb-replays.csv,http://t.co/cxTiKYoQXE,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,CHI @ PHI,T8,Renteria,Schierholtz,Out at 1st,Force play,Danley,Cederstrom,Stands,2:16,http://t.co/7hcadgg70d,0,0,0,2014-mlb-replays.csv,http://t.co/7hcadgg70d,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,COL @ SF,T1,Bochy,Rutledge,Safe at 1st,Force play,Muchlinski,Winters,Overturned,0:46,http://t.co/ZHfN38MHPR,1,0,0,2014-mlb-replays.csv,http://t.co/ZHfN38MHPR,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,COL @ SF,B9,Bochy,Pagan,Out at 1st,Force play,Muchlinski,Winters,Stands,2:42,http://atmlb.com/1siPlRG,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/06/15/mlbtv_33722365_1800K.mp4,200,2048,
+2014-06-14,2014-06-14,0,2014,KC @ CWS,B8,Yost,Eaton,Safe at home,Tag play,Conroy,Emmel,Overturned,2:07,http://t.co/vfLWJpYhEL,1,1,0,2014-mlb-replays.csv,http://t.co/vfLWJpYhEL,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,MIN @ DET,B3,UMPIRE,V. Martinez,In play,Potential HR,Buckminster,Reynolds,Overturned,0:43,http://t.co/FcTMfT4Z9C,1,0,0,2014-mlb-replays.csv,http://t.co/FcTMfT4Z9C,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,MIN @ DET,T8,Gardenhire,E. Nunez,Out at 1st,Force play,Buckminster,Reynolds,Overturned,0:53,http://t.co/Q2Spy0fTJk,1,0,0,2014-mlb-replays.csv,http://t.co/Q2Spy0fTJk,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,TB @ HOU,T3,Maddon,Kiermaier,Out at 3rd,Tag play,Nelson,Nelson,Stands,2:07,http://t.co/bQdM3k5BvP,0,0,0,2014-mlb-replays.csv,http://t.co/bQdM3k5BvP,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,TB @ HOU,B3,UMPIRE,Dominguez,In play (double),Potential HR,Nelson,Nelson,Confirmed,1:27,http://t.co/QKjPznc8jf,0,0,0,2014-mlb-replays.csv,http://t.co/QKjPznc8jf,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,TEX @ SEA,T1,McClendon,L. Martin,Safe at 2nd,Tag play,Davis,Davis,Overturned,1:55,http://t.co/hwbIrbifwc,1,0,0,2014-mlb-replays.csv,http://t.co/hwbIrbifwc,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,TEX @ SEA,T1,UMPIRE,A. Beltre,Count Check,Record Keeping,Marquez,Davis,Record Keeping,1:39,http://t.co/LIlH4benak,0,0,0,2014-mlb-replays.csv,http://t.co/LIlH4benak,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,TEX @ SEA,B6,Washington,Cano,Safe at home,Tag play,Marquez,Davis,Confirmed,2:00,http://t.co/RK9rpygFcO,0,0,0,2014-mlb-replays.csv,http://t.co/RK9rpygFcO,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,TEX @ SEA,T7,UMPIRE,Andrus,Out at 1st,Tag play,Cuzzi,Davis,Overturned,3:15,http://t.co/LaH9tJTzUC,1,0,0,2014-mlb-replays.csv,http://t.co/LaH9tJTzUC,520,0,HTTP 520
+2014-06-14,2014-06-14,0,2014,TOR @ BAL,T8,UMPIRE,Bautista,7.13/Out at home,7.13,Estabrook,Layne,Confirmed,2:02,http://t.co/lOdmC2vHvb,0,0,0,2014-mlb-replays.csv,http://t.co/lOdmC2vHvb,520,0,HTTP 520
+2014-06-15,2014-06-15,0,2014,ARI @ LAD,B1,UMPIRE,H. Ramirez,Foul Ball,Potential HR,"Welke, B.",Davidson,Confirmed,1:09,http://atmlb.com/1qWRlKS,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/06/15/mlbtv_33757267_1800K.mp4,200,2048,
+2014-06-15,2014-06-15,0,2014,ARI @ LAD,T8,Mattingly,Campana,Safe at 1st,Force play,Tumpane,Davidson,Overturned,0:44,http://t.co/KLNDUjS1jN,1,0,0,2014-mlb-replays.csv,http://t.co/KLNDUjS1jN,520,0,HTTP 520
+2014-06-15,2014-06-15,0,2014,CHI @ PHI,T3,Sandberg,Rizzo,Safe at 1st,Force play,Cederstrom,Cederstrom,Overturned,0:49,http://t.co/JwCpizy8hU,1,0,0,2014-mlb-replays.csv,http://t.co/JwCpizy8hU,520,0,HTTP 520
+2014-06-15,2014-06-15,0,2014,COL @ SF,B2,Bochy,G. Blanco,Out at 1st,Force play,Wegner,Winters,Overturned,1:02,http://t.co/0SQCKbKxEP,1,0,0,2014-mlb-replays.csv,http://t.co/0SQCKbKxEP,520,0,HTTP 520
+2014-06-15,2014-06-15,0,2014,KC @ CWS,T4,Yost,Moustakas,Out at 2nd,Force play,Morales,Emmel,Overturned,1:27,http://t.co/MLZT8xbhMF,1,0,0,2014-mlb-replays.csv,http://t.co/MLZT8xbhMF,520,0,HTTP 520
+2014-06-15,2014-06-15,0,2014,MIN @ DET,T8,Gardenhire,Dozier,Out at 1st,Force play,Gonzalez,Reynolds,Stands,2:15,http://t.co/FO1sNOlJEW,0,0,0,2014-mlb-replays.csv,http://t.co/FO1sNOlJEW,520,0,HTTP 520
+2014-06-15,2014-06-15,0,2014,TB @ HOU,T6,Maddon,D. Jennings,Out at 1st,Force play,Carlson,Nelson,Overturned,1:56,http://t.co/eHnhYaWY4q,1,0,0,2014-mlb-replays.csv,http://t.co/eHnhYaWY4q,520,0,HTTP 520
+2014-06-15,2014-06-15,0,2014,TEX @ SEA,B8,McClendon,Bloomquist,Out at 1st,Force play,Davis,Davis,Confirmed,0:57,http://t.co/VTpWieWMwP,0,0,0,2014-mlb-replays.csv,http://t.co/VTpWieWMwP,520,0,HTTP 520
+2014-06-15,2014-06-15,0,2014,TOR @ BAL,B4,Showalter,A. Jones,Out at 1st,Force play,Hamari,Layne,Confirmed,0:58,http://t.co/y105x3uvaD,0,0,0,2014-mlb-replays.csv,http://t.co/y105x3uvaD,520,0,HTTP 520
+2014-06-15,2014-06-15,0,2014,TOR @ BAL,T8,Gibbons,Bautista,Out at home,Tag play,Layne,Layne,Stands,3:29,http://t.co/A3MvrmOVHY,0,0,0,2014-mlb-replays.csv,http://t.co/A3MvrmOVHY,520,0,HTTP 520
+2014-06-16,2014-06-16,0,2014,LAA @ CLE,B1,UMPIRE,A. Cabrera,Home Run,Potential HR,Porter,West,Stands,1:41,http://t.co/PpalsBsMRc,0,0,0,2014-mlb-replays.csv,http://t.co/PpalsBsMRc,520,0,HTTP 520
+2014-06-16,2014-06-16,0,2014,MIL @ ARI,B7,Gibson,Prado,Out at 1st,Force play,T. Barrett,T. Barrett,Confirmed,0:39,http://t.co/9AUsg8u7Tj,0,0,0,2014-mlb-replays.csv,http://t.co/9AUsg8u7Tj,520,0,HTTP 520
+2014-06-16,2014-06-16,0,2014,MIL @ ARI,T9,UMPIRE,E. Herrera,Safe at 3rd,Tag play,Little,T. Barrett,Stands,4:03,http://t.co/Giv8iUD5KN,0,0,0,2014-mlb-replays.csv,http://t.co/Giv8iUD5KN,520,0,HTTP 520
+2014-06-16,2014-06-16,0,2014,PHI @ ATL,B2,Gonzalez,C. Johnson,Out at 1st,Force play,Gonzalez,Culbreth,Overturned,2:08,http://t.co/yeEQM6vZW3,1,0,0,2014-mlb-replays.csv,http://t.co/yeEQM6vZW3,520,0,HTTP 520
+2014-06-17,2014-06-17,0,2014,BAL @ TB,T3,UMPIRE,C. Davis,In play,Potential HR,L. Barrett,Kulpa,Overturned,1:18,http://t.co/yGIRnNlbmM,1,0,0,2014-mlb-replays.csv,http://t.co/yGIRnNlbmM,520,0,HTTP 520
+2014-06-17,2014-06-17,0,2014,BAL @ TB,B5,Showalter,Longoria,Safe at 1st,Force play,Hoberg,Kulpa,Stands,1:12,http://t.co/3R2aseOKVx,0,0,0,2014-mlb-replays.csv,http://t.co/3R2aseOKVx,520,0,HTTP 520
+2014-06-17,2014-06-17,0,2014,CHI @ MIA,B8,Renteria,Realmuto,Safe at 1st,Tag play,Diaz,Nelson,Stands,2:08,http://t.co/PyaF1h0wKK,0,0,0,2014-mlb-replays.csv,http://t.co/PyaF1h0wKK,520,0,HTTP 520
+2014-06-17,2014-06-17,0,2014,KC @ DET,T2,Yost,Dyson,Out at 1st,Force play,Reyburn,Hallion,Overturned,2:27,http://t.co/QzrgFm9HwN,1,0,0,2014-mlb-replays.csv,http://t.co/QzrgFm9HwN,520,0,HTTP 520
+2014-06-17,2014-06-17,0,2014,MIN @ BOS,B8,UMPIRE,Pedroia,In play (out),Potential HR,Tichenor,T. Welke,Stands,1:26,http://t.co/tzexrwf5Ue,0,0,0,2014-mlb-replays.csv,http://t.co/tzexrwf5Ue,520,0,HTTP 520
+2014-06-18,2014-06-18,0,2014,CHI @ MIA,T5,Renteria,Barney,Out at 1st,Force play,Pattillo,Nelson,Overturned,1:27,http://t.co/jP0WSvV8Lb,1,0,0,2014-mlb-replays.csv,http://t.co/jP0WSvV8Lb,520,0,HTTP 520
+2014-06-18,2014-06-18,0,2014,CIN @ PIT,T3,UMPIRE,Mesoraco,7.13/Out at home,7.13,DiMuro,Layne,Overturned,3:24,http://t.co/Sz9pJVyvHV,1,1,0,2014-mlb-replays.csv,http://t.co/Sz9pJVyvHV,520,0,HTTP 520
+2014-06-18,2014-06-18,0,2014,CIN @ PIT,B5,UMPIRE,P. Alvarez,7.13/Out at home,Tag play,DiMuro,Layne,Overturned,2:13,http://t.co/kv7Xd04PRw,1,1,0,2014-mlb-replays.csv,http://t.co/kv7Xd04PRw,520,0,HTTP 520
+2014-06-18,2014-06-18,0,2014,COL @ LAD,B3,Weiss,D. Gordon,Safe at 1st,Force play,Cuzzi,Davis,Overturned,1:59,http://t.co/sJEqN3HLjf,1,0,0,2014-mlb-replays.csv,http://t.co/sJEqN3HLjf,520,0,HTTP 520
+2014-06-18,2014-06-18,0,2014,COL @ LAD,B5,Weiss,A.J. Ellis,Safe at 1st,Force play,Cuzzi,Davis,Confirmed,1:44,http://t.co/W7UZ8VcVVS,0,0,0,2014-mlb-replays.csv,http://t.co/W7UZ8VcVVS,520,0,HTTP 520
+2014-06-18,2014-06-18,0,2014,HOU @ WSH,B1,Williams,Span,Out at 2nd,Tag play,Ad. Johnson,Vanover,Overturned,2:09,http://t.co/mulUoMyx0x,1,0,0,2014-mlb-replays.csv,http://t.co/mulUoMyx0x,520,0,HTTP 520
+2014-06-18,2014-06-18,0,2014,SEA @ SD,T1,McClendon,E. Chavez,Out at 2nd,Tag play,Iassogna,Scott,Stands,3:05,http://t.co/2bCs2IQuCf,0,0,0,2014-mlb-replays.csv,http://t.co/2bCs2IQuCf,520,0,HTTP 520
+2014-06-18,2014-06-18,0,2014,SEA @ SD,T9,UMPIRE,Ackley,Out at 1st,Force play,Scott,Scott,Confirmed,1:34,http://t.co/lJOwzwJsRS,0,0,0,2014-mlb-replays.csv,http://t.co/lJOwzwJsRS,520,0,HTTP 520
+2014-06-19,2014-06-19,0,2014,KC @ DET,B4,Yost,Mi. Cabrera,Safe at 2nd,Tag play,Hallion,Hallion,Overturned,1:10,http://t.co/PKqcWWgWc5,1,0,0,2014-mlb-replays.csv,http://t.co/PKqcWWgWc5,520,0,HTTP 520
+2014-06-19,2014-06-19,0,2014,MIL @ ARI,T8,Gibson,C. Gomez,Safe at 2nd,Tag play,T. Barrett,T. Barrett,Overturned,0:47,http://atmlb.com/1w3shos,1,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/06/19/mlbtv_33861695_1800K.mp4,200,2048,
+2014-06-19,2014-06-19,0,2014,TOR @ NYY,T1,Girardi,Me. Cabrera,Safe at 2nd,Tag play,Baker,Meals,Overturned,0:41,http://t.co/sheytW4Dqa,1,0,0,2014-mlb-replays.csv,http://t.co/sheytW4Dqa,520,0,HTTP 520
+2014-06-19,2014-06-19,0,2014,TOR @ NYY,T8,Gibbons,Navarro,Out at 1st,Force play,Conroy,Meals,Stands,1:58,http://t.co/WZOdBJURhJ,0,0,0,2014-mlb-replays.csv,http://t.co/WZOdBJURhJ,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,ATL @ WSH,B9,UMPIRE,Rendon,In play,Potential HR,Carlson,T. Welke,Overturned,0:50,http://t.co/C1OxQmOjE2,1,0,0,2014-mlb-replays.csv,http://t.co/C1OxQmOjE2,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,ATL @ WSH,B11,Williams,Frandsen,Out at 1st,Force play,Fagan,T. Welke,Confirmed,1:34,http://t.co/ZW6TArgpL3,0,0,0,2014-mlb-replays.csv,http://t.co/ZW6TArgpL3,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,BOS @ OAK,B3,Melvin,Gentry,Ball (not HBP),HBP,Davis,Davis,Overturned,0:39,http://t.co/X2ri47RcnW,1,0,0,2014-mlb-replays.csv,http://t.co/X2ri47RcnW,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,CWS @ MIN,B9,Ventura,E. Escobar,Safe at home,Tag play,Fletcher,Wegner,Confirmed,1:17,http://t.co/Y7VhyGrTPI,0,0,0,2014-mlb-replays.csv,http://t.co/Y7VhyGrTPI,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,LAD @ SD,T9,Mattingly,Van Slyke,Out at 1st,Tag play,Marquez,T. Barrett,Overturned,1:55,http://t.co/NuFEfRGjBV,1,0,0,2014-mlb-replays.csv,http://t.co/NuFEfRGjBV,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,NYM @ MIA,B4,UMPIRE,G. Jones,Home Run,Potential HR,Kulpa,Kulpa,Overturned,1:21,http://t.co/16jMB0uxNp,1,1,0,2014-mlb-replays.csv,http://t.co/16jMB0uxNp,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,NYM @ MIA,T8,UMPIRE,D. Wright,7.13/Out at home,7.13,L. Barrett,Kulpa,Confirmed,2:06,http://t.co/sKxrDKcCre,0,0,0,2014-mlb-replays.csv,http://t.co/sKxrDKcCre,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,NYM @ MIA,T9,Collins,Nieuwenhuis,Out at home,Tag play,L. Barrett,Kulpa,Confirmed,0:54,http://t.co/Gvbo9BM9Me,0,0,0,2014-mlb-replays.csv,http://t.co/Gvbo9BM9Me,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,PHI @ STL,T7,Matheny,M. Byrd,Safe at 1st,Force play,Vanover,Vanover,Stands,1:41,http://t.co/hTWYn2jvDB,0,0,0,2014-mlb-replays.csv,http://t.co/hTWYn2jvDB,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,PIT @ CHI,B1,Hurdle,Rizzo,Strike (not HBP),HBP,Davidson,Davidson,Overturned,1:25,http://t.co/KYefmyLuBp,1,0,0,2014-mlb-replays.csv,http://t.co/KYefmyLuBp,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,PIT @ CHI,T2,UMPIRE,I. Davis,7.13/Out at home,7.13,Davidson,Davidson,Stands,0:54,http://t.co/MOrB9TIIYJ,0,0,0,2014-mlb-replays.csv,http://t.co/MOrB9TIIYJ,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,SEA @ KC,B9,McClendon,Dyson,Safe at 1st,Force play,Barry,Nelson,Stands,0:50,http://t.co/FbHEqQ1bQg,0,0,0,2014-mlb-replays.csv,http://t.co/FbHEqQ1bQg,520,0,HTTP 520
+2014-06-20,2014-06-20,0,2014,SF @ ARI,B5,UMPIRE,Owings,7.13/Out at home,7.13,Iassogna,Scott,Confirmed,1:00,http://t.co/ieb1KBD9YW,0,0,0,2014-mlb-replays.csv,http://t.co/ieb1KBD9YW,520,0,HTTP 520
+2014-06-21,2014-06-21,0,2014,CWS @ MIN,B3,Ventura,Dozier,Safe at 2nd,Tag play,Wegner,Wegner,Overturned,1:01,http://atmlb.com/1qsJ01U,1,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/06/21/mlbtv_33913207_1800K.mp4,200,2048,
+2014-06-21,2014-06-21,0,2014,DET @ CLE,T7,UMPIRE,Kinsler,Home Run,Potential HR,Meals,Meals,Stands,0:43,http://t.co/hsJKcewOoX,0,0,0,2014-mlb-replays.csv,http://t.co/hsJKcewOoX,520,0,HTTP 520
+2014-06-21,2014-06-21,0,2014,HOU @ TB,T1,Maddon,Guyer,No catch (trap),Catch/no catch,Buckminster,Culbreth,Overturned,1:09,http://t.co/rjzflpz7yQ,1,0,0,2014-mlb-replays.csv,http://t.co/rjzflpz7yQ,520,0,HTTP 520
+2014-06-21,2014-06-21,0,2014,MIL @ COL,B9,Weiss,LeMahieu,Out at 1st,Force play,Estabrook,Layne,Stands,1:43,http://t.co/k3WMudCGhi,0,0,0,2014-mlb-replays.csv,http://t.co/k3WMudCGhi,520,0,HTTP 520
+2014-06-21,2014-06-21,0,2014,PIT @ CHI,T7,Hurdle,G. Polanco,Out at 1st,Force play,Hoye,Davidson,Overturned,2:21,http://t.co/6AlO4v9Lbo,1,0,0,2014-mlb-replays.csv,http://t.co/6AlO4v9Lbo,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,BAL @ NYY,B1,Showalter,Gardner,Safe at 3rd,Tag play,Hallion,Hallion,Overturned,2:39,http://t.co/sKXvIF31T0,1,0,0,2014-mlb-replays.csv,http://t.co/sKXvIF31T0,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,DET @ CLE,T5,Ausmus,A. Cabrera,Out at 2nd,Force play,Meals,Meals,Overturned,2:12,http://t.co/LZbz4tj5jf,1,0,0,2014-mlb-replays.csv,http://t.co/LZbz4tj5jf,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,DET @ CLE,B5,Francona,Bourn,Out at 1st,Force play,Meals,Meals,Overturned,0:28,http://t.co/QzXNYRl4dv,1,0,0,2014-mlb-replays.csv,http://t.co/QzXNYRl4dv,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,DET @ CLE,T9,Ausmus,An. Romine,Out at 1st,Force play,Meals,Meals,Overturned,1:34,http://t.co/D1uF6FZRGE,1,0,0,2014-mlb-replays.csv,http://t.co/D1uF6FZRGE,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,HOU @ TB,T3,Porter,Villar,Out at 3rd,Tag play,Gonzalez,Culbreth,Overturned,1:28,http://t.co/ONLTy5oK73,1,0,0,2014-mlb-replays.csv,http://t.co/ONLTy5oK73,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,HOU @ TB,B3,Maddon,D. Jennings,Out at home,Tag play,Knight,Culbreth,Confirmed,2:16,http://t.co/jhcGttIwra,0,0,0,2014-mlb-replays.csv,http://t.co/jhcGttIwra,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,HOU @ TB,B8,UMPIRE,Longoria,Out at home,Tag play,Knight,Culbreth,Confirmed,0:56,http://t.co/ORcqygYKtF,0,0,0,2014-mlb-replays.csv,http://t.co/ORcqygYKtF,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,LAD @ SD,T7,Mattingly,D. Gordon,Out at 1st,Tag play,Little,T. Barrett,Stands,0:52,http://t.co/wjpNVU3x0K,0,0,0,2014-mlb-replays.csv,http://t.co/wjpNVU3x0K,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,PIT @ CHI,B9,Renteria,S. Castro,Out at 2nd,Force play,Davidson,Davidson,Confirmed,0:25,http://t.co/Dame4MWE04,0,0,0,2014-mlb-replays.csv,http://t.co/Dame4MWE04,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,SEA @ KC,B7,McClendon,Ciriaco,Safe at 1st,Force play,Diaz,Nelson,Overturned,2:54,http://t.co/rPWl6EVZVS,1,0,0,2014-mlb-replays.csv,http://t.co/rPWl6EVZVS,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,TEX @ LAA,B1,UMPIRE,Calhoun,7.13/Out at home,7.13,Miller,Miller,Overturned,1:47,http://t.co/kDWciwZlSh,1,1,0,2014-mlb-replays.csv,http://t.co/kDWciwZlSh,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,TOR @ CIN,T3,Price,Bautista,Safe at 1st,Force play,Drake,West,Stands,1:43,http://t.co/ZZOmeuwVkQ,0,0,0,2014-mlb-replays.csv,http://t.co/ZZOmeuwVkQ,520,0,HTTP 520
+2014-06-22,2014-06-22,0,2014,TOR @ CIN,T7,Gibbons,Me. Cabrera,Out at 1st,Force play,Drake,West,Overturned,1:43,http://t.co/AxYgr7dSAJ,1,0,0,2014-mlb-replays.csv,http://t.co/AxYgr7dSAJ,520,0,HTTP 520
+2014-06-23,2014-06-23,0,2014,BOS @ SEA,T9,Farrell,S. Romero,Catch,Catch/no catch,Reyburn,Kellogg,Overturned,0:53,http://t.co/WjMonyoVLw,1,0,0,2014-mlb-replays.csv,http://t.co/WjMonyoVLw,520,0,HTTP 520
+2014-06-23,2014-06-23,0,2014,SD @ SF,T4,UMPIRE,Grandal,Home Run,Potential HR,O'Nora,O'Nora,Overturned,3:21,http://t.co/xBvTlNnRmZ,1,1,0,2014-mlb-replays.csv,http://t.co/xBvTlNnRmZ,520,0,HTTP 520
+2014-06-23,2014-06-23,0,2014,STL @ COL,T7,Weiss,M. Carpenter,HBP,HBP,Little,T. Barrett,Stands,3:50,http://t.co/KfWoSoYsQF,0,0,0,2014-mlb-replays.csv,http://t.co/KfWoSoYsQF,520,0,HTTP 520
+2014-06-24,2014-06-24,0,2014,BOS @ SEA,T3,Farrell,Ackley,Catch,Catch/no catch,Kellogg,Kellogg,Overturned,2:13,http://t.co/vKsz6HdOxI,1,0,0,2014-mlb-replays.csv,http://t.co/vKsz6HdOxI,520,0,HTTP 520
+2014-06-24,2014-06-24,0,2014,BOS @ SEA,B5,Farrell,J. Jones,Safe at 1st,Force play,Reyburn,Kellogg,Stands,2:37,http://t.co/sftkJel5mQ,0,0,0,2014-mlb-replays.csv,http://t.co/sftkJel5mQ,520,0,HTTP 520
+2014-06-24,2014-06-24,0,2014,CLE @ ARI,B1,Francona,Goldschmidt,Safe at 1st,Force play,Fairchild,Miller,Stands,2:59,http://t.co/oTDY2XVQud,0,0,0,2014-mlb-replays.csv,http://t.co/oTDY2XVQud,520,0,HTTP 520
+2014-06-24,2014-06-24,0,2014,DET @ TEX,T6,Washington,R. Davis,Safe at 2nd,Tag play,Fagan,T. Welke,Overturned,1:11,http://t.co/XUl9VJ4jwS,1,0,0,2014-mlb-replays.csv,http://t.co/XUl9VJ4jwS,520,0,HTTP 520
+2014-06-24,2014-06-24,0,2014,LAD @ KC,T1,Yost,Puig,Safe at 1st,Force play,Knight,Wendelstedt,Stands,2:00,http://t.co/INTwIT3vWp,0,0,0,2014-mlb-replays.csv,http://t.co/INTwIT3vWp,520,0,HTTP 520
+2014-06-24,2014-06-24,0,2014,SD @ SF,B7,Black,B. Crawford,Safe at 1st,Force play,Hamari,O'Nora,Stands,2:16,http://t.co/QSYHdySFhi,0,0,0,2014-mlb-replays.csv,http://t.co/QSYHdySFhi,520,0,HTTP 520
+2014-06-24,2014-06-24,0,2014,STL @ COL,B7,Weiss,LeMahieu,Out at 3rd,Tag play,Little,T. Barrett,Stands,2:28,http://t.co/Zep4GB5A6w,0,0,0,2014-mlb-replays.csv,http://t.co/Zep4GB5A6w,520,0,HTTP 520
+2014-06-25,2014-06-25,0,2014,CIN @ CHI,T4,Renteria,Mesoraco,Safe at 1st,Tag play,H. Gibson,Scott,Overturned,2:17,http://t.co/hKWBjdtCyC,1,0,0,2014-mlb-replays.csv,http://t.co/hKWBjdtCyC,520,0,HTTP 520
+2014-06-25,2014-06-25,0,2014,CIN @ CHI,B9,UMPIRE,Ruggiano,In play,Potential HR,Scott,Scott,Confirmed,1:15,http://t.co/L4OU2Ajng0,0,0,0,2014-mlb-replays.csv,http://t.co/L4OU2Ajng0,520,0,HTTP 520
+2014-06-25,2014-06-25,0,2014,CLE @ ARI,B3,Francona,Inciarte,Safe at 3rd,Tag play,Everitt,Miller,Overturned,0:45,http://t.co/1ZXmNazIRA,1,0,0,2014-mlb-replays.csv,http://t.co/1ZXmNazIRA,520,0,HTTP 520
+2014-06-25,2014-06-25,0,2014,CWS @ BAL,T7,Showalter,Flowers,Safe at 2nd,Tag play,Foster,Emmel,Overturned,1:14,http://t.co/8IeRv9R3Yl,1,0,0,2014-mlb-replays.csv,http://t.co/8IeRv9R3Yl,520,0,HTTP 520
+2014-06-25,2014-06-25,0,2014,LAD @ KC,B9,Yost,Ciriaco,Out at 2nd,Tag play,Estabrook,Wendelstedt,Overturned,1:17,http://t.co/OijRuooveb,1,0,0,2014-mlb-replays.csv,http://t.co/OijRuooveb,520,0,HTTP 520
+2014-06-25,2014-06-25,0,2014,MIA @ PHI,B2,Redmond,M. Byrd,Safe at 2nd,Force play,Randazzo,Gorman,Confirmed,0:34,http://t.co/aGkf0WWIZo,0,0,0,2014-mlb-replays.csv,http://t.co/aGkf0WWIZo,520,0,HTTP 520
+2014-06-26,2014-06-26,0,2014,COL @ MIL,B6,Weiss,Overbay,Safe at 1B,Force play,Scott,Scott,Stands,2:42,http://t.co/kyCeJPGo7x,0,0,0,2014-mlb-replays.csv,http://t.co/kyCeJPGo7x,520,0,HTTP 520
+2014-06-26,2014-06-26,0,2014,CWS @ TOR,B2,UMPIRE,Reyes,In play (triple),Potential HR,Gonzalez,Culbreth,Confirmed,2:06,http://t.co/c9jNfygFOe,0,0,0,2014-mlb-replays.csv,http://t.co/c9jNfygFOe,520,0,HTTP 520
+2014-06-26,2014-06-26,0,2014,CWS @ TOR,B8,Gibbons,Tolleson,Out at 1B,Force play,Gonzalez,Culbreth,Stands,3:33,http://t.co/4ioMlXhdTx,0,0,0,2014-mlb-replays.csv,http://t.co/4ioMlXhdTx,520,0,HTTP 520
+2014-06-26,2014-06-26,0,2014,STL @ LAD,T7,UMPIRE,Craig,7.13/Out at home,7.13,Carapazza,Miller,Confirmed,1:16,http://t.co/oXvGq6H3gZ,0,0,0,2014-mlb-replays.csv,http://t.co/oXvGq6H3gZ,520,0,HTTP 520
+2014-06-26,2014-06-26,0,2014,STL @ LAD,T9,Matheny,Bourjos,Out at 2nd,Tag play,Everitt,Miller,Confirmed,1:34,http://t.co/6YqiiL9xxv,0,0,0,2014-mlb-replays.csv,http://t.co/6YqiiL9xxv,520,0,HTTP 520
+2014-06-26,2014-06-26,0,2014,WSH @ CHI,T2,UMPIRE,Zimmerman,7.13/Out at home,7.13,DiMuro,Layne,Confirmed,0:50,http://t.co/1kTE3qyLWP,0,0,0,2014-mlb-replays.csv,http://t.co/1kTE3qyLWP,520,0,HTTP 520
+2014-06-27,2014-06-27,0,2014,CIN @ SF,T6,Bochy,Cozart,Safe at 1st,Force play,Bellino,Kellogg,Stands,3:34,http://t.co/YEqJUA4Gsh,0,0,0,2014-mlb-replays.csv,http://t.co/YEqJUA4Gsh,520,0,HTTP 520
+2014-06-27,2014-06-27,0,2014,CIN @ SF,T7,UMPIRE,Pence,No catch (trap),Catch/no catch,Bellino,Kellogg,Confirmed,1:11,http://t.co/A0VrYe6WXn,0,0,0,2014-mlb-replays.csv,http://t.co/A0VrYe6WXn,520,0,HTTP 520
+2014-06-27,2014-06-27,0,2014,COL @ MIL,B8,Weiss,C. Gomez,Safe at 2nd,Tag play,Bucknor,Scott,Overturned,1:44,http://t.co/4Q4XU1YujQ,1,0,0,2014-mlb-replays.csv,http://t.co/4Q4XU1YujQ,520,0,HTTP 520
+2014-06-27,2014-06-27,0,2014,LAA @ KC,T3,Yost,Trout,Safe at 1st,Force play,T. Welke,T. Welke,Overturned,0:55,http://t.co/Yx3JNov553,1,0,0,2014-mlb-replays.csv,http://t.co/Yx3JNov553,520,0,HTTP 520
+2014-06-27,2014-06-27,0,2014,NYM @ PIT,B10,Collins,J. Harrison,Safe at 2nd,Tag play,Barry,Nelson,Stands,3:14,http://t.co/6dK7tHSnao,0,0,0,2014-mlb-replays.csv,http://t.co/6dK7tHSnao,520,0,HTTP 520
+2014-06-27,2014-06-27,0,2014,OAK @ MIA,T9,UMPIRE,Crisp,7.13/Out at home,Tag play,Foster,West,Overturned,3:27,http://t.co/iqDltnEpaf,1,1,0,2014-mlb-replays.csv,http://t.co/iqDltnEpaf,520,0,HTTP 520
+2014-06-27,2014-06-27,0,2014,TB @ BAL,T7,Showalter,Zobrist,Safe at 1st,Force play,Morales,Gorman,Overturned,0:41,http://t.co/Cfh9k6Nj7j,1,0,0,2014-mlb-replays.csv,http://t.co/Cfh9k6Nj7j,520,0,HTTP 520
+2014-06-27,2014-06-27,0,2014,TB @ BAL,T6,Maddon,Kiermaier,Out at 1st,Force play,Wolf,Gorman,Overturned,1:40,http://t.co/yZ00qpZfTT,1,0,0,2014-mlb-replays.csv,http://t.co/yZ00qpZfTT,520,0,HTTP 520
+2014-06-27,2014-06-27,0,2014,TB @ BAL,B6,Showalter,Machado,Out at 1st,Tag play,Wolf,Gorman,Stands,1:52,http://t.co/Tb2mG5wMpr,0,0,0,2014-mlb-replays.csv,http://t.co/Tb2mG5wMpr,520,0,HTTP 520
+2014-06-27,2014-06-27,0,2014,WSH @ CHI,B5,Williams,Coghlan,Safe at 1st,Force play,Layne,Layne,Overturned,1:31,http://t.co/YdmrIBi5gW,1,0,0,2014-mlb-replays.csv,http://t.co/YdmrIBi5gW,520,0,HTTP 520
+2014-06-28,2014-06-28,0,2014,ARI @ SD,T6,Gibson,Prado,Out at 1st,Force play,Wolcott,Davis,Stands,2:47,http://t.co/3SVw9xa4zI,0,0,0,2014-mlb-replays.csv,http://t.co/3SVw9xa4zI,520,0,HTTP 520
+2014-06-28,2014-06-28,0,2014,BOS @ NYY,B5,Farrell,Solarte,Safe at 1st,Force play,Fletcher,Winters,Overturned,0:57,http://t.co/6d9hsAWyDJ,1,0,0,2014-mlb-replays.csv,http://t.co/6d9hsAWyDJ,520,0,HTTP 520
+2014-06-28,2014-06-28,0,2014,BOS @ NYY,T6,Girardi,Pedroia,Safe at 2nd,Tag play,Segal,Winters,Overturned,0:30,http://t.co/xTHMq7sROC,1,0,0,2014-mlb-replays.csv,http://t.co/xTHMq7sROC,520,0,HTTP 520
+2014-06-28,2014-06-28,0,2014,CIN @ SF,T6,Bochy,Bruce,Safe at 1st,Force play,Reyburn,Kellogg,Overturned,1:49,http://t.co/iLsAtCsi7g,1,0,0,2014-mlb-replays.csv,http://t.co/iLsAtCsi7g,520,0,HTTP 520
+2014-06-28,2014-06-28,0,2014,CIN @ SF,B8,Bochy,G. Blanco,Out at 2nd,Tag play,Hoberg,Kellogg,Stands,2:38,http://t.co/2NzZnyAIk9,0,0,0,2014-mlb-replays.csv,http://t.co/2NzZnyAIk9,520,0,HTTP 520
+2014-06-28,2014-06-28,0,2014,COL @ MIL,T3,Roenicke,Rutledge,Safe at 1st,Tag play,Bucknor,Scott,Overturned,1:48,http://t.co/EkhN6yaiSH,1,0,0,2014-mlb-replays.csv,http://t.co/EkhN6yaiSH,520,0,HTTP 520
+2014-06-28,2014-06-28,0,2014,COL @ MIL,T8,Weiss,Tulowitzki,Out at 2nd,Tag play,H. Gibson,Scott,Stands,2:18,http://t.co/EH9zTCBUpa,0,0,0,2014-mlb-replays.csv,http://t.co/EH9zTCBUpa,520,0,HTTP 520
+2014-06-28,2014-06-28,0,2014,OAK @ MIA,T9,Redmond,Cespedes,Safe at 2nd,Tag play,West,West,Overturned,3:46,http://t.co/9pBACALOkD,1,0,0,2014-mlb-replays.csv,http://t.co/9pBACALOkD,520,0,HTTP 520
+2014-06-28,2014-06-28,0,2014,STL @ LAD,B2,UMPIRE,D. Gordon,7.13/Out at home,7.13,Everitt,Miller,Confirmed,1:16,http://t.co/Wlvb4RewFO,0,0,0,2014-mlb-replays.csv,http://t.co/Wlvb4RewFO,520,0,HTTP 520
+2014-06-28,2014-06-28,0,2014,WSH @ CHI,B6,Williams,Rizzo,Safe at 1st,Force play,Woodring,Layne,Overturned,1:12,http://t.co/2TOPYvk5H7,1,0,0,2014-mlb-replays.csv,http://t.co/2TOPYvk5H7,520,0,HTTP 520
+2014-06-29,2014-06-29,0,2014,ARI @ SD,B6,Black,Grandal,Out at 1st,Force play,Carlson,Davis,Stands,2:09,http://atmlb.com/1lsJEY0,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/06/29/mlbtv_arisdn_34164201_1800K.mp4,200,2048,
+2014-06-29,2014-06-29,0,2014,ARI @ SD,B6,Gibson,Maybin,Safe at 1st,Force play,Carlson,Davis,Overturned,1:12,http://atmlb.com/Txru0m,1,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/06/29/mlbtv_chator_34165525_1800K.mp4,200,2048,
+2014-06-29,2014-06-29,0,2014,CIN @ SF,T9,Bochy,Cozart,Safe at 2nd,Tag play,Kellogg,Kellogg,Overturned,1:52,http://t.co/jK0Ut8Cf5T,1,0,0,2014-mlb-replays.csv,http://t.co/jK0Ut8Cf5T,520,0,HTTP 520
+2014-06-29,2014-06-29,0,2014,LAA @ KC,T3,Yost,Trout,Safe at 2nd,Force play,Timmons,T. Welke,Overturned,1:12,http://t.co/jgk8vyL0KC,1,0,0,2014-mlb-replays.csv,http://t.co/jgk8vyL0KC,520,0,HTTP 520
+2014-06-29,2014-06-29,0,2014,LAA @ KC,T5,Yost,Calhoun,Safe at 1st,Force play,Fagan,T. Welke,Overturned,1:08,http://t.co/fEBUH0Wyir,1,0,0,2014-mlb-replays.csv,http://t.co/fEBUH0Wyir,520,0,HTTP 520
+2014-06-29,2014-06-29,0,2014,TB @ BAL,B6,Maddon,Hardy,Safe at 1st,Force play,Randazzo,Randazzo,Overturned,0:42,http://t.co/YQSclNFiJ6,1,0,0,2014-mlb-replays.csv,http://t.co/YQSclNFiJ6,520,0,HTTP 520
+2014-06-30,2014-06-30,0,2014,CIN @ SD,B8,Price,E. Cabrera,Retouched 2nd,Touching base,Everitt,Miller,Stands,2:46,http://t.co/6U22M2qen8,0,0,0,2014-mlb-replays.csv,http://t.co/6U22M2qen8,520,0,HTTP 520
+2014-06-30,2014-06-30,0,2014,CLE @ LAD,T3,Francona,Bourn,Out at 1st,Force play,Ad. Johnson,Vanover,Overturned,0:51,http://t.co/o1uKTnDIu4,1,0,0,2014-mlb-replays.csv,http://t.co/o1uKTnDIu4,520,0,HTTP 520
+2014-06-30,2014-06-30,0,2014,NYM @ ATL,B3,Collins,B.J. Upton,Safe at 2nd,Tag play,Iassogna,Scott,Overturned,0:35,http://t.co/PLzeRe0M30,1,0,0,2014-mlb-replays.csv,http://t.co/PLzeRe0M30,520,0,HTTP 520
+2014-06-30,2014-06-30,0,2014,SEA @ HOU,T4,Porter,Ackley,Fair Ball,Fair/foul,Tichenor,T. Welke,Overturned,2:01,http://t.co/yoLvq0fsxt,1,0,0,2014-mlb-replays.csv,http://t.co/yoLvq0fsxt,520,0,HTTP 520
+2014-06-30,2014-06-30,0,2014,TEX @ BAL,T3,Washington,Chirinos,Out at 2nd,Tag play,Basner,Nelson,Overturned,1:41,http://t.co/0GkQ5YHmmG,1,0,0,2014-mlb-replays.csv,http://t.co/0GkQ5YHmmG,520,0,HTTP 520
+2014-07-01,2014-07-1,1,2014,CHI @ BOS,B9,Farrell,Pedroia,Out at 1st,Force play,Meals,Meals,Confirmed,1:06,http://t.co/5vRsybxnDf,0,0,0,2014-mlb-replays.csv,http://t.co/5vRsybxnDf,520,0,HTTP 520
+2014-07-01,2014-07-1,1,2014,CIN @ SD,T9,Black,Frazier,Safe at 2nd,Force play,Fairchild,Miller,Overturned,1:54,http://t.co/vzlxWJp4Xa,1,0,0,2014-mlb-replays.csv,http://t.co/vzlxWJp4Xa,520,0,HTTP 520
+2014-07-01,2014-07-1,1,2014,CLE @ LAD,B4,Francona,Puig,Safe at 2nd,Tag play,Nauert,Vanover,Overturned,1:56,http://t.co/kQXMgX5cho,1,0,0,2014-mlb-replays.csv,http://t.co/kQXMgX5cho,520,0,HTTP 520
+2014-07-01,2014-07-1,1,2014,CLE @ LAD,B4,Mattingly,D. Gordon,Out at home,Tag play,Vanover,Vanover,Stands,1:36,http://t.co/swxnCqux4k,0,0,0,2014-mlb-replays.csv,http://t.co/swxnCqux4k,520,0,HTTP 520
+2014-07-01,2014-07-1,1,2014,PHI @ MIA,T9,Sandberg,C. Hernandez,Out at 1st,Force play,Cooper,Hallion,Confirmed,1:21,http://t.co/RFHKTzmmMv,0,0,0,2014-mlb-replays.csv,http://t.co/RFHKTzmmMv,520,0,HTTP 520
+2014-07-01,2014-07-1,1,2014,SEA @ HOU,T6,UMPIRE,Ackley,7.13/Out at home,7.13,Timmons,T. Welke,Confirmed,2:31,http://t.co/vcamAVrxnO,0,0,0,2014-mlb-replays.csv,http://t.co/vcamAVrxnO,520,0,HTTP 520
+2014-07-01,2014-07-1,1,2014,TEX @ BAL,B1,UMPIRE,Pearce,Home Run,Potential HR,Nelson,Nelson,Confirmed,0:46,http://t.co/kM1vL2PJ7w,0,0,0,2014-mlb-replays.csv,http://t.co/kM1vL2PJ7w,520,0,HTTP 520
+2014-07-02,2014-07-2,1,2014,CIN @ SD,B4,Black,Falu,Missed 3B,Touching base,Miller,Everitt,Stands,2:00,http://t.co/BOsD3H7s0Y,0,0,0,2014-mlb-replays.csv,http://t.co/BOsD3H7s0Y,520,0,HTTP 520
+2014-07-02,2014-07-2,1,2014,COL @ WSH,B2,Williams,Zimmerman,Out at 2nd,Tag play,West,West,Stands,2:54,http://t.co/VQwjxbwk24,0,0,0,2014-mlb-replays.csv,http://t.co/VQwjxbwk24,520,0,HTTP 520
+2014-07-02,2014-07-2,1,2014,COL @ WSH,B7,UMPIRE,Desmond,In play (triple),Potential HR,West,West,Overturned,3:51,http://t.co/PLfQzRbAeU,1,0,0,2014-mlb-replays.csv,http://t.co/PLfQzRbAeU,520,0,HTTP 520
+2014-07-02,2014-07-2,1,2014,KC @ MIN,B5,Gardenhire,Fuld,Out at 2nd,Tag play,Blaser,Kellogg,Overturned,2:03,http://t.co/ZvHvKGLKvJ,1,0,0,2014-mlb-replays.csv,http://t.co/ZvHvKGLKvJ,520,0,HTTP 520
+2014-07-02,2014-07-2,1,2014,MIL @ TOR,B4,Gibbons,Kawasaki,Out at 1st,Tag play,Cuzzi,G. Gibson,Stands,2:27,http://t.co/aPJFRLmvks,0,0,0,2014-mlb-replays.csv,http://t.co/aPJFRLmvks,520,0,HTTP 520
+2014-07-02,2014-07-2,1,2014,MIL @ TOR,B8,Roenicke,Tolleson,Safe at 2nd,Tag play,Wolcott,G. Gibson,Overturned,0:55,http://t.co/IPqaBpXsVX,1,0,0,2014-mlb-replays.csv,http://t.co/IPqaBpXsVX,520,0,HTTP 520
+2014-07-02,2014-07-2,1,2014,STL @ SF,B9,Bochy,Pence,Out at 1st,Force play,Kulpa,DeMuth,Overturned,0:57,http://t.co/5vS3CSt8JO,1,0,0,2014-mlb-replays.csv,http://t.co/5vS3CSt8JO,520,0,HTTP 520
+2014-07-02,2014-07-2,1,2014,TB @ NYY,T4,Maddon,S. Rodriguez,Out at 2nd,Tag play,Little,T. Barrett,Confirmed,1:48,http://t.co/Kbbl2yIcin,0,0,0,2014-mlb-replays.csv,http://t.co/Kbbl2yIcin,520,0,HTTP 520
+2014-07-02,2014-07-2,1,2014,TB @ NYY,T9,UMPIRE,Jennings,Out at 2nd,Force play,Little,T. Barrett,Stands,1:16,http://t.co/nmZP1hKmhL,0,0,0,2014-mlb-replays.csv,http://t.co/nmZP1hKmhL,520,0,HTTP 520
+2014-07-02,2014-07-2,1,2014,TEX @ BAL,T5,Washington,Rios,Out at 1st,Force play,Barry,Nelson,Overturned,1:29,http://t.co/XIe0JQEYq0,1,0,0,2014-mlb-replays.csv,http://t.co/XIe0JQEYq0,520,0,HTTP 520
+2014-07-03,2014-07-3,1,2014,ARI @ PIT,B5,Gibson,G. Polanco,Safe at 2nd,Tag play,Eddings,Joyce,Overturned,4:23,http://t.co/YYbQpJaO0q,1,0,0,2014-mlb-replays.csv,http://t.co/YYbQpJaO0q,520,0,HTTP 520
+2014-07-03,2014-07-3,1,2014,STL @ SF,B5,Matheny,Pence,Safe at 1st,Force play,DeMuth,DeMuth,Stands,2:36,http://t.co/BdqEa5IzMw,0,0,0,2014-mlb-replays.csv,http://t.co/BdqEa5IzMw,520,0,HTTP 520
+2014-07-03,2014-07-3,1,2014,TOR @ OAK,T2,Gibbons,Kawasaki,No tag/Out at home,Tag play,Carapazza,Miller,Overturned,4:32,http://t.co/0Lom6xIwXr,1,1,0,2014-mlb-replays.csv,http://t.co/0Lom6xIwXr,520,0,HTTP 520
+2014-07-04,2014-07-4,1,2014,HOU @ LAA,B3,UMPIRE,Freese,7.13/Out at home,7.13,Hernandez,Vanover,Confirmed,3:05,http://t.co/zIPxK3l4A1,0,0,0,2014-mlb-replays.csv,http://t.co/zIPxK3l4A1,520,0,HTTP 520
+2014-07-04,2014-07-4,1,2014,MIA @ STL,B6,UMPIRE,M. Carpenter,In play (double),Potential HR,Timmons,T. Welke,Confirmed,0:53,http://t.co/dmtTylcLle,0,0,0,2014-mlb-replays.csv,http://t.co/dmtTylcLle,520,0,HTTP 520
+2014-07-04,2014-07-4,1,2014,MIA @ STL,T9,Matheny,R. Johnson,Runners on 2nd and 3rd,Runner pass?,T. Welke,T. Welke,Confirmed,2:04,http://t.co/AfzVTIMCTJ,0,0,0,2014-mlb-replays.csv,http://t.co/AfzVTIMCTJ,520,0,HTTP 520
+2014-07-04,2014-07-4,1,2014,NYY @ MIN,B9,Gardenhire,Ze. Wheeler,Catch (Foul Terr.),Boundary call,Porter,West,Overturned,0:41,http://atmlb.com/1xGEdgx,1,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/07/04/mlbtv_34287887_1800K.mp4,200,2048,
+2014-07-04,2014-07-4,1,2014,TOR @ OAK,T8,Gibbons,Encarnacion,Out at 1st,Force play,Miller,Miller,Confirmed,0:36,http://t.co/dwiKmkJZ9z,0,0,0,2014-mlb-replays.csv,http://t.co/dwiKmkJZ9z,520,0,HTTP 520
+2014-07-05,2014-07-5,1,2014,ARI @ ATL,T1,Gibson,A. Hill,Out at 1st,Force play,Basner,Nelson,Overturned,0:45,http://t.co/h3iubNZUxA,1,0,0,2014-mlb-replays.csv,http://t.co/h3iubNZUxA,520,0,HTTP 520
+2014-07-05,2014-07-5,1,2014,BAL @ BOS,T2,Showalter,Hardy,Out at 2nd,Tag play,Layne,Layne,Overturned,3:50,http://t.co/zLh8aUmytL,1,0,0,2014-mlb-replays.csv,http://t.co/zLh8aUmytL,520,0,HTTP 520
+2014-07-05,2014-07-5,1,2014,MIA @ STL,T4,UMPIRE,Ozuna,7.13/Out at home,7.13,Fagan,T. Welke,Stands,2:08,http://t.co/sPNBLIYWVp,0,0,0,2014-mlb-replays.csv,http://t.co/sPNBLIYWVp,520,0,HTTP 520
+2014-07-05,2014-07-5,1,2014,PHI @ PIT,T4,UMPIRE,Asche,Home Run,Potential HR,Iassogna,Scott,Confirmed,2:03,http://t.co/lZN9JjhNeV,0,0,0,2014-mlb-replays.csv,http://t.co/lZN9JjhNeV,520,0,HTTP 520
+2014-07-05,2014-07-5,1,2014,PHI @ PIT,T5,Sandberg,Rollins,Out at 1st,Force play,Scott,Scott,Stands,1:47,http://t.co/HeLWJBi6ie,0,0,0,2014-mlb-replays.csv,http://t.co/HeLWJBi6ie,520,0,HTTP 520
+2014-07-05,2014-07-5,1,2014,SEA @ CWS,B8,Ventura,M. Sierra,Out at 3rd,Tag play,DeMuth,DeMuth,Overturned,1:00,http://t.co/YegDFwZuGl,1,0,0,2014-mlb-replays.csv,http://t.co/YegDFwZuGl,520,0,HTTP 520
+2014-07-05,2014-07-5,1,2014,SF @ SD,T10,Black,Posey,Safe at 2nd,Tag play,B. Welke,Davidson,Stands,1:30,http://t.co/B0o3GOpHcI,0,0,0,2014-mlb-replays.csv,http://t.co/B0o3GOpHcI,520,0,HTTP 520
+2014-07-05,2014-07-5,1,2014,TOR @ OAK,T8,Gibbons,Me. Cabrera,Out at home,Tag play,Miller,Miller,Stands,2:42,http://t.co/WA7Xrr7ouq,0,0,0,2014-mlb-replays.csv,http://t.co/WA7Xrr7ouq,520,0,HTTP 520
+2014-07-06,2014-07-6,1,2014,BAL @ BOS,T4,Showalter,N. Cruz,Out at 2nd,Tag play,Wendelstedt,Layne,Overturned,0:52,http://t.co/cIV6ihLbaM,1,0,0,2014-mlb-replays.csv,http://t.co/cIV6ihLbaM,520,0,HTTP 520
+2014-07-06,2014-07-6,1,2014,BAL @ BOS,B9,Farrell,Pedroia,Out at 2nd,Tag play,Wendelstedt,Layne,Confirmed,1:15,http://t.co/iC6U7HQzzY,0,0,0,2014-mlb-replays.csv,http://t.co/iC6U7HQzzY,520,0,HTTP 520
+2014-07-06,2014-07-6,1,2014,CHI @ WSH,T3,Williams,R. Sweeney,Safe at 1st,Force play,Schrieber,T. Barrett,Overturned,1:05,http://t.co/hwPpwzhAM5,1,0,0,2014-mlb-replays.csv,http://t.co/hwPpwzhAM5,520,0,HTTP 520
+2014-07-06,2014-07-6,1,2014,CHI @ WSH,B8,Renteria,Span,Safe at 2nd,Tag play,T. Barrett,T. Barrett,Stands,1:33,http://t.co/AEiIoZFvkR,0,0,0,2014-mlb-replays.csv,http://t.co/AEiIoZFvkR,520,0,HTTP 520
+2014-07-06,2014-07-6,1,2014,LAD @ COL,T5,Mattingly,A. Gonzalez,Out at home,Tag play,Kellogg,Kellogg,Overturned,1:28,http://t.co/us1MOZbCWu,1,1,0,2014-mlb-replays.csv,http://t.co/us1MOZbCWu,520,0,HTTP 520
+2014-07-06,2014-07-6,1,2014,MIL @ CIN,B2,UMPIRE,R. Santiago,In play (inside-the-park HR),Fan Interference,Meals,Meals,Overturned,3:34,http://t.co/AngkZOZNGe,1,0,0,2014-mlb-replays.csv,http://t.co/AngkZOZNGe,520,0,HTTP 520
+2014-07-06,2014-07-6,1,2014,PHI @ PIT,B8,UMPIRE,McCutchen,In play (triple),Fan Interference,Iassogna,Scott,Overturned,1:52,http://t.co/wrREJV73UC,1,0,0,2014-mlb-replays.csv,http://t.co/wrREJV73UC,520,0,HTTP 520
+2014-07-06,2014-07-6,1,2014,SF @ SD,T7,Bochy,Conrad,Out at 2nd,Force play,Davidson,Davidson,Stands,2:51,http://t.co/zuolhFjQtZ,0,0,0,2014-mlb-replays.csv,http://t.co/zuolhFjQtZ,520,0,HTTP 520
+2014-07-06,2014-07-6,1,2014,TB @ DET,T1,UMPIRE,Joyce,In play (triple),Potential HR,Cuzzi,G. Gibson,Overturned,0:40,http://t.co/3Awz9sRkTO,1,0,0,2014-mlb-replays.csv,http://t.co/3Awz9sRkTO,520,0,HTTP 520
+2014-07-07,2014-07-7,1,2014,ATL @ NYM,B9,Collins,A. Simmons,Out at 2nd,Force play,Timmons,Everitt,Overturned,1:59,http://t.co/kNYdSvMoa5,1,0,0,2014-mlb-replays.csv,http://t.co/kNYdSvMoa5,520,0,HTTP 520
+2014-07-07,2014-07-7,1,2014,CHI @ CIN,B7,Renteria,Frazier,Safe at 1st,Force play,Winters,Winters,Overturned,0:41,http://t.co/fQ7pJGjYMb,1,0,0,2014-mlb-replays.csv,http://t.co/fQ7pJGjYMb,520,0,HTTP 520
+2014-07-07,2014-07-7,1,2014,CWS @ BOS,T5,Farrell,Eaton,Safe at 1st,Tag play,Joyce,Joyce,Overturned,1:34,http://t.co/36101RnNun,1,0,0,2014-mlb-replays.csv,http://t.co/36101RnNun,520,0,HTTP 520
+2014-07-07,2014-07-7,1,2014,HOU @ TEX,T4,Porter,Altuve,Out at 1st,Force play,Carapazza,Miller,Overturned,0:48,http://t.co/6rp8RRqpF0,1,0,0,2014-mlb-replays.csv,http://t.co/6rp8RRqpF0,520,0,HTTP 520
+2014-07-07,2014-07-7,1,2014,SF @ OAK,B5,Bochy,Gentry,HBP,HBP,Nauert,Hernandez,Stands,2:01,http://t.co/BdQf8NQwAl,0,0,0,2014-mlb-replays.csv,http://t.co/BdQf8NQwAl,520,0,HTTP 520
+2014-07-07,2014-07-7,1,2014,SF @ OAK,T7,UMPIRE,Pence,Out at 1st,Force play,Hernandez,Hernandez,Confirmed,0:53,http://t.co/yJa4fGBaVf,0,0,0,2014-mlb-replays.csv,http://t.co/yJa4fGBaVf,520,0,HTTP 520
+2014-07-07,2014-07-7,1,2014,TOR @ LAA,B5,UMPIRE,Iannetta,Fan Interference (double),Fan Interference,Wolf,Gorman,Confirmed,1:28,http://t.co/2SAJeMepqD,0,0,0,2014-mlb-replays.csv,http://t.co/2SAJeMepqD,520,0,HTTP 520
+2014-07-08,2014-07-8,1,2014,HOU @ TEX,T7,Porter,Springer,Out at 2nd,Tag Play,Hamari,Miller,Confirmed,2:04,http://atmlb.com/1k6s0tL,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/07/09/mlbtv_34417843_1800K.mp4,200,2048,
+2014-07-08,2014-07-8,1,2014,LAD @ DET,B2,Ausmus,T. Hunter,Out at 2nd,Tag Play,Little,T. Barrett,Overturned,2:40,http://t.co/AWlTQOI7PG,1,0,0,2014-mlb-replays.csv,http://t.co/AWlTQOI7PG,520,0,HTTP 520
+2014-07-08,2014-07-8,1,2014,MIA @ ARI,B2,Redmond,Gosewisch,Safe at 1st,Force play,Tumpane,Davidson,Stands,1:22,http://t.co/NmS2aHvRvV,0,0,0,2014-mlb-replays.csv,http://t.co/NmS2aHvRvV,520,0,HTTP 520
+2014-07-08,2014-07-8,1,2014,MIN @ SEA,B3,McClendon,J. Jones,Out at 1st,Force play,Morales,Scott,Overturned,1:17,http://atmlb.com/1jqXzDF,1,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/07/09/mlbtv_34420623_1800K.mp4,200,2048,
+2014-07-08,2014-07-8,1,2014,PIT @ STL,T5,Hurdle,N. Walker,Out at 3rd,Tag Play,Porter,West,Stands,1:43,http://t.co/zAplNtbB0w,0,0,0,2014-mlb-replays.csv,http://t.co/zAplNtbB0w,520,0,HTTP 520
+2014-07-08,2014-07-8,1,2014,SF @ OAK,T4,Bochy,Sandoval,Out at 1st,Force play,Ripperger,Hernandez,Stands,1:03,http://t.co/tZsf2rD4xR,0,0,0,2014-mlb-replays.csv,http://t.co/tZsf2rD4xR,520,0,HTTP 520
+2014-07-08,2014-07-8,1,2014,TOR @ LAA,T3,Scioscia,Reyes,Safe at 1st,Tag Play,Wolf,Gorman,Overturned,3:07,http://t.co/B4G8YEYiAj,1,0,0,2014-mlb-replays.csv,http://t.co/B4G8YEYiAj,520,0,HTTP 520
+2014-07-08,2014-07-8,1,2014,TOR @ LAA,B7,Gibbons,Aybar,Safe at 1st,Force play,Wolf,Gorman,Confirmed,1:29,http://atmlb.com/1syAJKq,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/07/09/mlbtv_34423933_1800K.mp4,200,2048,
+2014-07-09,2014-07-9,1,2014,ATL @ NYM,T1,Collins,B.J. Upton,Safe at 2nd,Tag play,Tichenor,Everitt,Overturned,1:02,http://t.co/avRTvrT0sE,1,0,0,2014-mlb-replays.csv,http://t.co/avRTvrT0sE,520,0,HTTP 520
+2014-07-09,2014-07-9,1,2014,CHI @ CIN,T8,Hyde (Renteria),S. Castro,Out at 1st,Force play,Muchlinski,Winters,Stands,1:35,http://t.co/7tccFMFMKE,0,0,0,2014-mlb-replays.csv,http://t.co/7tccFMFMKE,520,0,HTTP 520
+2014-07-09,2014-07-9,1,2014,HOU @ TEX,T6,Washington,Corporan,Fair Ball,Fair/foul,Carapazza,Miller,Confirmed,0:41,http://atmlb.com/1sIUpep,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/07/10/mlbtv_34450697_1800K.mp4,200,2048,
+2014-07-09,2014-07-9,1,2014,NYY @ CLE,T10,Girardi,B. Roberts,Out at 1st,Force play,Knight,Culbreth,Overturned,2:26,http://atmlb.com/1nmLwqu,1,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/07/10/mlbtv_34449153_1800K.mp4,200,2048,
+2014-07-09,2014-07-9,1,2014,PIT @ STL,B1,Matheny,M. Adams,Out at 3rd,Tag play,Porter,West,Confirmed,1:06,http://atmlb.com/1s5c3M1,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/07/10/mlbtv_34444305_1800K.mp4,200,2048,
+2014-07-09,2014-07-9,1,2014,SD @ COL,T4,Weiss,Grandal,Safe at 2nd,Tag Play,Kulpa,Kulpa,Overturned,1:34,http://t.co/ktbWlD8yKZ,1,0,0,2014-mlb-replays.csv,http://t.co/ktbWlD8yKZ,520,0,HTTP 520
+2014-07-09,2014-07-9,1,2014,SD @ COL,T4,Weiss,Amarista,Safe at 1st,Force play,L. Barrett,Kulpa,Stands,2:20,http://t.co/3b6UTfHJ2W,0,0,0,2014-mlb-replays.csv,http://t.co/3b6UTfHJ2W,520,0,HTTP 520
+2014-07-09,2014-07-9,1,2014,SD @ COL,T5,UMPIRE,Grandal,Foul Ball,Fair/foul,L. Barrett,Kulpa,Stands,1:54,http://t.co/u7RHRZREAz,0,0,0,2014-mlb-replays.csv,http://t.co/u7RHRZREAz,520,0,HTTP 520
+2014-07-09,2014-07-9,1,2014,TOR @ LAA,T1,UMPIRE,Reyes,7.13/Out at home,7.13,Wolf,Gorman,Stands,1:59,http://t.co/u1FgCuZbXo,0,0,0,2014-mlb-replays.csv,http://t.co/u1FgCuZbXo,520,0,HTTP 520
+2014-07-09,2014-07-9,1,2014,TOR @ LAA,T3,Scioscia,Me. Cabrera,Safe at 1st,Force play,Gorman,Gorman,Overturned,1:02,http://t.co/fDPClBLKus,1,0,0,2014-mlb-replays.csv,http://t.co/fDPClBLKus,520,0,HTTP 520
+2014-07-09,2014-07-9,1,2014,TOR @ LAA,B3,UMPIRE,Trout,7.13/Out at home,7.13,Wolf,Gorman,Confirmed,1:29,http://t.co/EGo3URduvj,0,0,0,2014-mlb-replays.csv,http://t.co/EGo3URduvj,520,0,HTTP 520
+2014-07-09,2014-07-9,1,2014,TOR @ LAA,B7,Gibbons,Trout,Safe at 1st,Force play,Gorman,Gorman,Confirmed,0:39,http://t.co/vhdIP9I0K1,0,0,0,2014-mlb-replays.csv,http://t.co/vhdIP9I0K1,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,ATL @ NYM,T8,Collins,Heyward,Safe at 1st,Force play,Tichenor,Everitt,Overturned,1:19,http://t.co/wd9ydvKgSO,1,0,0,2014-mlb-replays.csv,http://t.co/wd9ydvKgSO,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,CHI @ CIN,T12,UMPIRE,Valbuena,7.13/Out at home,7.13,Wegner,Winters,Confirmed,2:27,http://t.co/vmnRYBq1GZ,0,0,0,2014-mlb-replays.csv,http://t.co/vmnRYBq1GZ,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,CWS @ BOS,T9,Ventura,Al. Ramirez,Out at 1st,Force play,Blaser,Joyce,Overturned,1:57,http://t.co/gOjSJlbkyj,1,0,0,2014-mlb-replays.csv,http://t.co/gOjSJlbkyj,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,MIN @ SEA,B1,Gardenhire,J. Jones,Safe at 1st,Tag play,Barksdale,Scott,Overturned,0:47,http://t.co/O671YmXm66,1,0,0,2014-mlb-replays.csv,http://t.co/O671YmXm66,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,MIN @ SEA,B7,Gardenhire,J. Jones,Safe at 3rd,Tag play,Danley,Scott,Overturned,3:00,http://t.co/fElxzz0nxe,1,0,0,2014-mlb-replays.csv,http://t.co/fElxzz0nxe,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,NYY @ CLE,B8,UMPIRE,R. Perez,In play,Potential HR,Woodring,Culbreth,Overturned,2:25,http://t.co/Juj2rmpdBS,1,0,0,2014-mlb-replays.csv,http://t.co/Juj2rmpdBS,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,OAK @ SF,B6,Bochy,Pence,Out at 1st,Force play,Nauert,Hernandez,Overturned,2:12,http://t.co/AIPGcYLXcr,1,0,0,2014-mlb-replays.csv,http://t.co/AIPGcYLXcr,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,OAK @ SF,B9,Melvin,Blanco,Safe at 1st,Force play,Nauert,Hernandez,Overturned,3:06,http://t.co/M930wmcGM7,1,0,0,2014-mlb-replays.csv,http://t.co/M930wmcGM7,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,PHI @ MIL,T8,Sandberg,R. Howard,Ground-Rule Double,Boundary call,Kellogg,Kellogg,Confirmed,1:05,http://t.co/tupkgBvzn1,0,0,0,2014-mlb-replays.csv,http://t.co/tupkgBvzn1,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,PHI @ MIL,T8,Roenicke,C. Hernandez,Safe at 1st,Force play,O'Nora,Kellogg,Overturned,0:55,http://t.co/Xt9MvNlDGE,1,0,0,2014-mlb-replays.csv,http://t.co/Xt9MvNlDGE,520,0,HTTP 520
+2014-07-10,2014-07-10,0,2014,WSH @ BAL,T4,Williams,LaRoche,Ball (not HBP),HBP,Bucknor,Cederstrom,Overturned,0:58,http://t.co/oACV9yTxN2,1,0,0,2014-mlb-replays.csv,http://t.co/oACV9yTxN2,520,0,HTTP 520
+2014-07-11,2014-07-11,0,2014,CWS @ CLE,B5,Francona,A. Cabrera,Out at 2nd,Tag play,Iassogna,Cederstrom,Overturned,1:32,http://t.co/F3FHrPujDg,1,0,0,2014-mlb-replays.csv,http://t.co/F3FHrPujDg,520,0,HTTP 520
+2014-07-11,2014-07-11,0,2014,DET @ KC,B4,Yost,S. Perez,Out at 1st,Tag play,Carapazza,Miller,Stands,1:51,http://t.co/pqcQlOdV8b,0,0,0,2014-mlb-replays.csv,http://t.co/pqcQlOdV8b,520,0,HTTP 520
+2014-07-11,2014-07-11,0,2014,TOR @ TB,T8,Maddon,Mastroianni,Safe at 1st,Force play,Everitt,Everitt,Stands,3:45,http://t.co/OWne7qxgUo,0,0,0,2014-mlb-replays.csv,http://t.co/OWne7qxgUo,520,0,HTTP 520
+2014-07-12,2014-07-12,0,2014,ARI @ SF,B7,Gibson,G. Blanco,Safe at 1st,Tag play,Morales,Scott,Overturned,1:47,http://t.co/CC2UlG9uJR,1,0,0,2014-mlb-replays.csv,http://t.co/CC2UlG9uJR,520,0,HTTP 520
+2014-07-12,2014-07-12,0,2014,ATL @ CHI,B8,Gonzalez,Coghlan,Safe at 2nd,Force play,Bellino,Kellogg,Overturned,2:41,http://t.co/a9FSSiDP0i,1,0,0,2014-mlb-replays.csv,http://t.co/a9FSSiDP0i,520,0,HTTP 520
+2014-07-12,2014-07-12,0,2014,BOS @ HOU,T9,Farrell,Pedroia,Out at 1st,Force play,Foster,West,Confirmed,2:18,http://t.co/VXJHvAA1F1,0,0,0,2014-mlb-replays.csv,http://t.co/VXJHvAA1F1,520,0,HTTP 520
+2014-07-12,2014-07-12,0,2014,CWS @ CLE,B7,Francona,Viciedo,Catch,Catch/no catch,Nauert,Cederstrom,Overturned,1:58,http://t.co/hZjT15UExt,1,0,0,2014-mlb-replays.csv,http://t.co/hZjT15UExt,520,0,HTTP 520
+2014-07-12,2014-07-12,0,2014,DET @ KC,T9,Ausmus,Castellanos,Out at 1st,Force play,Miller,Miller,Overturned,1:07,http://t.co/sNIKkC2QAZ,1,0,0,2014-mlb-replays.csv,http://t.co/sNIKkC2QAZ,520,0,HTTP 520
+2014-07-12,2014-07-12,0,2014,MIN @ COL,B3,UMPIRE,Blackmon,7.13/Out at home,7.13,Hernandez,Hernandez,Confirmed,2:08,http://t.co/AWOGYfVoeC,0,0,0,2014-mlb-replays.csv,http://t.co/AWOGYfVoeC,520,0,HTTP 520
+2014-07-12,2014-07-12,0,2014,OAK @ SEA,B8,McClendon,Bloomquist,Out at home,Tag play,Davidson,Davidson,Stands,3:00,http://t.co/5YtqZL3YQ6,0,0,0,2014-mlb-replays.csv,http://t.co/5YtqZL3YQ6,520,0,HTTP 520
+2014-07-12,2014-07-12,0,2014,SD @ LAD,B4,Mattingly,A. Gonzalez,Foul Ball,Fair/foul,Randazzo,Gorman,Stands,2:07,http://t.co/onDgaqnLV2,0,0,0,2014-mlb-replays.csv,http://t.co/onDgaqnLV2,520,0,HTTP 520
+2014-07-12,2014-07-12,0,2014,STL @ MIL,T5,Roenicke,M. Carpenter,Safe at 1st,Force play,Nelson,Nelson,Overturned,1:21,http://t.co/y1CR4m2zY7,1,0,0,2014-mlb-replays.csv,http://t.co/y1CR4m2zY7,520,0,HTTP 520
+2014-07-12,2014-07-12,0,2014,TOR @ TB,T5,Gibbons,Reyes,Out at 2nd,Tag play,Timmons,Everitt,Confirmed,1:33,http://t.co/3bGDBBAWVj,0,0,0,2014-mlb-replays.csv,http://t.co/3bGDBBAWVj,520,0,HTTP 520
+2014-07-13,2014-07-13,0,2014,ATL @ CHI,B1,Gonzalez,Coghlan,Safe at 2nd,Tag play,O'Nora,Kellogg,Overturned,1:11,http://t.co/ZBe8EfgN6k,1,0,0,2014-mlb-replays.csv,http://t.co/ZBe8EfgN6k,520,0,HTTP 520
+2014-07-13,2014-07-13,0,2014,ATL @ CHI,B8,Renteria,S. Castro,Out at home,Tag play,Kellogg,Kellogg,Confirmed,1:31,http://t.co/y5Sqqsez34,0,0,0,2014-mlb-replays.csv,http://t.co/y5Sqqsez34,520,0,HTTP 520
+2014-07-13,2014-07-13,0,2014,MIA @ NYM,B4,Redmond,Lagares,Safe at 1st,Force play,T. Barrett,T. Barrett,Overturned,1:01,http://t.co/1olotA37Pk,1,0,0,2014-mlb-replays.csv,http://t.co/1olotA37Pk,520,0,HTTP 520
+2014-07-13,2014-07-13,0,2014,MIN @ COL,B4,Weiss,C. Gonzalez,Out at 1st,Force play,Guccione,Hernandez,Confirmed,1:00,http://t.co/aUBGr3PLSr,0,0,0,2014-mlb-replays.csv,http://t.co/aUBGr3PLSr,520,0,HTTP 520
+2014-07-13,2014-07-13,0,2014,SD @ LAD,T7,Mattingly,Goebbert,Safe at 1st,Force play,Gorman,Gorman,Stands,3:31,http://t.co/zYJn3wXKpK,0,0,0,2014-mlb-replays.csv,http://t.co/zYJn3wXKpK,520,0,HTTP 520
+2014-07-13,2014-07-13,0,2014,TOR @ TB,B6,Maddon,Y. Escobar,Out at home,Tag play,Barber,Everitt,Overturned,1:54,http://t.co/6vShiIWmu0,1,1,0,2014-mlb-replays.csv,http://t.co/6vShiIWmu0,520,0,HTTP 520
+2014-07-18,2014-07-18,0,2014,COL @ PIT,T5,Hurdle,Dickerson,Safe at 2nd,Tag play,Hudson,T. Welke,Stands,2:17,http://t.co/XYMPHjCX79,0,0,0,2014-mlb-replays.csv,http://t.co/XYMPHjCX79,520,0,HTTP 520
+2014-07-18,2014-07-18,0,2014,COL @ PIT,B8,Weiss,G. Polanco,Safe at 1st,Force play,T. Welke,T. Welke,Overturned,1:23,http://t.co/8jAQvAlk0b,1,0,0,2014-mlb-replays.csv,http://t.co/8jAQvAlk0b,520,0,HTTP 520
+2014-07-18,2014-07-18,0,2014,HOU @ CWS,B1,Ventura,Eaton,Out at home,Tag play,Bellino,Kellogg,Confirmed,1:50,http://t.co/VXCGZGUu8y,0,0,0,2014-mlb-replays.csv,http://t.co/VXCGZGUu8y,520,0,HTTP 520
+2014-07-18,2014-07-18,0,2014,HOU @ CWS,T5,UMPIRE,J. Castro,Foul Ball,Potential HR,O'Nora,Kellogg,Confirmed,1:27,http://t.co/PFtH8eo9WT,0,0,0,2014-mlb-replays.csv,http://t.co/PFtH8eo9WT,520,0,HTTP 520
+2014-07-18,2014-07-18,0,2014,MIL @ WSH,T7,Roenicke,Segura,Out at 1st,Force play,Carapazza,Miller,Overturned,1:23,http://t.co/R7kxfWVHco,1,0,0,2014-mlb-replays.csv,http://t.co/R7kxfWVHco,520,0,HTTP 520
+2014-07-18,2014-07-18,0,2014,SEA @ LAA,T10,Scioscia,Cano,Safe at 2nd,Tag play,Schrieber,T. Barrett,Overturned,1:02,http://t.co/fX0IffsyXH,1,0,0,2014-mlb-replays.csv,http://t.co/fX0IffsyXH,520,0,HTTP 520
+2014-07-18,2014-07-18,0,2014,SEA @ LAA,B16,McClendon,Trout,Double,Touching base,Schrieber,T. Barrett,Confirmed,0:46,http://t.co/BapiZaPCi6,0,0,0,2014-mlb-replays.csv,http://t.co/BapiZaPCi6,520,0,HTTP 520
+2014-07-18,2014-07-18,0,2014,TB @ MIN,T5,Maddon,Kiermaier,Out at 1st,Force play,DiMuro,Wendelstedt,Overturned,0:54,http://t.co/U8us5jpFkf,1,0,0,2014-mlb-replays.csv,http://t.co/U8us5jpFkf,520,0,HTTP 520
+2014-07-18,2014-07-18,0,2014,TB @ MIN,B5,Maddon,Dozier,HBP,HBP,Wendelstedt,Wendelstedt,Stands,2:55,http://atmlb.com/1qXc5C7,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/07/19/mlbtv_34603965_1800K.mp4,200,2048,
+2014-07-19,2014-07-19,0,2014,CLE @ DET,T1,UMPIRE,Brantley,In play,Potential HR,Diaz,Everitt,Confirmed,0:42,http://t.co/LnQyj3jzjf,0,0,0,2014-mlb-replays.csv,http://t.co/LnQyj3jzjf,520,0,HTTP 520
+2014-07-19,2014-07-19,0,2014,COL @ PIT,T6,Hurdle,Blackmon,Safe at 2nd,Tag play,Fagan,T. Welke,Overturned,0:49,http://t.co/jRA9sRGPBo,1,0,0,2014-mlb-replays.csv,http://t.co/jRA9sRGPBo,520,0,HTTP 520
+2014-07-19,2014-07-19,0,2014,COL @ PIT,B8,UMPIRE,McCutchen,7.13/Out at home,7.13,T. Welke,T. Welke,Confirmed,0:45,http://t.co/zG5Uog8wVT,0,0,0,2014-mlb-replays.csv,http://t.co/zG5Uog8wVT,520,0,HTTP 520
+2014-07-19,2014-07-19,0,2014,HOU @ CWS,B3,Porter,Beckham,HBP,HBP,O'Nora,O'Nora,Overturned,3:59,http://t.co/J38o91OKpZ,1,0,0,2014-mlb-replays.csv,http://t.co/J38o91OKpZ,520,0,HTTP 520
+2014-07-19,2014-07-19,0,2014,HOU @ CWS,B4,Ventura,Al. Ramirez,Out at 1st,Force play,Pattillo,O'Nora,Overturned,0:24,http://t.co/vUHDTvWf3u,1,0,0,2014-mlb-replays.csv,http://t.co/vUHDTvWf3u,520,0,HTTP 520
+2014-07-19,2014-07-19,0,2014,HOU @ CWS,B4,Porter,J. Abreu,Safe at 2nd,Force play,Reyburn,O'Nora,Overturned,1:17,http://t.co/8gaYFy0NyQ,1,0,0,2014-mlb-replays.csv,http://t.co/8gaYFy0NyQ,520,0,HTTP 520
+2014-07-19,2014-07-19,0,2014,MIL @ WSH,B1,UMPIRE,Desmond,7.13/Out at home,7.13,Carapazza,Miller,Confirmed,2:02,http://t.co/lCOE7ir61L,0,0,0,2014-mlb-replays.csv,http://t.co/lCOE7ir61L,520,0,HTTP 520
+2014-07-19,2014-07-19,0,2014,PHI @ ATL,B7,Sandberg,C. Johnson,Safe at 2nd,Tag play,Wolf,Davis,Stands,1:33,http://t.co/zenqsQkhoa,0,0,0,2014-mlb-replays.csv,http://t.co/zenqsQkhoa,520,0,HTTP 520
+2014-07-19,2014-07-19,0,2014,TEX @ TOR,B3,Washington,Reyes,Safe at 2nd,Force play,Conroy,B. Welke,Overturned,1:00,http://t.co/2rTnq192iX,1,0,0,2014-mlb-replays.csv,http://t.co/2rTnq192iX,520,0,HTTP 520
+2014-07-20,2014-07-20,0,2014,CHI @ ARI,B7,Gibson,Trumbo,Out at 2nd,Tag play,Blaser,Joyce,Overturned,2:23,http://t.co/QeRbRC99KA,1,0,0,2014-mlb-replays.csv,http://t.co/QeRbRC99KA,520,0,HTTP 520
+2014-07-20,2014-07-20,0,2014,CLE @ DET,T8,Francona,Kipnis,Out at 2nd,Tag play,Barry,Everitt,Confirmed,0:57,http://t.co/1i3AARcp7X,0,0,0,2014-mlb-replays.csv,http://t.co/1i3AARcp7X,520,0,HTTP 520
+2014-07-20,2014-07-20,0,2014,SF @ MIA,T8,Bochy,Posey,Out at 1st,Force play,Rackley,Gorman,Confirmed,1:13,http://t.co/EGN9RNvzls,0,0,0,2014-mlb-replays.csv,http://t.co/EGN9RNvzls,520,0,HTTP 520
+2014-07-20,2014-07-20,0,2014,TEX @ TOR,T6,Washington,L. Martin,Out at 1st,Force play,Conroy,B. Welke,Overturned,0:51,http://t.co/GsJVPMxLYT,1,0,0,2014-mlb-replays.csv,http://t.co/GsJVPMxLYT,520,0,HTTP 520
+2014-07-21,2014-07-21,0,2014,CIN @ MIL,B4,UMPIRE,C. Gomez,Ground-Rule Double,Potential HR,Segal,Gorman,Confirmed,1:09,http://t.co/3WXHBsPewh,0,0,0,2014-mlb-replays.csv,http://t.co/3WXHBsPewh,520,0,HTTP 520
+2014-07-21,2014-07-21,0,2014,CIN @ MIL,T6,Roenicke,Schumaker,Safe at 2nd,Tag play,Segal,Gorman,Stands,3:19,http://t.co/VtKp5lIIgv,0,0,0,2014-mlb-replays.csv,http://t.co/VtKp5lIIgv,520,0,HTTP 520
+2014-07-21,2014-07-21,0,2014,CLE @ MIN,B2,UMPIRE,Colabello,Home Run,Potential HR,Reyburn,O'Nora,Overturned,1:02,http://t.co/vXeKl0Ld3b,1,1,0,2014-mlb-replays.csv,http://t.co/vXeKl0Ld3b,520,0,HTTP 520
+2014-07-21,2014-07-21,0,2014,DET @ ARI,T7,UMPIRE,Mi. Cabrera,In play (out),Potential HR,Gonzalez,Culbreth,Confirmed,3:31,http://atmlb.com/1kaIVAP,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/07/22/mlbtv_detari_34700723_1800K.mp4,200,2048,
+2014-07-21,2014-07-21,0,2014,DET @ ARI,B7,Gibson,Inciarte,Out at 1st,Tag play,Culbreth,Culbreth,Confirmed,1:16,http://t.co/aom8VhlUao,0,0,0,2014-mlb-replays.csv,http://t.co/aom8VhlUao,520,0,HTTP 520
+2014-07-21,2014-07-21,0,2014,KC @ CWS,B6,UMPIRE,Flowers,Foul Ball,Potential HR,Muchlinski,Winters,Confirmed,1:27,http://t.co/y8SrMAcFjw,0,0,0,2014-mlb-replays.csv,http://t.co/y8SrMAcFjw,520,0,HTTP 520
+2014-07-21,2014-07-21,0,2014,LAD @ PIT,T1,Hurdle,A. Gonzalez,Safe at 2nd,Tag play,Diaz,Nelson,Stands,2:31,http://t.co/zL8jsCsyE4,0,0,0,2014-mlb-replays.csv,http://t.co/zL8jsCsyE4,520,0,HTTP 520
+2014-07-21,2014-07-21,0,2014,SF @ PHI,T2,UMPIRE,Morse,7.13/Out at home,7.13,Miller,Miller,Confirmed,1:32,http://t.co/ttYrSKwvcr,0,0,0,2014-mlb-replays.csv,http://t.co/ttYrSKwvcr,520,0,HTTP 520
+2014-07-21,2014-07-21,0,2014,SF @ PHI,B7,Sandberg,Asche,Out at 1st,Force play,Fairchild,Miller,Overturned,1:00,http://t.co/8mXHCrrNeE,1,0,0,2014-mlb-replays.csv,http://t.co/8mXHCrrNeE,520,0,HTTP 520
+2014-07-21,2014-07-21,0,2014,SF @ PHI,B9,Sandberg,D. Brown,Out at 1st,Force play,Fairchild,Miller,Stands,1:34,http://t.co/wyxYch4GAh,0,0,0,2014-mlb-replays.csv,http://t.co/wyxYch4GAh,520,0,HTTP 520
+2014-07-21,2014-07-21,0,2014,TEX @ NYY,T7,Washington,A. Beltre,Out at 1st,Force play,Wolcott,Scott,Overturned,0:26,http://t.co/QxfF2zw8pe,1,0,0,2014-mlb-replays.csv,http://t.co/QxfF2zw8pe,520,0,HTTP 520
+2014-07-22,2014-07-22,0,2014,CIN @ MIL,T7,Roenicke,Cozart,HBP,HBP,Gorman,Gorman,Confirmed,1:15,http://t.co/FLnLKXfLCO,0,0,0,2014-mlb-replays.csv,http://t.co/FLnLKXfLCO,520,0,HTTP 520
+2014-07-22,2014-07-22,0,2014,HOU @ OAK,T10,Melvin,Altuve,Safe at 2nd,Tag play,Schrieber,Marquez,Overturned,1:04,http://t.co/eZFFPelP75,1,0,0,2014-mlb-replays.csv,http://t.co/eZFFPelP75,520,0,HTTP 520
+2014-07-22,2014-07-22,0,2014,KC @ CWS,T5,Yost,Dyson,Out at 1st,Force play,Fletcher,Winters,Stands,2:24,http://t.co/fRPzMsUIYe,0,0,0,2014-mlb-replays.csv,http://t.co/fRPzMsUIYe,520,0,HTTP 520
+2014-07-22,2014-07-22,0,2014,KC @ CWS,B5,Ventura,Al. Ramirez,Out at 2nd,Tag play,Muchlinski,Winters,Overturned,2:48,http://t.co/6iFTug0cDQ,1,0,0,2014-mlb-replays.csv,http://t.co/6iFTug0cDQ,520,0,HTTP 520
+2014-07-22,2014-07-22,0,2014,LAD @ PIT,T1,Hurdle,J. Turner,Safe at 1st,Force play,Diaz,Nelson,Overturned,0:47,http://t.co/t4vqulmznq,1,0,0,2014-mlb-replays.csv,http://t.co/t4vqulmznq,520,0,HTTP 520
+2014-07-22,2014-07-22,0,2014,LAD @ PIT,B7,Banister (Hurdle),R. Martin,Out at 2nd,Force play,Carlson,Nelson,Overturned,1:19,http://t.co/SdhAIfP7X9,1,0,0,2014-mlb-replays.csv,http://t.co/SdhAIfP7X9,520,0,HTTP 520
+2014-07-22,2014-07-22,0,2014,TB @ STL,B6,Matheny,Holliday,Foul Ball,Fair/foul,Bellino,Danley,Confirmed,1:47,http://t.co/2f1qNwaYuB,0,0,0,2014-mlb-replays.csv,http://t.co/2f1qNwaYuB,520,0,HTTP 520
+2014-07-22,2014-07-22,0,2014,WSH @ COL,T2,Williams,Harper,Out at 3rd,Tag play,Conroy,Meals,Stands,2:23,http://t.co/WTKrnIz7KK,0,0,0,2014-mlb-replays.csv,http://t.co/WTKrnIz7KK,520,0,HTTP 520
+2014-07-23,2014-07-23,0,2014,DET @ ARI,T4,Ausmus,An. Romine,Out at 1st,Force play,Reynolds,Culbreth,Overturned,1:52,http://t.co/stxYZLxR9g,1,0,0,2014-mlb-replays.csv,http://t.co/stxYZLxR9g,520,0,HTTP 520
+2014-07-23,2014-07-23,0,2014,HOU @ OAK,B1,Melvin,Jaso,Out at 2nd,Force play,Everitt,Marquez,Overturned,1:45,http://t.co/m1giScTbvG,1,0,0,2014-mlb-replays.csv,http://t.co/m1giScTbvG,520,0,HTTP 520
+2014-07-23,2014-07-23,0,2014,LAD @ PIT,T8,Hurdle,Puig,Safe at 1st,Force play,Carlson,Nelson,Stands,2:00,http://t.co/wvtQkbV1rB,0,0,0,2014-mlb-replays.csv,http://t.co/wvtQkbV1rB,520,0,HTTP 520
+2014-07-23,2014-07-23,0,2014,NYM @ SEA,T1,McClendon,"E. Young, Jr.",Safe at 2nd,Tag Play,Eddings,Joyce,Stands,1:46,http://t.co/E4aetKoca1,0,0,0,2014-mlb-replays.csv,http://t.co/E4aetKoca1,520,0,HTTP 520
+2014-07-23,2014-07-23,0,2014,NYM @ SEA,B8,Collins,Bloomquist,Safe at 1st,Force play,Hudson,Joyce,Overturned,0:43,http://t.co/tJZTDEZE8C,1,0,0,2014-mlb-replays.csv,http://t.co/tJZTDEZE8C,520,0,HTTP 520
+2014-07-23,2014-07-23,0,2014,TEX @ NYY,T1,Washington,Rios,Out at 2nd,Tag Play,Bucknor,Scott,Confirmed,1:15,http://t.co/qBJMkTktm3,0,0,0,2014-mlb-replays.csv,http://t.co/qBJMkTktm3,520,0,HTTP 520
+2014-07-24,2014-07-24,0,2014,BAL @ SEA,B1,UMPIRE,J. Jones,Out at home,7.13,Reynolds,Culbreth,Stands,4:04,http://t.co/bUAaMbO4oU,0,0,0,2014-mlb-replays.csv,http://t.co/bUAaMbO4oU,520,0,HTTP 520
+2014-07-24,2014-07-24,0,2014,CLE @ KC,B11,Francona,Aoki,Safe at 1st,Force play,Baker,Meals,Overturned,2:11,http://t.co/96AHQNXkpt,1,0,0,2014-mlb-replays.csv,http://t.co/96AHQNXkpt,520,0,HTTP 520
+2014-07-24,2014-07-24,0,2014,CLE @ KC,B14,Francona,L. Cain,Safe at 2nd,Tag Play,Meals,Meals,Confirmed,1:14,http://t.co/hSgdclnXAd,0,0,0,2014-mlb-replays.csv,http://t.co/hSgdclnXAd,520,0,HTTP 520
+2014-07-24,2014-07-24,0,2014,MIA @ ATL,B6,Redmond,J. Upton,Safe at 1st,Force play,Drake,West,Overturned,2:18,http://t.co/ZJ4OsT0daT,1,0,0,2014-mlb-replays.csv,http://t.co/ZJ4OsT0daT,520,0,HTTP 520
+2014-07-24,2014-07-24,0,2014,NYM @ MIL,T7,Collins,Wright,Out at 1st,Force play,Danley,Danley,Stands,2:19,http://t.co/nPsbzVOuuR,0,0,0,2014-mlb-replays.csv,http://t.co/nPsbzVOuuR,520,0,HTTP 520
+2014-07-24,2014-07-24,0,2014,SD @ CHI,B5,Black,Rizzo,Strike (not HBP),HBP,Kulpa,Kulpa,Stands,3:51,http://t.co/zq0BA5rwFM,0,0,0,2014-mlb-replays.csv,http://t.co/zq0BA5rwFM,520,0,HTTP 520
+2014-07-24,2014-07-24,0,2014,TEX @ NYY,B5,Girardi,Ryan,Out at 1st,Force play,Bucknor,Scott,Confirmed,2:29,http://t.co/2NnTOyNtKp,0,0,0,2014-mlb-replays.csv,http://t.co/2NnTOyNtKp,520,0,HTTP 520
+2014-07-25,2014-07-25,0,2014,ARI @ PHI,T9,Sandberg,Gosewisch,Safe at 1st,Force play,Wolcott,Scott,Confirmed,0:34,http://t.co/shAT6Ds7uU,0,0,0,2014-mlb-replays.csv,http://t.co/shAT6Ds7uU,520,0,HTTP 520
+2014-07-25,2014-07-25,0,2014,BAL @ SEA,B10,Showalter,Cano,Safe at 1st,Force play,Culbreth,Culbreth,Overturned,1:56,http://t.co/qXO4SL7sun,1,0,0,2014-mlb-replays.csv,http://t.co/qXO4SL7sun,520,0,HTTP 520
+2014-07-25,2014-07-25,0,2014,LAD @ SF,T1,UMPIRE,Puig,Fan Interference (triple),Potential HR,Marquez,Everitt,Stands,2:54,http://t.co/xTOkh9HOAs,0,0,0,2014-mlb-replays.csv,http://t.co/xTOkh9HOAs,520,0,HTTP 520
+2014-07-25,2014-07-25,0,2014,MIA @ HOU,B6,Redmond,Altuve,Safe at 2nd,Tag play,Tichenor,Kulpa,Overturned,1:04,http://t.co/SzDJFaE0mR,1,0,0,2014-mlb-replays.csv,http://t.co/SzDJFaE0mR,520,0,HTTP 520
+2014-07-25,2014-07-25,0,2014,NYM @ MIL,T8,Collins,Campbell,Out at 1st,Force play,Ripperger,Danley,Overturned,1:10,http://t.co/vy0FxrDft8,1,0,0,2014-mlb-replays.csv,http://t.co/vy0FxrDft8,520,0,HTTP 520
+2014-07-25,2014-07-25,0,2014,OAK @ TEX,B4,Melvin,Arencibia,Safe at 1st,Tag play,Reyburn,O'Nora,Overturned,0:52,http://t.co/mekyfThFeY,1,0,0,2014-mlb-replays.csv,http://t.co/mekyfThFeY,520,0,HTTP 520
+2014-07-25,2014-07-25,0,2014,OAK @ TEX,B7,Melvin,Andrus,Safe at 1st,Force play,Reyburn,O'Nora,Overturned,1:37,http://t.co/T5uvnFoiBR,1,0,0,2014-mlb-replays.csv,http://t.co/T5uvnFoiBR,520,0,HTTP 520
+2014-07-25,2014-07-25,0,2014,PIT @ COL,T5,Weiss,Martin,Safe at 2nd,Force play,Hallion,Hallion,Stands,3:13,http://t.co/T8E8gPL6fG,0,0,0,2014-mlb-replays.csv,http://t.co/T8E8gPL6fG,520,0,HTTP 520
+2014-07-25,2014-07-25,0,2014,SD @ ATL,T5,Black,Medica,Out at 2nd,Force play,Nauert,Vanover,Stands,3:02,http://t.co/5vN5TaAEj8,0,0,0,2014-mlb-replays.csv,http://t.co/5vN5TaAEj8,520,0,HTTP 520
+2014-07-25,2014-07-25,0,2014,STL @ CHI,T8,Renteria,Wong,Safe at 2nd,Tag play,Winters,Winters,Stands,1:50,http://t.co/2fMu3BAmir,0,0,0,2014-mlb-replays.csv,http://t.co/2fMu3BAmir,520,0,HTTP 520
+2014-07-26,2014-07-26,0,2014,ARI @ PHI,B9,Gibson,Brignac,Safe at 2nd,Tag play,Iassogna,Scott,Overturned,1:34,http://t.co/fV7896Tpbd,1,0,0,2014-mlb-replays.csv,http://t.co/fV7896Tpbd,520,0,HTTP 520
+2014-07-26,2014-07-26,0,2014,ARI @ PHI,B9,Gibson,Revere,Safe at 1st,Force play,Scott,Scott,Confirmed,2:02,http://t.co/0TGU0AOK9z,0,0,0,2014-mlb-replays.csv,http://t.co/0TGU0AOK9z,520,0,HTTP 520
+2014-07-26,2014-07-26,0,2014,BOS @ TB,T1,UMPIRE,Ortiz,Fan Interference (double),Potential HR,Carapazza,Miller,Stands,2:06,http://t.co/OYRtSCR7OG,0,0,0,2014-mlb-replays.csv,http://t.co/OYRtSCR7OG,520,0,HTTP 520
+2014-07-26,2014-07-26,0,2014,DET @ LAA,T3,Scioscia,Suarez,Safe at 1st,Tag play,Joyce,Joyce,Overturned,3:52,http://t.co/5SGvh5V9HD,1,0,0,2014-mlb-replays.csv,http://t.co/5SGvh5V9HD,520,0,HTTP 520
+2014-07-26,2014-07-26,0,2014,NYM @ MIL,B8,Collins,Reynolds,Safe at 1st,Force play,Bellino,Danley,Overturned,1:16,http://t.co/UZpIXzn6Jo,1,0,0,2014-mlb-replays.csv,http://t.co/UZpIXzn6Jo,520,0,HTTP 520
+2014-07-26,2014-07-26,0,2014,SD @ ATL,B4,Gonzalez,Freeman,Foul Ball,Fair/foul,Vanover,Vanover,Stands,1:45,http://t.co/M5hPzRfMDT,0,0,0,2014-mlb-replays.csv,http://t.co/M5hPzRfMDT,520,0,HTTP 520
+2014-07-26,2014-07-26,0,2014,STL @ CHI,T7,Renteria,Jay,Safe at 3rd,Tag play,Muchlinski,Winters,Stands,2:01,http://t.co/SpYphyvJGw,0,0,0,2014-mlb-replays.csv,http://t.co/SpYphyvJGw,520,0,HTTP 520
+2014-07-27,2014-07-27,0,2014,ARI @ PHI,T1,Sandberg,Montero,Safe at 1st,Force play,Iassogna,Scott,Overturned,0:32,http://t.co/S3IibOOro4,1,0,0,2014-mlb-replays.csv,http://t.co/S3IibOOro4,520,0,HTTP 520
+2014-07-27,2014-07-27,0,2014,ARI @ PHI,B6,UMPIRE,Howard,Out at home,7.13,Scott,Scott,Overturned,2:52,http://atmlb.com/1pmI8M6,1,1,0,2014-mlb-replays.csv,https://www.mlb.com/,200,2048,
+2014-07-27,2014-07-27,0,2014,CWS @ MIN,T6,Gardenhire,Eaton,Safe at 1st,Force play,Randazzo,Kellogg,Stands,1:59,http://t.co/FOHYGPpZPJ,0,0,0,2014-mlb-replays.csv,http://t.co/FOHYGPpZPJ,520,0,HTTP 520
+2014-07-27,2014-07-27,0,2014,MIA @ HOU,B1,UMPIRE,Altuve,Home Run,Potential HR,Hickox,Kulpa,Confirmed,0:39,http://t.co/PGw2XGjuNG,0,0,0,2014-mlb-replays.csv,http://t.co/PGw2XGjuNG,520,0,HTTP 520
+2014-07-27,2014-07-27,0,2014,NYM @ MIL,B9,Collins,K. Davis,Safe at 1st,Force play,Barksdale,Danley,Stands,1:43,http://t.co/7TwnHbTx87,0,0,0,2014-mlb-replays.csv,http://t.co/7TwnHbTx87,520,0,HTTP 520
+2014-07-27,2014-07-27,0,2014,OAK @ TEX,T5,Washington,Lowrie,Safe at 1st,Tag play,Little,O'Nora,Overturned,1:04,http://t.co/9mM9RqBFwr,1,0,0,2014-mlb-replays.csv,http://t.co/9mM9RqBFwr,520,0,HTTP 520
+2014-07-27,2014-07-27,0,2014,PIT @ COL,T6,Weiss,Harrison,Safe at 2nd,Tag play,Guccione,Hallion,Stands,3:35,http://t.co/wE6XzJ8J6h,0,0,0,2014-mlb-replays.csv,http://t.co/wE6XzJ8J6h,520,0,HTTP 520
+2014-07-27,2014-07-27,0,2014,STL @ CHI,T3,Matheny,M. Carpenter,Out at 2nd,Tag play,Muchlinski,Winters,Stands,3:43,http://t.co/lWXCqXPGvs,0,0,0,2014-mlb-replays.csv,http://t.co/lWXCqXPGvs,520,0,HTTP 520
+2014-07-28,2014-07-28,0,2014,ARI @ CIN,B9,Gibson,Frazier,Foul Ball,Fan interference?,Guccione,Hallion,Stands,1:51,http://t.co/wU2TLl5sIf,0,0,0,2014-mlb-replays.csv,http://t.co/wU2TLl5sIf,520,0,HTTP 520
+2014-07-28,2014-07-28,0,2014,COL @ CHI,T5,Renteria,Culberson,Safe at 1st,Force play,Cuzzi,Davis,Overturned,2:26,http://t.co/Ipjxiz2Yxp,1,0,0,2014-mlb-replays.csv,http://t.co/Ipjxiz2Yxp,520,0,HTTP 520
+2014-07-28,2014-07-28,0,2014,COL @ CHI,B8,Weiss,Schierholtz,Safe at 3rd,Tag play,Davis,Davis,Overturned,0:44,http://t.co/0X0flCcKCB,1,0,0,2014-mlb-replays.csv,http://t.co/0X0flCcKCB,520,0,HTTP 520
+2014-07-28,2014-07-28,0,2014,MIL @ TB,T3,Maddon,C. Gomez,Safe at 1st,Force play,B. Welke,Davidson,Stands,2:11,http://t.co/ctBemE3oPm,0,0,0,2014-mlb-replays.csv,http://t.co/ctBemE3oPm,520,0,HTTP 520
+2014-07-28,2014-07-28,0,2014,OAK @ HOU,B2,Porter,Krauss,Foul Ball,Fair/foul,Eddings,Joyce,Confirmed,0:51,http://t.co/MmI1Qpvt4i,0,0,0,2014-mlb-replays.csv,http://t.co/MmI1Qpvt4i,520,0,HTTP 520
+2014-07-28,2014-07-28,0,2014,PHI @ NYM,T6,Collins,M. Byrd,Safe at 2nd,Force play,Meals,Meals,Stands,1:53,http://t.co/XATMJSCgEu,0,0,0,2014-mlb-replays.csv,http://t.co/XATMJSCgEu,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,ARI @ CIN,B2,Price,Cozart,Out at 1st,Force play,Cooper,Hallion,Overturned,1:26,http://t.co/AuJ97mg590,1,0,0,2014-mlb-replays.csv,http://t.co/AuJ97mg590,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,COL @ CHI,T4,Renteria,Blackmon,Safe at 2nd,Tag play,Davis,Davis,Stands,2:11,http://t.co/EpCw4K1Sgc,0,0,0,2014-mlb-replays.csv,http://t.co/EpCw4K1Sgc,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,CWS @ DET,T4,Ausmus,Gillaspie,Safe at 2nd,Tag play,T. Welke,T. Welke,Overturned,1:16,http://t.co/XadZdh6E0K,1,0,0,2014-mlb-replays.csv,http://t.co/XadZdh6E0K,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,MIN @ KC,T3,Gardenhire,A. Gordon,Catch,Catch/no catch,Marquez,T. Barrett,Stands,3:35,http://t.co/TegNg01Zb4,0,0,0,2014-mlb-replays.csv,http://t.co/TegNg01Zb4,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,MIN @ KC,T6,Yost,E. Nunez,Safe at 2nd,Tag play,Hamari,T. Barrett,Stands,1:07,http://t.co/U8jVretnR4,0,0,0,2014-mlb-replays.csv,http://t.co/U8jVretnR4,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,NYY @ TEX,T6,Girardi,Jeter,Out at 1st,Force play,Kulpa,Kulpa,Overturned,1:07,http://t.co/orOtf6G0Kx,1,0,0,2014-mlb-replays.csv,http://t.co/orOtf6G0Kx,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,OAK @ HOU,B5,Melvin,Grossman,Safe at 2nd,Tag play,Joyce,Joyce,Stands,3:20,http://t.co/rnpzzi237z,0,0,0,2014-mlb-replays.csv,http://t.co/rnpzzi237z,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,PIT @ SF,B2,UMPIRE,Morse,Home Run,Potential HR,Reynolds,Culbreth,Confirmed,0:48,http://t.co/SFPP4SCjIa,0,0,0,2014-mlb-replays.csv,http://t.co/SFPP4SCjIa,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,SEA @ CLE,T5,UMPIRE,Zunino,Home Run,Potential HR,Hernandez,Vanover,Confirmed,1:10,http://t.co/zrVvYncFRP,0,0,0,2014-mlb-replays.csv,http://t.co/zrVvYncFRP,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,SEA @ CLE,B7,UMPIRE,D. Murphy,In play (double),Potential HR,Carapazza,Vanover,Confirmed,1:42,http://t.co/A3iFfJbjNO,0,0,0,2014-mlb-replays.csv,http://t.co/A3iFfJbjNO,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,STL @ SD,T5,UMPIRE,M. Carpenter,7.13/Out at home,7.13,Randazzo,Gorman,Confirmed,1:32,http://t.co/pwdo8szHpv,0,0,0,2014-mlb-replays.csv,http://t.co/pwdo8szHpv,520,0,HTTP 520
+2014-07-29,2014-07-29,0,2014,TOR @ BOS,B8,Farrell,Pedroia,Out at 1st,Force play,Wegner,Winters,Stands,1:42,http://t.co/eQHThnSfV8,0,0,0,2014-mlb-replays.csv,http://t.co/eQHThnSfV8,520,0,HTTP 520
+2014-07-30,2014-07-30,0,2014,ARI @ CIN,T7,Price,Gregorius,Safe at 2nd,Tag play,H. Gibson,Hallion,Stands,2:16,http://t.co/gqTwIBISIy,0,0,0,2014-mlb-replays.csv,http://t.co/gqTwIBISIy,520,0,HTTP 520
+2014-07-30,2014-07-30,0,2014,ATL @ LAD,B3,Gonzalez,D. Gordon,Safe at 2nd,Tag play,Layne,Layne,Overturned,1:04,http://t.co/UZaVCGJF7W,1,0,0,2014-mlb-replays.csv,http://t.co/UZaVCGJF7W,520,0,HTTP 520
+2014-07-30,2014-07-30,0,2014,ATL @ LAD,T10,Gonzalez,Schafer,Out at 2nd,Tag play,Layne,Layne,Confirmed,0:32,http://t.co/iDGh6wBE4j,0,0,0,2014-mlb-replays.csv,http://t.co/iDGh6wBE4j,520,0,HTTP 520
+2014-07-30,2014-07-30,0,2014,COL @ CHI,T10,Weiss,McKenry,Out at home,Tag play,Little,Davis,Stands,2:54,http://t.co/4yN9cQYWg9,0,0,0,2014-mlb-replays.csv,http://t.co/4yN9cQYWg9,520,0,HTTP 520
+2014-07-30,2014-07-30,0,2014,MIN @ KC,T3,Gardenhire,E. Nunez,Out at 1st,Force play,Hamari,T. Barrett,Overturned,1:15,http://t.co/Y4lzg4z0dv,1,0,0,2014-mlb-replays.csv,http://t.co/Y4lzg4z0dv,520,0,HTTP 520
+2014-07-30,2014-07-30,0,2014,STL @ SD,B6,Matheny,Venable,Safe at 1st,Force play,Gorman,Gorman,Overturned,2:55,http://t.co/o9oQp1VRaR,1,0,0,2014-mlb-replays.csv,http://t.co/o9oQp1VRaR,520,0,HTTP 520
+2014-07-30,2014-07-30,0,2014,TOR @ BOS,T6,UMPIRE,Me. Cabrera,7.13/Out at home,7.13,Wegner,Winters,Confirmed,2:03,http://t.co/Ti9YND9rgs,0,0,0,2014-mlb-replays.csv,http://t.co/Ti9YND9rgs,520,0,HTTP 520
+2014-07-30,2014-07-30,0,2014,WSH @ MIA,T8,Redmond,Span,Safe at 1st,Force play,Kellogg,Kellogg,Stands,3:11,http://t.co/XXj44c706W,0,0,0,2014-mlb-replays.csv,http://t.co/XXj44c706W,520,0,HTTP 520
+2014-07-31,2014-07-31,0,2014,ATL @ LAD,T9,Mattingly,J. Upton,Safe at 1st,Force play,Estabrook,Wendelstedt,Stands,2:33,http://t.co/JMTpDoSmph,0,0,0,2014-mlb-replays.csv,http://t.co/JMTpDoSmph,520,0,HTTP 520
+2014-07-31,2014-07-31,0,2014,CIN @ MIA,T8,UMPIRE,Cozart,7.13/Out at home,7.13,Winters,Winters,Overturned,6:17,http://t.co/HIWQaipuzs,1,1,0,2014-mlb-replays.csv,http://t.co/HIWQaipuzs,520,0,HTTP 520
+2014-07-31,2014-07-31,0,2014,COL @ CHI,B5,Weiss,Lake,Safe at 1st,Force play,G. Gibson,Davis,Overturned,1:00,http://t.co/IdxlEbSvNZ,1,0,0,2014-mlb-replays.csv,http://t.co/IdxlEbSvNZ,520,0,HTTP 520
+2014-07-31,2014-07-31,0,2014,CWS @ DET,B9,Ventura,V. Martinez,Safe at 1st,Force play,Tichenor,T. Welke,Stands,2:45,http://t.co/MPvdbt4FfW,0,0,0,2014-mlb-replays.csv,http://t.co/MPvdbt4FfW,520,0,HTTP 520
+2014-07-31,2014-07-31,0,2014,LAA @ BAL,B11,Showalter,A. Jones,Out at 1st,Tag play,Bellino,Cederstrom,Stands,2:24,http://t.co/UHt9lMesH7,0,0,0,2014-mlb-replays.csv,http://t.co/UHt9lMesH7,520,0,HTTP 520
+2014-07-31,2014-07-31,0,2014,PIT @ ARI,T3,Hurdle,G. Polanco,Out at 1st,Tag play,L. Barrett,Kulpa,Overturned,0:47,http://t.co/PVRMpHpCsp,1,0,0,2014-mlb-replays.csv,http://t.co/PVRMpHpCsp,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,CHI @ LAD,B1,UMPIRE,A. Gonzalez,7.13/Out at home,7.13,Wolf,Gorman,Confirmed,1:37,http://t.co/oU0nYFCjRd,0,0,0,2014-mlb-replays.csv,http://t.co/oU0nYFCjRd,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,CHI @ LAD,B3,Renteria,Haren,Safe at 1st,Force play,Randazzo,Gorman,Overturned,2:35,http://t.co/9ZnLPDR5wI,1,0,0,2014-mlb-replays.csv,http://t.co/9ZnLPDR5wI,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,CHI @ LAD,T6,Mattingly,Rizzo,Safe at 1st,Force play,Randazzo,Gorman,Overturned,1:16,http://t.co/kTx1xS7S4w,1,0,0,2014-mlb-replays.csv,http://t.co/kTx1xS7S4w,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,CHI @ LAD,B6,Renteria,Puig,Safe at home,Tag play,Wolf,Gorman,Stands,4:46,http://t.co/IP4vRSNnuu,0,0,0,2014-mlb-replays.csv,http://t.co/IP4vRSNnuu,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,CIN @ MIA,B5,Price,G. Jones,Safe at 1st,Force play,Woodring,Winters,Overturned,1:24,http://t.co/7N9qYUvjDO,1,0,0,2014-mlb-replays.csv,http://t.co/7N9qYUvjDO,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,LAA @ TB,B2,UMPIRE,Loney,In play (double),Potential HR,Carapazza,Vanover,Stands,2:00,http://t.co/znbahjphv9,0,0,0,2014-mlb-replays.csv,http://t.co/znbahjphv9,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,MIL @ STL,T6,Matheny,Segura,Safe at 2nd,Force play,Little,Davis,Stands,2:15,http://t.co/RNIDJg79mX,0,0,0,2014-mlb-replays.csv,http://t.co/RNIDJg79mX,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,MIN @ CWS,T7,Gardenhire,Dozier,Out at 1st,Force play,Cederstrom,Cederstrom,Overturned,3:08,http://t.co/RoljpFO0HR,1,0,0,2014-mlb-replays.csv,http://t.co/RoljpFO0HR,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,MIN @ CWS,T9,Ventura,Dozier,Safe at 1st,Force play,Cederstrom,Cederstrom,Confirmed,0:41,http://t.co/8yKBAy63dr,0,0,0,2014-mlb-replays.csv,http://t.co/8yKBAy63dr,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,NYY @ BOS,T6,Girardi,Ellsbury,Out at 2nd,Tag play,Schrieber,T. Barrett,Overturned,1:53,http://t.co/UZByoOb5RG,1,0,0,2014-mlb-replays.csv,http://t.co/UZByoOb5RG,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,PIT @ ARI,B5,Gibson,Nuno,Ball (not HBP),HBP,Kulpa,Kulpa,Overturned,1:30,http://t.co/a4x2fF37Qm,1,0,0,2014-mlb-replays.csv,http://t.co/a4x2fF37Qm,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,PIT @ ARI,T8,UMPIRE,J. Harrison,In play (triple),Potential HR,Hickox,Kulpa,Confirmed,0:50,http://t.co/VYT5cD2hQu,0,0,0,2014-mlb-replays.csv,http://t.co/VYT5cD2hQu,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,SF @ NYM,B2,Bochy,C. Young,HBP,HBP,Kellogg,Kellogg,Overturned,0:38,http://t.co/BtxB9Ebvzq,1,0,0,2014-mlb-replays.csv,http://t.co/BtxB9Ebvzq,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,TEX @ CLE,B3,Washington,Chisenhall,Safe at 1st,Force play,Hudson,Joyce,Overturned,1:49,http://t.co/ttGFBp53nU,1,0,0,2014-mlb-replays.csv,http://t.co/ttGFBp53nU,520,0,HTTP 520
+2014-08-01,2014-08-1,1,2014,TEX @ CLE,B4,Washington,Aviles,Safe at 3rd,Tag play,Blaser,Joyce,Overturned,3:20,http://t.co/5uf7MHfSBa,1,0,0,2014-mlb-replays.csv,http://t.co/5uf7MHfSBa,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,ATL @ SD,T8,UMPIRE,Gattis,7.13/Out at home,7.13,Reynolds,Culbreth,Confirmed,1:49,http://t.co/C1EK8znW5b,0,0,0,2014-mlb-replays.csv,http://t.co/C1EK8znW5b,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,CHI @ LAD,B7,Renteria,Puig,Safe at 1st,Tag play,Rackley,Gorman,Overturned,1:32,http://t.co/HmwjR3nnLe,1,0,0,2014-mlb-replays.csv,http://t.co/HmwjR3nnLe,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,CIN @ MIA,T9,Price,B. Pena,Out at 2nd,Tag play,Winters,Winters,Confirmed,1:01,http://t.co/QC7UK1Gm41,0,0,0,2014-mlb-replays.csv,http://t.co/QC7UK1Gm41,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,KC @ OAK,T4,UMPIRE,A. Gordon,7.13/Out at home,7.13,Basner,Wendelstedt,Confirmed,1:25,http://t.co/PHao8w4iCP,0,0,0,2014-mlb-replays.csv,http://t.co/PHao8w4iCP,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,LAA @ TB,B6,Scioscia,Guyer,Safe at 1st,Tag play,Carapazza,Vanover,Stands,1:28,http://t.co/tZU14dL9Ec,0,0,0,2014-mlb-replays.csv,http://t.co/tZU14dL9Ec,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,LAA @ TB,T9,UMPIRE,Cron,7.13/Out at home,7.13,Vanover,Vanover,Confirmed,1:23,http://t.co/15LMsRhoyf,0,0,0,2014-mlb-replays.csv,http://t.co/15LMsRhoyf,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,MIL @ STL,T9,Matheny,E. Herrera,HBP,HBP,Cuzzi,Davis,Overturned,1:44,http://t.co/XMY3Bg0wlu,1,0,0,2014-mlb-replays.csv,http://t.co/XMY3Bg0wlu,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,MIN @ CWS,B8,Ventura,Eaton,Out at 2nd,Tag play,Ripperger,Cederstrom,Confirmed,2:02,http://t.co/bCKz5gjd8p,0,0,0,2014-mlb-replays.csv,http://t.co/bCKz5gjd8p,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,NYY @ BOS,T6,Girardi,Jeter,Out at 1st,Force play,Schrieber,T. Barrett,Overturned,1:13,http://t.co/NT8VzRLVnd,1,0,0,2014-mlb-replays.csv,http://t.co/NT8VzRLVnd,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,PIT @ ARI,B2,Gibson,McCutchen,Catch,Catch/no catch,Hickox,Kulpa,Stands,2:51,http://t.co/ZhovO4WFFY,0,0,0,2014-mlb-replays.csv,http://t.co/ZhovO4WFFY,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,PIT @ ARI,B3,UMPIRE,D. Peralta,In play,Potential HR,Hoberg,Kulpa,Confirmed,1:43,http://t.co/ckcT5sHObA,0,0,0,2014-mlb-replays.csv,http://t.co/ckcT5sHObA,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,SEA @ BAL,B6,McClendon,D. Young,Safe at 1st,Force play,Timmons,T. Welke,Overturned,0:59,http://t.co/y0VZCcbh23,1,0,0,2014-mlb-replays.csv,http://t.co/y0VZCcbh23,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,SF @ NYM,B3,Bochy,deGrom,Safe at 1st,Force play,Reyburn,Kellogg,Overturned,1:08,http://t.co/e4EabrQJaR,1,0,0,2014-mlb-replays.csv,http://t.co/e4EabrQJaR,520,0,HTTP 520
+2014-08-02,2014-08-2,1,2014,TOR @ HOU,B8,Porter,Singleton,Out at home,Tag play,Baker,Meals,Overturned,1:38,http://t.co/mU9lwwav6a,1,1,0,2014-mlb-replays.csv,http://t.co/mU9lwwav6a,520,0,HTTP 520
+2014-08-03,2014-08-3,1,2014,ATL @ SD,B4,Black,Amarista,Out at 2nd,Tag Play,Scheurwater,Reynolds,Overturned,3:36,http://t.co/JPExnRYSLy,1,0,0,2014-mlb-replays.csv,http://t.co/JPExnRYSLy,520,0,HTTP 520
+2014-08-03,2014-08-3,1,2014,ATL @ SD,T8,Black,Amarista,Safe at 2nd,Force play,Scheurwater,Reynolds,Overturned,1:14,http://t.co/deebZAE58G,1,0,0,2014-mlb-replays.csv,http://t.co/deebZAE58G,520,0,HTTP 520
+2014-08-03,2014-08-3,1,2014,ATL @ SD,T8,Gonzalez,Amarista,Out at 2nd,Force play,Scheurwater,Reynolds,Confirmed,0:58,http://t.co/NmvKwn6YVQ,0,0,0,2014-mlb-replays.csv,http://t.co/NmvKwn6YVQ,520,0,HTTP 520
+2014-08-03,2014-08-3,1,2014,CIN @ MIA,B3,Price,Valdespin,Safe at 1st,Force play,Winters,Winters,Stands,2:14,http://t.co/MJruC7BUAT,0,0,0,2014-mlb-replays.csv,http://t.co/MJruC7BUAT,520,0,HTTP 520
+2014-08-03,2014-08-3,1,2014,MIN @ CWS,B8,Ventura,Beckham,Foul Ball,HBP,Danley,Cederstrom,Overturned,2:47,http://t.co/o00zb4aCvE,1,0,0,2014-mlb-replays.csv,http://t.co/o00zb4aCvE,520,0,HTTP 520
+2014-08-03,2014-08-3,1,2014,PHI @ WSH,T5,Williams,Asche,Safe at 2nd,Tag Play,H. Gibson,Hallion,Stands,2:55,http://t.co/ENOHhy7Six,0,0,0,2014-mlb-replays.csv,http://t.co/ENOHhy7Six,520,0,HTTP 520
+2014-08-03,2014-08-3,1,2014,PIT @ ARI,T3,Gibson,G. Polanco,Safe at 2nd,Tag Play,L. Barrett,Kulpa,Overturned,0:55,http://t.co/SiKbNr2GXT,1,0,0,2014-mlb-replays.csv,http://t.co/SiKbNr2GXT,520,0,HTTP 520
+2014-08-03,2014-08-3,1,2014,PIT @ ARI,T8,UMPIRE,G. Polanco,7.13/Out at home,7.13,Hickox,Kulpa,Confirmed,0:36,http://t.co/lx2MVMOaYu,0,0,0,2014-mlb-replays.csv,http://t.co/lx2MVMOaYu,520,0,HTTP 520
+2014-08-04,2014-08-4,1,2014,CIN @ CLE,T6,Francona,Frazier,Safe at 1st,Force play,G. Gibson,Davis,Overturned,1:41,http://t.co/G5ueLePsFm,1,0,0,2014-mlb-replays.csv,http://t.co/G5ueLePsFm,520,0,HTTP 520
+2014-08-04,2014-08-4,1,2014,TB @ OAK,T2,Maddon,Forsythe,Out at 2nd,Tag play,Tumpane,Scott,Overturned,1:17,http://t.co/JSLayh5lOB,1,0,0,2014-mlb-replays.csv,http://t.co/JSLayh5lOB,520,0,HTTP 520
+2014-08-04,2014-08-4,1,2014,TEX @ CWS,B3,UMPIRE,Flowers,In play (triple),Potential HR,Baker,Meals,Confirmed,1:03,http://t.co/U2AsexrNLS,0,0,0,2014-mlb-replays.csv,http://t.co/U2AsexrNLS,520,0,HTTP 520
+2014-08-05,2014-08-5,1,2014,ATL @ SEA,B3,Gonzalez,Taylor,Safe at 2nd,Tag play,Gorman,Gorman,Stands,2:15,http://t.co/e2ubQyRxwv,0,0,0,2014-mlb-replays.csv,http://t.co/e2ubQyRxwv,520,0,HTTP 520
+2014-08-05,2014-08-5,1,2014,CIN @ CLE,T9,Price,B. Pena,Out at home,Tag play,G. Gibson,Davis,Stands,3:33,http://t.co/9uushaVySB,0,0,0,2014-mlb-replays.csv,http://t.co/9uushaVySB,520,0,HTTP 520
+2014-08-05,2014-08-5,1,2014,CIN @ CLE,B9,UMPIRE,D. Murphy,Safe at 1st,Force play,Cuzzi,Davis,Overturned,1:57,http://t.co/lws4rMvnxx,1,0,0,2014-mlb-replays.csv,http://t.co/lws4rMvnxx,520,0,HTTP 520
+2014-08-05,2014-08-5,1,2014,LAA @ LAD,T1,Mattingly,Trout,Safe at 1st,Force play,Reynolds,Reynolds,Stands,1:12,http://t.co/lYCcK6N7et,0,0,0,2014-mlb-replays.csv,http://t.co/lYCcK6N7et,520,0,HTTP 520
+2014-08-05,2014-08-5,1,2014,NYM @ WSH,B6,UMPIRE,Werth,7.13/Out at home,7.13,Nauert,Vanover,Confirmed,1:03,http://t.co/GCvriucY6F,0,0,0,2014-mlb-replays.csv,http://t.co/GCvriucY6F,520,0,HTTP 520
+2014-08-05,2014-08-5,1,2014,SD @ MIN,B6,Black,D. Santana,Safe at 1st,Force play,Hudson,Wendelstedt,Overturned,3:36,http://t.co/1eCwT2huy4,1,0,0,2014-mlb-replays.csv,http://t.co/1eCwT2huy4,520,0,HTTP 520
+2014-08-05,2014-08-5,1,2014,SF @ MIL,T3,Bochy,Pence,Out at 1st,Force play,H. Gibson,Hallion,Overturned,1:00,http://t.co/gK4RERxi9q,1,0,0,2014-mlb-replays.csv,http://t.co/gK4RERxi9q,520,0,HTTP 520
+2014-08-05,2014-08-5,1,2014,SF @ MIL,T9,Roenicke,Panik,Safe at 1st,Force play,H. Gibson,Hallion,Overturned,3:16,http://t.co/8T8uOI4Abi,1,0,0,2014-mlb-replays.csv,http://t.co/8T8uOI4Abi,520,0,HTTP 520
+2014-08-06,2014-08-6,1,2014,BAL @ TOR,B7,Showalter,Rasmus,Safe at 1st,Tag play,Reyburn,Kellogg,Overturned,0:43,http://t.co/duXOsZOgca,1,0,0,2014-mlb-replays.csv,http://t.co/duXOsZOgca,520,0,HTTP 520
+2014-08-06,2014-08-6,1,2014,BAL @ TOR,B8,Showalter,Kawasaki,Safe at 1st,Tag play,Reyburn,Kellogg,Stands,1:25,http://t.co/OrwVzqtZEr,0,0,0,2014-mlb-replays.csv,http://t.co/OrwVzqtZEr,520,0,HTTP 520
+2014-08-06,2014-08-6,1,2014,BAL @ TOR,B8,Gibbons,Reyes,Out at 1st,Force play,Reyburn,Kellogg,Stands,1:55,http://t.co/LaMIrSSSQt,0,0,0,2014-mlb-replays.csv,http://t.co/LaMIrSSSQt,520,0,HTTP 520
+2014-08-06,2014-08-6,1,2014,BOS @ STL,T3,Farrell,J. Kelly,Out at 1st,Force play,Cederstrom,Cederstrom,Overturned,1:47,http://t.co/GIf2BIaRmQ,1,0,0,2014-mlb-replays.csv,http://t.co/GIf2BIaRmQ,520,0,HTTP 520
+2014-08-06,2014-08-6,1,2014,CHI @ COL,T9,Renteria,Lake,Out at 1st,Force play,Guccione,West,Stands,2:04,http://t.co/P3NfzjZ3yD,0,0,0,2014-mlb-replays.csv,http://t.co/P3NfzjZ3yD,520,0,HTTP 520
+2014-08-06,2014-08-6,1,2014,DET @ NYY,B8,Girardi,Teixeira,Out at home,Tag play,Woodring,Winters,Overturned,2:31,http://t.co/g2MdhyuZh1,1,1,0,2014-mlb-replays.csv,http://t.co/g2MdhyuZh1,520,0,HTTP 520
+2014-08-06,2014-08-6,1,2014,HOU @ PHI,B1,Sandberg,Buchanan,Out at 2nd,Tag play,Nelson,Nelson,Stands,3:09,http://t.co/m3giDYPiuf,0,0,0,2014-mlb-replays.csv,http://t.co/m3giDYPiuf,520,0,HTTP 520
+2014-08-06,2014-08-6,1,2014,KC @ ARI,T9,Yost,Moustakas,Out at 1st,Force play,Randazzo,DeMuth,Overturned,0:49,http://t.co/EC8NyVLwyL,1,0,0,2014-mlb-replays.csv,http://t.co/EC8NyVLwyL,520,0,HTTP 520
+2014-08-06,2014-08-6,1,2014,LAD @ LAA,T4,Scioscia,Ethier,Safe at 2nd,Force play,Knight,Reynolds,Overturned,1:00,http://t.co/6NjiI8Q9nk,1,0,0,2014-mlb-replays.csv,http://t.co/6NjiI8Q9nk,520,0,HTTP 520
+2014-08-06,2014-08-6,1,2014,SD @ MIN,B2,Gardenhire,D. Santana,Ball (not HBP),HBP,Hudson,Wendelstedt,Overturned,2:18,http://t.co/H3pfEgFJjZ,1,0,0,2014-mlb-replays.csv,http://t.co/H3pfEgFJjZ,520,0,HTTP 520
+2014-08-07,2014-08-7,1,2014,BAL @ TOR,B3,Showalter,Reyes,Safe at 2nd,Tag play,Kellogg,Kellogg,Stands,3:09,http://t.co/xqfDABLZdM,0,0,0,2014-mlb-replays.csv,http://t.co/xqfDABLZdM,520,0,HTTP 520
+2014-08-07,2014-08-7,1,2014,KC @ ARI,T9,Gibson,Guthrie,Safe at 3rd,Tag play,DeMuth,DeMuth,Stands,2:37,http://t.co/vMwwThhh22,0,0,0,2014-mlb-replays.csv,http://t.co/vMwwThhh22,520,0,HTTP 520
+2014-08-07,2014-08-7,1,2014,LAD @ LAA,B6,Mattingly,Cowgill,Safe at 1st,Force play,Gonzalez,Reynolds,Overturned,2:00,http://t.co/6EDuSn3Kjy,1,0,0,2014-mlb-replays.csv,http://t.co/6EDuSn3Kjy,520,0,HTTP 520
+2014-08-07,2014-08-7,1,2014,LAD @ LAA,B8,Scioscia,Aybar,Out at 1st,Force play,Gonzalez,Reynolds,Confirmed,1:05,http://t.co/Q4EPLZhdu9,0,0,0,2014-mlb-replays.csv,http://t.co/Q4EPLZhdu9,520,0,HTTP 520
+2014-08-07,2014-08-7,1,2014,MIA @ PIT,B8,Hurdle,Snider,Out at 1st,Force play,Everitt,Miller,Overturned,2:02,http://t.co/cFhKGSfKao,1,0,0,2014-mlb-replays.csv,http://t.co/cFhKGSfKao,520,0,HTTP 520
+2014-08-08,2014-08-8,1,2014,DET @ TOR,B2,Ausmus,Goins,Safe at 1st,Force play,Ad. Johnson,Miller,Stands,2:20,http://t.co/Rgv3WDd895,0,0,0,2014-mlb-replays.csv,http://t.co/Rgv3WDd895,520,0,HTTP 520
+2014-08-08,2014-08-8,1,2014,SF @ KC,T2,UMPIRE,J. Perez,Foul Ball,Potential HR,Cederstrom,Cederstrom,Confirmed,1:04,http://t.co/8jhvEpkF4T,0,0,0,2014-mlb-replays.csv,http://t.co/8jhvEpkF4T,520,0,HTTP 520
+2014-08-08,2014-08-8,1,2014,SF @ KC,T3,Yost,Pence,Safe at 3rd,Tag play,Cederstrom,Cederstrom,Overturned,2:38,http://t.co/mPg9GjlAnI,1,0,0,2014-mlb-replays.csv,http://t.co/mPg9GjlAnI,520,0,HTTP 520
+2014-08-08,2014-08-8,1,2014,TB @ CHI,T1,Maddon,Zobrist,Out at 2nd,Force play,H. Gibson,Hallion,Overturned,2:10,http://t.co/Z9uGxcOJzc,1,0,0,2014-mlb-replays.csv,http://t.co/Z9uGxcOJzc,520,0,HTTP 520
+2014-08-08,2014-08-8,1,2014,TB @ CHI,T7,Renteria,S. Rodriguez,Safe at home,Tag play,Cooper,Hallion,Confirmed,1:04,http://t.co/5FjCwswJMD,0,0,0,2014-mlb-replays.csv,http://t.co/5FjCwswJMD,520,0,HTTP 520
+2014-08-08,2014-08-8,1,2014,TEX @ HOU,B2,Washington,M. Gonzalez,HBP,HBP,Rackley,DeMuth,Stands,2:01,http://t.co/Ru6Yr961xI,0,0,0,2014-mlb-replays.csv,http://t.co/Ru6Yr961xI,520,0,HTTP 520
+2014-08-08,2014-08-8,1,2014,TEX @ HOU,T7,Porter,Odor,Safe at 2nd,Tag play,DeMuth,DeMuth,Overturned,2:40,http://t.co/0ffMHpceze,1,0,0,2014-mlb-replays.csv,http://t.co/0ffMHpceze,520,0,HTTP 520
+2014-08-09,2014-08-9,1,2014,BOS @ LAA,B19,UMPIRE,Pujols,Home Run,Potential HR,Wolcott,Scott,Confirmed,1:38,http://t.co/WJUiiD3GAs,0,0,0,2014-mlb-replays.csv,http://t.co/WJUiiD3GAs,520,0,HTTP 520
+2014-08-09,2014-08-9,1,2014,DET @ TOR,B9,Ausmus,Reyes,Safe at 2nd,Tag play,Fairchild,Miller,Stands,2:15,http://t.co/VgMCIdHZid,0,0,0,2014-mlb-replays.csv,http://t.co/VgMCIdHZid,520,0,HTTP 520
+2014-08-09,2014-08-9,1,2014,LAD @ MIL,B7,Mattingly,C. Gomez,Safe at 2nd,Tag play,Drake,West,Stands,2:14,http://t.co/CuYDNdBUyI,0,0,0,2014-mlb-replays.csv,http://t.co/CuYDNdBUyI,520,0,HTTP 520
+2014-08-09,2014-08-9,1,2014,SD @ PIT,T8,Hurdle,Venable,Safe at 2nd,Tag play,Wegner,Meals,Overturned,1:30,http://t.co/as17cjKo0z,1,0,0,2014-mlb-replays.csv,http://t.co/as17cjKo0z,520,0,HTTP 520
+2014-08-09,2014-08-9,1,2014,STL @ BAL,T1,UMPIRE,Holliday,Out at home,7.13,Diaz,Nelson,Confirmed,1:32,http://t.co/RdOGXSxULu,0,0,0,2014-mlb-replays.csv,http://t.co/RdOGXSxULu,520,0,HTTP 520
+2014-08-09,2014-08-9,1,2014,TB @ CHI,B5,Renteria,Ruggiano,Out at 2nd,Tag play,Porter,Hallion,Stands,4:13,http://t.co/o6IWyYZAOW,0,0,0,2014-mlb-replays.csv,http://t.co/o6IWyYZAOW,520,0,HTTP 520
+2014-08-09,2014-08-9,1,2014,TEX @ HOU,T2,Washington,L. Martin,Out at 1st,Force play,DeMuth,DeMuth,Overturned,1:59,http://t.co/AipxHFvcdS,1,0,0,2014-mlb-replays.csv,http://t.co/AipxHFvcdS,520,0,HTTP 520
+2014-08-09,2014-08-9,1,2014,WSH @ ATL,T11,Gonzalez,W. Ramos,Safe at home,Tag play,G. Gibson,Davis,Overturned,1:32,http://t.co/mNmGCppr9y,1,1,0,2014-mlb-replays.csv,http://t.co/mNmGCppr9y,520,0,HTTP 520
+2014-08-10,2014-08-10,0,2014,CWS @ SEA,T6,McClendon,De Aza,Safe at 1st,Tag play,Basner,Wendelstedt,Overturned,2:27,http://t.co/pGK2SN041L,1,0,0,2014-mlb-replays.csv,http://t.co/pGK2SN041L,520,0,HTTP 520
+2014-08-10,2014-08-10,0,2014,DET @ TOR,B9,Gibbons,Gose,Out at 2nd,Tag play,Everitt,Miller,Overturned,2:23,http://t.co/0SO6Qj4UPD,1,0,0,2014-mlb-replays.csv,http://t.co/0SO6Qj4UPD,520,0,HTTP 520
+2014-08-10,2014-08-10,0,2014,DET @ TOR,T13,Gibbons,An. Romine,Safe at 2nd,Tag play,Everitt,Miller,Overturned,2:05,http://t.co/C5oOxrYTRi,1,0,0,2014-mlb-replays.csv,http://t.co/C5oOxrYTRi,520,0,HTTP 520
+2014-08-10,2014-08-10,0,2014,LAD @ MIL,B4,Mattingly,Braun,Safe at 3rd,Tag play,Foster,West,Overturned,2:00,http://t.co/sbOYITMpTD,1,0,0,2014-mlb-replays.csv,http://t.co/sbOYITMpTD,520,0,HTTP 520
+2014-08-10,2014-08-10,0,2014,STL @ BAL,T7,Matheny,Schoop,Out at 2nd,Catch/no catch,Nelson,Nelson,Overturned,2:34,http://t.co/rb61okvX0I,1,0,0,2014-mlb-replays.csv,http://t.co/rb61okvX0I,520,0,HTTP 520
+2014-08-10,2014-08-10,0,2014,TEX @ HOU,B1,Porter,C. Carter,Out at 1st,Force play,Randazzo,DeMuth,Overturned,1:23,http://t.co/vzawe4a2xC,1,0,0,2014-mlb-replays.csv,http://t.co/vzawe4a2xC,520,0,HTTP 520
+2014-08-10,2014-08-10,0,2014,TEX @ HOU,B2,UMPIRE,Dominguez,7.13/Out at home,7.13,DeMuth,DeMuth,Stands,4:11,http://t.co/ugn3HDu1vt,0,0,0,2014-mlb-replays.csv,http://t.co/ugn3HDu1vt,520,0,HTTP 520
+2014-08-11,2014-08-11,0,2014,COL @ SD,B4,Weiss,R. Liriano,HBP,HBP,DeMuth,DeMuth,Stands,1:18,http://t.co/rGOLDKE7cM,0,0,0,2014-mlb-replays.csv,http://t.co/rGOLDKE7cM,520,0,HTTP 520
+2014-08-11,2014-08-11,0,2014,MIL @ CHI,B2,Renteria,S. Castro,Out at 2nd,Tag play,Fagan,T. Welke,Confirmed,1:59,http://t.co/X3tii39WxD,0,0,0,2014-mlb-replays.csv,http://t.co/X3tii39WxD,520,0,HTTP 520
+2014-08-11,2014-08-11,0,2014,MIL @ CHI,T7,UMPIRE,Braun,7.13/Out at home,7.13,T. Welke,T. Welke,Confirmed,1:45,http://t.co/VXvEu36U1N,0,0,0,2014-mlb-replays.csv,http://t.co/VXvEu36U1N,520,0,HTTP 520
+2014-08-11,2014-08-11,0,2014,NYM @ PHI,B9,UMPIRE,Utley,Home Run,Potential HR,Fletcher,Wegner,Overturned,2:04,http://t.co/11doX3yaO0,1,1,0,2014-mlb-replays.csv,http://t.co/11doX3yaO0,520,0,HTTP 520
+2014-08-11,2014-08-11,0,2014,NYY @ BAL,B3,Showalter,Cruz,Ball (not HBP),HBP,Little,Davis,Overturned,3:18,http://t.co/noB4OBu6MS,1,0,0,2014-mlb-replays.csv,http://t.co/noB4OBu6MS,520,0,HTTP 520
+2014-08-11,2014-08-11,0,2014,TB @ TEX,T2,UMPIRE,Escobar,7.13/Out at home,7.13,Porter,West,Stands,3:05,http://t.co/sIVmXLplB6,0,0,0,2014-mlb-replays.csv,http://t.co/sIVmXLplB6,520,0,HTTP 520
+2014-08-12,2014-08-12,0,2014,ARI @ CLE,T1,Gibson,Hill,Out at 1st,Force play,Muchlinski,Wegner,Stands,2:08,http://t.co/OYiv342bjt,0,0,0,2014-mlb-replays.csv,http://t.co/OYiv342bjt,520,0,HTTP 520
+2014-08-12,2014-08-12,0,2014,BOS @ CIN,T9,Price,C. Vazquez,Safe at 1st,Force play,Meals,Meals,Overturned,1:48,http://t.co/wPUrkfzxYE,1,0,0,2014-mlb-replays.csv,http://t.co/wPUrkfzxYE,520,0,HTTP 520
+2014-08-12,2014-08-12,0,2014,CWS @ SF,T10,UMPIRE,Jordan Danks,7.13/Out at home,7.13,Culbreth,Culbreth,Confirmed,1:11,http://t.co/fHayVdCK7X,0,0,0,2014-mlb-replays.csv,http://t.co/fHayVdCK7X,520,0,HTTP 520
+2014-08-12,2014-08-12,0,2014,DET @ PIT,B7,Ausmus,Polanco,Safe at 2nd,Tag play,Schrieber,T. Barrett,Overturned,0:49,http://t.co/3VQj6jCWPq,1,0,0,2014-mlb-replays.csv,http://t.co/3VQj6jCWPq,520,0,HTTP 520
+2014-08-12,2014-08-12,0,2014,MIN @ HOU,T8,Gardenhire,E. Nunez,Out at 1st,Force play,Hoye,Davidson,Stands,2:41,http://t.co/MsY718WM4k,0,0,0,2014-mlb-replays.csv,http://t.co/MsY718WM4k,520,0,HTTP 520
+2014-08-12,2014-08-12,0,2014,TB @ TEX,B5,Maddon,L. Martin,Safe at 2nd,Force play,Morales,West,Overturned,1:44,http://t.co/zK0gKrZxY5,1,0,0,2014-mlb-replays.csv,http://t.co/zK0gKrZxY5,520,0,HTTP 520
+2014-08-12,2014-08-12,0,2014,TB @ TEX,B7,UMPIRE,Choo,Count Check,Record Keeping,West,West,Record Keeping,1:09,http://t.co/wkn8ksmqBL,0,0,0,2014-mlb-replays.csv,http://t.co/wkn8ksmqBL,520,0,HTTP 520
+2014-08-12,2014-08-12,0,2014,TB @ TEX,T10,Maddon,Zobrist,Out at 1st,Force play,Foster,West,Confirmed,2:19,http://t.co/Cpf5kdYaTe,0,0,0,2014-mlb-replays.csv,http://t.co/Cpf5kdYaTe,520,0,HTTP 520
+2014-08-12,2014-08-12,0,2014,TB @ TEX,B10,Washington,Rosales,Out at 1st,Force play,Foster,West,Confirmed,0:45,http://t.co/NGdW3fCETg,0,0,0,2014-mlb-replays.csv,http://t.co/NGdW3fCETg,520,0,HTTP 520
+2014-08-13,2014-08-13,0,2014,COL @ SD,B1,Black,Solarte,Out at 1st,Force play,DeMuth,DeMuth,Overturned,0:56,http://t.co/tLfsXoMiM9,1,0,0,2014-mlb-replays.csv,http://t.co/tLfsXoMiM9,520,0,HTTP 520
+2014-08-13,2014-08-13,0,2014,COL @ SD,B8,Black,Nelson,Out at 2nd,Tag play,Kulpa,DeMuth,Stands,1:45,http://t.co/EAtdI9DNdZ,0,0,0,2014-mlb-replays.csv,http://t.co/EAtdI9DNdZ,520,0,HTTP 520
+2014-08-13,2014-08-13,0,2014,CWS @ SF,B7,UMPIRE,Blanco,7.13/Out at home,7.13,Segal,Culbreth,Overturned,5:55,http://t.co/FD4OQaQWAX,1,1,0,2014-mlb-replays.csv,http://t.co/FD4OQaQWAX,520,0,HTTP 520
+2014-08-13,2014-08-13,0,2014,LAD @ ATL,T8,Gonzalez,Uribe,Safe at 1st,Force play,Barksdale,Cederstrom,Overturned,0:59,http://t.co/xwD4VLau0C,1,0,0,2014-mlb-replays.csv,http://t.co/xwD4VLau0C,520,0,HTTP 520
+2014-08-13,2014-08-13,0,2014,MIN @ HOU,B3,Porter,Altuve,Out at 1st,Force play,Ad. Johnson,Davidson,Stands,1:55,http://t.co/8gNSPQsqLZ,0,0,0,2014-mlb-replays.csv,http://t.co/8gNSPQsqLZ,520,0,HTTP 520
+2014-08-13,2014-08-13,0,2014,PIT @ DET,T4,Ausmus,Mercer,Safe at 3rd,Tag play,Marquez,T. Barrett,Stands,3:00,http://t.co/ecUA7MhWXH,0,0,0,2014-mlb-replays.csv,http://t.co/ecUA7MhWXH,520,0,HTTP 520
+2014-08-13,2014-08-13,0,2014,STL @ MIA,B5,Redmond,Saltalamacchia,Out at 1st,Force play,Eddings,Joyce,Stands,1:21,http://t.co/YTMP9E8T0B,0,0,0,2014-mlb-replays.csv,http://t.co/YTMP9E8T0B,520,0,HTTP 520
+2014-08-13,2014-08-13,0,2014,TB @ TEX,T2,UMPIRE,Casali,In play (double),Potential HR,West,West,Confirmed,1:57,http://t.co/sanVzQLExj,0,0,0,2014-mlb-replays.csv,http://t.co/sanVzQLExj,520,0,HTTP 520
+2014-08-13,2014-08-13,0,2014,TOR @ SEA,T9,McClendon,Kawasaki,Safe at 1st,Force play,Bucknor,Scott,Stands,1:17,http://t.co/Rb7538VWzG,0,0,0,2014-mlb-replays.csv,http://t.co/Rb7538VWzG,520,0,HTTP 520
+2014-08-13,2014-08-13,0,2014,WSH @ NYM,B9,UMPIRE,den Dekker,7.13/Out at home,7.13,Scheurwater,Gorman,Confirmed,1:34,http://t.co/96IkEglwkN,0,0,0,2014-mlb-replays.csv,http://t.co/96IkEglwkN,520,0,HTTP 520
+2014-08-14,2014-08-14,0,2014,LAD @ ATL,T9,UMPIRE,Puig,7.13/Out at home,7.13,Barksdale,Cederstrom,Confirmed,1:36,http://t.co/tfasdwIEMl,0,0,0,2014-mlb-replays.csv,http://t.co/tfasdwIEMl,520,0,HTTP 520
+2014-08-14,2014-08-14,0,2014,OAK @ KC,B7,Melvin,L. Cain,Safe at 3rd,Tag play,Hallion,Hallion,Stands,2:10,http://t.co/aMVMemtqKf,0,0,0,2014-mlb-replays.csv,http://t.co/aMVMemtqKf,520,0,HTTP 520
+2014-08-14,2014-08-14,0,2014,SD @ STL,T9,Black,Amarista,Out at home,Tag play,Davidson,Davidson,Stands,4:16,http://t.co/nKALLBRnII,0,0,0,2014-mlb-replays.csv,http://t.co/nKALLBRnII,520,0,HTTP 520
+2014-08-14,2014-08-14,0,2014,WSH @ NYM,B9,Collins,Duda,Ball (not HBP),HBP,Gorman,Gorman,Confirmed,2:50,http://t.co/QtNgsrfFwI,0,0,0,2014-mlb-replays.csv,http://t.co/QtNgsrfFwI,520,0,HTTP 520
+2014-08-15,2014-08-15,0,2014,BAL @ CLE,B5,UMPIRE,Z. Walters,Home Run,Potential HR,Hickox,DeMuth,Confirmed,2:09,http://t.co/wmGzo5xQPW,0,0,0,2014-mlb-replays.csv,http://t.co/wmGzo5xQPW,520,0,HTTP 520
+2014-08-15,2014-08-15,0,2014,HOU @ BOS,T8,Farrell,Fowler,Safe at 2nd,Force play,Hoberg,Joyce,Stands,2:44,http://t.co/JYmEt0QdKW,0,0,0,2014-mlb-replays.csv,http://t.co/JYmEt0QdKW,520,0,HTTP 520
+2014-08-15,2014-08-15,0,2014,HOU @ BOS,T8,Farrell,G. Petit,Safe at home,Tag play,Blaser,Joyce,Confirmed,2:44,http://t.co/wqD3D7zXtj,0,0,0,2014-mlb-replays.csv,http://t.co/wqD3D7zXtj,520,0,HTTP 520
+2014-08-15,2014-08-15,0,2014,KC @ MIN,B4,Yost,Plouffe,Safe at 3rd,Tag play,Segal,Culbreth,Stands,3:25,http://t.co/uG2rQ41Rsy,0,0,0,2014-mlb-replays.csv,http://t.co/uG2rQ41Rsy,520,0,HTTP 520
+2014-08-15,2014-08-15,0,2014,LAA @ TEX,T9,Washington,Calhoun,HBP,HBP,Guccione,Hallion,Confirmed,0:31,http://t.co/LExLCecLhC,0,0,0,2014-mlb-replays.csv,http://t.co/LExLCecLhC,520,0,HTTP 520
+2014-08-15,2014-08-15,0,2014,OAK @ ATL,T1,Gonzalez,J. Gomes,Safe at 2nd,Tag play,T. Barrett,T. Barrett,Overturned,2:05,http://t.co/Aqo6JADWHZ,1,0,0,2014-mlb-replays.csv,http://t.co/Aqo6JADWHZ,520,0,HTTP 520
+2014-08-15,2014-08-15,0,2014,PHI @ SF,T4,Sandberg,Rollins,Out at 3rd,Tag play,Morales,West,Confirmed,1:08,http://t.co/aYcYkutKDC,0,0,0,2014-mlb-replays.csv,http://t.co/aYcYkutKDC,520,0,HTTP 520
+2014-08-15,2014-08-15,0,2014,SEA @ DET,B4,McClendon,T. Hunter,Safe at 1st,Tag play,Randazzo,Gorman,Overturned,1:00,http://t.co/W7mx1qlQH7,1,0,0,2014-mlb-replays.csv,http://t.co/W7mx1qlQH7,520,0,HTTP 520
+2014-08-15,2014-08-15,0,2014,TOR @ CWS,B2,Ventura,Flowers,Caught Foul Tip,HBP,T. Welke,T. Welke,Stands,2:54,http://t.co/cAWoEAVWBY,0,0,0,2014-mlb-replays.csv,http://t.co/cAWoEAVWBY,520,0,HTTP 520
+2014-08-16,2014-08-16,0,2014,ARI @ MIA,T1,UMPIRE,Inciarte,7.13/Out at home,7.13,Baker,Meals,Confirmed,1:38,http://t.co/Ux3qZX2Zdj,0,0,0,2014-mlb-replays.csv,http://t.co/Ux3qZX2Zdj,520,0,HTTP 520
+2014-08-16,2014-08-16,0,2014,SD @ STL,T2,Matheny,Goebbert,Safe at 1st,Force play,Hoye,Davidson,Overturned,1:28,http://t.co/MuHKseLc6d,1,0,0,2014-mlb-replays.csv,http://t.co/MuHKseLc6d,520,0,HTTP 520
+2014-08-17,2014-08-17,0,2014,HOU @ BOS,T2,Porter,Krauss,Out at 2nd,Force play,Blaser,Joyce,Overturned,2:26,http://t.co/W7dckVa0hz,1,0,0,2014-mlb-replays.csv,http://t.co/W7dckVa0hz,520,0,HTTP 520
+2014-08-17,2014-08-17,0,2014,LAA @ TEX,B5,Washington,Odor,Out at 2nd,Tag play,Guccione,Hallion,Stands,1:13,http://t.co/2qzQC4cv6G,0,0,0,2014-mlb-replays.csv,http://t.co/2qzQC4cv6G,520,0,HTTP 520
+2014-08-17,2014-08-17,0,2014,PHI @ SF,B8,Sandberg,Panik,Safe at 2nd,Tag play,Porter,West,Confirmed,2:04,http://t.co/ZfuXppaY3A,0,0,0,2014-mlb-replays.csv,http://t.co/ZfuXppaY3A,520,0,HTTP 520
+2014-08-17,2014-08-17,0,2014,PIT @ WSH,B7,Williams,M. Taylor,Foul Ball,HBP,Fletcher,Wegner,Overturned,1:25,http://t.co/QSWt0baaqA,1,0,0,2014-mlb-replays.csv,http://t.co/QSWt0baaqA,520,0,HTTP 520
+2014-08-17,2014-08-17,0,2014,TOR @ CWS,T1,UMPIRE,Reyes,7.13/Out at home,7.13,Fagan,T. Welke,Overturned,2:27,http://t.co/tVifkiZENq,1,1,0,2014-mlb-replays.csv,http://t.co/tVifkiZENq,520,0,HTTP 520
+2014-08-17,2014-08-17,0,2014,TOR @ CWS,B8,Ventura,A. Garcia,Out at 3rd,Tag play,Tichenor,T. Welke,Confirmed,1:21,http://t.co/V2wD1kdiub,0,0,0,2014-mlb-replays.csv,http://t.co/V2wD1kdiub,520,0,HTTP 520
+2014-08-18,2014-08-18,0,2014,BAL @ CWS,T5,Showalter,Pearce,Out at home,Tag play,H. Gibson,Hallion,Confirmed,1:01,http://t.co/V9Og3ckkNI,0,0,0,2014-mlb-replays.csv,http://t.co/V9Og3ckkNI,520,0,HTTP 520
+2014-08-18,2014-08-18,0,2014,CHI @ NYM,B4,Renteria,den Dekker,Safe at 2nd,Tag play,Cuzzi,G. Gibson,Overturned,0:57,http://t.co/qK3qEAZV5n,1,0,0,2014-mlb-replays.csv,http://t.co/qK3qEAZV5n,520,0,HTTP 520
+2014-08-18,2014-08-18,0,2014,CHI @ NYM,T5,Renteria,J. Baez,Out at 1st,Force play,G. Gibson,G. Gibson,Stands,0:28,http://t.co/J6WeBsVfik,0,0,0,2014-mlb-replays.csv,http://t.co/J6WeBsVfik,520,0,HTTP 520
+2014-08-18,2014-08-18,0,2014,CIN @ STL,B4,Price,Taveras,Safe at 2nd,Tag play,Tichenor,T. Welke,Overturned,2:29,http://t.co/WGxhFRbs7C,1,0,0,2014-mlb-replays.csv,http://t.co/WGxhFRbs7C,520,0,HTTP 520
+2014-08-18,2014-08-18,0,2014,LAA @ BOS,B2,Scioscia,Napoli,Safe at 3rd,Tag play,Fletcher,Winters,Stands,2:16,http://t.co/d8JfEMV3id,0,0,0,2014-mlb-replays.csv,http://t.co/d8JfEMV3id,520,0,HTTP 520
+2014-08-18,2014-08-18,0,2014,LAA @ BOS,T8,Farrell,Pujols,Safe at home,Tag play,Muchlinski,Winters,Overturned,1:17,http://t.co/m5SOO6e7LB,1,1,0,2014-mlb-replays.csv,http://t.co/m5SOO6e7LB,520,0,HTTP 520
+2014-08-19,2014-08-19,0,2014,DET @ TB,B4,UMPIRE,Belnome,Home Run,Potential HR,Cuzzi,Davis,Overturned,1:05,http://t.co/on6JtddEID,1,1,0,2014-mlb-replays.csv,http://t.co/on6JtddEID,520,0,HTTP 520
+2014-08-19,2014-08-19,0,2014,DET @ TB,T5,Ausmus,D. Jennings,Catch,Catch/no catch,Little,Davis,Overturned,1:49,http://t.co/YTrL95zCz3,1,0,0,2014-mlb-replays.csv,http://t.co/YTrL95zCz3,520,0,HTTP 520
+2014-08-19,2014-08-19,0,2014,KC @ COL,T5,Weiss,Aoki,Safe at 3rd,Tag play,Diaz,Nelson,Overturned,1:12,http://t.co/2oL5ioEseh,1,0,0,2014-mlb-replays.csv,http://t.co/2oL5ioEseh,520,0,HTTP 520
+2014-08-19,2014-08-19,0,2014,LAA @ BOS,T3,Scioscia,Pujols,Out at 1st,Force play,Winters,Winters,Overturned,1:28,http://t.co/bD09RbNuYj,1,0,0,2014-mlb-replays.csv,http://t.co/bD09RbNuYj,520,0,HTTP 520
+2014-08-19,2014-08-19,0,2014,SD @ LAD,T9,Black,A. Almonte,Out at 3rd,Tag play,Miller,Miller,Stands,2:24,http://t.co/Z7yAtqXCGz,0,0,0,2014-mlb-replays.csv,http://t.co/Z7yAtqXCGz,520,0,HTTP 520
+2014-08-20,2014-08-20,0,2014,ATL @ PIT,B1,Gonzalez,Harrison,Safe at 2nd,Tag play,Hernandez,Vanover,Overturned,1:32,http://t.co/wZr0gtllGt,1,0,0,2014-mlb-replays.csv,http://t.co/wZr0gtllGt,520,0,HTTP 520
+2014-08-20,2014-08-20,0,2014,ATL @ PIT,T6,Gonzalez,Freeman,Out at home,Tag play,Nauert,Vanover,Confirmed,1:00,http://t.co/wl62A47q73,0,0,0,2014-mlb-replays.csv,http://t.co/wl62A47q73,520,0,HTTP 520
+2014-08-20,2014-08-20,0,2014,CLE @ MIN,T4,Francona,Aviles,Out at 2nd,Tag play,Hamari,Scott,Overturned,1:13,http://t.co/60YSwX3Siv,1,0,0,2014-mlb-replays.csv,http://t.co/60YSwX3Siv,520,0,HTTP 520
+2014-08-20,2014-08-20,0,2014,CLE @ MIN,T6,Francona,Walters,Ball (not HBP),HBP,Scott,Scott,Confirmed,1:17,http://t.co/PEJgwvYTAf,0,0,0,2014-mlb-replays.csv,http://t.co/PEJgwvYTAf,520,0,HTTP 520
+2014-08-20,2014-08-20,0,2014,KC @ COL,B8,Weiss,Arenado,Foul Ball,Fair/foul,Barry,Nelson,Stands,1:23,http://t.co/e6NqSZI4X9,0,0,0,2014-mlb-replays.csv,http://t.co/e6NqSZI4X9,520,0,HTTP 520
+2014-08-20,2014-08-20,0,2014,SD @ LAD,T8,Black,R. Liriano,Out at 3rd,Tag play,Fairchild,Miller,Confirmed,0:55,http://t.co/TbN7zp7nT2,0,0,0,2014-mlb-replays.csv,http://t.co/TbN7zp7nT2,520,0,HTTP 520
+2014-08-20,2014-08-20,0,2014,TEX @ MIA,T6,Redmond,L. Martin,Safe at 3rd,Tag play,Reyburn,Kellogg,Overturned,1:33,http://t.co/PV3mABbHZV,1,0,0,2014-mlb-replays.csv,http://t.co/PV3mABbHZV,520,0,HTTP 520
+2014-08-20,2014-08-20,0,2014,TOR @ MIL,B7,Gibbons,Gennett,Safe at 1st,Force play,Culbreth,Culbreth,Stands,0:27,http://t.co/ukIpuQtUQR,0,0,0,2014-mlb-replays.csv,http://t.co/ukIpuQtUQR,520,0,HTTP 520
+2014-08-21,2014-08-21,0,2014,ARI @ WSH,B1,Gibson,LaRoche,Safe at 1st,Force play,Davidson,Davidson,Overturned,2:01,http://t.co/8P9s9J9DUJ,1,0,0,2014-mlb-replays.csv,http://t.co/8P9s9J9DUJ,520,0,HTTP 520
+2014-08-21,2014-08-21,0,2014,ATL @ CIN,T3,Gonzalez,Schumaker,Catch,Catch/no catch,Carlson,Nelson,Overturned,2:01,http://t.co/xmB6yTDEqZ,1,0,0,2014-mlb-replays.csv,http://t.co/xmB6yTDEqZ,520,0,HTTP 520
+2014-08-21,2014-08-21,0,2014,CLE @ MIN,T6,Gardenhire,C. Santana,Safe at 2nd,Tag play,Bucknor,Scott,Overturned,0:28,http://t.co/ILwXfmD4g6,1,0,0,2014-mlb-replays.csv,http://t.co/ILwXfmD4g6,520,0,HTTP 520
+2014-08-21,2014-08-21,0,2014,CLE @ MIN,B7,Gardenhire,Schafer,Out at 2nd,Tag play,Bucknor,Scott,Confirmed,0:31,http://t.co/WC3gqIe0vu,0,0,0,2014-mlb-replays.csv,http://t.co/WC3gqIe0vu,520,0,HTTP 520
+2014-08-21,2014-08-21,0,2014,LAA @ BOS,T3,Farrell,H. Kendrick,Safe at 1st,Tag play,Muchlinski,Winters,Overturned,0:39,http://t.co/GFGsBNtDcw,1,0,0,2014-mlb-replays.csv,http://t.co/GFGsBNtDcw,520,0,HTTP 520
+2014-08-21,2014-08-21,0,2014,SF @ CHI,B3,Renteria,Alcantara,Ball (not HBP),HBP,DiMuro,Wendelstedt,Confirmed,2:16,http://t.co/LdMFEnNc7g,0,0,0,2014-mlb-replays.csv,http://t.co/LdMFEnNc7g,520,0,HTTP 520
+2014-08-22,2014-08-22,0,2014,BAL @ CHI,T5,UMPIRE,C. Davis,7.13/Out at home,7.13,Culbreth,Culbreth,Confirmed,0:43,http://t.co/58GHW3KZCN,0,0,0,2014-mlb-replays.csv,http://t.co/58GHW3KZCN,520,0,HTTP 520
+2014-08-22,2014-08-22,0,2014,CWS @ NYY,T6,UMPIRE,Gillaspie,7.13/Out at home,7.13,Muchlinski,Winters,Confirmed,1:22,http://t.co/W5rB8SKD9A,0,0,0,2014-mlb-replays.csv,http://t.co/W5rB8SKD9A,520,0,HTTP 520
+2014-08-22,2014-08-22,0,2014,NYM @ LAD,T4,Collins,D. Wright,Out at 2nd,Tag play,Scott,Scott,Stands,2:11,http://t.co/laq3Mx6xBt,0,0,0,2014-mlb-replays.csv,http://t.co/laq3Mx6xBt,520,0,HTTP 520
+2014-08-22,2014-08-22,0,2014,PIT @ MIL,B6,Roenicke,Ar. Ramirez,Out at 3rd,Force play,Little,Davis,Stands,2:34,http://t.co/iknA1Ukd0y,0,0,0,2014-mlb-replays.csv,http://t.co/iknA1Ukd0y,520,0,HTTP 520
+2014-08-22,2014-08-22,0,2014,SEA @ BOS,B2,UMPIRE,Bogaerts,Foul Ball,Potential HR,Hoberg,Vanover,Stands,3:15,http://t.co/jbt97ZQcPP,0,0,0,2014-mlb-replays.csv,http://t.co/jbt97ZQcPP,520,0,HTTP 520
+2014-08-22,2014-08-22,0,2014,SEA @ BOS,T4,Farrell,Betts,No catch (trap),Catch/no catch,Hoberg,Vanover,Overturned,1:43,http://t.co/dzvW15VAF9,1,0,0,2014-mlb-replays.csv,http://t.co/dzvW15VAF9,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,BAL @ CHI,B7,UMPIRE,Rizzo,7.13/Out at home,7.13,Segal,Culbreth,Confirmed,1:14,http://t.co/LGFNYfnmuQ,0,0,0,2014-mlb-replays.csv,http://t.co/LGFNYfnmuQ,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,BAL @ CHI,B8,Renteria,L. Watkins,Out at 3rd,Tag play,Culbreth,Culbreth,Stands,1:51,http://t.co/ylZUljIBHn,0,0,0,2014-mlb-replays.csv,http://t.co/ylZUljIBHn,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,CWS @ NYY,B6,UMPIRE,Beltran,Home Run,Potential HR,Winters,Winters,Confirmed,0:58,http://t.co/pf1RomoxKk,0,0,0,2014-mlb-replays.csv,http://t.co/pf1RomoxKk,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,CWS @ NYY,B6,Girardi,Prado,Out at 2nd,Tag play,Fletcher,Winters,Overturned,1:20,http://t.co/M90hzf2b54,1,0,0,2014-mlb-replays.csv,http://t.co/M90hzf2b54,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,DET @ MIN,T3,Ausmus,T. Hunter,Out at 3rd,Tag play,Scheurwater,Hallion,Overturned,2:05,http://t.co/bj1fvfc9uL,1,0,0,2014-mlb-replays.csv,http://t.co/bj1fvfc9uL,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,KC @ TEX,B6,Yost,Andrus,Safe at 2nd,Tag play,DiMuro,Wendelstedt,Confirmed,1:25,http://t.co/qm3XFY90US,0,0,0,2014-mlb-replays.csv,http://t.co/qm3XFY90US,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,KC @ TEX,T7,Washington,L. Cain,Safe at home,Tag play,Wendelstedt,Wendelstedt,Confirmed,0:39,http://t.co/X4hzq4KLlI,0,0,0,2014-mlb-replays.csv,http://t.co/X4hzq4KLlI,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,LAA @ OAK,T3,Scioscia,Pujols,Out at 1st,Force play,Everitt,Miller,Overturned,2:06,http://t.co/PjCIRqd95E,1,0,0,2014-mlb-replays.csv,http://t.co/PjCIRqd95E,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,LAA @ OAK,B6,Melvin,Donaldson,Out at home,Tag play,Fairchild,Miller,Stands,3:48,http://t.co/1Gu3zJb7U2,0,0,0,2014-mlb-replays.csv,http://t.co/1Gu3zJb7U2,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,LAA @ OAK,B7,UMPIRE,Fuld,Out at 2nd,Tag play,A. Johnson,Miller,Confirmed,1:27,http://t.co/CNLwEvCfq1,0,0,0,2014-mlb-replays.csv,http://t.co/CNLwEvCfq1,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,STL @ PHI,T9,UMPIRE,Wong,Ground-Rule Double,Record Keeping,Bellino,Kellogg,Record Keeping,0:46,http://t.co/nONiH7dTMs,0,0,0,2014-mlb-replays.csv,http://t.co/nONiH7dTMs,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,STL @ PHI,T10,Matheny,Bourjos,Out at 1st,Force play,Reyburn,Kellogg,Stands,0:55,http://t.co/ACrKXpVdgt,0,0,0,2014-mlb-replays.csv,http://t.co/ACrKXpVdgt,520,0,HTTP 520
+2014-08-23,2014-08-23,0,2014,TB @ TOR,T4,Gibbons,Myers,Safe at 1st,Tag play,B. Welke,Davidson,Overturned,3:00,http://t.co/VRytvmNMSH,1,0,0,2014-mlb-replays.csv,http://t.co/VRytvmNMSH,520,0,HTTP 520
+2014-08-24,2014-08-24,0,2014,HOU @ CLE,T7,UMPIRE,Corporan,Foul Ball,Potential HR,Danley,Cederstrom,Confirmed,1:03,http://t.co/gw9elT880g,0,0,0,2014-mlb-replays.csv,http://t.co/gw9elT880g,520,0,HTTP 520
+2014-08-24,2014-08-24,0,2014,KC @ TEX,B7,Yost,Rosales,Safe at 1st,Force play,DiMuro,Wendelstedt,Overturned,1:12,http://t.co/TNQsua4LAH,1,0,0,2014-mlb-replays.csv,http://t.co/TNQsua4LAH,520,0,HTTP 520
+2014-08-24,2014-08-24,0,2014,SEA @ BOS,B1,Farrell,Craig,Out at 3rd,Tag play,Hernandez,Vanover,Overturned,2:00,http://t.co/w8fRWfPgMC,1,0,0,2014-mlb-replays.csv,http://t.co/w8fRWfPgMC,520,0,HTTP 520
+2014-08-24,2014-08-24,0,2014,SEA @ BOS,T6,McClendon,C. Taylor,Out at 3rd,Tag play,Hernandez,Vanover,Confirmed,0:52,http://t.co/zpv0YBjYuq,0,0,0,2014-mlb-replays.csv,http://t.co/zpv0YBjYuq,520,0,HTTP 520
+2014-08-24,2014-08-24,0,2014,TB @ TOR,T5,Maddon,Joyce,Out at 1st,Force play,Hoye,Davidson,Overturned,0:44,http://t.co/7RTBgXBmPG,1,0,0,2014-mlb-replays.csv,http://t.co/7RTBgXBmPG,520,0,HTTP 520
+2014-08-24,2014-08-24,0,2014,TB @ TOR,T10,UMPIRE,Forsythe,7.13/Out at home,7.13,B. Welke,Davidson,Confirmed,2:57,http://t.co/XH57UYM8Nd,0,0,0,2014-mlb-replays.csv,http://t.co/XH57UYM8Nd,520,0,HTTP 520
+2014-08-25,2014-08-25,0,2014,BOS @ TOR,T7,Farrell,Betts,Out at 2nd,Tag play,Guccione,Hallion,Overturned,1:16,http://t.co/1mfioNwT70,1,0,0,2014-mlb-replays.csv,http://t.co/1mfioNwT70,520,0,HTTP 520
+2014-08-25,2014-08-25,0,2014,BOS @ TOR,B9,Gibbons,Kawasaki,Out at 1st,Force play,H. Gibson,Hallion,Confirmed,0:39,http://t.co/BBwbjIr06D,0,0,0,2014-mlb-replays.csv,http://t.co/BBwbjIr06D,520,0,HTTP 520
+2014-08-25,2014-08-25,0,2014,BOS @ TOR,T10,UMPIRE,Holt,Safe at 2nd,Tag play,Guccione,Hallion,Confirmed,1:19,http://t.co/nNwnZInPAy,0,0,0,2014-mlb-replays.csv,http://t.co/nNwnZInPAy,520,0,HTTP 520
+2014-08-25,2014-08-25,0,2014,COL @ SF,T7,Bochy,LeMahieu,Safe at home,Tag play,Eddings,Joyce,Overturned,2:57,http://t.co/nJRIjIeUR2,1,1,0,2014-mlb-replays.csv,http://t.co/nJRIjIeUR2,520,0,HTTP 520
+2014-08-25,2014-08-25,0,2014,MIA @ LAA,T6,UMPIRE,Yelich,In play (double),Potential HR,Wolcott,Scott,Confirmed,1:01,http://t.co/aTr5Q2Gojq,0,0,0,2014-mlb-replays.csv,http://t.co/aTr5Q2Gojq,520,0,HTTP 520
+2014-08-25,2014-08-25,0,2014,MIL @ SD,B2,UMPIRE,Amarista,7.13/Out at home,7.13,Schrieber,T. Barrett,Stands,4:01,http://t.co/ulx3MWy7Y1,0,0,0,2014-mlb-replays.csv,http://t.co/ulx3MWy7Y1,520,0,HTTP 520
+2014-08-25,2014-08-25,0,2014,MIL @ SD,B4,Roenicke,C. Nelson,Safe at 1st,Force play,Marquez,T. Barrett,Overturned,0:39,http://t.co/DNVKrEZraK,1,0,0,2014-mlb-replays.csv,http://t.co/DNVKrEZraK,520,0,HTTP 520
+2014-08-25,2014-08-25,0,2014,NYY @ KC,T7,Girardi,Ellsbury,Out at home,Tag play,L. Barrett,DeMuth,Overturned,2:00,http://t.co/IqIXfDRHCp,1,1,0,2014-mlb-replays.csv,http://t.co/IqIXfDRHCp,520,0,HTTP 520
+2014-08-25,2014-08-25,0,2014,TEX @ SEA,T4,Washington,Telis,Out at 1st,Force play,Fagan,Timmons,Stands,1:40,http://t.co/vlbGeg3i38,0,0,0,2014-mlb-replays.csv,http://t.co/vlbGeg3i38,520,0,HTTP 520
+2014-08-25,2014-08-25,0,2014,WSH @ PHI,B7,Williams,D. Brown,Safe at 2nd,Tag play,Cederstrom,Cederstrom,Overturned,2:00,http://t.co/rYWEMfEIEA,1,0,0,2014-mlb-replays.csv,http://t.co/rYWEMfEIEA,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,ATL @ NYM,B4,Gonzalez,d'Arnaud,Safe at 2nd,Tag play,Wegner,Winters,Stands,2:44,http://t.co/DicTXOfiPI,0,0,0,2014-mlb-replays.csv,http://t.co/DicTXOfiPI,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,BOS @ TOR,T1,UMPIRE,Craig,7.13/Out at home,7.13,H. Gibson,Hallion,Confirmed,0:35,http://t.co/hG6XouIkyU,0,0,0,2014-mlb-replays.csv,http://t.co/hG6XouIkyU,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,BOS @ TOR,T2,Gibbons,Betts,Safe at 1st,Tag play,Guccione,Hallion,Stands,1:24,http://t.co/aZNSlFaHjO,0,0,0,2014-mlb-replays.csv,http://t.co/aZNSlFaHjO,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,BOS @ TOR,T11,Farrell,Betts,Out at 2nd,Force play,Cooper,Hallion,Overturned,1:14,http://t.co/tuIz4t5DGU,1,0,0,2014-mlb-replays.csv,http://t.co/tuIz4t5DGU,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,LAD @ ARI,T4,UMPIRE,C. Crawford,7.13/Out at home,Tag play,Little,Davis,Overturned,2:05,http://t.co/iZCBYL46E1,1,1,0,2014-mlb-replays.csv,http://t.co/iZCBYL46E1,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,LAD @ ARI,T4,Mattingly,R. Hernandez,Out at 1st,Force play,Davis,Davis,Overturned,0:35,http://t.co/khG3vdrpS9,1,0,0,2014-mlb-replays.csv,http://t.co/khG3vdrpS9,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,LAD @ ARI,B5,Mattingly,D. Peralta,Safe at 2nd,Tag play,G. Gibson,Davis,Stands,2:08,http://t.co/0uoOsUO93f,0,0,0,2014-mlb-replays.csv,http://t.co/0uoOsUO93f,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,TB @ BAL,T1,UMPIRE,D. Jennings,7.13/Out at home,7.13,Hoberg,Nelson,Stands,2:42,http://t.co/2jlUlW4BhM,0,0,0,2014-mlb-replays.csv,http://t.co/2jlUlW4BhM,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,TB @ BAL,B3,UMPIRE,Markakis,Count Check,Record Keeping,Hoberg,Nelson,Record Keeping,2:21,http://t.co/Q7TEzqkuVT,0,0,0,2014-mlb-replays.csv,http://t.co/Q7TEzqkuVT,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,TEX @ SEA,T3,Washington,Andrus,Out at 1st,Force play,Timmons,Timmons,Overturned,1:04,http://t.co/0W2nTq0rvF,1,0,0,2014-mlb-replays.csv,http://t.co/0W2nTq0rvF,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,WSH @ PHI,T1,Sandberg,Rendon,Safe at 1st,Force play,Cederstrom,Cederstrom,Overturned,1:43,http://t.co/CKPuh40AOS,1,0,0,2014-mlb-replays.csv,http://t.co/CKPuh40AOS,520,0,HTTP 520
+2014-08-26,2014-08-26,0,2014,WSH @ PHI,B8,Sandberg,Revere,Out at 1st,Force play,Cederstrom,Cederstrom,Overturned,2:57,http://t.co/ZNgn388K2c,1,0,0,2014-mlb-replays.csv,http://t.co/ZNgn388K2c,520,0,HTTP 520
+2014-08-27,2014-08-27,0,2014,CHI @ CIN,B5,Renteria,Negron,Safe at 1st,Force play,May,Miller,Overturned,0:49,http://t.co/r3zQ8yH7Cs,1,0,0,2014-mlb-replays.csv,http://t.co/r3zQ8yH7Cs,520,0,HTTP 520
+2014-08-27,2014-08-27,0,2014,CLE @ CWS,B7,UMPIRE,C. Sanchez,7.13/Out at home,7.13,Drake,West,Confirmed,1:38,http://t.co/cXxJAqMDz0,0,0,0,2014-mlb-replays.csv,http://t.co/cXxJAqMDz0,520,0,HTTP 520
+2014-08-27,2014-08-27,0,2014,MIL @ SD,B8,Roenicke,S. Smith,Safe at 1st,Tag play,T. Barrett,T. Barrett,Overturned,0:44,http://t.co/zPLsfkflaL,1,0,0,2014-mlb-replays.csv,http://t.co/zPLsfkflaL,520,0,HTTP 520
+2014-08-27,2014-08-27,0,2014,OAK @ HOU,T9,Porter,Gentry,Safe at 2nd,Tag play,DiMuro,Emmel,Confirmed,0:58,http://t.co/VdcHFdXTIO,0,0,0,2014-mlb-replays.csv,http://t.co/VdcHFdXTIO,520,0,HTTP 520
+2014-08-27,2014-08-27,0,2014,OAK @ HOU,B9,UMPIRE,Altuve,Out at 1st,Force play,Basner,Emmel,Confirmed,1:03,http://t.co/zH81U8mCQC,0,0,0,2014-mlb-replays.csv,http://t.co/zH81U8mCQC,520,0,HTTP 520
+2014-08-28,2014-08-28,0,2014,COL @ SF,B8,Bochy,Pence,Out at home,Tag play,Hudson,Joyce,Confirmed,1:24,http://t.co/cclnRcPREW,0,0,0,2014-mlb-replays.csv,http://t.co/cclnRcPREW,520,0,HTTP 520
+2014-08-28,2014-08-28,0,2014,TEX @ HOU,T6,Porter,Odor,Safe at 1st,Force play,Rackley,Gorman,Overturned,0:40,http://t.co/CQoe9Jd7V1,1,0,0,2014-mlb-replays.csv,http://t.co/CQoe9Jd7V1,520,0,HTTP 520
+2014-08-29,2014-08-29,0,2014,CIN @ PIT,T8,Hurdle,Phillips,HBP,HBP,Culbreth,Culbreth,Stands,2:08,http://t.co/z0tLmOF9GZ,0,0,0,2014-mlb-replays.csv,http://t.co/z0tLmOF9GZ,520,0,HTTP 520
+2014-08-29,2014-08-29,0,2014,LAD @ SD,T6,Black,H. Ramirez,Safe at 1st,Tag play,Tichenor,Timmons,Overturned,1:02,http://atmlb.com/1lud1jh,1,0,0,2014-mlb-replays.csv,http://atmlb.com/1lud1jh,403,0,HTTP 403
+2014-08-29,2014-08-29,0,2014,MIN @ BAL,B5,UMPIRE,D. Young,Home Run,Potential HR,Wegner,Winters,Stands,2:01,http://t.co/copzt0F300,0,0,0,2014-mlb-replays.csv,http://t.co/copzt0F300,520,0,HTTP 520
+2014-08-29,2014-08-29,0,2014,NYY @ TOR,T9,Gibbons,Ellsbury,Safe at home,Tag play,Everitt,Miller,Overturned,1:44,http://t.co/Cct953Lbf6,1,1,0,2014-mlb-replays.csv,http://t.co/Cct953Lbf6,520,0,HTTP 520
+2014-08-29,2014-08-29,0,2014,NYY @ TOR,T9,UMPIRE,Ellsbury,7.13/Out at home,7.13,Everitt,Miller,Confirmed,0:48,http://t.co/SrPv4wOqGw,0,0,0,2014-mlb-replays.csv,http://t.co/SrPv4wOqGw,520,0,HTTP 520
+2014-08-29,2014-08-29,0,2014,OAK @ LAA,T7,Scioscia,Sogard,Safe at 1st,Tag play,Little,Davis,Stands,2:04,http://t.co/uGRe9TQhLJ,0,0,0,2014-mlb-replays.csv,http://t.co/uGRe9TQhLJ,520,0,HTTP 520
+2014-08-29,2014-08-29,0,2014,WSH @ SEA,T2,Williams,Harper,Out at 1st,Force play,Blaser,Joyce,Overturned,0:47,http://t.co/a293o6W5QH,1,0,0,2014-mlb-replays.csv,http://t.co/a293o6W5QH,520,0,HTTP 520
+2014-08-30,2014-08-30,0,2014,BOS @ TB,B4,Maddon,Guyer,Out at 1st,Force play,Estabrook,Layne,Stands,1:32,http://t.co/obLSLSvMQ2,0,0,0,2014-mlb-replays.csv,http://t.co/obLSLSvMQ2,520,0,HTTP 520
+2014-08-30,2014-08-30,0,2014,CHI @ STL,T2,UMPIRE,Valaika,7.13/Out at home,Tag play,Porter,West,Overturned,1:20,http://t.co/gIdFA58JJn,1,1,0,2014-mlb-replays.csv,http://t.co/gIdFA58JJn,520,0,HTTP 520
+2014-08-30,2014-08-30,0,2014,COL @ ARI,B5,Gibson,Inciarte,Out at 1st,Force play,Marquez,T. Barrett,Stands,2:32,http://t.co/Jo6PL1yX5O,0,0,0,2014-mlb-replays.csv,http://t.co/Jo6PL1yX5O,520,0,HTTP 520
+2014-08-30,2014-08-30,0,2014,DET @ CWS,T6,Ausmus,Romine,Out at 1st,Force play,Diaz,Nelson,Stands,2:15,http://t.co/2NxcRRib2o,0,0,0,2014-mlb-replays.csv,http://t.co/2NxcRRib2o,520,0,HTTP 520
+2014-08-30,2014-08-30,0,2014,MIL @ SF,B6,Roenicke,Gomez,No catch (trap),Catch/no catch,Wolcott,Scott,Overturned,0:45,http://t.co/qDeZBUuEKD,1,0,0,2014-mlb-replays.csv,http://t.co/qDeZBUuEKD,520,0,HTTP 520
+2014-08-30,2014-08-30,0,2014,MIL @ SF,T9,Roenicke,Braun,Out at 2nd,Force play,Wolcott,Scott,Confirmed,0:41,http://t.co/qsvg7GJPQt,0,0,0,2014-mlb-replays.csv,http://t.co/qsvg7GJPQt,520,0,HTTP 520
+2014-08-30,2014-08-30,0,2014,MIN @ BAL,T4,Gardenhire,Schoop,Out at 2nd,Force play,Wegner,Winters,Overturned,0:39,http://t.co/oXiNwAor6y,1,0,0,2014-mlb-replays.csv,http://t.co/oXiNwAor6y,520,0,HTTP 520
+2014-08-30,2014-08-30,0,2014,PHI @ NYM,B4,Sandberg,Wright,Safe at 1st,Tag play,Kulpa,DeMuth,Overturned,0:38,http://t.co/spHse70n4l,1,0,0,2014-mlb-replays.csv,http://t.co/spHse70n4l,520,0,HTTP 520
+2014-08-31,2014-08-31,0,2014,CIN @ PIT,B4,Price,S. Marte,Safe at 1st,Force play,Gonzalez,Reynolds,Overturned,1:14,http://t.co/dWCTUJ7y4b,1,0,0,2014-mlb-replays.csv,http://t.co/dWCTUJ7y4b,520,0,HTTP 520
+2014-08-31,2014-08-31,0,2014,DET @ CWS,B1,Ventura,Gillaspie,Out at 2nd,Force play,Hoberg,Nelson,Overturned,1:57,http://t.co/8Z0EHkMEhD,1,0,0,2014-mlb-replays.csv,http://t.co/8Z0EHkMEhD,520,0,HTTP 520
+2014-08-31,2014-08-31,0,2014,MIA @ ATL,T9,Redmond,Solano,Out at 1st,Force play,Guccione,Hallion,Stands,1:25,http://t.co/RB2PXFJ7oz,0,0,0,2014-mlb-replays.csv,http://t.co/RB2PXFJ7oz,520,0,HTTP 520
+2014-08-31,2014-08-31,0,2014,TEX @ HOU,T1,UMPIRE,Rios,In play (double),Potential HR,Barber,Gorman,Confirmed,0:48,http://t.co/Mi8jsPOTFs,0,0,0,2014-mlb-replays.csv,http://t.co/Mi8jsPOTFs,520,0,HTTP 520
+2014-08-31,2014-08-31,0,2014,TEX @ HOU,B8,UMPIRE,Grossman,7.13/Out at home,7.13,Randazzo,Gorman,Confirmed,1:34,http://atmlb.com/Z4T8Fi,0,0,0,2014-mlb-replays.csv,http://atmlb.com/Z4T8Fi,403,0,HTTP 403
+2014-09-01,Sep. 1,1,2014,BOS @ TB,B10,Farrell,Hanigan,Safe at 2nd,Tag play,DiMuro,Layne,Stands,2:15,http://t.co/4r7upuSZOz,0,0,0,2014-mlb-replays.csv,http://t.co/4r7upuSZOz,520,0,HTTP 520
+2014-09-01,Sep. 1,1,2014,MIN @ BAL,B5,Showalter,Paredes,Out at 1st,Force play,Cederstrom,Danley,Confirmed,0:39,http://t.co/D6kgCYOJHG,0,0,0,2014-mlb-replays.csv,http://t.co/D6kgCYOJHG,520,0,HTTP 520
+2014-09-01,Sep. 1,1,2014,SF @ COL,B8,Weiss,Morneau,Out at 2nd,Tag play,Hernandez,Vanover,Stands,2:06,http://t.co/TTCVjAwZuD,0,0,0,2014-mlb-replays.csv,http://t.co/TTCVjAwZuD,520,0,HTTP 520
+2014-09-01,Sep. 1,1,2014,TEX @ KC,T2,Washington,Telis,Out at 1st,Force play,Drake,Culbreth,Stands,1:25,http://t.co/4liTH0qWsT,0,0,0,2014-mlb-replays.csv,http://t.co/4liTH0qWsT,520,0,HTTP 520
+2014-09-01,Sep. 1,1,2014,TEX @ KC,B7,UMPIRE,Dyson,Safe at 2nd,Tag play,Porter,Culbreth,Overturned,1:00,http://t.co/oXwdFJVZsq,1,0,0,2014-mlb-replays.csv,http://t.co/oXwdFJVZsq,520,0,HTTP 520
+2014-09-01,Sep. 1,1,2014,WSH @ LAD,B3,Williams,Gordon,Safe at 1st,Tag play,T. Barrett,T. Barrett,Overturned,2:02,http://t.co/jdSfq02zb8,1,0,0,2014-mlb-replays.csv,http://t.co/jdSfq02zb8,520,0,HTTP 520
+2014-09-01,Sep. 1,1,2014,WSH @ LAD,T7,UMPIRE,Rendon,7.13/Out at home,7.13,Tumpane,T. Barrett,Confirmed,1:02,http://atmlb.com/1qYKlLz,0,0,0,2014-mlb-replays.csv,http://atmlb.com/1qYKlLz,403,0,HTTP 403
+2014-09-01,Sep. 1,1,2014,WSH @ LAD,T8,Williams,Ramos,Out at 1st,Force play,T. Barrett,T. Barrett,Confirmed,0:41,http://atmlb.com/1vKpqmE,0,0,0,2014-mlb-replays.csv,http://atmlb.com/1vKpqmE,403,0,HTTP 403
+2014-09-02,Sep. 2,1,2014,BOS @ NYY,B5,Girardi,Jeter,Out at 1st,Force play,T. Welke,T. Welke,Overturned,1:08,http://t.co/0vxo7IfCHl,1,0,0,2014-mlb-replays.csv,http://t.co/0vxo7IfCHl,520,0,HTTP 520
+2014-09-02,Sep. 2,1,2014,CIN @ BAL,T9,Price,B. Hamilton,Out b/w 1st-2nd,Tag play,Layne,Layne,Stands,0:29,http://t.co/ghCG1zQWa6,0,0,0,2014-mlb-replays.csv,http://t.co/ghCG1zQWa6,520,0,HTTP 520
+2014-09-02,Sep. 2,1,2014,CWS @ MIN,T9,Gardenhire,C. Sanchez,Safe at 2nd,Tag play,Little,Davis,Overturned,0:49,http://t.co/43hnBAxq0b,1,0,0,2014-mlb-replays.csv,http://t.co/43hnBAxq0b,520,0,HTTP 520
+2014-09-02,Sep. 2,1,2014,DET @ CLE,B7,Francona,J. Ramirez,Out at 1st,Tag play,Woodring,Everitt,Stands,1:49,http://t.co/TZb5CieI1v,0,0,0,2014-mlb-replays.csv,http://t.co/TZb5CieI1v,520,0,HTTP 520
+2014-09-02,Sep. 2,1,2014,MIL @ CHI,B4,Roenicke,Valaika,Safe at 1st,Force play,Carlson,Diaz,Overturned,1:34,http://t.co/uSM3iNE7xF,1,0,0,2014-mlb-replays.csv,http://t.co/uSM3iNE7xF,520,0,HTTP 520
+2014-09-02,Sep. 2,1,2014,PIT @ STL,T1,Matheny,Lambo,Safe at 1st,Force play,Kulpa,Emmel,Overturned,0:41,http://t.co/LPapV1zSji,1,0,0,2014-mlb-replays.csv,http://t.co/LPapV1zSji,520,0,HTTP 520
+2014-09-02,Sep. 2,1,2014,TEX @ KC,T6,Washington,Beltre,Out at 1st,Force play,Culbreth,Culbreth,Stands,1:11,http://t.co/IMak8HVx43,0,0,0,2014-mlb-replays.csv,http://t.co/IMak8HVx43,520,0,HTTP 520
+2014-09-03,Sep. 3,1,2014,ARI @ SD,T5,Black,A. Marte,Safe at home,Tag play,Blaser,Joyce,Stands,2:25,http://t.co/L8hXFiTSf1,0,0,0,2014-mlb-replays.csv,http://t.co/L8hXFiTSf1,520,0,HTTP 520
+2014-09-03,Sep. 3,1,2014,LAA @ HOU,B7,Scioscia,Singleton,Safe at 2nd,Tag play,Reyburn,Kellogg,Overturned,0:52,http://t.co/A3XNJFzRRL,1,0,0,2014-mlb-replays.csv,http://t.co/A3XNJFzRRL,520,0,HTTP 520
+2014-09-03,Sep. 3,1,2014,NYM @ MIA,B6,Collins,Ozuna,Safe at 1st,Force play,Fletcher,Winters,Overturned,1:10,http://t.co/jZOWGvtmCB,1,0,0,2014-mlb-replays.csv,http://t.co/jZOWGvtmCB,520,0,HTTP 520
+2014-09-03,Sep. 3,1,2014,PHI @ ATL,B5,Gonzalez,Freeman,Out at 2nd,Tag play,Baker,Meals,Overturned,2:16,http://t.co/bGBoYxC8xv,1,0,0,2014-mlb-replays.csv,http://t.co/bGBoYxC8xv,520,0,HTTP 520
+2014-09-03,Sep. 3,1,2014,TOR @ TB,T5,UMPIRE,Encarnacion,Home Run,Potential HR,Danley,Cederstrom,Stands,3:26,http://t.co/9D4IkswCeu,0,0,0,2014-mlb-replays.csv,http://t.co/9D4IkswCeu,520,0,HTTP 520
+2014-09-03,Sep. 3,1,2014,TOR @ TB,B6,Maddon,Loney,Out at 2nd,Tag play,Danley,Cederstrom,Overturned,1:30,http://t.co/RtBSKdLddU,1,0,0,2014-mlb-replays.csv,http://t.co/RtBSKdLddU,520,0,HTTP 520
+2014-09-03,Sep. 3,1,2014,WSH @ LAD,B7,Mattingly,J. Turner,Ball (not HBP),HBP,Schrieber,T. Barrett,Stands,1:56,http://t.co/CoaZOSwmsJ,0,0,0,2014-mlb-replays.csv,http://t.co/CoaZOSwmsJ,520,0,HTTP 520
+2014-09-03,Sep. 3,1,2014,WSH @ LAD,B8,Williams,D. Gordon,Safe at 2nd,Tag play,Ripperger,T. Barrett,Overturned,2:43,http://t.co/2pZMiIqD45,1,0,0,2014-mlb-replays.csv,http://t.co/2pZMiIqD45,520,0,HTTP 520
+2014-09-04,Sep. 4,1,2014,ARI @ SD,B7,Black,S. Smith,Out at 1st,Tag play,Hudson,Joyce,Confirmed,1:23,http://t.co/im1OgQSeFU,0,0,0,2014-mlb-replays.csv,http://t.co/im1OgQSeFU,520,0,HTTP 520
+2014-09-04,Sep. 4,1,2014,DET @ CLE,T8,Francona,Castellanos,Safe at 1st,Force play,Ad. Johnson,Everitt,Overturned,4:09,http://t.co/Ev7QsKH63c,1,0,0,2014-mlb-replays.csv,http://t.co/Ev7QsKH63c,520,0,HTTP 520
+2014-09-04,Sep. 4,1,2014,LAA @ MIN,B9,Scioscia,D. Santana,Safe at 1st,Tag play,B. Welke,Emmel,Stands,4:15,http://t.co/RljHDaXtOK,0,0,0,2014-mlb-replays.csv,http://t.co/RljHDaXtOK,520,0,HTTP 520
+2014-09-04,Sep. 4,1,2014,STL @ MIL,T9,UMPIRE,Jay,7.13/Out at home,7.13,Conroy,Meals,Confirmed,1:18,http://t.co/cEqLI2iC6x,0,0,0,2014-mlb-replays.csv,http://t.co/cEqLI2iC6x,520,0,HTTP 520
+2014-09-04,Sep. 4,1,2014,TOR @ TB,B6,Maddon,Myers,Out at 2nd,Tag play,Cederstrom,Cederstrom,Confirmed,2:07,http://t.co/I3Db9OPcvN,0,0,0,2014-mlb-replays.csv,http://t.co/I3Db9OPcvN,520,0,HTTP 520
+2014-09-04,Sep. 4,1,2014,TOR @ TB,B10,Gibbons,Kiermaier,Safe at 1st,Force play,Danley,Cederstrom,Confirmed,1:30,http://t.co/g04ndw0U9v,0,0,0,2014-mlb-replays.csv,http://t.co/g04ndw0U9v,520,0,HTTP 520
+2014-09-05,Sep. 5,1,2014,ARI @ LAD,B1,Gibson,H. Ramirez,Safe at 1st,Force play,Hoberg,Diaz,Overturned,1:49,http://t.co/QUAKkhdfKV,1,0,0,2014-mlb-replays.csv,http://t.co/QUAKkhdfKV,520,0,HTTP 520
+2014-09-05,Sep. 5,1,2014,LAA @ MIN,B2,Scioscia,Pinto,Safe at 2nd,Tag play,Tumpane,Emmel,Overturned,0:44,http://t.co/y3OohXZcup,1,0,0,2014-mlb-replays.csv,http://t.co/y3OohXZcup,520,0,HTTP 520
+2014-09-05,Sep. 5,1,2014,NYM @ CIN,T2,Collins,W. Flores,Out at 3rd,Tag play,Schrieber,T. Barrett,Overturned,2:43,http://t.co/tUT9HnE39l,1,0,0,2014-mlb-replays.csv,http://t.co/tUT9HnE39l,520,0,HTTP 520
+2014-09-05,Sep. 5,1,2014,PHI @ WSH,B7,UMPIRE,Werth,7.13/Out at home,7.13,Ad. Johnson,Everitt,Confirmed,1:43,http://t.co/Kz7s4Xmhjb,0,0,0,2014-mlb-replays.csv,http://t.co/Kz7s4Xmhjb,520,0,HTTP 520
+2014-09-05,Sep. 5,1,2014,SD @ COL,B5,Weiss,Blackmon,Out at 3rd,Tag play,Iassogna,Iassogna,Stands,2:10,http://t.co/ObrrQmvhgN,0,0,0,2014-mlb-replays.csv,http://t.co/ObrrQmvhgN,520,0,HTTP 520
+2014-09-05,Sep. 5,1,2014,SEA @ TEX,B3,McClendon,L. Martin,Safe at 1st,Force play,Vanover,Vanover,Overturned,2:08,http://t.co/U94vocYt44,1,0,0,2014-mlb-replays.csv,http://t.co/U94vocYt44,520,0,HTTP 520
+2014-09-05,Sep. 5,1,2014,SEA @ TEX,B8,Bogar,Choice,Out at 1st,Force play,Vanover,Vanover,Confirmed,1:02,http://t.co/QYev0S577W,0,0,0,2014-mlb-replays.csv,http://t.co/QYev0S577W,520,0,HTTP 520
+2014-09-05,Sep. 5,1,2014,STL @ MIL,B3,Matheny,Gennett,Safe at 2nd,Tag play,Davidson,Meals,Overturned,0:44,http://t.co/kP2wXK3Zlv,1,0,0,2014-mlb-replays.csv,http://t.co/kP2wXK3Zlv,520,0,HTTP 520
+2014-09-05,Sep. 5,1,2014,TOR @ BOS,T10,Farrell,Mayberry,Safe at home,Tag play,Porter,Culbreth,Confirmed,1:12,http://t.co/HHAiBmyDRe,0,0,0,2014-mlb-replays.csv,http://t.co/HHAiBmyDRe,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,ARI @ LAD,B8,Gibson,H. Ramirez,In play (double),Fan interference?,Diaz,Diaz,Overturned,1:44,http://t.co/FgfDG4yWch,1,0,0,2014-mlb-replays.csv,http://t.co/FgfDG4yWch,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,ATL @ MIA,T4,Redmond,A. Simmons,Safe at home,Tag play,Wendelstedt,Layne,Stands,2:22,http://t.co/YJdFEcxWo7,0,0,0,2014-mlb-replays.csv,http://t.co/YJdFEcxWo7,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,ATL @ MIA,B9,Gonzalez,Valdespin,Safe at 1st,Tag play,Estabrook,Layne,Overturned,0:57,http://t.co/h3o9nntZYU,1,0,0,2014-mlb-replays.csv,http://t.co/h3o9nntZYU,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,ATL @ MIA,T10,UMPIRE,Gattis,In Play,Potential HR,Barber,Layne,Overturned,0:37,http://t.co/kH3a08DpOp,1,0,0,2014-mlb-replays.csv,http://t.co/kH3a08DpOp,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,CWS @ CLE,B5,Ventura,J. Ramirez,Safe at 1st,Force play,T. Welke,T. Welke,Stands,1:49,http://t.co/W3D6xOs7so,0,0,0,2014-mlb-replays.csv,http://t.co/W3D6xOs7so,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,LAA @ MIN,T1,Gardenhire,Aybar,Safe at 1st,Tag play,Tumpane,Emmel,Overturned,1:19,http://atmlb.com/1lRpNZI,1,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/09/07/mlbtv_36009897_1800K.mp4,200,2048,
+2014-09-06,Sep. 6,1,2014,LAA @ MIN,B9,Gardenhire,Dozier,Out at 1st,Force play,Tumpane,Emmel,Confirmed,2:24,http://t.co/62e9bW2OvY,0,0,0,2014-mlb-replays.csv,http://t.co/62e9bW2OvY,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,NYM @ CIN,T9,Price,"E. Young, Jr.",Safe at 3rd,Tag play,Marquez,T. Barrett,Overturned,1:25,http://t.co/rc7YFJmz4U,1,0,0,2014-mlb-replays.csv,http://t.co/rc7YFJmz4U,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,SD @ COL,B1,Black,Stubbs,Safe at 1st,Force play,Bucknor,Iassogna,Overturned,0:56,http://t.co/XKwjFVT9FY,1,0,0,2014-mlb-replays.csv,http://t.co/XKwjFVT9FY,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,SEA @ TEX,T2,McClendon,L. Morrison,Out at 1st,Force play,Hernandez,Vanover,Overturned,0:39,http://t.co/SPNuIGpy0f,1,0,0,2014-mlb-replays.csv,http://t.co/SPNuIGpy0f,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,SEA @ TEX,T8,Bogar,Seager,Touched 3rd/Safe at home,Touching base,Nauert,Vanover,Confirmed,0:46,http://t.co/a7IJ8UuYEO,0,0,0,2014-mlb-replays.csv,http://t.co/a7IJ8UuYEO,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,SF @ DET,B2,Ausmus,R. Davis,Out at 1st,Force play,Wegner,Winters,Overturned,0:49,http://t.co/XVfz3sOs1d,1,0,0,2014-mlb-replays.csv,http://t.co/XVfz3sOs1d,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,SF @ DET,B4,Ausmus,R. Davis,Out at 2nd,Tag play,Winters,Winters,Confirmed,1:27,http://t.co/LeiZw7znWE,0,0,0,2014-mlb-replays.csv,http://t.co/LeiZw7znWE,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,STL @ MIL,B1,Matheny,Braun,Safe at home,Tag play,Meals,Meals,Overturned,1:19,http://t.co/E63n8pOrqh,1,1,0,2014-mlb-replays.csv,http://t.co/E63n8pOrqh,520,0,HTTP 520
+2014-09-06,Sep. 6,1,2014,TOR @ BOS,T6,Farrell,Bautista,Fair Ball (double),Fair/foul,Porter,Culbreth,Confirmed,0:50,http://atmlb.com/1ufGe2U,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/09/07/mlbtv_36021829_1800K.mp4,200,2048,
+2014-09-07,Sep. 7,1,2014,ATL @ MIA,B1,Gonzalez,Yelich,Safe at 1st,Tag play,Barber,Layne,Overturned,1:02,http://t.co/Mja0csBRc8,1,0,0,2014-mlb-replays.csv,http://t.co/Mja0csBRc8,520,0,HTTP 520
+2014-09-07,Sep. 7,1,2014,CWS @ CLE,B4,Ventura,Kipnis,Safe at 1st,Force Play,Tichenor,T. Welke,Overturned,0:47,http://t.co/A6srpEaw78,1,0,0,2014-mlb-replays.csv,http://t.co/A6srpEaw78,520,0,HTTP 520
+2014-09-07,Sep. 7,1,2014,KC @ NYY,T4,Girardi,A. Escobar,Safe at 3rd,Tag Play,Cederstrom,Cederstrom,Overturned,0:33,http://t.co/WwLv6OCPwb,1,0,0,2014-mlb-replays.csv,http://t.co/WwLv6OCPwb,520,0,HTTP 520
+2014-09-07,Sep. 7,1,2014,LAA @ MIN,B1,Scioscia,Dozier,Safe at 2nd,Tag Play,B. Welke,Emmel,Stands,1:05,http://t.co/dASDYcz2Gh,0,0,0,2014-mlb-replays.csv,http://t.co/dASDYcz2Gh,520,0,HTTP 520
+2014-09-07,Sep. 7,1,2014,NYM @ CIN,B9,Price,Frazier,Out at 1st,Force Play,Schrieber,T. Barrett,Overturned,3:08,http://t.co/QpI3LISVYR,1,0,0,2014-mlb-replays.csv,http://t.co/QpI3LISVYR,520,0,HTTP 520
+2014-09-07,Sep. 7,1,2014,PHI @ WSH,T8,Williams,Revere,Safe at 2nd,Tag Play,Ad. Johnson,Everitt,Overturned,0:39,http://t.co/50vPz0PgzZ,1,0,0,2014-mlb-replays.csv,http://t.co/50vPz0PgzZ,520,0,HTTP 520
+2014-09-07,Sep. 7,1,2014,SD @ COL,B8,Black,LeMahieu,Safe at 1st,Tag Play,Iassogna,Iassogna,Overturned,2:39,http://t.co/RU7jKwhgNs,1,0,0,2014-mlb-replays.csv,http://t.co/RU7jKwhgNs,520,0,HTTP 520
+2014-09-07,Sep. 7,1,2014,SF @ DET,T7,Ausmus,G. Blanco,Safe at 1st,Tag Play,Winters,Winters,Stands,1:40,http://t.co/dlLIRpdJcf,0,0,0,2014-mlb-replays.csv,http://t.co/dlLIRpdJcf,520,0,HTTP 520
+2014-09-08,Sep. 8,1,2014,BAL @ BOS,T9,Showalter,De Aza,Out at 2nd,Tag play,Ad. Johnson,Miller,Confirmed,1:03,http://t.co/zLNOwWFYwy,0,0,0,2014-mlb-replays.csv,http://t.co/zLNOwWFYwy,520,0,HTTP 520
+2014-09-08,Sep. 8,1,2014,CHI @ TOR,B2,Renteria,Goins,Safe at 1st,Force play,Layne,Layne,Overturned,0:58,http://t.co/bHzyQlyNZ8,1,0,0,2014-mlb-replays.csv,http://t.co/bHzyQlyNZ8,520,0,HTTP 520
+2014-09-08,Sep. 8,1,2014,HOU @ SEA,T7,UMPIRE,Grossman,Home Run,Potential HR,Hoberg,Nelson,Overturned,1:58,http://t.co/sk9qIVqcUg,1,1,0,2014-mlb-replays.csv,http://t.co/sk9qIVqcUg,520,0,HTTP 520
+2014-09-08,Sep. 8,1,2014,HOU @ SEA,T8,Jewett (McClendon),C. Carter,Safe at 2nd,Tag play,Hoberg,Nelson,Stands,3:02,http://t.co/ZdzfeAP22Z,0,0,0,2014-mlb-replays.csv,http://t.co/ZdzfeAP22Z,520,0,HTTP 520
+2014-09-09,Sep. 9,1,2014,ATL @ WSH,B1,Gonzalez,Desmond,Safe at 2nd,Force play,Drake,West,Stands,1:55,http://t.co/OlvZeM5GI9,0,0,0,2014-mlb-replays.csv,http://t.co/OlvZeM5GI9,520,0,HTTP 520
+2014-09-09,Sep. 9,1,2014,HOU @ SEA,T4,UMPIRE,Singleton,In play (double),Potential HR,Hoberg,Nelson,Confirmed,0:47,http://t.co/8q2ob9NLmD,0,0,0,2014-mlb-replays.csv,http://t.co/8q2ob9NLmD,520,0,HTTP 520
+2014-09-09,Sep. 9,1,2014,HOU @ SEA,T6,McClendon,Singleton,Safe at 1st,Force play,Hoberg,Nelson,Overturned,1:00,http://t.co/yRIr39vKoe,1,0,0,2014-mlb-replays.csv,http://t.co/yRIr39vKoe,520,0,HTTP 520
+2014-09-09,Sep. 9,1,2014,KC @ DET,B6,Ausmus,R. Davis,Out at 1st,Tag play,Hoye,Emmel,Stands,1:20,http://t.co/bcCe9zTirO,0,0,0,2014-mlb-replays.csv,http://t.co/bcCe9zTirO,520,0,HTTP 520
+2014-09-09,Sep. 9,1,2014,LAA @ TEX,T8,Bogar,Cowgill,Safe at 2nd,Tag play,Eddings,Joyce,Stands,2:31,http://atmlb.com/1pT37mt,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/09/10/mlbtv_36106523_1800K.mp4,200,2048,
+2014-09-09,Sep. 9,1,2014,MIA @ MIL,T7,Redmond,Yelich,Out at 1st,Force play,Bellino,Kellogg,Overturned,1:43,http://t.co/FEEJlKRS3T,1,0,0,2014-mlb-replays.csv,http://t.co/FEEJlKRS3T,520,0,HTTP 520
+2014-09-09,Sep. 9,1,2014,OAK @ CWS,T1,Ventura,Donaldson,Safe at 1st,Force play,Wolcott,Scott,Overturned,1:04,http://t.co/1riNalrX4S,1,0,0,2014-mlb-replays.csv,http://t.co/1riNalrX4S,520,0,HTTP 520
+2014-09-09,Sep. 9,1,2014,OAK @ CWS,T8,Melvin,Crisp,Out at 1st,Force play,Wolcott,Scott,Overturned,1:04,http://t.co/yf8scXj1cB,1,0,0,2014-mlb-replays.csv,http://t.co/yf8scXj1cB,520,0,HTTP 520
+2014-09-09,Sep. 9,1,2014,PIT @ PHI,T5,UMPIRE,S. Marte,Home Run,Potential HR,Hickox,T. Welke,Overturned,1:03,http://t.co/4648vMivKf,1,1,0,2014-mlb-replays.csv,http://t.co/4648vMivKf,520,0,HTTP 520
+2014-09-09,Sep. 9,1,2014,TB @ NYY,B5,UMPIRE,Drew,7.13/Out at home,7.13,Carapazza,Vanover,Confirmed,1:31,http://t.co/uPiotOcAbs,0,0,0,2014-mlb-replays.csv,http://t.co/uPiotOcAbs,520,0,HTTP 520
+2014-09-10,Sep. 10,1,2014,ARI @ SF,B3,Gibson,Pagan,Safe at 2nd,Tag play,Rackley,Gorman,Overturned,0:47,http://t.co/Lmm8QaukRz,1,0,0,2014-mlb-replays.csv,http://t.co/Lmm8QaukRz,520,0,HTTP 520
+2014-09-10,Sep. 10,1,2014,CHI @ TOR,B7,Gibbons,Goins,Out at 1st,Force play,Estabrook,Wendelstedt,Confirmed,1:03,http://t.co/epSzmhz4W5,0,0,0,2014-mlb-replays.csv,http://t.co/epSzmhz4W5,520,0,HTTP 520
+2014-09-10,Sep. 10,1,2014,KC @ DET,B1,Yost,Kinsler,Safe at 1st,Tag play,Tumpane,Emmel,Overturned,1:13,http://t.co/54jLy8eSpY,1,0,0,2014-mlb-replays.csv,http://t.co/54jLy8eSpY,520,0,HTTP 520
+2014-09-10,Sep. 10,1,2014,LAA @ TEX,T1,UMPIRE,H. Kendrick,7.13/Out at home,7.13,Hamari,Joyce,Confirmed,0:42,http://t.co/oKbYDEh3Hw,0,0,0,2014-mlb-replays.csv,http://t.co/oKbYDEh3Hw,520,0,HTTP 520
+2014-09-10,Sep. 10,1,2014,LAA @ TEX,B5,Scioscia,Sardinas,Safe at 1st,Force play,Eddings,Joyce,Overturned,0:57,http://t.co/qz0wSU1KGj,1,0,0,2014-mlb-replays.csv,http://t.co/qz0wSU1KGj,520,0,HTTP 520
+2014-09-10,Sep. 10,1,2014,MIA @ MIL,B1,UMPIRE,Lucroy,7.13/Out at home,7.13,Bellino,Kellogg,Stands,1:46,http://t.co/kcuUPpJTGp,0,0,0,2014-mlb-replays.csv,http://t.co/kcuUPpJTGp,520,0,HTTP 520
+2014-09-10,Sep. 10,1,2014,OAK @ CWS,T8,Melvin,Crisp,Out at 2nd,Tag play,Iassogna,Scott,Confirmed,1:21,http://t.co/PEY4dBJAWF,0,0,0,2014-mlb-replays.csv,http://t.co/PEY4dBJAWF,520,0,HTTP 520
+2014-09-10,Sep. 10,1,2014,SD @ LAD,T1,Mattingly,Solarte,Safe at 2nd,Tag play,L. Barrett,DeMuth,Overturned,0:34,http://t.co/7STnuL3WD2,1,0,0,2014-mlb-replays.csv,http://t.co/7STnuL3WD2,520,0,HTTP 520
+2014-09-10,Sep. 10,1,2014,SD @ LAD,T5,Mattingly,Spangenberg,Safe at 2nd,Tag play,L. Barrett,DeMuth,Overturned,0:27,http://t.co/eZPwRgpDDW,1,0,0,2014-mlb-replays.csv,http://t.co/eZPwRgpDDW,520,0,HTTP 520
+2014-09-10,Sep. 10,1,2014,SD @ LAD,B6,Black,H. Ramirez,Safe at 1st,Tag play,Kulpa,DeMuth,Overturned,2:02,http://t.co/GOhuMIXRr8,1,0,0,2014-mlb-replays.csv,http://t.co/GOhuMIXRr8,520,0,HTTP 520
+2014-09-11,Sep. 11,1,2014,WSH @ NYM,T4,UMPIRE,Rendon,Home Run,Potential HR,Hoye,Emmel,Confirmed,0:30,http://t.co/4Yy8yMA55E,0,0,0,2014-mlb-replays.csv,http://t.co/4Yy8yMA55E,520,0,HTTP 520
+2014-09-12,Sep. 12,1,2014,CHI @ PIT,T5,UMPIRE,Alcantara,Home Run,Potential HR,Ripperger,T. Barrett,Confirmed,0:45,http://t.co/9YU4nJsxX1,0,0,0,2014-mlb-replays.csv,http://t.co/9YU4nJsxX1,520,0,HTTP 520
+2014-09-12,Sep. 12,1,2014,HOU @ LAA,T4,Lawless,Grossman,Out at 1st,Tag play,L. Barrett,DeMuth,Overturned,0:47,http://t.co/5DTw27iEah,1,0,0,2014-mlb-replays.csv,http://t.co/5DTw27iEah,520,0,HTTP 520
+2014-09-12,Sep. 12,1,2014,LAD @ SF,T1,Bochy,Puig,Safe at 2nd,Force play,Hamari,Joyce,Stands,1:11,http://t.co/PlR9RShaaq,0,0,0,2014-mlb-replays.csv,http://t.co/PlR9RShaaq,520,0,HTTP 520
+2014-09-12,Sep. 12,1,2014,MIA @ PHI,T6,Sandberg,Lucas,Safe at 1st,Force play,Porter,West,Confirmed,0:39,http://t.co/99zfjr3jxt,0,0,0,2014-mlb-replays.csv,http://t.co/99zfjr3jxt,520,0,HTTP 520
+2014-09-12,Sep. 12,1,2014,SD @ ARI,B4,Gibson,Trumbo,Out at 1st,Force play,Little,Kellogg,Stands,1:04,http://t.co/9b4xkMhRi2,0,0,0,2014-mlb-replays.csv,http://t.co/9b4xkMhRi2,520,0,HTTP 520
+2014-09-12,Sep. 12,1,2014,TB @ TOR,B8,Maddon,Reyes,HBP,HBP,Guccione,Hallion,Overturned,2:39,http://t.co/yiJRMphh5z,1,0,0,2014-mlb-replays.csv,http://t.co/yiJRMphh5z,520,0,HTTP 520
+2014-09-12,Sep. 12,1,2014,WSH @ NYM,T5,UMPIRE,Rendon,In play (double),Potential HR,Hoye,Emmel,Overturned,0:51,http://t.co/TsXdBCOjNL,1,0,0,2014-mlb-replays.csv,http://t.co/TsXdBCOjNL,520,0,HTTP 520
+2014-09-12,Sep. 12,1,2014,WSH @ NYM,T5,Collins,Desmond,Safe at 1st,Force play,B. Welke,Emmel,Stands,1:17,http://t.co/1raDSBUS33,0,0,0,2014-mlb-replays.csv,http://t.co/1raDSBUS33,520,0,HTTP 520
+2014-09-13,Sep. 13,1,2014,CHI @ PIT,T7,Hurdle,Alcantara,Safe at 2nd,Tag play,T. Barrett,T. Barrett,Stands,1:39,http://t.co/B7QHYbQNDI,0,0,0,2014-mlb-replays.csv,http://t.co/B7QHYbQNDI,520,0,HTTP 520
+2014-09-13,Sep. 13,1,2014,CLE @ DET,T8,Ausmus,Shuck,Safe at 1st,Force play,Layne,Layne,Overturned,0:38,http://t.co/Quegefs3zU,1,0,0,2014-mlb-replays.csv,http://t.co/Quegefs3zU,520,0,HTTP 520
+2014-09-13,Sep. 13,1,2014,COL @ STL,T9,Matheny,Stubbs,Safe at 1st,Force play,Nelson,Nelson,Stands,1:45,http://t.co/TvjhrAE8pR,0,0,0,2014-mlb-replays.csv,http://t.co/TvjhrAE8pR,520,0,HTTP 520
+2014-09-13,Sep. 13,1,2014,COL @ STL,T9,UMPIRE,McKenry,In play (double),Fan interference?,Nelson,Nelson,Confirmed,1:50,http://t.co/Ww79iLEE3x,0,0,0,2014-mlb-replays.csv,http://t.co/Ww79iLEE3x,520,0,HTTP 520
+2014-09-13,Sep. 13,1,2014,LAD @ SF,T6,Mattingly,Crawford,Out at 1st,Force play,Eddings,Eddings,Overturned,0:44,http://t.co/fcFcgTHI6U,1,0,0,2014-mlb-replays.csv,http://t.co/fcFcgTHI6U,520,0,HTTP 520
+2014-09-13,Sep. 13,1,2014,MIA @ PHI,T3,Sandberg,Yelich,Safe at 2nd,Tag play,Foster,West,Overturned,0:55,http://t.co/PUevECyysy,1,0,0,2014-mlb-replays.csv,http://t.co/PUevECyysy,520,0,HTTP 520
+2014-09-13,Sep. 13,1,2014,MIN @ CWS,B7,Gardenhire,Jordan Danks,Fair Ball (double),Fair/foul,Vanover,Vanover,Confirmed,0:39,http://t.co/lhpAMIT3df,0,0,0,2014-mlb-replays.csv,http://t.co/lhpAMIT3df,520,0,HTTP 520
+2014-09-13,Sep. 13,1,2014,NYY @ BAL,T1,Showalter,Ellsbury,Safe at 1st,Force play,Hickox,T. Welke,Overturned,0:32,http://t.co/aTqclErzxP,1,0,0,2014-mlb-replays.csv,http://t.co/aTqclErzxP,520,0,HTTP 520
+2014-09-13,Sep. 13,1,2014,OAK @ SEA,T9,McClendon,Sogard,Safe at 2nd,Tag play,Gorman,Gorman,Overturned,1:54,http://t.co/HagiGBhTzl,1,0,0,2014-mlb-replays.csv,http://t.co/HagiGBhTzl,520,0,HTTP 520
+2014-09-13,Sep. 13,1,2014,SD @ ARI,T6,UMPIRE,Rivera,In play (triple),Potential HR,Kellogg,Kellogg,Stands,2:55,http://t.co/8LnRung1nT,0,0,0,2014-mlb-replays.csv,http://t.co/8LnRung1nT,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,ATL @ TEX,B2,Bogar,Martin,Out at 1st,Tag play,Ad. Johnson,Everitt,Stands,2:12,http://t.co/NJgSz111xH,0,0,0,2014-mlb-replays.csv,http://t.co/NJgSz111xH,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,ATL @ TEX,B4,Gonzalez,Sardinas,Safe at 3rd,Tag play,Miller,Everitt,Overturned,0:46,http://t.co/nLOw8320kt,1,0,0,2014-mlb-replays.csv,http://t.co/nLOw8320kt,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,CHI @ PIT,B1,Renteria,Snider,Safe at 1st,Force play,T. Barrett,T. Barrett,Overturned,1:05,http://t.co/IdWJ1twcWH,1,0,0,2014-mlb-replays.csv,http://t.co/IdWJ1twcWH,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,CHI @ PIT,B6,Renteria,Snider,Safe at 1st,Force play,T. Barrett,T. Barrett,Confirmed,1:12,http://t.co/aBM8ogidCF,0,0,0,2014-mlb-replays.csv,http://t.co/aBM8ogidCF,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,CIN @ MIL,T9,Roenicke,Lutz,Safe at 1st,Force play,Bucknor,Scott,Overturned,1:28,http://t.co/B0obxL84tJ,1,0,0,2014-mlb-replays.csv,http://t.co/B0obxL84tJ,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,CLE @ DET,B3,Ausmus,Kinsler,Not HBP,HBP,Layne,Layne,Overturned,2:31,http://t.co/cOBnyMKuKu,1,0,0,2014-mlb-replays.csv,http://t.co/cOBnyMKuKu,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,COL @ STL,B8,Matheny,Descalso,Out at 1st,Force play,Hoberg,Nelson,Overturned,1:16,http://t.co/dYwoPQ4oXa,1,0,0,2014-mlb-replays.csv,http://t.co/dYwoPQ4oXa,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,LAD @ SF,T1,Mattingly,Gordon,Out at 2nd,Tag play,Blaser,Eddings,Overturned,1:13,http://t.co/VPwvagsILW,1,0,0,2014-mlb-replays.csv,http://t.co/VPwvagsILW,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,MIA @ PHI,T2,Redmond,Hernandez,Out at 1st,Force play,Foster,West,Overturned,0:37,http://t.co/1vG0aAlPUU,1,0,0,2014-mlb-replays.csv,http://t.co/1vG0aAlPUU,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,MIN @ CWS,T3,Ventura,Santana,Safe at 1st,Force play,Vanover,Vanover,Stands,2:45,http://t.co/QcvjaO8rM1,0,0,0,2014-mlb-replays.csv,http://t.co/QcvjaO8rM1,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,TB @ TOR,T3,Maddon,Guyer,Out at 3rd,Tag play,Nauert,Hallion,Confirmed,1:16,http://t.co/HgHeCRLCYG,0,0,0,2014-mlb-replays.csv,http://t.co/HgHeCRLCYG,520,0,HTTP 520
+2014-09-14,Sep. 14,1,2014,TB @ TOR,T8,Gibbons,Bautista,Foul Ball,Fan interference?,H. Gibson,Hallion,Overturned,1:52,http://t.co/4TkKPgx0CB,1,0,0,2014-mlb-replays.csv,http://t.co/4TkKPgx0CB,520,0,HTTP 520
+2014-09-15,Sep. 15,1,2014,TOR @ BAL,T9,Gibbons,Schoop,Out at 2nd,Force play,Schrieber,T. Barrett,Confirmed,1:25,http://t.co/ytfZg5NEH8,0,0,0,2014-mlb-replays.csv,http://t.co/ytfZg5NEH8,520,0,HTTP 520
+2014-09-16,Sep. 16,1,2014,CIN @ CHI,T4,Renteria,Hamilton,Safe at 2nd,Tag play,Miller,Miller,Overturned,1:48,http://t.co/3fRifEtPvo,1,0,0,2014-mlb-replays.csv,http://t.co/3fRifEtPvo,520,0,HTTP 520
+2014-09-16,Sep. 16,1,2014,CWS @ KC,T2,Ventura,Viciedo,Out at 2nd,Tag play,Nelson,Nelson,Confirmed,1:57,http://t.co/4ghYsiMxwv,0,0,0,2014-mlb-replays.csv,http://t.co/4ghYsiMxwv,520,0,HTTP 520
+2014-09-16,Sep. 16,1,2014,LAD @ COL,T6,UMPIRE,Turner,7.13/Out at home,7.13,Reyburn,O'Nora,Confirmed,1:35,http://t.co/bTbNNM0cms,0,0,0,2014-mlb-replays.csv,http://t.co/bTbNNM0cms,520,0,HTTP 520
+2014-09-16,Sep. 16,1,2014,NYY @ TB,B6,Maddon,Franklin,Out at 3rd,Tag play,Foster,West,Overturned,1:12,http://t.co/mL8TXHcQuV,1,0,0,2014-mlb-replays.csv,http://t.co/mL8TXHcQuV,520,0,HTTP 520
+2014-09-16,Sep. 16,1,2014,SEA @ LAA,T5,Scioscia,Chavez,Safe at 1st,Force play,Meals,Meals,Overturned,1:06,http://t.co/te2l4N6RdS,1,0,0,2014-mlb-replays.csv,http://t.co/te2l4N6RdS,520,0,HTTP 520
+2014-09-16,Sep. 16,1,2014,WSH @ ATL,T8,Gonzalez,Rendon,Safe at 2nd,Tag play,Hickox,T. Welke,Overturned,1:47,http://t.co/wwvf9wQWwW,1,0,0,2014-mlb-replays.csv,http://t.co/wwvf9wQWwW,520,0,HTTP 520
+2014-09-17,Sep. 17,1,2014,CWS @ KC,T1,Yost,Abreu,Safe at 2nd,Tag play,Diaz,Nelson,Overturned,0:54,http://t.co/ScSX5u8qgc,1,0,0,2014-mlb-replays.csv,http://t.co/ScSX5u8qgc,520,0,HTTP 520
+2014-09-17,Sep. 17,1,2014,DET @ MIN,T6,Gardenhire,Davis,Safe at 1st,Force play,Joyce,Joyce,Overturned,2:29,http://t.co/IgJ2ZiVclD,1,0,0,2014-mlb-replays.csv,http://t.co/IgJ2ZiVclD,520,0,HTTP 520
+2014-09-17,Sep. 17,1,2014,NYY @ TB,T8,Maddon,C. Young,Safe at 1st,Force play,Foster,Foster,Overturned,0:30,http://t.co/g7pTFesZgb,1,0,0,2014-mlb-replays.csv,http://t.co/g7pTFesZgb,520,0,HTTP 520
+2014-09-17,Sep. 17,1,2014,SF @ ARI,T6,Bochy,Pence,Out at 1st,Force play,DeMuth,DeMuth,Stands,2:13,http://t.co/O31neTtTkH,0,0,0,2014-mlb-replays.csv,http://t.co/O31neTtTkH,520,0,HTTP 520
+2014-09-17,Sep. 17,1,2014,TEX @ OAK,T9,Melvin,Odor,Safe at 3rd,Tag play,Ripperger,Cederstrom,Stands,3:23,http://t.co/uuU9cEcFo3,0,0,0,2014-mlb-replays.csv,http://t.co/uuU9cEcFo3,520,0,HTTP 520
+2014-09-17,Sep. 17,1,2014,TEX @ OAK,T9,Bogar,Smolinski,Out at 1st,Force play,Cederstrom,Cederstrom,Overturned,1:16,http://t.co/8aXD0cQabi,1,0,0,2014-mlb-replays.csv,http://t.co/8aXD0cQabi,520,0,HTTP 520
+2014-09-18,Sep. 18,1,2014,CLE @ HOU,T1,Francona,J. Ramirez,Out at 1st,Force play,Vanover,Vanover,Overturned,0:51,http://t.co/CWuJlP64r6,1,0,0,2014-mlb-replays.csv,http://t.co/CWuJlP64r6,520,0,HTTP 520
+2014-09-18,Sep. 18,1,2014,CLE @ HOU,T9,UMPIRE,Bourn,Inside-the-park HR,Boundary call,Hernandez,Vanover,Overturned,0:55,http://t.co/4H5zney4o7,1,0,0,2014-mlb-replays.csv,http://t.co/4H5zney4o7,520,0,HTTP 520
+2014-09-18,Sep. 18,1,2014,CLE @ HOU,T9,Francona,J. Ramirez,Out at 1st,Force play,Vanover,Vanover,Overturned,2:12,http://t.co/jILPcAnFg0,1,0,0,2014-mlb-replays.csv,http://t.co/jILPcAnFg0,520,0,HTTP 520
+2014-09-18,Sep. 18,1,2014,LAD @ CHI,T9,Renteria,A. Gonzalez,Safe at 1st,Force play,Cuzzi,Davis,Confirmed,0:37,http://t.co/wxLRLoLKXO,0,0,0,2014-mlb-replays.csv,http://t.co/wxLRLoLKXO,520,0,HTTP 520
+2014-09-18,Sep. 18,1,2014,MIL @ STL,B8,Matheny,Holliday,Out at 1st,Force play,Culbreth,Culbreth,Overturned,2:07,http://t.co/0Z7dSqNevI,1,0,0,2014-mlb-replays.csv,http://t.co/0Z7dSqNevI,520,0,HTTP 520
+2014-09-18,Sep. 18,1,2014,SEA @ LAA,T5,Scioscia,L. Morrison,Safe at 1st,Force play,Conroy,Meals,Overturned,1:06,http://t.co/SENn7Zy8rw,1,0,0,2014-mlb-replays.csv,http://t.co/SENn7Zy8rw,520,0,HTTP 520
+2014-09-19,Sep. 19,1,2014,ARI @ COL,B5,UMPIRE,Ynoa,7.13/Out at home,7.13,Ad. Johnson,Miller,Stands,1:42,http://t.co/2TR9tZ8665,0,0,0,2014-mlb-replays.csv,http://t.co/2TR9tZ8665,520,0,HTTP 520
+2014-09-19,Sep. 19,1,2014,CIN @ STL,T2,Price,Cozart,Out at 2nd,Tag Play,Fagan,T. Welke,Stands,2:18,http://t.co/vZyqqtNIFj,0,0,0,2014-mlb-replays.csv,http://t.co/vZyqqtNIFj,520,0,HTTP 520
+2014-09-19,Sep. 19,1,2014,LAD @ CHI,B2,Renteria,Alcantara,Out at 1st,Force Play,H. Gibson,Davis,Overturned,2:05,http://t.co/xlRUvetYBp,1,0,0,2014-mlb-replays.csv,http://t.co/xlRUvetYBp,520,0,HTTP 520
+2014-09-19,Sep. 19,1,2014,MIL @ PIT,B8,Roenicke,Marte,Safe at 1st,Force Play,Foster,West,Confirmed,0:43,http://t.co/gD23nl3rb3,0,0,0,2014-mlb-replays.csv,http://t.co/gD23nl3rb3,520,0,HTTP 520
+2014-09-19,Sep. 19,1,2014,SEA @ HOU,T4,McClendon,Jackson,Out at 2nd,Tag Play,Reyburn,O'Nora,Overturned,2:18,http://t.co/MohGegcJ7X,1,0,0,2014-mlb-replays.csv,http://t.co/MohGegcJ7X,520,0,HTTP 520
+2014-09-19,Sep. 19,1,2014,SEA @ HOU,B8,Lawless,Marisnick,Out at 1st,Force Play,Wendelstedt,O'Nora,Stands,1:35,http://t.co/dLgydrhzBB,0,0,0,2014-mlb-replays.csv,http://t.co/dLgydrhzBB,520,0,HTTP 520
+2014-09-19,Sep. 19,1,2014,TEX @ LAA,B7,UMPIRE,Cron,7.13/Out at home,7.13,Gorman,Gorman,Confirmed,1:41,http://t.co/hfbqE9sLPE,0,0,0,2014-mlb-replays.csv,http://t.co/hfbqE9sLPE,520,0,HTTP 520
+2014-09-20,Sep. 20,1,2014,CLE @ MIN,B7,Francona,Schafer,Safe at 2nd,Tag Play,Reynolds,Culbreth,Overturned,1:12,http://t.co/YhR3fDLMHp,1,0,0,2014-mlb-replays.csv,http://t.co/YhR3fDLMHp,520,0,HTTP 520
+2014-09-20,Sep. 20,1,2014,CWS @ TB,B2,UMPIRE,Franklin,Home Run,Potential HR,Barber,Joyce,Stands,1:34,http://t.co/VoXfRjCsdr,0,0,0,2014-mlb-replays.csv,http://t.co/VoXfRjCsdr,520,0,HTTP 520
+2014-09-20,Sep. 20,1,2014,LAD @ CHI,T3,Renteria,Gordon,Safe at 2nd,Tag Play,G. Gibson,Davis,Stands,2:01,http://t.co/HJhKQOPQuB,0,0,0,2014-mlb-replays.csv,http://t.co/HJhKQOPQuB,520,0,HTTP 520
+2014-09-20,Sep. 20,1,2014,MIL @ PIT,B2,Hurdle,Marte,Out at 1st,Force Play,Drake,West,Overturned,1:46,http://t.co/Robn5ZSdb3,1,0,0,2014-mlb-replays.csv,http://t.co/Robn5ZSdb3,520,0,HTTP 520
+2014-09-20,Sep. 20,1,2014,WSH @ MIA,T7,UMPIRE,Zimmerman,7.13/Out at home,7.13,Fairchild,T. Barrett,Confirmed,1:54,http://t.co/Cse9ZT21ax,0,0,0,2014-mlb-replays.csv,http://t.co/Cse9ZT21ax,520,0,HTTP 520
+2014-09-21,Sep. 21,1,2014,ARI @ COL,T6,Gibson,Pollock,Out at 1st,Force Play,Miller,Miller,Stands,3:17,http://t.co/RdAqXKZTPw,0,0,0,2014-mlb-replays.csv,http://t.co/RdAqXKZTPw,520,0,HTTP 520
+2014-09-21,Sep. 21,1,2014,BOS @ BAL,B7,Farrell,Joseph,Safe at 1st,Force Play,L. Barrett,DeMuth,Stands,3:31,http://t.co/dq95s0FyGS,0,0,0,2014-mlb-replays.csv,http://t.co/dq95s0FyGS,520,0,HTTP 520
+2014-09-21,Sep. 21,1,2014,CIN @ STL,B3,Price,Wong,Safe at 1st,Force Play,T. Welke,T. Welke,Overturned,1:01,http://t.co/qSXIloUnEU,1,0,0,2014-mlb-replays.csv,http://t.co/qSXIloUnEU,520,0,HTTP 520
+2014-09-21,Sep. 21,1,2014,CWS @ TB,B6,Maddon,Myers,Out at 1st,Force Play,Blaser,Joyce,Overturned,2:29,http://t.co/6w3oqTGA6S,1,0,0,2014-mlb-replays.csv,http://t.co/6w3oqTGA6S,520,0,HTTP 520
+2014-09-21,Sep. 21,1,2014,CWS @ TB,B9,Maddon,S. Rodriguez,Out at 1st,Force Play,Blaser,Joyce,Confirmed,1:37,http://t.co/r7mAC6Y3DB,0,0,0,2014-mlb-replays.csv,http://t.co/r7mAC6Y3DB,520,0,HTTP 520
+2014-09-21,Sep. 21,1,2014,LAD @ CHI,T3,Renteria,H. Ramirez,Safe at 1st,Force Play,G. Gibson,Davis,Overturned,1:39,http://t.co/vjCJzeJUth,1,0,0,2014-mlb-replays.csv,http://t.co/vjCJzeJUth,520,0,HTTP 520
+2014-09-21,Sep. 21,1,2014,SEA @ HOU,B6,Lawless,Altuve,Out at 2nd,Tag Play,O'Nora,O'Nora,Stands,1:48,http://t.co/XFM35w88EO,0,0,0,2014-mlb-replays.csv,http://t.co/XFM35w88EO,520,0,HTTP 520
+2014-09-21,Sep. 21,1,2014,TEX @ LAA,B8,Bogar,Pujols,Safe at 1st,Force Play,Wolf,Gorman,Overturned,1:33,http://t.co/QNntSzNWH7,1,0,0,2014-mlb-replays.csv,http://t.co/QNntSzNWH7,520,0,HTTP 520
+2014-09-22,Sep. 22,1,2014,ARI @ MIN,B5,Gibson,A. Hicks,Safe at 2nd,Tag play,Byrne,Cederstrom,Overturned,0:57,http://t.co/VUp13cTx6p,1,0,0,2014-mlb-replays.csv,http://t.co/VUp13cTx6p,520,0,HTTP 520
+2014-09-22,Sep. 22,1,2014,SEA @ TOR,B1,Gibbons,Valencia,Out at 3rd,Tag play,Eddings,Joyce,Overturned,2:10,http://t.co/hpfRqZK8PI,1,0,0,2014-mlb-replays.csv,http://t.co/hpfRqZK8PI,520,0,HTTP 520
+2014-09-22,Sep. 22,1,2014,SEA @ TOR,B2,UMPIRE,Bautista,7.13/Out at home,7.13,Blaser,Joyce,Confirmed,1:41,http://t.co/8P6Sd5fmjE,0,0,0,2014-mlb-replays.csv,http://t.co/8P6Sd5fmjE,520,0,HTTP 520
+2014-09-22,Sep. 22,1,2014,SEA @ TOR,B8,Gibbons,Tolleson,Out at 1st,Force play,Joyce,Joyce,Overturned,1:32,http://t.co/wHH3YYeJfL,1,0,0,2014-mlb-replays.csv,http://t.co/wHH3YYeJfL,520,0,HTTP 520
+2014-09-22,Sep. 22,1,2014,SF @ LAD,T7,Mattingly,J. Perez,Safe at 1st,Tag play,Ad. Johnson,Miller,Confirmed,1:28,http://t.co/mJTwddLsIQ,0,0,0,2014-mlb-replays.csv,http://t.co/mJTwddLsIQ,520,0,HTTP 520
+2014-09-22,Sep. 22,1,2014,STL @ CHI,T5,Matheny,M. Carpenter,Out at 2nd,Tag play,Carlson,Emmel,Overturned,3:31,http://t.co/kjHcF0xxbV,1,0,0,2014-mlb-replays.csv,http://t.co/kjHcF0xxbV,520,0,HTTP 520
+2014-09-23,Sep. 23,1,2014,COL @ SD,T9,Weiss,B. Barnes,Out at 2nd,Tag play,Meals,Meals,Confirmed,1:24,http://t.co/XWmby765nr,0,0,0,2014-mlb-replays.csv,http://t.co/XWmby765nr,520,0,HTTP 520
+2014-09-23,Sep. 23,1,2014,CWS @ DET,B8,Ventura,An. Romine,Safe at 2nd,Tag play,Fletcher,Winters,Stands,1:39,http://t.co/BZ7GBAmc8j,0,0,0,2014-mlb-replays.csv,http://t.co/BZ7GBAmc8j,520,0,HTTP 520
+2014-09-23,Sep. 23,1,2014,HOU @ TEX,T7,Bogar,Presley,Safe at 1st,Force play,Buckminster,T. Barrett,Overturned,1:00,http://t.co/9HaW3LovGv,1,0,0,2014-mlb-replays.csv,http://t.co/9HaW3LovGv,520,0,HTTP 520
+2014-09-23,Sep. 23,1,2014,SEA @ TOR,B3,McClendon,Reyes,Safe at 1st,Force play,Hudson,Joyce,Overturned,1:00,http://t.co/HKAnRvPP8U,1,0,0,2014-mlb-replays.csv,http://t.co/HKAnRvPP8U,520,0,HTTP 520
+2014-09-23,Sep. 23,1,2014,SF @ LAD,B4,Mattingly,Van Slyke,Out at 2nd,Tag play,Miller,Miller,Stands,1:55,http://t.co/KWQTvkQWox,0,0,0,2014-mlb-replays.csv,http://t.co/KWQTvkQWox,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,COL @ SD,B4,Black,Medica,Foul Ball,Fair/foul,Meals,Meals,Overturned,1:45,http://t.co/zIefHL1f6F,1,0,0,2014-mlb-replays.csv,http://t.co/zIefHL1f6F,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,COL @ SD,B4,Black,Wieland,Out at 1st,Tag play,Meals,Meals,Confirmed,1:53,http://t.co/PKwpomIrVy,0,0,0,2014-mlb-replays.csv,http://t.co/PKwpomIrVy,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,HOU @ TEX,T1,Bogar,Grossman,Safe at 3rd,Tag play,T. Barrett,T. Barrett,Overturned,1:00,http://t.co/GUIrq3GB7Q,1,0,0,2014-mlb-replays.csv,http://t.co/GUIrq3GB7Q,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,KC @ CLE,B7,Francona,A. Gordon,Catch,Catch/no catch,West,West,Stands,2:21,http://t.co/chXqTSouuX,0,0,0,2014-mlb-replays.csv,http://t.co/chXqTSouuX,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,LAA @ OAK,B4,UMPIRE,Donaldson,Out at home,7.13,Davis,Davis,Stands,3:39,http://atmlb.com/1pp3czk,0,0,0,2014-mlb-replays.csv,http://mediadownloads.mlb.com/mlbam/2014/09/24/mlbtv_36559911_1800K.mp4,200,2048,
+2014-09-24,Sep. 24,1,2014,LAA @ OAK,B8,Scioscia,B. Burns,Safe at 2nd,Tag play,Cooper,Davis,Stands,2:11,http://t.co/hiyYdp9VZq,0,0,0,2014-mlb-replays.csv,http://t.co/hiyYdp9VZq,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,MIL @ CIN,T2,Price,R. Weeks,Safe at 2nd,Force play,Wolcott,Scott,Overturned,0:52,http://t.co/JvCOoh42No,1,0,0,2014-mlb-replays.csv,http://t.co/JvCOoh42No,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,PHI @ MIA,T9,Sandberg,Ruiz,Out at 3rd,Force play,Wendelstedt,Vanover,Confirmed,1:43,http://t.co/rmjEyDdrC4,0,0,0,2014-mlb-replays.csv,http://t.co/rmjEyDdrC4,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,PIT @ ATL,B6,Hurdle,Gosselin,Safe at 1st,Force play,Layne,Layne,Overturned,0:29,http://t.co/6BuwA0HjAn,1,0,0,2014-mlb-replays.csv,http://t.co/6BuwA0HjAn,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,SEA @ TOR,T3,Gibbons,Hart,Fair Ball (double),Fair/foul,Eddings,Joyce,Confirmed,1:30,http://t.co/luhmzvURne,0,0,0,2014-mlb-replays.csv,http://t.co/luhmzvURne,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,SEA @ TOR,B8,McClendon,Pompey,Safe at 1st,Tag play,Eddings,Joyce,Overturned,0:33,http://t.co/FSAL4xLCpZ,1,0,0,2014-mlb-replays.csv,http://t.co/FSAL4xLCpZ,520,0,HTTP 520
+2014-09-24,Sep. 24,1,2014,SEA @ TOR,T9,McClendon,J. Jones,Out at 1st,Tag play,Eddings,Joyce,Confirmed,0:52,http://t.co/sOVtqaGTJ0,0,0,0,2014-mlb-replays.csv,http://t.co/sOVtqaGTJ0,520,0,HTTP 520
+2014-09-25,Sep. 25,1,2014,BAL @ NYY,T3,Girardi,A. Jones,Safe at 1st,Force play,O'Nora,O'Nora,Overturned,1:26,http://t.co/rRYmtWltYG,1,0,0,2014-mlb-replays.csv,http://t.co/rRYmtWltYG,520,0,HTTP 520
+2014-09-25,Sep. 25,1,2014,KC @ CWS,B7,Ventura,Eaton,Out at 1st,Force play,Drake,T. Barrett,Overturned,2:14,http://t.co/XSyA8ScCcl,1,0,0,2014-mlb-replays.csv,http://t.co/XSyA8ScCcl,520,0,HTTP 520
+2014-09-25,Sep. 25,1,2014,MIL @ CIN,T4,UMPIRE,Braun,7.13/Out at home,7.13,Scott,Scott,Confirmed,0:45,http://t.co/S0slAtaKC2,0,0,0,2014-mlb-replays.csv,http://t.co/S0slAtaKC2,520,0,HTTP 520
+2014-09-25,Sep. 25,1,2014,MIN @ DET,B7,Gardenhire,Kinsler,Safe at 1st,Tag play,L. Barrett,West,Stands,2:15,http://t.co/ZfXDHu1fi1,0,0,0,2014-mlb-replays.csv,http://t.co/ZfXDHu1fi1,520,0,HTTP 520
+2014-09-25,Sep. 25,1,2014,NYM @ WSH,B3,Williams,Treinen,Out at 1st,Force play,Segal,G. Gibson,Overturned,2:01,http://t.co/NbSfaQcl1l,1,0,0,2014-mlb-replays.csv,http://t.co/NbSfaQcl1l,520,0,HTTP 520
+2014-09-25,Sep. 25,1,2014,NYM @ WSH,T8,Collins,Tejada,Out at 2nd,Force play,Randazzo,G. Gibson,Confirmed,1:57,http://t.co/tRUmhzfUPs,0,0,0,2014-mlb-replays.csv,http://t.co/tRUmhzfUPs,520,0,HTTP 520
+2014-09-25,Sep. 25,1,2014,TB @ BOS,T2,Farrell,Zobrist,Safe at 2nd,Tag play,Nelson,Nelson,Overturned,1:17,http://t.co/gJiErL6RNF,1,0,0,2014-mlb-replays.csv,http://t.co/gJiErL6RNF,520,0,HTTP 520
+2014-09-26,Sep. 26,1,2014,CHI @ MIL,B6,Roenicke,Braun,Foul Ball (HBP?),Hit By Pitch,May,Nelson,Overturned,2:00,http://t.co/hvuszaB5lS,1,0,0,2014-mlb-replays.csv,http://t.co/hvuszaB5lS,520,0,HTTP 520
+2014-09-26,Sep. 26,1,2014,COL @ LAD,T7,Weiss,R. Ynoa,Out at home,Tag Play,Reynolds,Culbreth,Stands,2:43,http://t.co/ONdklHHpeo,0,0,0,2014-mlb-replays.csv,http://t.co/ONdklHHpeo,520,0,HTTP 520
+2014-09-26,Sep. 26,1,2014,HOU @ NYM,T2,Lawless,Fowler,Out at 2nd,Tag Play,Byrne,Layne,Overturned,1:18,http://t.co/A540Kq6kRZ,1,0,0,2014-mlb-replays.csv,http://t.co/A540Kq6kRZ,520,0,HTTP 520
+2014-09-26,Sep. 26,1,2014,KC @ CWS,T4,Ventura,Infante,Safe at 2nd,Tag Play,T. Barrett,T. Barrett,Overturned,1:42,http://t.co/HriJ6tW6f3,1,0,0,2014-mlb-replays.csv,http://t.co/HriJ6tW6f3,520,0,HTTP 520
+2014-09-26,Sep. 26,1,2014,LAA @ SEA,B1,McClendon,A. Jackson,Out at 2nd,Tag Play,Ad. Johnson,Miller,Overturned,1:10,http://t.co/tzlHwMJpYp,1,0,0,2014-mlb-replays.csv,http://t.co/tzlHwMJpYp,520,0,HTTP 520
+2014-09-26,Sep. 26,1,2014,LAA @ SEA,B6,Scioscia,A. Jackson,Foul Ball,Fan Interference,Miller,Miller,Stands,3:07,http://t.co/o47TnC7T9P,0,0,0,2014-mlb-replays.csv,http://t.co/o47TnC7T9P,520,0,HTTP 520
+2014-09-26,Sep. 26,1,2014,MIN @ DET,T8,Ausmus,Arcia,Safe at 1st,Force Play,Hickox,West,Overturned,1:10,http://t.co/DcwWAwi2ms,1,0,0,2014-mlb-replays.csv,http://t.co/DcwWAwi2ms,520,0,HTTP 520
+2014-09-26,Sep. 26,1,2014,NYY @ BOS,B1,Girardi,Cespedes,Safe at 2nd,Tag Play,Vanover,Vanover,Overturned,0:54,http://t.co/LoNDU8KH2q,1,0,0,2014-mlb-replays.csv,http://t.co/LoNDU8KH2q,520,0,HTTP 520
+2014-09-26,Sep. 26,1,2014,STL @ ARI,T8,Trammell,Wong,Safe at 1st,Tag Play,Davidson,Meals,Stands,1:58,http://t.co/JrAvZU88Tj,0,0,0,2014-mlb-replays.csv,http://t.co/JrAvZU88Tj,520,0,HTTP 520
+2014-09-26,Sep. 26,1,2014,STL @ ARI,T10,Matheny,Wong,Out at 2nd,Force Play,Baker,Meals,Confirmed,0:39,http://t.co/fLjxAmYrqY,0,0,0,2014-mlb-replays.csv,http://t.co/fLjxAmYrqY,520,0,HTTP 520
+2014-09-27,Sep. 27,1,2014,ATL @ PHI,B4,UMPIRE,Utley,7.13/Out at home,7.13,Bucknor,Scott,Confirmed,0:43,http://t.co/UnZZkvyW1L,0,0,0,2014-mlb-replays.csv,http://t.co/UnZZkvyW1L,520,0,HTTP 520
+2014-09-27,Sep. 27,1,2014,BAL @ TOR,B7,UMPIRE,Pillar,7.13/Out at home,Tag play,Wolf,Randazzo,Overturned,3:33,http://t.co/SKMka2nRgU,1,1,0,2014-mlb-replays.csv,http://t.co/SKMka2nRgU,520,0,HTTP 520
+2014-09-27,Sep. 27,1,2014,KC @ CWS,B1,Yost,Eaton,Safe at 2nd,Tag play,Conroy,T. Barrett,Stands,1:32,http://t.co/BXdjCeqWKy,0,0,0,2014-mlb-replays.csv,http://t.co/BXdjCeqWKy,520,0,HTTP 520
+2014-09-27,Sep. 27,1,2014,LAA @ SEA,B2,Scioscia,L. Morrison,Safe at 2nd,Force play,Fairchild,Miller,Overturned,1:34,http://t.co/AZOL5yyurB,1,0,0,2014-mlb-replays.csv,http://t.co/AZOL5yyurB,520,0,HTTP 520
+2014-09-27,Sep. 27,1,2014,OAK @ TEX,B3,Melvin,Andrus,Safe at 2nd,Tag play,B. Welke,Emmel,Overturned,0:47,http://t.co/IDFHCK38UG,1,0,0,2014-mlb-replays.csv,http://t.co/IDFHCK38UG,520,0,HTTP 520
+2014-09-27,Sep. 27,1,2014,OAK @ TEX,T8,Bogar,J. Gomes,Safe at home,Tag play,Hoye,Emmel,Confirmed,1:28,http://t.co/DqxSSDUYFQ,0,0,0,2014-mlb-replays.csv,http://t.co/DqxSSDUYFQ,520,0,HTTP 520
+2014-09-27,Sep. 27,1,2014,PIT @ CIN,B1,UMPIRE,Mesoraco,7.13/Out at home,7.13,Joyce,Joyce,Stands,3:16,http://t.co/6U3xIz9OE1,0,0,0,2014-mlb-replays.csv,http://t.co/6U3xIz9OE1,520,0,HTTP 520
+2014-09-27,Sep. 27,1,2014,STL @ ARI,B2,Matheny,Pennington,Safe at 1st,Force play,Baker,Meals,Stands,2:04,http://t.co/mMj12RwmPX,0,0,0,2014-mlb-replays.csv,http://t.co/mMj12RwmPX,520,0,HTTP 520
+2014-09-28,Sep. 28,1,2014,KC @ CWS,B4,Ventura,Phegley,Out at home,Tag play,T. Barrett,T. Barrett,Stands,1:52,http://t.co/SY9Qf6271b,0,0,0,2014-mlb-replays.csv,http://t.co/SY9Qf6271b,520,0,HTTP 520
+2014-09-28,Sep. 28,1,2014,KC @ CWS,B7,UMPIRE,A. Garcia,7.13/Out at home,7.13,T. Barrett,T. Barrett,Confirmed,1:00,http://t.co/uk20sH8vM9,0,0,0,2014-mlb-replays.csv,http://t.co/uk20sH8vM9,520,0,HTTP 520
+2014-09-28,Sep. 28,1,2014,SD @ SF,B7,Bochy,Panik,Out at 1st,Force play,Hallion,Hallion,Overturned,3:46,http://t.co/7F5J8bO7aN,1,0,0,2014-mlb-replays.csv,http://t.co/7F5J8bO7aN,520,0,HTTP 520
+2014-10-03,2014-10-3,1,2014,"DET @ BAL, G2",B3,UMPIRE,Markakis,Home Run,Potential HR,Schrieber,Kellogg,Confirmed,2:37,http://t.co/9olYuTwGJa,0,0,1,2014-postseason-replays.csv,http://t.co/9olYuTwGJa,520,0,HTTP 520
+2014-10-03,2014-10-3,1,2014,"SF @ WSH, G1",T3,Bochy,Ishikawa,Out at 2nd,Force play,Hallion,Winters,Overturned,0:57,http://t.co/aj94CKZwPo,1,0,1,2014-postseason-replays.csv,http://t.co/aj94CKZwPo,520,0,HTTP 520
+2014-10-04,2014-10-4,1,2014,"SF @ WSH, G2",T9,Bochy,Posey,Out at home,Tag play,Carapazza,Winters,Stands,2:34,http://t.co/gglE6P7zqM,0,0,1,2014-postseason-replays.csv,http://t.co/gglE6P7zqM,520,0,HTTP 520
+2014-10-04,2014-10-4,1,2014,"STL @ LAD, G2",B3,Mattingly,Greinke,Out between 1st-2nd,Tag play,Cooper,Scott,Overturned,0:53,http://t.co/MG9feqKDtp,1,0,1,2014-postseason-replays.csv,http://t.co/MG9feqKDtp,520,0,HTTP 520
+2014-10-05,2014-10-5,1,2014,"BAL @ DET, G3",B2,Ausmus,An. Romine,Out at 1st,Force play,Wolf,Kellogg,Stands,2:26,http://t.co/CFyx26RjM1,0,0,1,2014-postseason-replays.csv,http://t.co/CFyx26RjM1,520,0,HTTP 520
+2014-10-07,2014-10-7,1,2014,"LAD @ STL, G4",T6,Matheny,Ethier,Safe at 3rd,Tag play,Meals,Scott,Overturned,1:47,http://t.co/n4KwD5nZSP,1,0,1,2014-postseason-replays.csv,http://t.co/n4KwD5nZSP,520,0,HTTP 520
+2014-10-07,2014-10-7,1,2014,"WSH @ SF, G4",B7,UMPIRE,Posey,7.13/Out at home,7.13,Wendelstedt,Winters,Confirmed,1:52,http://t.co/RVgjJIDg6D,0,0,1,2014-postseason-replays.csv,http://t.co/RVgjJIDg6D,520,0,HTTP 520
+2014-10-11,2014-10-11,0,2014,"SF @ STL, G1",B7,Matheny,Wong,Out at 1st,Tag play,B. Welke,Davis,Confirmed,0:54,http://t.co/xjBMTuPuwI,0,0,1,2014-postseason-replays.csv,http://t.co/xjBMTuPuwI,520,0,HTTP 520
+2014-10-15,2014-10-15,0,2014,"STL @ SF, G4",B5,Matheny,Pence,Safe at 2nd,Tag play,Miller,Davis,Confirmed,1:51,http://t.co/3t1weJfywm,0,0,1,2014-postseason-replays.csv,http://t.co/3t1weJfywm,520,0,HTTP 520
+2014-10-25,2014-10-25,0,2014,"KC @ SF, G4",B6,Yost,Arias,Safe at 2nd,Tag play,Kellogg,Kellogg,Confirmed,1:53,http://t.co/Q1EqYPJYFY,0,0,1,2014-postseason-replays.csv,http://t.co/Q1EqYPJYFY,520,0,HTTP 520
+2014-10-29,2014-10-29,0,2014,"SF @ KC, G7",B3,Bochy,Hosmer,Safe at 1st,Force play,Cooper,Kellogg,Overturned,2:54,http://t.co/NQAgfcQh8H,1,0,1,2014-postseason-replays.csv,http://t.co/NQAgfcQh8H,520,0,HTTP 520
+2015-04-06,2015-04-6,1,2015,BAL @ TB,B5,Cash,Loney,Out at home,Collisions at HP,DeMuth,DeMuth,Confirmed,1:41,http://t.co/L5BWj3qvqH,0,0,0,2015-mlb-replays.csv,http://t.co/L5BWj3qvqH,520,0,HTTP 520
+2015-04-06,2015-04-6,1,2015,BAL @ TB,T8,Showalter,Pearce,Out at home,Tag Play,DeMuth,DeMuth,Overturned,2:32,http://t.co/csSSchgA55,1,1,0,2015-mlb-replays.csv,http://t.co/csSSchgA55,520,0,HTTP 520
+2015-04-06,2015-04-6,1,2015,SD @ LAD,B8,Black,Puig,Safe at 2nd,Tag Play,DiMuro,Gorman,Overturned,0:57,http://atmlb.com/1FoayzO,1,0,0,2015-mlb-replays.csv,http://atmlb.com/1FoayzO,403,0,HTTP 403
+2015-04-06,2015-04-6,1,2015,SF @ ARI,B8,Hale,D. Peralta,Foul Tip/No HBP,HBP,Cederstrom,Cederstrom,Stands,2:09,http://atmlb.com/1IwTbxC,0,0,0,2015-mlb-replays.csv,http://atmlb.com/1IwTbxC,403,0,HTTP 403
+2015-04-06,2015-04-6,1,2015,TEX @ OAK,B5,Melvin,Fuld,Out at 2nd,Force Play,Wolf,Miller,Overturned,1:42,http://atmlb.com/1Cn7E8l,1,0,0,2015-mlb-replays.csv,http://atmlb.com/1Cn7E8l,403,0,HTTP 403
+2015-04-08,2015-04-8,1,2015,ATL @ MIA,T9,Gonzalez,Ozuna,Catch,Catch/no catch,Diaz,Nelson,Confirmed,1:03,http://t.co/wgA18EmSh2,0,0,0,2015-mlb-replays.csv,http://t.co/wgA18EmSh2,520,0,HTTP 520
+2015-04-08,2015-04-8,1,2015,BAL @ TB,B1,Showalter,Jennings,Safe at 1st,Force Play,Estabrook,DeMuth,Overturned,1:26,http://t.co/wkexM7tuMm,1,0,0,2015-mlb-replays.csv,http://t.co/wkexM7tuMm,520,0,HTTP 520
+2015-04-08,2015-04-8,1,2015,BAL @ TB,B4,Cash,Forsythe,Out at 1st,Force Play,Estabrook,DeMuth,Stands,2:06,http://t.co/b07gi5d1Fz,0,0,0,2015-mlb-replays.csv,http://t.co/b07gi5d1Fz,520,0,HTTP 520
+2015-04-08,2015-04-8,1,2015,BAL @ TB,B7,UMPIRE,Souza,Out at 2nd,Tag Play,DeMuth,DeMuth,Confirmed,0:56,http://t.co/AOTODLjbZ7,0,0,0,2015-mlb-replays.csv,http://t.co/AOTODLjbZ7,520,0,HTTP 520
+2015-04-08,2015-04-8,1,2015,SD @ LAD,B2,Mattingly,Rollins,Out at 1st,Force Play,T. Gibson,Gorman,Overturned,1:37,http://t.co/7vLnhrkXtX,1,0,0,2015-mlb-replays.csv,http://t.co/7vLnhrkXtX,520,0,HTTP 520
+2015-04-08,2015-04-8,1,2015,STL @ CHI,B8,Maddon,Szczur,Out at 1st,Force Play,Foster,Winters,Confirmed,0:51,http://atmlb.com/1Cnp3h5,0,0,0,2015-mlb-replays.csv,http://atmlb.com/1Cnp3h5,403,0,HTTP 403
+2015-04-08,2015-04-8,1,2015,TEX @ OAK,B3,UMPIRE,Canha,Double,Potential HR,Hamari,Miller,Confirmed,1:32,http://t.co/8oi6KmqlUF,0,0,0,2015-mlb-replays.csv,http://t.co/8oi6KmqlUF,520,0,HTTP 520
+2015-04-08,2015-04-8,1,2015,TEX @ OAK,B5,Banister,Ladendorf,Safe at 1st,Force Play,Hamari,Miller,Stands,1:45,http://t.co/Z1jLKlkeNB,0,0,0,2015-mlb-replays.csv,http://t.co/Z1jLKlkeNB,520,0,HTTP 520
+2015-04-09,2015-04-9,1,2015,CLE @ HOU,B6,Hinch,C. Carter,Out at 1st,Force Play,Conroy,T. Barrett,Stands,3:11,http://t.co/K1OlJeg0po,0,0,0,2015-mlb-replays.csv,http://t.co/K1OlJeg0po,520,0,HTTP 520
