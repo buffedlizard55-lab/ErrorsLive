@@ -61,6 +61,16 @@ def slate(day):
     return out
 
 
+def game_stats(rows):
+    """Per-game counts the pages print, derived only from the scored rows."""
+    played = [r for r in rows if r.get('status') == 'scored']
+    return {'batted_balls': len(played),
+            'errors': sum(1 for r in played if r['official_call'] == 'error'),
+            'top_pick_agrees': sum(r['model_agrees_with_call'] for r in played),
+            'risp_runs_at_stake': sum(1 for r in played if r['risp'] and r['run_scored']),
+            'overturned_reviews': sum(1 for r in played if r.get('review_overturned') is True)}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -102,7 +112,12 @@ def main(argv=None):
                 'final_home': (plays[-1]['result'].get('homeScore') if plays else None)
                 if not g else g.get('rH'),
                 'linescore_url': g.get('api', ''),
-                'plays': rows, 'source': f})
+                'linescore_away': g.get('rA'), 'linescore_home': g.get('rH'),
+                'pk': pk, 'away_abbr': g.get('away', ''), 'home_abbr': g.get('home', ''),
+                'model_rows': rows, 'plays': rows, 'source': f,
+                'url': f'{STATS}/api/v1.1/game/{pk}/feed/live',
+                'savant': f'{SAVANT}/gamefeed?gamePk={pk}',
+                **game_stats(rows)})
     else:
         meta = slate(day)
         if a.pk:
@@ -116,13 +131,27 @@ def main(argv=None):
                 plays = feed['liveData']['plays']['allPlays']
                 info = {'plays': len(plays),
                         'final_away': plays[-1]['result'].get('awayScore'),
-                        'final_home': plays[-1]['result'].get('homeScore')}
-                games.append({**m, **info, 'plays': rows})
+                        'final_home': plays[-1]['result'].get('homeScore'),
+                        'pk': m['game_pk'],
+                        'away_abbr': m.get('matchup', '').split(' @ ')[0],
+                        'home_abbr': m.get('matchup', ' @ ')[-1] if ' @ ' in m.get('matchup', '')
+                        else '',
+                        'linescore_away': m.get('away_score'), 'linescore_home': m.get('home_score')}
+                games.append({**m, **info, 'model_rows': rows, 'plays': rows,
+                              'url': m.get('official_feed_url', ''), 'savant': m.get('savant_url', ''),
+                              **game_stats(rows)})
             except Exception as e:                                   # noqa: BLE001
                 failures.append({'game_pk': m['game_pk'], 'error': f'{type(e).__name__}: {e}'[:200]})
 
-    played = [r for g in games for r in g.get('plays', []) if r.get('status') == 'scored']
+    played = [r for g in games for r in g.get('model_rows', []) if r.get('status') == 'scored']
     agree = sum(r['model_agrees_with_call'] for r in played)
+    verified = 0
+    for g in games:
+        la, lh = g.get('linescore_away'), g.get('linescore_home')
+        fa, fh = g.get('final_away'), g.get('final_home')
+        ok = la is not None and fa is not None and (fa, fh) == (la, lh)
+        g['verified'] = int(ok)
+        verified += int(ok)
     model = json.load(open(ROOT / 'docs' / 'data' / 'model.json'))
     offline = bool(a.feed)
     doc = {
@@ -132,22 +161,32 @@ def main(argv=None):
                  'fallback the page shows when a browser cannot reach statsapi.mlb.com. CI replaces '
                  'this file with the real slate (tools/fetch_live.py, mode live-slate).'
                  if offline else 'Fetched from the official schedule + feed endpoints by CI.'),
-        'game_day': day,
-        'source': f'{STATS}/api/v1/schedule?sportId=1&startDate={day}&endDate={day}',
-        'model': {'dataset': model['meta'].get('dataset'), 'n_bip': model['meta'].get('n_bip'),
+        'game_day': day, 'game_date': day,
+        'source': (f'{STATS}/api/v1/schedule?sportId=1&startDate={day}&endDate={day}'
+                   if not offline else 'data/source/feed_823441.json'),
+        'model': {'dataset': model['meta'].get('dataset'), 'n_model': model['meta'].get('n_model'),
+                  'n_bip': model['meta'].get('n_bip'), 'games': model['meta'].get('games'),
                   'auc_grouped': model['primary'].get('cv_auc'),
                   'auc_ci95': model['primary'].get('cv_auc_ci95'),
+                  'error_recall': model['honesty'].get('oof_error_recall'),
                   'dataset_note': model['meta'].get('dataset_note', '')},
-        'summary': {'games': len(games), 'games_with_balls': sum(1 for g in games if g.get('plays')),
-                    'batted_balls_scored': len(played),
-                    'top_pick_agrees_with_official': agree,
-                    'failures': len(failures)},
+        'summary': {
+            'games': len(games),
+            'games_verified_vs_linescore': verified,
+            'batted_balls': len(played),
+            'errors': sum(1 for r in played if r['official_call'] == 'error'),
+            'risp_runs_at_stake': sum(1 for r in played if r['risp'] and r['run_scored']),
+            'overturned_reviews': sum(1 for r in played if r.get('review_overturned') is True),
+            'top_pick_agreement': f'{agree}/{len(played)}' if played else '0/0',
+            'failures': len(failures),
+        },
+        'flags': [f"{f['game_pk']}: {f['error']}" for f in failures],
         'failures': failures,
         'games': games,
     }
     if offline and games and games[0].get('game_day'):
         day = games[0]['game_day']
-        doc['game_day'] = day
+        doc['game_day'] = doc['game_date'] = day
     out = ROOT / a.out
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(doc, indent=1))

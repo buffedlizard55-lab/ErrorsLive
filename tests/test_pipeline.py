@@ -635,6 +635,59 @@ check('no page cites a non-official source as official',
                     r'github\.com/nydailynews|github\.com/buffedlizard55-lab|'
                     r'www\.baseball-reference\.com)[^\s"\')]+)', all_html))
 
+# ---------------------------------------------------------------- H. page/data contracts
+print('== H. page <-> data contracts (the fields the pages actually read) ==')
+live = load_json(ROOT / 'docs/data/live_now.json')
+GAME_KEYS = ['model_rows', 'pk', 'game_pk', 'away_abbr', 'home_abbr', 'state', 'batted_balls', 'errors',
+             'top_pick_agrees', 'risp_runs_at_stake', 'overturned_reviews', 'verified', 'url', 'savant']
+check('live_now.json: every game carries the fields the slate tables read',
+      all(all(k in g for k in GAME_KEYS) for g in live['games']), 'game keys')
+SUM_KEYS = ['games', 'games_verified_vs_linescore', 'batted_balls', 'errors', 'risp_runs_at_stake',
+            'overturned_reviews', 'top_pick_agreement']
+check('live_now.json: the summary carries every KPI the pages print',
+      all(k in live['summary'] for k in SUM_KEYS), json.dumps(sorted(live['summary'])))
+check('live_now.json: per-game counts agree with the rows they summarise',
+      all(g['batted_balls'] == len([r for r in g['model_rows'] if r.get('status') == 'scored'])
+          and g['top_pick_agrees'] == sum(r['model_agrees_with_call'] for r in g['model_rows']
+                                          if r.get('status') == 'scored') for g in live['games']))
+check('live_now.json: offline fallback is labelled, not passed off as a live slate',
+      live['mode'] in ('live-slate', 'offline-fixture')
+      and (live['mode'] == 'live-slate' or 'fixture' in json.dumps(live['note']).lower()))
+SITE_R = load_json(ROOT / 'docs/data/replays_site.json')
+check('replays_site.json: rows carry everything the replays page renders',
+      all(all(k in r for k in ('date', 'matchup', 'inning', 'half', 'batter', 'review_type',
+                               'review_subject', 'description', 'runs_by_movement', 'score_delta',
+                               'rule', 'watch_url', 'mp4', 'feed_url', 'savant_game_url'))
+          for r in SITE_R['rows'])
+      and all(all(k in r for k in ('d', 'm', 'g', 'n', 'h', 'b', 't', 's', 'c', 'p'))
+              for r in SITE_R['overturned_index']))
+NY_SITE = load_json(ROOT / 'docs/data/nydn_site.json')
+check('nydn_site.json: rows carry the archive fields and the resolved link status',
+      all(all(k in r for k in ('date', 'game', 'play_type', 'player', 'inning', 'initial_call',
+                               'result', 'run_removed_heuristic', 'video', 'link_status'))
+          for r in NY_SITE['rows'])
+      and NY_SITE['counts']['run_removed'] == len(NY_SITE['rows']))
+MDL = load_json(ROOT / 'docs/data/model.json')
+check('model.json: carries every block the site reads (feature spec, honesty, calibration, surface)',
+      all(k in MDL for k in ('meta', 'primary', 'multiclass', 'honesty', 'surface', 'correlations',
+                             'context_stats', 'risk_bands'))
+      and all(k in MDL['primary'] for k in ('feature_spec', 'feature_names', 'scaler_mean',
+                                            'scaler_scale', 'intercept', 'coef', 'cv_auc',
+                                            'cv_auc_ci95', 'cv_auc_random_kfold',
+                                            'cv_auc_gradient_boosting_grouped'))
+      and all(k in MDL['honesty'] for k in ('what_this_is', 'oof_top1_accuracy',
+                                            'oof_error_nominated_top1', 'oof_error_recall',
+                                            'p_error_percentile_grid', 'calibration_oof',
+                                            'grouped_vs_random_auc_gap')))
+check('model.json: the feature spec and the coefficient map agree, name for name',
+      [f['name'] for f in MDL['primary']['feature_spec']] == MDL['primary']['feature_names']
+      and all(n in MDL['primary']['coef'] for n in MDL['primary']['feature_names'])
+      and len(MDL['primary']['scaler_mean']) == len(MDL['primary']['feature_names']))
+check('site_kpis.json: every KPI the model page reads is present and non-null',
+      all(kpis['model'][k] is not None for k in ('dataset', 'n_bip', 'n_model', 'n_error', 'games',
+                                                 'auc_grouped', 'auc_ci95', 'top1', 'brier'))
+      and kpis['ingested']['bip'] == len(load_csv(ROOT / 'docs/data/bip_official.csv')))
+
 print()
 if FAILED:
     print(f'{len(FAILED)} FAILURE(S):')
