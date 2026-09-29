@@ -1,193 +1,185 @@
 #!/usr/bin/env python3
-"""PROBE (read-only): answer the questions the build sandbox cannot answer about official MLB endpoints.
+"""Probe the official MLB endpoints from CI and record what they actually return.
 
-The build sandbox has no route to statsapi.mlb.com / baseballsavant.mlb.com, so every claim about
-"what the official API returns" has to be produced by a run that *does* have a route. This script
-runs on a GitHub-hosted runner (see .github/workflows/ingest.yml) and prints a compact, auditable
-report of exactly what came back — status codes, byte counts, key presence, CORS headers. It never
-writes to the repo and never invents a value: an endpoint that fails is reported as a failure.
+The published site is rebuilt offline from committed sources, so every network collection step runs
+in GitHub Actions. This tool is the discovery step: it asks the official endpoints the questions the
+project needs answered, and writes the *observed* answers (status codes, byte counts, detected keys,
+sample URLs) to `data/ingest/probe_report.json`, which the workflow commits back to the branch. That
+keeps the evidence in the repository where a reviewer can read it, and it means the ingest is written
+against observed reality rather than an assumed schema.
 
-Questions it answers, in order:
-  Q1  Is statsapi.mlb.com reachable from CI, and does it send CORS headers (i.e. can the
-      GitHub Pages site call it straight from a visitor's browser)?
-  Q2  How large is a live feed when trimmed to the fields we model? (ingest-cost planning)
-  Q3  Do modern (2026) feeds carry reviewDetails / isOverturned / playId?
-  Q4  Do 2014-2018 feeds carry reviewDetails too (the NYDN archive window)?
-  Q5  Do the archived NYDN video short-links still resolve, and to what?
-  Q6  Does baseballsavant.com expose a per-play video for a modern playId?
-
-Usage: python3 tools/probe_api.py [--json out.json]
+Questions this probe answers, all with sources:
+  1. Does the schedule API cover the 2014-2018 replay era? (needed to map archive rows to gamePks)
+  2. Do those era feeds carry `reviewDetails` and per-event `playId`? (needed to join archive -> feed)
+  3. Does the modern feed carry Statcast hitData + reviewDetails + playId? (the model dataset)
+  4. Does /api/v1/game/{pk}/content expose a direct .mp4 (the click-to-download half of the brief)?
+  5. Which of those mp4s is attached to which playId? (join key for one-click video download)
+  6. Does baseballsavant.mlb.com/sporty-videos?playId=... answer per play (click-to-watch half)?
+Everything is an official MLB domain; nothing is inferred.
 """
-import argparse, json, sys, time, urllib.error, urllib.request
+import json
+import re
+import sys
+import urllib.error
+import urllib.request
+import zlib
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-UA = {'User-Agent': 'LiveScoringErrors/1.0 (+https://github.com/buffedlizard55-lab/LiveScoringErrors)'}
-STATS = 'https://statsapi.mlb.com'
-SAVANT = 'https://baseballsavant.mlb.com'
-
-SLIM = ('liveData,plays,allPlays,about,atBatIndex,inning,halfInning,isComplete,result,eventType,'
-        'description,rbi,awayScore,homeScore,isOut,reviewDetails,isOverturned,reviewType,'
-        'challengeTeamId,inProgress,playEvents,playId,isPitch,details,hitData,launchSpeed,'
-        'launchAngle,totalDistance,trajectory,hardness,hitCoordinates,coordX,coordY,runners,'
-        'movement,start,end,outBase,isOut,originBase,credits,position,player,fullName')
-
-REPORT = {}
+OUT = ROOT / 'data' / 'ingest' / 'probe_report.json'
+UA = {'User-Agent': 'LiveScoringErrors-research/1.0 (+https://github.com/buffedlizard55-lab/LiveScoringErrors)'}
+RECORDS = []
+FEED_FIELDS = ('gameData,datetime,officialDate,teams,away,home,name,abbreviation,'
+               'liveData,plays,allPlays,result,event,eventType,rbi,description,about,inning,'
+               'halfInning,isComplete,reviewDetails,isOverturned,reviewType,playEvents,playId,'
+               'hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness')
 
 
-def fetch(url, timeout=45, want='json', max_bytes=2_000_000):
-    """Return a dict describing the response. Never raises: failures are data here."""
+def get(url, timeout=45):
+    """GET that never raises. status -1 means a transport failure (recorded, not crashed on)."""
     req = urllib.request.Request(url, headers=UA)
-    t0 = time.time()
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            raw = r.read(max_bytes)
-            hdrs = {k.lower(): v for k, v in r.headers.items()}
-            status, final = r.status, r.geturl()
+            body = r.read()
+            if r.headers.get('Content-Encoding') == 'gzip':
+                try:
+                    body = zlib.decompress(body, 16 + zlib.MAX_WBITS)
+                except zlib.error:
+                    pass
+            return r.status, body
     except urllib.error.HTTPError as e:
-        return {'url': url, 'status': e.code, 'error': f'HTTPError {e.code}',
-                'headers': {k.lower(): v for k, v in (e.headers or {}).items()}, 'bytes': 0}
-    except Exception as e:                                                # noqa: BLE001
-        return {'url': url, 'status': None, 'error': f'{type(e).__name__}: {e}', 'bytes': 0}
-    out = {'url': url, 'final_url': final, 'status': status, 'bytes': len(raw),
-           'ms': int(1000 * (time.time() - t0)), 'cors': hdrs.get('access-control-allow-origin')}
-    if want == 'json':
-        try:
-            out['json'] = json.loads(raw)
-        except Exception as e:                                            # noqa: BLE001
-            out['error'] = f'not JSON: {e}'
-    else:
-        out['body'] = raw.decode('utf-8', 'replace')
-    return out
+        return e.code, e.read()[:8000]
+    except Exception as e:                                       # noqa: BLE001
+        return -1, str(e).encode()
 
 
-def q1_reachability_and_cors():
-    r = fetch(f'{STATS}/api/v1/game/823441/linescore')
-    REPORT['Q1_statsapi'] = {k: r.get(k) for k in ('status', 'bytes', 'cors', 'error')}
-    pre = fetch(f'{STATS}/api/v1/schedule?sportId=1&date=2026-07-18&hydrate=linescore')
-    REPORT['Q1_schedule'] = {k: pre.get(k) for k in ('status', 'bytes', 'cors', 'error')}
-    REPORT['Q1_verdict'] = ('statsapi reachable from CI' if r.get('status') == 200
-                            else f"NOT reachable ({r.get('error')})")
-    cors = pre.get('cors') or (pre.get('headers') or {}).get('access-control-allow-origin')
-    REPORT['Q1_cors_verdict'] = (f'Access-Control-Allow-Origin: {cors} -> browser fetch allowed'
-                                 if cors else
-                                 'no Access-Control-Allow-Origin header -> browser fetch NOT confirmed')
+def record(probe, url, status, body, **facts):
+    text = body.decode('utf-8', 'replace')
+    rec = {'probe': probe, 'url': url, 'status': status, 'bytes': len(body)}
+    rec.update(facts)
+    mp4 = sorted({m for m in re.findall(r'https?://[^"\'\\\s]+?\.mp4[^"\'\\\s]*', text)})
+    if mp4:
+        rec['mp4_hits'] = mp4[:3]
+        rec['mp4_hits_n'] = len(mp4)
+    RECORDS.append(rec)
+    print(json.dumps(rec)[:700], flush=True)
+    return rec
 
 
-def q2_feed_size():
-    full = fetch(f'{STATS}/api/v1.1/game/823441/feed/live')
-    slim = fetch(f'{STATS}/api/v1.1/game/823441/feed/live?fields={SLIM}')
-    REPORT['Q2_full_feed_bytes'] = full.get('bytes')
-    REPORT['Q2_slim_feed_bytes'] = slim.get('bytes')
-    if full.get('bytes') and slim.get('bytes'):
-        REPORT['Q2_saving_pct'] = round(100 * (1 - slim['bytes'] / full['bytes']), 1)
+def games_on(date):
+    url = f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate={date}&endDate={date}'
+    status, body = get(url)
+    try:
+        dates = json.loads(body.decode())['dates']
+        games = dates[0]['games'] if dates else []
+        return status, body, games
+    except Exception:                                            # noqa: BLE001
+        return status, body, []
 
 
-def _play_facts(feed):
-    plays = feed['liveData']['plays']['allPlays']
-    def rev(p):
-        return (p.get('reviewDetails')
-                or next((e['reviewDetails'] for e in p.get('playEvents', []) if 'reviewDetails' in e), {}))
-    with_rev = [p for p in plays if rev(p)]
-    overturned = [p for p in with_rev if rev(p).get('isOverturned') is True]
-    play_ids = sum(1 for p in plays for e in p.get('playEvents', []) if e.get('playId'))
-    # a real playId to hand to baseballsavant: the last playId of a batted-ball play
-    batted = [p for p in plays if any('hitData' in e for e in p.get('playEvents', []))]
-    sample = None
-    if batted:
-        ids = [e['playId'] for e in batted[-1].get('playEvents', []) if e.get('playId')]
-        sample = ids[-1] if ids else None
-    return {'plays': len(plays), 'plays_with_reviewDetails': len(with_rev),
-            'plays_overturned': len(overturned), 'play_events_with_playId': play_ids,
-            'reviewTypes': sorted({rev(p).get('reviewType') for p in with_rev if rev(p).get('reviewType')}),
-            'overturned_descriptions': [p['result']['description'][:110] for p in overturned[:3]],
-            'sample_batted_ball_playId': sample,
-            'hitData_coord_keys': sorted({k for p in plays for e in p.get('playEvents', [])
-                                          if 'hitData' in e for k in e['hitData']})}
+def feed_probe(tag, pk):
+    url = f'https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live?fields={FEED_FIELDS}'
+    status, body = get(url)
+    facts = {'game_pk': pk}
+    play_ids = []
+    try:
+        j = json.loads(body.decode())
+        plays = j['liveData']['plays']['allPlays']
+        reviewed = [p for p in plays if p.get('reviewDetails')]
+        hit_events = [e for p in plays for e in p['playEvents'] if e.get('hitData')]
+        coord_keys = sorted({k for e in hit_events for k in (e['hitData'].get('coordinates') or {})})
+        facts.update({
+            'date': j['gameData']['datetime'].get('officialDate'),
+            'teams': [j['gameData']['teams'][s]['abbreviation'] for s in ('away', 'home')],
+            'plays': len(plays), 'reviewed': len(reviewed),
+            'reviewTypes': sorted({(p['reviewDetails'].get('reviewType') or '') for p in reviewed}),
+            'playIds': sum(1 for p in plays for e in p['playEvents'] if e.get('playId')),
+            'hitData_events': len(hit_events),
+            'hitData_keys': sorted({k for e in hit_events for k in e['hitData']})[:14],
+            'hitData_coord_keys': coord_keys,
+        })
+        for p in reviewed:
+            pid = next((e.get('playId') for e in p['playEvents'] if e.get('playId')), None)
+            if pid:
+                play_ids.append({'play_id': pid, 'game_pk': pk,
+                                 'eventType': p['result']['eventType'],
+                                 'overturned': p['reviewDetails'].get('isOverturned'),
+                                 'desc': p['result']['description'][:80]})
+    except Exception as e:                                       # noqa: BLE001
+        facts['parse_error'] = str(e)[:200]
+    record(f'feed_{tag}', url, status, body, **facts)
+    return play_ids
 
 
-def _first_games(day, n=3):
-    s = fetch(f'{STATS}/api/v1/schedule?sportId=1&date={day}&fields=dates,date,games,gamePk,'
-              f'officialDate,status,detailedState,teams,away,home,team,name')
-    return [g['gamePk'] for d in (s.get('json') or {}).get('dates', []) for g in d.get('games', [])][:n]
-
-
-def q3_modern_feed():
-    r = fetch(f'{STATS}/api/v1.1/game/823441/feed/live?fields={SLIM}')
-    REPORT['Q3_status'] = r.get('status')
-    REPORT['Q3_823441'] = _play_facts(r['json']) if 'json' in r else {'error': r.get('error')}
-    # the busiest recent date we know of, to confirm playId/review coverage on a full slate
-    return REPORT['Q3_823441'].get('sample_batted_ball_playId')
-
-
-def q4_old_feed():
-    out = {}
-    for year, day in {2014: '2014-04-01', 2016: '2016-10-25', 2018: '2018-07-24'}.items():
-        pks = _first_games(day)
-        rows = []
-        for pk in pks:
-            f = fetch(f'{STATS}/api/v1.1/game/{pk}/feed/live?fields={SLIM}')
-            if 'json' in f:
-                rows.append({'pk': pk, **_play_facts(f['json'])})
-            else:
-                rows.append({'pk': pk, 'error': f.get('error'), 'status': f.get('status')})
-        out[str(year)] = {'date': day, 'games_found': len(pks), 'probes': rows}
-    REPORT['Q4_replay_eras'] = out
-
-
-def q5_nydn_links():
-    import csv
-    path = ROOT / 'docs' / 'data' / 'overturned_calls.csv'
-    rows = [r for r in csv.DictReader(open(path)) if r['video']][:8]
-    out = []
-    for r in rows:
-        url = r['video']
-        if not url.lower().startswith(('http://', 'https://')):
-            url = 'http://' + url.lstrip('/')
-        res = fetch(url, timeout=30, want='raw', max_bytes=4096)
-        out.append({'source': r['video'], 'date': r['date'], 'player': r['player'],
-                    'final_url': res.get('final_url'), 'status': res.get('status'),
-                    'bytes': res.get('bytes'), 'error': res.get('error'),
-                    'title': ((res.get('body') or '')[:0] or None)})
-    REPORT['Q5_shortlink_sample'] = out
-
-
-def q6_savant_video(play_id):
-    if not play_id:
-        REPORT['Q6_savant'] = 'no playId available from the feed probe'
-        return
-    url = f'{SAVANT}/sporty-videos?playId={play_id}'
-    r = fetch(url, timeout=45, want='raw', max_bytes=400_000)
-    body = r.get('body') or ''
-    REPORT['Q6_savant'] = {
-        'url': url, 'status': r.get('status'), 'bytes': r.get('bytes'), 'error': r.get('error'),
-        'says_no_video': 'No Video Found' in body,
-        'has_mp4': '.mp4' in body,
-        'mp4_samples': sorted({('https://' + t).split('"')[0].split("'")[0]
-                               for t in body.split('https://') if '.mp4' in t[:300]})[:3],
-    }
+def content_probe(tag, pk, play_id=None):
+    """The download half: find .mp4 URLs and, if a playId is known, which one belongs to it."""
+    url = f'https://statsapi.mlb.com/api/v1/game/{pk}/content'
+    status, body = get(url)
+    facts = {'game_pk': pk, 'play_id': play_id}
+    try:
+        j = json.loads(body.decode())
+        facts['top_keys'] = sorted(j)
+        hl = (j.get('highlights') or {}).get('highlights', {}).get('items', [])
+        facts['highlight_items'] = len(hl)
+        if hl:
+            facts['item_keys'] = sorted(hl[0])
+            facts['playback_keys'] = sorted((hl[0].get('playbacks') or [{}])[0])
+            kw = {(k.get('type'), k.get('value')) for it in hl for k in (it.get('keywordsAll') or [])}
+            facts['keyword_types'] = sorted({t for t, _ in kw if t})[:10]
+            facts['items_with_play_id'] = sum(
+                1 for it in hl if any(k.get('type') == 'play_id' for k in (it.get('keywordsAll') or [])))
+            if play_id:
+                for it in hl:
+                    if any(k.get('value') == play_id for k in (it.get('keywordsAll') or [])):
+                        facts['matched_item'] = {
+                            'title': it.get('title'), 'duration': it.get('duration'),
+                            'playbacks': [{'name': p.get('name'), 'url': p.get('url')}
+                                          for p in (it.get('playbacks') or [])][:4]}
+                        break
+        facts['mp4_in_body'] = len(re.findall(r'https?://[^"\'\\\s]+?\.mp4', body.decode('utf-8', 'replace')))
+    except Exception as e:                                       # noqa: BLE001
+        facts['parse_error'] = str(e)[:200]
+    record(f'content_{tag}', url, status, body, **facts)
 
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument('--json', help='write the report here as well as printing it')
-    a = ap.parse_args()
-    play_id = None
-    for fn in (q1_reachability_and_cors, q2_feed_size, q3_modern_feed, q4_old_feed, q5_nydn_links):
-        try:
-            r = fn()
-            play_id = play_id or (r if isinstance(r, str) else None)
-        except Exception as e:                                            # noqa: BLE001
-            REPORT[fn.__name__ + '_ERROR'] = f'{type(e).__name__}: {e}'
-    try:
-        q6_savant_video(play_id)
-    except Exception as e:                                                # noqa: BLE001
-        REPORT['Q6_ERROR'] = f'{type(e).__name__}: {e}'
-    txt = json.dumps(REPORT, indent=1, default=str)
-    print(txt)
-    if a.json:
-        Path(a.json).write_text(txt)
-    return 0
+    eras = [('2014', '2014-04-01'), ('2017', '2017-06-01'), ('2026', '2026-06-01')]
+    ids = {}
+    for tag, date in eras:
+        status, body, games = games_on(date)
+        record(f'schedule_{tag}', f'https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate={date}&endDate={date}',
+               status, body, games=len(games), gameTypes=sorted({g.get('gameType') for g in games}),
+               first_pk=games[0]['gamePk'] if games else None,
+               first_teams=[games[0]['teams']['away']['team']['name'], games[0]['teams']['home']['team']['name']]
+               if games else None)
+        if games:
+            ids[tag] = feed_probe(tag, games[0]['gamePk'])
+    for tag in ('2014', '2017', '2026'):
+        picks = ids.get(tag) or []
+        pk = picks[0]['game_pk'] if picks else None
+        if not pk:
+            continue
+        # content endpoint: does it hand out mp4s, and can a playId be joined to one?
+        content_probe(tag, pk, picks[0]['play_id'] if picks else None)
+        if picks:
+            pid = picks[0]['play_id']
+            status, body = get(f'https://baseballsavant.mlb.com/sporty-videos?playId={pid}')
+            text = body.decode('utf-8', 'replace')
+            record(f'sporty_videos_{tag}', f'https://baseballsavant.mlb.com/sporty-videos?playId={pid}',
+                   status, body, play_id=pid, no_video_found='No Video Found' in text,
+                   mlb_video_links=len(re.findall(r'mlb\.com/video', text)),
+                   savant_gamefeed='gamefeed?gamePk' in text)
+    status, body = get('https://www.mlb.com/video/?q=overturned+call')
+    record('film_room_search', 'https://www.mlb.com/video/?q=overturned+call', status, body)
+
+    REPORT = {'generated_utc': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+              'note': 'Observed official-endpoint behaviour; committed by .github/workflows/probe.yml. '
+                      'Re-run: gh workflow run probe.yml',
+              'records': RECORDS}
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(REPORT, indent=1))
+    print(f'WROTE {OUT.relative_to(ROOT)} ({len(RECORDS)} records)')
 
 
 if __name__ == '__main__':
