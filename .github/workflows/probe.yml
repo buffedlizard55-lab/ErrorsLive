@@ -1,0 +1,33 @@
+name: probe
+
+# Sandbox-side builds are offline by design, so anything that has to touch MLB endpoints is done
+# here, in CI, and the *derived* tables are what gets committed. This workflow is the discovery
+# step: it prints what each official endpoint actually returns so the ingest can be written against
+# observed reality instead of a guess.
+on:
+  push:
+    branches: ['arena/**', 'main', 'ingest/**']
+    paths: ['tools/probe_ci.py', '.github/workflows/probe.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Reachability probe against official endpoints
+        run: python3 tools/probe_ci.py
+      - name: Upload probe log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: probe-log
+          path: probe.log
+          if-no-files-found: ignore
