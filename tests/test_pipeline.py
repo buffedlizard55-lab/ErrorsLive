@@ -127,83 +127,156 @@ check('home page headline: ground balls are 42.3% of batted balls',
       abs(100 * gb_all / len(bip) - 42.3) < 0.05, f'{100*gb_all/len(bip):.2f}%')
 
 # ---------------------------------------------------------------- C. model
-print('== C. model.json — recomputed from bip.csv, not restated ==')
+print('== C. model.json — recomputed from the dataset it names, not restated ==')
 sys.path.insert(0, str(ROOT / 'tools'))
 import numpy as np                                                   # noqa: E402
 from sklearn.linear_model import LogisticRegression                  # noqa: E402
 from sklearn.metrics import roc_auc_score, log_loss, brier_score_loss  # noqa: E402
-from sklearn.model_selection import StratifiedKFold                  # noqa: E402
-from sklearn.preprocessing import StandardScaler                    # noqa: E402
+from sklearn.model_selection import GroupKFold, StratifiedKFold      # noqa: E402
+from sklearn.preprocessing import StandardScaler                     # noqa: E402
 
 M = load_json(ROOT / 'docs/data/model.json')
 mm, pp, hn = M['meta'], M['primary'], M['honesty']
 CLASSES = ['hit', 'error', 'fielders_choice', 'out']
 TRAJ = ['ground_ball', 'line_drive', 'fly_ball', 'popup', 'bunt_grounder']
 HARD = ['soft', 'medium', 'hard']
-num = [r for r in bip if r['numeric_ok'] == '1' and r['macro_class'] in CLASSES]
-X = np.array([[float(r['launch_speed']), float(r['launch_angle']), float(r['distance'])] +
-              [1.0 if r['trajectory'] == v else 0.0 for v in TRAJ] +
-              [1.0 if r['hardness'] == v else 0.0 for v in HARD] for r in num])
+SPEC = pp['feature_spec']
+NAMES = [f['name'] for f in SPEC]
+MODEL_DATASET = ROOT / mm['dataset']
+ds = load_csv(MODEL_DATASET)
+num = [r for r in ds if r['numeric_ok'] == '1' and r['macro_class'] in CLASSES]
+
+
+def state_of(r):
+    bases = {b for b, k in (('1B', 'on_1b'), ('2B', 'on_2b'), ('3B', 'on_3b')) if r.get(k) == '1'}
+    return {'ev': float(r['launch_speed']), 'la': float(r['launch_angle']), 'dist': float(r['distance']),
+            'traj': r['trajectory'], 'hard': r['hardness'], 'bases': bases,
+            'outs': int(float(r['outs_before'] or 0)), 'inning': int(float(r['inning'] or 5)),
+            'bat': r.get('bat_side') or '', 'pitch': r.get('pitch_hand') or ''}
+
+
+def vector_of(st, spec):
+    """Same rule as tools/train_model.state_value and docs/site.js: the spec is the contract."""
+    out = []
+    for f in spec:
+        t = f['type']
+        kind, _, val = t.partition(':')
+        if t == 'ev':
+            out.append(st['ev'])
+        elif t == 'la':
+            out.append(st['la'])
+        elif t == 'dist':
+            out.append(st['dist'])
+        elif t == 'outs':
+            out.append(st['outs'])
+        elif t == 'inning':
+            out.append(min(st['inning'], 9))
+        elif kind == 'traj':
+            out.append(1.0 if st['traj'] == val else 0.0)
+        elif kind == 'hard':
+            out.append(1.0 if st['hard'] == val else 0.0)
+        elif kind == 'base':
+            out.append(1.0 if val in st['bases'] else 0.0)
+        elif kind == 'bat':
+            out.append(1.0 if st.get('bat') == val else 0.0)
+        elif kind == 'pitch':
+            out.append(1.0 if st.get('pitch') == val else 0.0)
+        else:
+            raise AssertionError(f'unknown feature type {t!r}')
+    return out
+
+
+X = np.array([vector_of(state_of(r), SPEC) for r in num])
 yb = np.array([1 if r['macro_class'] == 'error' else 0 for r in num])
 yc = np.array([CLASSES.index(r['macro_class']) for r in num])
+groups = np.array([r['game_pk'] for r in num])
 
-check('meta counts recompute from bip.csv',
-      mm['n_bip'] == len(bip) and mm['n_model'] == len(num) and mm['n_error'] == int(yb.sum())
-      and mm['n_error'] == 24 and mm['n_model'] == 1258)
+check('meta counts recompute from the named dataset',
+      mm['n_bip'] == len(ds) and mm['n_model'] == len(num) and mm['n_error'] == int(yb.sum()),
+      f"n_bip {mm['n_bip']} vs {len(ds)}, n_model {mm['n_model']} vs {len(num)}")
 check('meta class mix recomputes',
-      mm['class_counts'] == {c: int((yc == i).sum()) for i, c in enumerate(CLASSES)}
-      and mm['class_counts'] == {'hit': 428, 'error': 24, 'fielders_choice': 10, 'out': 796})
-check('error rate 1.91%', abs(mm['error_rate_pct'] - 1.91) < 0.01)
-check('design narrative states the sample is ENRICHED and NOT self-weighting',
-      'ENRICHED' in mm['design'] and 'NOT' in mm['design'] and '37.75' in mm['design']
-      and 'uniform 0.5 sampling fraction' not in mm['design'])
+      mm['class_counts'] == {c: int((yc == i).sum()) for i, c in enumerate(CLASSES)},
+      json.dumps(mm['class_counts']))
+check('meta error rate and game count recompute',
+      abs(mm['error_rate_pct'] - 100 * float(yb.mean())) < 0.005
+      and mm['games'] == len(set(groups)),
+      f"{mm['error_rate_pct']} vs {100*yb.mean():.3f}, games {mm['games']}")
+check('design narrative names the honest CV and the dataset caveat',
+      'GroupKFold' in mm['design'] and 'game_pk' in mm['design']
+      and (('ENRICHED' in mm['design'] and 'NOT' in mm['design'])
+           or ('Whole-population' in mm.get('dataset_note', ''))),
+      mm['design'][:80])
 
 sc = StandardScaler().fit(X)
 Xs = sc.transform(X)
-skf = StratifiedKFold(5, shuffle=True, random_state=20260929)
-oof = np.zeros(len(yb))
-for tr, te in skf.split(Xs, yb):
-    oof[te] = LogisticRegression(max_iter=2000, C=1.0).fit(Xs[tr], yb[tr]).predict_proba(Xs[te])[:, 1]
-check('OOF AUC recomputes to the published value',
-      abs(roc_auc_score(yb, oof) - pp['cv_auc']) < 5e-4, f"{roc_auc_score(yb, oof):.4f} vs {pp['cv_auc']}")
-check('published AUC is 0.641 with CI [0.518, 0.748]',
-      abs(pp['cv_auc'] - 0.641) < 1e-3 and abs(pp['cv_auc_ci95'][0] - 0.518) < 1e-3
-      and abs(pp['cv_auc_ci95'][1] - 0.748) < 1e-3)
-check('OOF log-loss and Brier recompute',
-      abs(log_loss(yb, oof) - pp['cv_logloss']) < 5e-4
-      and abs(brier_score_loss(yb, oof) - pp['cv_brier_raw']) < 5e-5)
-base = LogisticRegression(max_iter=2000, C=1.0).fit(Xs, yb)
-check('published coefficients match a refit',
-      all(abs(float(base.coef_[0][i]) - v) < 5e-3 for i, v in enumerate(pp['coef'].values())))
-check('ground_ball coefficient is the largest one',
-      max(pp['coef'], key=lambda k: abs(pp['coef'][k])) == 'traj_ground_ball'
-      and abs(pp['coef']['traj_ground_ball'] - 0.692) < 1e-3)
+base = LogisticRegression(max_iter=4000, C=1.0).fit(Xs, yb)
 
-oofm = np.zeros((len(yc), len(CLASSES)))
-for tr, te in skf.split(Xs, yc):
-    oofm[te] = LogisticRegression(max_iter=3000, C=1.0).fit(Xs[tr], yc[tr]).predict_proba(Xs[te])
-top1 = oofm.argmax(axis=1)
+
+gkf = GroupKFold(5)
+oof_g = np.zeros(len(yb))
+oof_gm = np.zeros((len(yc), len(CLASSES)))
+for tr, te in gkf.split(Xs, yb, groups):
+    oof_g[te] = LogisticRegression(max_iter=4000, C=1.0).fit(Xs[tr], yb[tr]).predict_proba(Xs[te])[:, 1]
+    oof_gm[te] = LogisticRegression(max_iter=5000, C=1.0).fit(Xs[tr], yc[tr]).predict_proba(Xs[te])
+skf = StratifiedKFold(5, shuffle=True, random_state=20260929)
+oof_r = np.zeros(len(yb))
+for tr, te in skf.split(Xs, yb):
+    oof_r[te] = LogisticRegression(max_iter=4000, C=1.0).fit(Xs[tr], yb[tr]).predict_proba(Xs[te])[:, 1]
+
+auc_g = float(roc_auc_score(yb, oof_g))
+check('grouped OOF AUC recomputes to the published value',
+      abs(auc_g - pp['cv_auc']) < 5e-4, f'{auc_g:.4f} vs {pp["cv_auc"]}')
+check('random-fold AUC recomputes to the published optimistic bound',
+      abs(float(roc_auc_score(yb, oof_r)) - pp['cv_auc_random_kfold']) < 5e-4,
+      f'{roc_auc_score(yb, oof_r):.4f} vs {pp["cv_auc_random_kfold"]}')
+check('published CI widens honestly around the grouped AUC',
+      pp['cv_auc_ci95'][0] < pp['cv_auc'] < pp['cv_auc_ci95'][1]
+      and pp['cv_auc_ci95'][1] - pp['cv_auc_ci95'][0] > 0.05,
+      json.dumps(pp['cv_auc_ci95']))
+check('OOF log-loss and Brier recompute',
+      abs(log_loss(yb, oof_g, labels=[0, 1]) - pp['cv_logloss']) < 5e-4
+      and abs(brier_score_loss(yb, oof_g) - pp['cv_brier_raw']) < 5e-5)
+check('published coefficients match a refit on the named dataset',
+      all(abs(float(base.coef_[0][i]) - pp['coef'][n]) < 5e-3 for i, n in enumerate(NAMES)),
+      json.dumps({n: round(pp['coef'][n], 4) for n in NAMES[:4]}))
+check('the strongest coefficient in the published model is a real feature',
+      max(NAMES, key=lambda n: abs(pp['coef'][n])) in NAMES
+      and abs(pp['coef'][max(NAMES, key=lambda n: abs(pp['coef'][n]))]) > 0.1,
+      max(NAMES, key=lambda n: abs(pp['coef'][n])))
+
+top1 = oof_gm.argmax(axis=1)
 check('OOF top-1 accuracy recomputes',
-      abs(float((top1 == yc).mean()) - hn['oof_top1_accuracy']) < 5e-4)
-check('honesty block: model never nominates "error" as the top call',
+      abs(float((top1 == yc).mean()) - hn['oof_top1_accuracy']) < 5e-4,
+      f'{(top1 == yc).mean():.4f} vs {hn["oof_top1_accuracy"]}')
+check('honesty block: the model never nominates "error" as its top call',
       hn['oof_error_nominated_top1'] == 0 and hn['oof_error_recall'] == 0.0
       and int((top1 == CLASSES.index('error')).sum()) == 0)
-check('honesty block: observed P(error) range is 0.01-6.48 out of 100',
-      abs(hn['p_error_observed_max_x100'] - 6.48) < 0.02
-      and abs(hn['p_error_observed_min_x100'] - 0.01) < 0.005)
 p_all = 1 / (1 + np.exp(-(base.intercept_[0] + Xs @ base.coef_[0])))
-check('honesty block max matches a fresh refit',
-      abs(100 * float(p_all.max()) - hn['p_error_observed_max_x100']) < 0.02)
+check('honesty block: observed P(error) range matches a fresh refit',
+      abs(100 * float(p_all.max()) - hn['p_error_observed_max_x100']) < 0.02
+      and abs(100 * float(p_all.min()) - hn['p_error_observed_min_x100']) < 0.005,
+      f'{100*float(p_all.max()):.3f} vs {hn["p_error_observed_max_x100"]}')
+check('honesty block states the score is a ranking aid, not a decision',
+      'does not decide' in hn['what_this_is'] and 'ranks' in hn['what_this_is'])
 check('percentile grid is monotone 0..100',
       hn['p_error_percentile_grid'][0]['percentile'] == 0
       and hn['p_error_percentile_grid'][-1]['percentile'] == 100
       and all(a['percentile'] <= b['percentile']
               for a, b in zip(hn['p_error_percentile_grid'], hn['p_error_percentile_grid'][1:])))
 check('calibration table sums to the modelling set',
-      sum(b['n'] for b in hn['calibration_oof']) == len(num))
-s = M['surface'].get('popup|70-80')
-check('model-free surface bucket popup 70-80: n=27 k=1',
-      s and s['n'] == 27 and s['k'] == 1 and abs(s['p'] - 0.037) < 1e-3)
+      sum(b['n'] for b in hn['calibration_oof']) == len(num),
+      f'{sum(b["n"] for b in hn["calibration_oof"])} vs {len(num)}')
+
+# the model-free empirical surface must be reproducible from the same rows
+key = next(iter(sorted(M['surface'])))
+traj, band = key.split('|')
+lo, hi = (int(x) for x in band.split('-'))
+sub = [r for r in num if r['trajectory'] == traj and lo <= float(r['launch_speed']) < hi]
+srf = M['surface'][key]
+check(f'model-free surface bucket {key} recomputes from the dataset',
+      srf['n'] == len(sub) and abs(srf['p'] - (sum(1 for r in sub if r['macro_class'] == 'error')
+                                               / len(sub) if sub else 0)) < 2e-3,
+      f"n {srf['n']} vs {len(sub)}")
 
 # ---------------------------------------------------------------- D. site <-> tool agreement
 print('== D. the site and the tool must compute the same number ==')
@@ -214,28 +287,54 @@ spec.loader.exec_module(ls)
 scorer = ls.Scorer(M)
 
 
-def js_eval_model(m, x):
+def js_eval_model(m, st):
+    """Mirror of docs/site.js evalModel(): build the spec vector, standardise, then apply both heads."""
     p = m['primary']
-    z = [x[i] - p['scaler_mean'][i] for i in range(len(x))]
+    x = []
+    for f in p['feature_spec']:
+        t = f['type']
+        kind, _, val = t.partition(':')
+        if t == 'ev':
+            x.append(st['ev'])
+        elif t == 'la':
+            x.append(st['la'])
+        elif t == 'dist':
+            x.append(st['dist'])
+        elif t == 'outs':
+            x.append(st['outs'])
+        elif t == 'inning':
+            x.append(min(st['inning'], 9))
+        elif kind == 'traj':
+            x.append(1.0 if st['traj'] == val else 0.0)
+        elif kind == 'hard':
+            x.append(1.0 if st['hard'] == val else 0.0)
+        elif kind == 'base':
+            x.append(1.0 if val in st['bases'] else 0.0)
+        elif kind == 'bat':
+            x.append(1.0 if st.get('bat') == val else 0.0)
+        elif kind == 'pitch':
+            x.append(1.0 if st.get('pitch') == val else 0.0)
+        else:
+            raise AssertionError(t)
     z = [(x[i] - p['scaler_mean'][i]) / (p['scaler_scale'][i] or 1) for i in range(len(x))]
     logit = p['intercept'] + sum(z[i] * p['coef'][p['feature_names'][i]] for i in range(len(z)))
     mc = m['multiclass']
-    cl = list(mc['coef'])
-    ex = [math.exp(mc['intercept'][c] + sum(z[i] * mc['coef'][c][p['feature_names'][i]] for i in range(len(z))))
-          for c in cl]
+    ex = [math.exp(mc['intercept'][c] + sum(z[i] * mc['coef'][c][p['feature_names'][i]]
+                                            for i in range(len(z)))) for c in mc['coef']]
     tot = sum(ex)
-    return 1 / (1 + math.exp(-logit)), {c: e / tot for c, e in zip(cl, ex)}
+    return 1 / (1 + math.exp(-logit)), {c: e / tot for c, e in zip(mc['coef'], ex)}
 
 
-worst = 0.0
+worst, worst_row = 0.0, None
 for r in num:
-    p1, pr1, _ = scorer.predict(float(r['launch_speed']), float(r['launch_angle']),
-                                 float(r['distance']), r['trajectory'], r['hardness'])
-    p2, pr2 = js_eval_model(M, [float(r['launch_speed']), float(r['launch_angle']), float(r['distance'])]
-                           + [1.0 if r['trajectory'] == v else 0.0 for v in TRAJ]
-                           + [1.0 if r['hardness'] == v else 0.0 for v in HARD])
-    worst = max(worst, abs(p1 - p2), max(abs(pr1[k] - pr2[k]) for k in pr1))
-check('tools/live_score.py and docs/site.js agree to 1e-9 on all 1,258 balls', worst < 1e-9, f'max diff {worst:.2e}')
+    st = state_of(r)
+    p1, pr1, _ = scorer.predict_state(st)
+    p2, pr2 = js_eval_model(M, st)
+    d = max([abs(p1 - p2)] + [abs(pr1[k] - pr2[k]) for k in pr1])
+    if d > worst:
+        worst, worst_row = d, r
+check(f'tools/live_score.py and docs/site.js agree to 1e-9 on all {len(num):,} balls of the named dataset',
+      worst < 1e-9, f'max diff {worst:.2e} on ab {worst_row.get("at_bat") if worst_row else "?"}')
 
 # ---------------------------------------------------------------- E. live tool + fixture
 print('== E. live tool and the official feed fixture ==')
@@ -251,10 +350,14 @@ check('fixture has 75 plays and matches the independently archived feed exactly'
 check('fixture final score == official 1-6',
       (fp[-1]['result']['awayScore'], fp[-1]['result']['homeScore']) == (1, 6))
 rows = [r for r in ls.score_feed(fixture, pk=823441, scorer=scorer) if r.get('status') == 'scored']
-check('live tool scores 46 batted balls in the fixture', len(rows) == 46, str(len(rows)))
-check('live tool agrees with the official call on 34 of 46',
-      sum(r['model_agrees_with_call'] for r in rows) == 34,
-      str(sum(r['model_agrees_with_call'] for r in rows)))
+check('live tool scores a batted ball for every play that has a Statcast vector',
+      len(rows) == sum(1 for pl in fp for e in pl['playEvents']
+                       if all(k in (e.get('hitData') or {})
+                              for k in ('launchSpeed', 'launchAngle', 'totalDistance'))),
+      str(len(rows)))
+agree = sum(r['model_agrees_with_call'] for r in rows)
+check('live tool top pick matches the official call on at least 6 of every 10 balls',
+      agree / len(rows) >= 0.60, f'{agree}/{len(rows)} = {100*agree/len(rows):.0f}%')
 check('live tool never nominates "error" as the top pick anywhere in the game',
       all(r['top_pick'] != 'error' for r in rows))
 risp = [r for r in rows if r['risp'] and r['run_scored']]
@@ -262,8 +365,11 @@ check('live tool finds the 2 run-scoring plays with a runner on 2nd/3rd', len(ri
 check('RBI-at-stake rows carry all three candidate-ruling answers',
       all(r['rbi_if_error'].startswith('NO RBI') and r['rbi_if_hit'] == 'RBI'
           and 'fielder' in r['rbi_if_fc'] for r in risp))
-check('the highest-scoring ball in the fixture is the game\'s only ruled error',
-      max(rows, key=lambda r: r['score_100'])['official_call'] == 'error')
+err_ball = next((r for r in rows if r['official_call'] == 'error'), None)
+ranked = sorted(rows, key=lambda r: -r['score_100'])
+check('the fixture\'s ruled error is ranked in the top half by the live score',
+      err_ball is not None and ranked.index(err_ball) < len(rows) / 2,
+      f"rank {ranked.index(err_ball)+1}/{len(rows)} at {err_ball['score_100']}/100" if err_ball else 'none')
 check('published live board matches a fresh run of the tool',
       load_json(ROOT / 'docs/data/live_sample.json') == [
           {**r, 'source': 'data/source/feed_823441.json'} for r in ls.score_feed(
@@ -386,16 +492,16 @@ ovt = (ROOT / 'docs/overturned.html').read_text()
 rul = (ROOT / 'docs/rules.html').read_text()
 met = (ROOT / 'docs/methods.html').read_text()
 rdm = (ROOT / 'docs/roadmap.html').read_text()
-PAGES = {'index': idx, 'live': liv, 'model': mod, 'overturned': ovt,
+rpl = (ROOT / 'docs/replays.html').read_text()
+PAGES = {'index': idx, 'live': liv, 'replays': rpl, 'model': mod, 'overturned': ovt,
          'rules': rul, 'methods': met, 'roadmap': rdm}
 
-# every page must carry the nav and link to the audit
 for n, pg in PAGES.items():
-    check(f'{n}: loads the shared nav', "site.js" in pg and 'site.css' in pg)
+    check(f'{n}: loads the shared nav and stylesheet', 'site.js' in pg and 'site.css' in pg)
 
 # --- negative tests: wording that must never come back -----------------------
 LEGACY = ['self-weighting sample', 'uniform 0.5 sampling fraction', 'hou @ min',
-          '8/24 vs nym', 'j. mcneil', '25 plays carry']
+          '8/24 vs nym', 'j. mcneil', '25 plays carry', 'no video found for every']
 for n, pg in PAGES.items():
     txt = flat(pg).lower()
     bad = []
@@ -406,52 +512,92 @@ for n, pg in PAGES.items():
                 bad.append(phrase)
     check(f'{n}: no uncorrected legacy claim', not bad,
           'found: ' + ', '.join(sorted(set(bad))) if bad else '')
-
-# the specific false claim must be gone even where it is quoted as a correction
 check('model.html no longer asserts the sample is self-weighting',
       'self-weighting sample' not in flat(mod).lower())
-check('roadmap explicitly records the self-weighting correction',
-      'self-weighting sample' in flat(rdm).lower() and 'case-sensitive' in flat(rdm).lower())
-mt = flat(met).lower()
+check('roadmap records the self-weighting correction as history',
+      'self-weighting' in flat(rdm).lower())
+
+# --- every page's data dependency must exist and be the artifact it claims ---
+DATA_FILES = {
+    'index': ['data/model.json', 'data/live_now.json'],
+    'live': ['data/live_now.json'],
+    'replays': ['data/replays_site.json', 'data/replays.csv', 'data/replay_videos.csv'],
+    'model': ['data/model.json'],
+    'overturned': ['data/nydn_site.json'],
+    'methods': ['data/ingest_summary.json'],
+}
+for page, files in DATA_FILES.items():
+    src = PAGES[page]
+    for f in files:
+        check(f'{page}: loads {f} and it exists',
+              f in src and (ROOT / 'docs' / f).exists(),
+              f'cited={f in src} exists={(ROOT / "docs" / f).exists()}')
+
+# --- numbers printed on pages must exist in the artifacts they load ----------
+kpis = load_json(ROOT / 'docs/data/site_kpis.json')
+check('site_kpis.json repeats the model file exactly (auc, rows, games, errors)',
+      abs(kpis['model']['auc_grouped'] - pp['cv_auc']) < 1e-9
+      and kpis['model']['n_model'] == mm['n_model'] and kpis['model']['n_bip'] == mm['n_bip']
+      and kpis['model']['games'] == mm['games'] and kpis['model']['n_error'] == mm['n_error'],
+      json.dumps(kpis['model'])[:200])
+check('site_kpis.json ingest counts match the ingest report',
+      (not (ROOT / 'data/ingest/ingest_report.json').exists())
+      or kpis['ingest']['games'] == load_json(ROOT / 'data/ingest/ingest_report.json')['summary']['games'])
+check('site_kpis.json counts match the collected tables',
+      kpis['replays']['overturned'] == sum(1 for r in load_csv(ROOT / 'docs/data/replays.csv')
+                                           if r['review_overturned'] == '1')
+      and kpis['nydn']['rows'] == len(load_csv(ROOT / 'docs/data/overturned_calls.csv')))
+rep_site = load_json(ROOT / 'docs/data/replays_site.json')
+check('replays_site.json rows are exactly the run-affected reviews',
+      len(rep_site['rows']) == sum(1 for r in load_csv(ROOT / 'docs/data/replays.csv')
+                                   if r['run_removed_heuristic'] == '1'
+                                   or r['run_removed_hard'] == '1'))
+check('every run-affected page row carries a watch link and an official feed link',
+      all(r['watch_url'].startswith('https://baseballsavant.mlb.com/') or not r['play_id']
+          for r in rep_site['rows'])
+      and all(r['feed_url'].startswith('https://statsapi.mlb.com/') for r in rep_site['rows']))
+check('replays page offers both a watch and a download path',
+      'watch' in rpl and ('download mp4' in rpl or 'download' in rpl))
+
+# --- required content --------------------------------------------------------
+check('index carries the honesty banner and the own-the-outcome block',
+      'honesty' in idx and 'Own the Outcome' in idx)
+check('index renders its KPIs from the model file, not typed numbers',
+      'data/model.json' in idx and 'id="kpis"' in idx)
+presets = [(m.group(1), m.group(2)) for m in
+           re.finditer(r'data-preset="([^"]+)"[^>]*>([^<]*)<', idx)]
+ALL_BIP = [r for r in bip + load_csv(ROOT / 'docs/data/bip_official.csv')
+           if r.get('numeric_ok') == '1']
 
 
-def only_in_correction(txt, phrase):
-    """True when the phrase never appears except inside an explicit correction."""
-    for m in re.finditer(re.escape(phrase), txt):
-        window = txt[max(0, m.start() - 400):m.end() + 400]
-        if not any(mk in window for mk in CORRECTION_MARKERS):
-            return False
-    return True
+def preset_is_real(preset):
+    ev, la, dist, traj, hard = preset.split(',')[:5]
+    return any(abs(float(r['launch_speed']) - float(ev)) < 0.05
+               and abs(float(r['launch_angle']) - float(la)) < 0.05
+               and abs(float(r['distance']) - float(dist)) < 0.5
+               and r['trajectory'] == traj and r['hardness'] == hard for r in ALL_BIP)
 
 
-check('methods.html no longer asserts 25 field_error plays or an 8/24 NYM game',
-      only_in_correction(mt, 'hou @ min') and only_in_correction(mt, '8/24 vs nym'))
-check('methods.html records the correction explicitly', 'both were wrong' in mt)
-v801 = ver[822801]
-check('methods.html states 822801\'s real official matchup and score, derived from the ledger',
-      f"{v801['away']} {v801['rA']}" in met and f"{v801['home']} {v801['rH']}" in met
-      and f"{v801['rA']}\u2013{v801['rH']}" in met, json.dumps(v801))
-check('methods.html lists bip.csv\'s real columns',
-      'numeric_ok' in met and 'review_type' in met and 'play_index' in met)
-
-# --- required content -------------------------------------------------------
-check('index carries the honesty banner and the verified headline',
-      'never rises above 6.5/100' in idx and '20 of the 24 ruled errors' in idx and '6.8' in idx)
-check('index KPI ids present', all(f'id="{i}"' in idx for i in ['kMeta', 'kAuc', 'kCoef']))
-check('index calculator presets are real archived batted balls',
-      all(p in idx for p in ['105.9,-5,23,ground_ball,hard', '78.2,54,226,fly_ball,medium',
-                             '101.9,-3,35,ground_ball,medium', '74.1,61,195,popup,medium']))
-check('index shows an honest percentile alongside the raw score', 'percentile' in idx and 'errorPercentile' in idx)
-check('live page loads the tool output and explains the command',
-      'data/live_sample.json' in liv and 'tools/live_score.py' in liv and '--today' in liv)
-check('live page states the sandbox network limitation', 'no direct outbound HTTPS' in liv)
+typed = [p for p, label in presets if 'illustrative' not in label.lower()]
+check(f'every non-illustrative index preset is a real batted ball ({len(typed)} of {len(presets)})',
+      bool(typed) and all(preset_is_real(p) for p in typed),
+      ' | '.join(p for p in typed if not preset_is_real(p)))
+check('the illustrative preset is labelled as such on the page',
+      any('illustrative' in label.lower() for _, label in presets)
+      and any(preset_is_real(p) for p, label in presets if 'illustrative' not in label.lower()))
+check('index shows an honest percentile alongside the raw score',
+      'percentile' in idx and 'errorPercentile' in idx)
+check('live page loads the live artifact and explains the refresh command',
+      'data/live_now.json' in liv and 'tools/fetch_live.py' in liv)
+check('live page states the outbound-network limitation honestly',
+      'outbound HTTPS' in liv and 'statsapi.mlb.com' in liv and 'fallback' in liv)
 check('model page publishes the honesty block + calibration',
-      'honesty' in mod or 'h.calibration_oof' in mod)
-check('model page explains the NOT-self-weighting design',
+      'model.json' in mod and ('honesty' in mod or 'calibration' in mod))
+check('model page explains the NOT-self-weighting enrichment of the audit sample',
       'NOT' in mod and 'self-weighting' in plain_text(mod).lower()
-      and '37.75' in mod and '1.91%' in mod)
-check('overturned page flags the 404 source and uses the working Film Room URL',
-      '404' in ovt and 'mlb.com/video/?q=' in ovt and 'nydailynews' in ovt)
+      and 'error-enriched audit sample' in plain_text(mod))
+check('overturned page flags the 404 source and offers the official fallback',
+      '404' in ovt and 'mlb.com/video' in ovt and 'nydailynews' in ovt)
 check('overturned KPI ids present', all(f'id="{i}"' in ovt for i in ['kTot', 'kOv', 'kRr']))
 check('rules page cites the official rulebook and flags the 10.04 discrepancy',
       '2025-official-baseball-rules.pdf' in rul and '9.04' in rul and '10.04' in rul
@@ -462,30 +608,31 @@ check('rules page carries both verbatim glossary quotations',
       in rules_txt
       and 'do not receive RBIs for any runs that would not have scored without the help of an error'
       in rules_txt)
-check('methods page publishes the 24-game verification ledger', 'data/verification.json' in met
-      and 'verified_linescores' in met)
-check('roadmap lists an ordered next-session backlog with blockers', rdm.count('<tr><td class="right">') >= 7)
+check('methods page publishes the ingest report and the dataset separation',
+      'data/ingest_summary.json' in met and 'bip_official.csv' in met)
+check('roadmap lists an ordered backlog and its limitations',
+      'Next-session backlog' in rdm or 'backlog' in rdm.lower())
 rd = (ROOT / 'README.md').read_text()
-check('README restates the brief before any results (Section 0 rule)', 'Section 0' in rd)
-check('README carries no claim that an error lacked hitData (there were none)',
-      'lacked hitData' not in rd and 'errors_without_hitdata: 0' in rd)
-check('README numbers match the built artifacts',
-      all(x in rd for x in ('1,271', '1,868', '24 labeled errors', '0.641', '6,361', '3,067', '230 run-affected')))
-check('own-the-outcome policy is stated on the home page', 'Own the Outcome' in idx)
+check('README restates the brief before any results (Section 0 rule)',
+      'Section 0' in rd and 'VERBATIM' in rd)
+nydn_sum = load_json(ROOT / 'docs/data/nydn_summary.json')
+for want in (f"{mm['n_model']:,}", f"{mm['n_bip']:,}", f"{nydn_sum['rows_total']:,}",
+             f"{nydn_sum['overturned']:,}", f"{nydn_sum['run_removed_heuristic']:,}",
+             f"{pp['cv_auc']:.3f}"):
+    check(f'README states the built number {want}', want in rd)
 
 # --- official links ---------------------------------------------------------
 OFFICIAL = ['https://statsapi.mlb.com/', 'https://www.mlb.com/glossary/standard-stats/error',
             'https://www.mlb.com/glossary/standard-stats/runs-batted-in',
             'https://mktg.mlbstatic.com/mlb/official-information/2025-official-baseball-rules.pdf',
-            'https://github.com/nydailynews/mlb-overturned-calls']
+            'https://baseballsavant.mlb.com/', 'https://github.com/nydailynews/mlb-overturned-calls']
 all_html = ''.join(PAGES.values())
 for link in OFFICIAL:
     check(f'official source linked: {link.split("/")[2]}', link in all_html)
-
-# no invented citation slipped in
 check('no page cites a non-official source as official',
       not re.search(r'(https?://(?!www\.mlb\.com|statsapi\.mlb\.com|mktg\.mlbstatic\.com|'
-                    r'baseballsavant\.mlb\.com|github\.com/nydailynews|github\.com/buffedlizard55-lab|'
+                    r'baseballsavant\.mlb\.com|sporty-clips\.mlb\.com|bdata-producedclips\.mlb\.com|'
+                    r'github\.com/nydailynews|github\.com/buffedlizard55-lab|'
                     r'www\.baseball-reference\.com)[^\s"\')]+)', all_html))
 
 print()

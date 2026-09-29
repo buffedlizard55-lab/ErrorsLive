@@ -2,8 +2,9 @@
  "meta": {
   "dataset": "docs/data/bip_official.csv",
   "dataset_kind": "official",
-  "n_bip": 30206,
+  "n_bip": 30298,
   "n_model": 30206,
+  "n_quarantined": 92,
   "n_error": 241,
   "error_rate_pct": 0.798,
   "class_counts": {

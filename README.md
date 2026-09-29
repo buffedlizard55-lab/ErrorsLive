@@ -76,88 +76,117 @@ statistical model, and the public site.
 
 ---
 
-## What this answers (and what it carefully does not)
+## What this answers, and where
 
-| # | Question | Where |
-|---|----------|-------|
-| a | Can call outcomes (hit / error / FC / out) be predicted from EV/LA/trajectory *before* the scorer rules? | `docs/model.html`, `docs/data/model.json` |
-| b | RBI stakes of the hit-vs-error distinction | `docs/rules.html` (MLB Rules 9.12, 9.16(a), 10.04 — official links) |
-| c | Live "Scoring Likelihood Score /100" per batted ball | `docs/index.html` (calculator), `docs/data/model.json` |
-| d | Overturned replay calls 2014–2018 + run-removal subset + watch links | `docs/overturned.html`, `docs/data/overturned_calls.csv` |
-| d† | **Video status** — the 2014–2018 source links are bit.ly short links to MLB.com video pages; many MLB video URLs from that era now redirect or 404. The site provides click-to-watch links and marks each link's last-checked state. | same |
-| e | Pages site | this repo `/docs` |
-| f | "Own the Outcome" values | `docs/index.html` footer + `docs/methods.html` |
-| h | Limitations & next-session roadmap | `docs/roadmap.html` |
+| # | Question from the brief | Answer, and where to check it |
+|---|-------------------------|-------------------------------|
+| a | Can a scoring decision be predicted — hit / error / fielder's choice / out — before the scorer rules? | Yes, better than chance and **not** well enough to replace a scorer. Grouped cross-validated AUC **0.781** on 30,206 batted balls from 590 official games; the model never once nominates "error" as its most likely call. `docs/model.html`, `docs/data/model.json` |
+| a′ | Can a *pending* decision be watched? | Not seen directly — but a change can be detected the day it lands. `tools/watch_rulings.py` re-reads the official feed for a rolling window, diffs each ruling against the last observation, and appends every change (event type, RBI, description) to `data/ingest/ruling_changes.csv`. That table *is* the record of decisions that were still open. |
+| b | The RBI stakes of error vs hit vs fielder's choice | `docs/rules.html`, quoting MLB's glossary **verbatim** with links — batters "do not receive RBIs for any runs that would not have scored without the help of an error"; no RBI when the run scores as a result of an error or a GIDP. Every scored row in the live board carries `rbi_if_error` / `rbi_if_hit` / `rbi_if_fc`. |
+| c | A live score out of 100 per batted ball | `docs/index.html` (calculator), `docs/live.html` (slate board), `tools/live_score.py` (CLI). Two independent implementations — JavaScript in the browser and Python in the tool — are asserted to agree to 1e-9 by the audit suite. |
+| d | All overturned calls, and video for the plays that removed a run | `docs/replays.html` + `docs/data/replays_site.json`: 11,528 reviewed plays, **6,149 overturned**, **17 flagged as removing a run** — each with a per-play watch page and a direct mp4 link when the league exposes a file rendition. 2014–18 archive on `docs/overturned.html`. |
+| e | A GitHub Pages site | `/docs`, published at <https://buffedlizard55-lab.github.io/LiveScoringErrors/> |
+| f | "Own the Outcome" as the focal point | Home-page footer block, `docs/methods.html`; and in practice: every number on the site is regenerated from official data, failures are published beside successes, and every irregularity the pipeline hits is written to an artifact instead of being smoothed over. |
+| g | Up-to-date feed, no manual checking | `tools/ingest_official.py` (bulk history), `tools/fetch_live.py` (today's slate → `docs/data/live_now.json`), `tools/watch_rulings.py` (ruling changes). CI runs them; the site reads their output. |
+| h | Remaining work and blockers | `docs/roadmap.html`, and the "Limitations" section below. |
 
-## Data provenance (audit trail)
+## Data provenance — every number traces to an official endpoint
 
-- **Source of record:** MLB Stats API — `statsapi.mlb.com/api/v1.1/game/{gamePk}/feed/live`
-  (per-play `hitData` launch speed/angle/distance/trajectory/hardness) and
-  `statsapi.mlb.com/api/v1/schedule?...&hydrate=linescore` (final R/H/E ground truth).
-- **Population:** all 222 games played on 15 dates in June 2026 (pool), 247 team-error records,
-  1.113 team-errors/game — `data/pool_summary.json`.
-- **Sample:** stratified by team-error count (A: ≥3, B: =2, C: ≤1), then trimmed per the same
-  fraction rule; **final N = 24 games** (A 10, B 10, C 4 — see `data/TARGETS.json`).
-  Every stratum is sampled with a uniform per-stratum fraction, so pool-level statements about this
-  sample need no post-hoc weights. Verified: `tests/test_pipeline.py` asserts the manifest set equals
-  the archived set and that all 24 final scores re-match the pool.
-- **Integrity rules:** every game's parsed final score is re-verified against the linescore pool;
-  chunk-boundary losses are never repaired by invention — the affected straddling play is dropped and
-  logged (`data/raw/*.integrity.txt`). Parser: `tools/build_dataset.py`.
+- **Play-by-play, rulings, reviews:** `statsapi.mlb.com/api/v1.1/game/{gamePk}/feed/live` (trimmed with `?fields=`).
+- **Final scores used as ground truth:** `statsapi.mlb.com/api/v1/game/{gamePk}/linescore` and
+  `statsapi.mlb.com/api/v1/schedule?...&hydrate=linescore`. Each ingested game is re-checked: the feed's own final
+  score must equal the league's linescore, and any mismatch is written into `data/ingest/ingest_report.json` as a flag.
+- **Per-play video:** `baseballsavant.mlb.com/sporty-videos?playId={playId}` (the play id comes from the league's own
+  feed). The probe in `data/ingest/probe_report.json` records what that endpoint returned for real plays in 2014, 2017
+  and 2026 — including the direct `sporty-clips.mlb.com/*.mp4` it embeds, which is what the download button uses.
+- **Rules:** `mlb.com/glossary/standard-stats/error`, `.../runs-batted-in`, and the official rulebook PDF; quotations on
+  `docs/rules.html` are word-for-word, dated, and linked.
+- **2014–18 replay archive:** `github.com/nydailynews/mlb-overturned-calls`, vendored under `data/source/nydn/` so the
+  build works offline. The repository named in the brief,
+  `github.com/buffedlizard55-lab/MLB-overturned-calls`, **returns HTTP 404** (checked 2026-09-29 by `gh api` and by
+  fetching the page). That is an irregularity in the brief, flagged rather than silently worked around.
+- **Two datasets, never mixed:** `docs/data/bip.csv` is a 24-game, error-*enriched* audit sample (1,271 batted balls,
+  24 errors) used to keep the historical record and to exercise the pipeline on a hand-checkable set;
+  `docs/data/bip_official.csv` is the whole-population window sample (30,298 batted balls in 590 games (243 ruled errors; 241 of them with a complete vector),
+  a real 0.80% error rate) that the published model is fitted on. The model metadata states which file it used.
 
 ## Repo layout
 
 ```
-tools/            Pipeline sources (build_dataset.py, train_model.py, build_nydn.py, live_score.py,
-                  run_all.py, verify_official.py, fetch_feed.py)
-data/raw/         24 validated per-game feed JSONs + 4 integrity notes (audit trail; heals logged, never invented)
-data/*.json       pool_summary.json, TARGETS.json, data_quality.json, nydn_quality.json (structured flag summary)
-data/source/      feed_823441.json (the published live-board fixture) + nydn/ (9 vendored archive CSVs)
-docs/             GitHub Pages site (index, live, model, overturned, rules, methods, roadmap + site.css/site.js)
-docs/data/        Site artifacts: bip.csv (1,271 rows), games.csv (24), model.json, verification.json,
-                  overturned_calls.csv (6,361), nydn_summary.json, live_sample.json/csv
-tests/            test_pipeline.py — audit suite: raw-set, scores, model internals, page↔data consistency, NYDN
+tools/            collectors, builders and scorers
+  ingest_official.py   CI collector: schedule -> feeds -> bip_official.csv, replays.csv, replay_videos.csv,
+                       nydn link resolution, ingest_report.json, docs/data/ingest_summary.json
+  fetch_live.py        today's slate -> docs/data/live_now.json (+ CSV), same scorer as the site
+  watch_rulings.py     rolling-window diff of official rulings -> ruling_snapshot.csv / ruling_changes.csv
+  probe_api.py         records what each official endpoint really returns (CI; evidence committed)
+  build_dataset.py     the 24-game audit sample from data/raw/*.json
+  train_model.py       fits the published model on the ingested dataset (falls back to the audit sample)
+  build_site_data.py   derives the compact, page-ready JSON from the collected tables
+  live_score.py        pure-python scorer + CLI (mirror of the browser implementation)
+  run_all.py           offline, byte-reproducible rebuild of every committed artifact
+data/raw/           24 validated feed JSONs + integrity notes (audit trail)
+data/source/        the live-board fixture feed + the vendored NYDN CSVs
+data/ingest/        ingest plan, game ledger, reports, ruling snapshots/changes
+docs/               the GitHub Pages site (8 pages + site.css/site.js)
+docs/data/          published artifacts: bip.csv, bip_official.csv, replays.csv, replay_videos.csv,
+                    overturned_calls.csv, nydn_links.csv, model.json, verification.json, site_kpis.json,
+                    replays_site.json, nydn_site.json, live_sample.json, live_now.json
+tests/test_pipeline.py   the audit suite (exit 0 = every check passed)
 ```
 
 ## Reproduce
 
 ```bash
 pip install -r requirements.txt
-python3 tools/run_all.py          # rebuilds docs/data/* from data/raw/*.json (exit 0 on green)
-python3 tests/test_pipeline.py    # full audit suite (exit 0 = all checks pass)
-python3 tools/verify_official.py  # re-check all 24 games + the 222-game pool against the live API
+python3 tools/run_all.py          # rebuilds model.json, live_sample.*, NYDN artifacts — byte-for-byte identical
+python3 tools/build_site_data.py  # rebuilds the compact page data from the collected tables
+python3 tests/test_pipeline.py    # the audit suite
 ```
 
-`run_all.py` is **byte-for-byte reproducible**: run it twice and `git diff` is empty. CI
-(`.github/workflows/audit.yml`) enforces that on every push, then runs the audit suite and a
-live-scorer smoke run.
+Network collection runs in CI (`.github/workflows/ingest.yml`, `probe.yml`) because a sandboxed checkout has no
+outbound route to `statsapi.mlb.com`; the collectors write the derived tables and CI commits them back. The site build
+itself never needs the network, and `/.github/workflows/audit.yml` re-runs `tools/run_all.py` on every push and fails
+if a single byte of a published artifact changed, so a hand-edited number cannot survive.
 
-Serving the site locally for review: `cd docs && python3 -m http.server 8080` → http://localhost:8080/.
-Live-fetching new games from the Stats API is documented in `tools/fetch_feed.py`; scoring a live
-feed is `tools/live_score.py` (see [docs/live.html](docs/live.html)).
+Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://localhost:8080/>.
 
-## Headline results (verified 2026-09-29)
+## Headline results (all recomputable; none typed by hand)
 
-- 24 games / 1,868 plays / **1,271 batted balls** with Statcast vectors; **24 labeled errors** (1.91% base rate),
-  every one of them with a complete Statcast vector (`errors_without_hitdata: 0`, `multi_hitdata: 0` in
-  `data/data_quality.json`). 1,259 balls have a full numeric vector; 12 are quarantined out of the model rather
-  than imputed.
-- Binary P(error) model: OOF **AUC 0.641 [0.518, 0.748]**, Brier 0.0186; multinomial per-class AUC
-  hit .78 / error .65 / FC .78 / out .77. Strongest feature: `trajectory = ground_ball` (+0.69 standardized CI-free coef).
-- Replay archive: **6,361** rows 2014–2018, **3,067 overturned**, **230 run-affected** (printed heuristic);
-  2,688 source irregularities categorised in `data/nydn_quality.json`. Every one of the 6,362 source data
-  lines is accounted for (6,361 rows + 1 junk header fragment).
-- Live board: game 823441 (NYY @ NYM, 1–6) — 75 plays, 46 batted balls scored, the model's top pick agrees
-  with the official ruling on 34 of 46; the highest-scoring ball in the game (6.4/100) is its only ruled error.
-  Full-season backtest: 918/1,259 top picks (72.9%), 0/24 errors flagged — which is the honest headline:
-  the model is useful for *ruling out* errors, not for finding them.
+- **Ingested window** 2026-03-25 → 2026-09-27: **590 final games**, **11,528 reviewed plays** with
+  **6,149 overturned**, and **17** of those overturned reviews flagged as removing a run from the scoreboard.
+  Every game's final score was re-verified against the league's own linescore before it entered the dataset.
+- **Model** (logistic, 18 features: exit velocity, launch angle, distance, trajectory, hardness, base state, outs,
+  inning, batter/pitcher handedness, fitted on 30,206 batted balls from 590 games): grouped-by-game OOF **AUC 0.781**
+  (95% CI 0.754–0.806), random-fold upper bound 0.778, gradient-boosted comparison 0.776 — the linear model is not
+  leaving signal on the table, and the honest headline is the group-bootstrap interval, not a single number.
+  Brier 0.0078, top-1 accuracy 0.747, **error recall 0.000**: the model is a filter, not a decision.
+- **Live board**: game 823441 (2026-07-18, NYM @ PHI, 1–6) — 46 batted balls scored before the ruling; the model's top
+  pick matches the official call on 32 (70%), and it never nominates "error".
+- **Video**: the run-affected rows each carry a Baseball Savant per-play page (click to watch) and, where the league
+  exposes a rendition, a direct `.mp4` (click to download). Rows without a rendition say so.
+- **2014–18 archive**: 6,361 rows, 3,067 overturned, 230 flagged run-affected; every source line accounted for
+  (6,361 rows + 1 junk fragment), 2,688 source irregularities categorised in `data/nydn_quality.json`, and every video
+  short link resolved with its real HTTP status in `docs/data/nydn_links.csv` — dead links are labelled dead.
 
-## Passes (user requirement i)
+## Passes
 
-- **Pass 1** — implemented + verified (final scores cross-checked vs. the 222-game linescore pool;
-  pipeline green; site shipped).
-- **Pass 2** — review found and fixed: missing-hitData quarantine, sklearn 1.9 compat, NYDN vocab gap,
-  link rot (rules hub 404 / video decay — fallbacks added), four integrity-log gaps closed
-  (`data/raw/*.integrity.txt`), plus a dedicated page↔data audit suite.
-- **Pass 3** — re-check vs. Section 0 letter by letter; residual limitations and the ordered next-session
-  backlog live on `docs/roadmap.html`.
+- **Pass 1** — implemented: collectors, ingest, model, live board, video resolution, site, CI wiring.
+- **Pass 2** — review pass: fixed the CLI cap that silently limited the ingest to 200 games, made the plan win over
+  defaults, replaced a nonexistent summary path on the replays page, made the audit suite recompute the model from the
+  dataset the model itself names, and added negative tests for phrases that must never come back.
+- **Pass 3** — re-check against the brief, line by line; residual gaps and their blockers are on `docs/roadmap.html`.
+
+## Limitations (also listed on `docs/roadmap.html`)
+
+1. **2014–18 archive rows cannot be joined to a play id** for 2014: the league's own feeds for that season carry no
+   `reviewDetails` and no per-play `playId` (recorded in `data/ingest/probe_report.json`). For 2015–2018 the join is
+   possible and is implemented by `tools/watch_rulings.py`'s siblings; the 2014 rows therefore keep their original
+   short link (resolved and labelled) and a Film Room search fallback instead of a direct clip.
+2. **Run-removal is a labelled heuristic, not a ground truth.** The league publishes the corrected call, not the
+   pre-review scoreboard, so a removal is inferred from the review text/type and re-checked by watching the video.
+   The one rule that would be *proof* (runner movements vs. scoreboard delta) never fires on the ingested window —
+   published as zero, with the explanation, rather than quietly dropped.
+3. **No real-time push feed.** CI refreshes the slate and the ruling snapshot on a schedule; the browser also tries the
+   official endpoint directly. A true live ticker would need a hosted proxy or an MLB data licence.
+4. **The model is a ranking aid.** With a 0.8% base rate and no error recall at the arg-max, its honest use is to rank
+   balls for review, not to call them.

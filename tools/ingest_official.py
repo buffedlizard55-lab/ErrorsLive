@@ -643,6 +643,17 @@ def main(argv=None):
     date_of = {l['game_pk']: l['date'] for l in ledger_all}
     bip_pub = [r for r in bip_all if in_window(date_of.get(r['game_pk'], ''), 'bip_window')]
     rep_pub = [r for r in rep_all if in_window(r['date'], 'replays_window')]
+    # A window filter that silently drops everything once emptied the published modelling CSV. A window
+    # that excludes the whole ingest is now a flag, not a quiet zero-row file.
+    for label, kept, total, win in (('bip_official.csv', bip_pub, bip_all, plan.get('bip_window')),
+                                    ('replays.csv', rep_pub, rep_all, plan.get('replays_window'))):
+        if total and not kept:
+            msg = (f'{label}: window {win} excluded all {total} collected rows — refusing to publish an '
+                   f'empty file over a good one')
+            log['flags'].append(msg)
+            print('FLAG ' + msg, flush=True)
+            kept.extend([r for r in total])          # publish everything rather than nothing
+
     ledger_all.sort(key=lambda r: (r['date'], r['game_pk']))
     bip_all.sort(key=lambda r: (r['game_pk'], r['at_bat']))
     rep_all.sort(key=lambda r: (r['date'], r['game_pk'], r['at_bat']))
@@ -694,6 +705,16 @@ def main(argv=None):
         'flags': log['flags'][:50], 'flag_count': len(log['flags']),
         'game_failures': log['game_failures'][:20], 'game_failure_count': len(log['game_failures']),
         'hard_run_removal_examples': log['hard_run_removal_examples'],
+    }, indent=1))
+    # Site-safe copy: the pages render the build's own summary rather than typed numbers. It is
+    # written by the collector (not by the offline rebuild), so the byte-reproducibility check on
+    # tools/run_all.py is unaffected.
+    (ROOT / 'docs' / 'data' / 'ingest_summary.json').write_text(json.dumps({
+        'generated_utc': log['generated_utc'], 'windows': log['windows'], 'summary': summary,
+        'endpoints': log['endpoints'], 'run_removal_rule': log['run_removal_rule'],
+        'flags': log['flags'][:50], 'flag_count': len(log['flags']),
+        'game_failures': log['game_failures'][:20], 'game_failure_count': len(log['game_failures']),
+        'hard_run_removal_examples': log.get('hard_run_removal_examples', []),
     }, indent=1))
     (out_dir / 'ingest_report.json').write_text(json.dumps(log, indent=1))
     print(json.dumps(summary, indent=1))

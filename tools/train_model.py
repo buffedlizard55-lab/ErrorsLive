@@ -67,15 +67,24 @@ def feature_spec(context=True):
 
 
 def load_rows():
+    """Prefer the ingested whole-window file; fall back to the 24-game audit sample.
+
+    Returns (modelling_rows, dataset_path, kind, raw_row_count) so the published metadata can state
+    how many batted balls the file holds and how many of them the model was actually fitted on
+    (rows without a complete Statcast vector are quarantined, never imputed).
+    """
     off = ROOT / 'docs' / 'data' / 'bip_official.csv'
+    if off.exists() and off.stat().st_size == 0:
+        raise SystemExit('docs/data/bip_official.csv exists but is empty — the ingest published nothing; '
+                         'refusing to silently fall back to the 24-game audit sample')
     if off.exists() and off.stat().st_size > 0:
-        rows = list(csv.DictReader(open(off)))
-        rows = [r for r in rows if r.get('numeric_ok') == '1' and r.get('macro_class') in CLASSES]
+        raw = list(csv.DictReader(open(off)))
+        rows = [r for r in raw if r.get('numeric_ok') == '1' and r.get('macro_class') in CLASSES]
         if len(rows) >= 1500:
-            return rows, 'docs/data/bip_official.csv', 'official'
-    rows = [r for r in csv.DictReader(open(ROOT / 'docs' / 'data' / 'bip.csv'))
-            if r['numeric_ok'] == '1' and r['macro_class'] in CLASSES]
-    return rows, 'docs/data/bip.csv', 'audit-24'
+            return rows, 'docs/data/bip_official.csv', 'official', len(raw)
+    raw = list(csv.DictReader(open(ROOT / 'docs' / 'data' / 'bip.csv')))
+    rows = [r for r in raw if r['numeric_ok'] == '1' and r['macro_class'] in CLASSES]
+    return rows, 'docs/data/bip.csv', 'audit-24', len(raw)
 
 
 def build_matrix(rows, spec):
@@ -140,7 +149,7 @@ def wilson(k, n, z=1.96):
 
 
 def main():
-    rows, dataset, kind = load_rows()
+    rows, dataset, kind, n_raw = load_rows()
     spec = feature_spec(context=any('on_1b' in r and r['on_1b'] != '' for r in rows[:50]))
     X, states = build_matrix(rows, spec)
     yb = np.array([1 if r['macro_class'] == 'error' else 0 for r in rows])
@@ -301,7 +310,8 @@ def main():
 
     p_all = 1 / (1 + np.exp(-(base.intercept_[0] + Xs @ base.coef_[0])))
     meta = {
-        'dataset': dataset, 'dataset_kind': kind, 'n_bip': len(rows), 'n_model': len(rows),
+        'dataset': dataset, 'dataset_kind': kind, 'n_bip': n_raw, 'n_model': len(rows),
+        'n_quarantined': n_raw - len(rows),
         'n_error': int(yb.sum()), 'error_rate_pct': round(100 * float(yb.mean()), 3),
         'class_counts': {c: int((yc == i).sum()) for i, c in enumerate(CLASSES)},
         'games': int(len(set(groups))), 'features': feat_names,

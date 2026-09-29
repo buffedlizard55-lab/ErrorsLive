@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
-"""Build the LIVE BOARD: every game on a date, scored play by play from the official MLB feed.
+"""Collect the current slate from the official feed and publish a live board artifact.
 
-This is the "up to date current feed" half of the brief. It needs outbound HTTPS to
-statsapi.mlb.com, which the build sandbox does not have — so it is run (a) on a GitHub Actions runner
-(.github/workflows/ingest.yml, workflow_dispatch), which commits docs/data/live_now.json, and (b) by
-any user on an unrestricted machine, including for a genuinely live in-progress game.
+The site's live page has two paths: it tries the official Stats API straight from the browser, and if
+that is blocked (a cross-origin rule, a locked-down network, or an offline reviewer) it falls back to
+`docs/data/live_now.json` — this file. The fallback is refreshed by CI, so the page is never blank and
+never invents a score.
 
-  python3 tools/fetch_live.py                       # today's slate (US Eastern game date)
-  python3 tools/fetch_live.py --date 2026-09-28     # a specific date
-  python3 tools/fetch_live.py --pk 823441           # one game
-  python3 tools/fetch_live.py --out docs/data/live_now.json --quiet
+Every number here comes from the same `tools/live_score.py` scorer the audit suite pins against
+`docs/site.js`, so the browser board and the CLI board cannot disagree.
 
-Every game's final (or in-progress) score is re-checked against the official linescore endpoint before
-its rows are published, and the report records that check per game. A game that cannot be verified is
-published with `verified: 0` and its error text — never silently.
+Usage
+  python3 tools/fetch_live.py                          # today's slate (US Eastern game day)
+  python3 tools/fetch_live.py --date 2026-09-28
+  python3 tools/fetch_live.py --pk 823441 --out docs/data/live_now.json
+Offline (fixture) mode, used by the audit suite and by reviewers without a network route:
+  python3 tools/fetch_live.py --feed data/source/feed_823441.json --out /tmp/live_now.json
 """
-import argparse, json, sys
+import argparse, csv, json, sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -24,150 +25,145 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import live_score as ls                                                     # noqa: E402
 
 STATS = 'https://statsapi.mlb.com'
-SCHED = (f'{STATS}/api/v1/schedule?sportId=1&date={{d}}&hydrate=team,linescore'
-         '&fields=dates,date,games,gamePk,officialDate,gameType,status,detailedState,'
-         'abstractGameState,teams,away,home,team,id,name,abbreviation,score')
-LINESCORE = f'{STATS}/api/v1/game/{{pk}}/linescore'
-# game types: R regular, F wild card, D division series, L championship series, W world series,
-# S spring, E exhibition, A all-star. The live board cares about games that count.
-COUNTING = ('R', 'F', 'D', 'L', 'W')
+SAVANT = 'https://baseballsavant.mlb.com'
 
 
-def game_date_default():
-    """MLB's 'today' is the US Eastern game date, not the UTC date."""
-    try:
-        from zoneinfo import ZoneInfo
-        return datetime.now(ZoneInfo('America/New_York')).strftime('%Y-%m-%d')
-    except Exception:                                                       # noqa: BLE001
-        return (datetime.now(timezone.utc) - timedelta(hours=5)).strftime('%Y-%m-%d')
+def game_day(date_arg=None):
+    """MLB's game day is US Eastern; a UTC date is a day ahead after 8pm ET."""
+    if date_arg:
+        return date_arg
+    et = datetime.now(timezone.utc) - timedelta(hours=4)
+    return et.date().isoformat()
 
 
 def slate(day):
-    obj = ls.http_json(SCHED.format(d=datetime.strptime(day, '%Y-%m-%d').strftime('%m/%d/%Y')))
+    url = (f'{STATS}/api/v1/schedule?sportId=1&startDate={day}&endDate={day}'
+           f'&hydrate=linescore,team&gameType=R,F,D,L,W')
+    sched = ls.http_json(url)
     out = []
-    for d in obj.get('dates', []):
-        for g in d.get('games', []):
-            away, home = g['teams']['away'], g['teams']['home']
+    for d in sched.get('dates', []):
+        for g in d['games']:
             out.append({
-                'pk': g['gamePk'], 'date': d.get('date'), 'gameType': g.get('gameType'),
-                'away': away['team'].get('name'), 'home': home['team'].get('name'),
-                'away_abbr': away['team'].get('abbreviation'),
-                'home_abbr': home['team'].get('abbreviation'),
-                'state': g.get('status', {}).get('detailedState'),
-                'abstract': g.get('status', {}).get('abstractGameState'),
-                'rA': away.get('score'), 'rH': home.get('score'),
-                'url': f'https://www.mlb.com/gameday/{g["gamePk"]}',
-                'savant': f'https://baseballsavant.mlb.com/gamefeed?gamePk={g["gamePk"]}',
+                'game_pk': g['gamePk'],
+                'matchup': f"{g['teams']['away']['team']['abbreviation']} @ "
+                           f"{g['teams']['home']['team']['abbreviation']}",
+                'away': g['teams']['away']['team']['name'],
+                'home': g['teams']['home']['team']['name'],
+                'game_type': g.get('gameType', 'R'),
+                'state': g['status']['detailedState'],
+                'abstract_state': g['status']['abstractGameState'],
+                'away_score': ((g.get('linescore') or {}).get('teams') or {}).get('away', {}).get('runs'),
+                'home_score': ((g.get('linescore') or {}).get('teams') or {}).get('home', {}).get('runs'),
+                'official_feed_url': f'{STATS}/api/v1.1/game/{g["gamePk"]}/feed/live',
+                'savant_url': f'{SAVANT}/gamefeed?gamePk={g["gamePk"]}',
+                'schedule_url': url,
             })
     return out
-
-
-def verify(pk):
-    """Official linescore -> (rA, rH) or an error string."""
-    try:
-        obj = ls.http_json(LINESCORE.format(pk=pk))
-        return obj['teams']['away']['runs'], obj['teams']['home']['runs'], ''
-    except Exception as e:                                                  # noqa: BLE001
-        return None, None, f'{type(e).__name__}: {e}'
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--date', help='YYYY-MM-DD (default: today, US Eastern)')
-    ap.add_argument('--pk', type=int, action='append', help='gamePk(s) to fetch instead of the slate')
-    ap.add_argument('--include-noncounting', action='store_true',
-                    help='also fetch spring/exhibition/all-star games')
-    ap.add_argument('--out', default=str(ROOT / 'docs' / 'data' / 'live_now.json'))
-    ap.add_argument('--csv', help='also write the flat play rows here')
-    ap.add_argument('--quiet', action='store_true')
+    ap.add_argument('--date', help='game day YYYY-MM-DD (default: today, US Eastern)')
+    ap.add_argument('--pk', type=int, action='append', help='specific gamePk(s)')
+    ap.add_argument('--feed', action='append', help='offline fixture feed JSON (repeatable)')
+    ap.add_argument('--max-games', type=int, default=20)
+    ap.add_argument('--out', default='docs/data/live_now.json')
+    ap.add_argument('--csv-out', default='docs/data/live_now.csv')
     a = ap.parse_args(argv)
 
-    day = a.date or game_date_default()
+    day = '' if a.feed else game_day(a.date)
     sc = ls.Scorer()
-    games, flags = [], []
-    if a.pk:
-        todo = [{'pk': pk, 'state': 'selected', 'gameType': '?'} for pk in a.pk]
-    else:
-        try:
-            todo = slate(day)
-        except Exception as e:                                              # noqa: BLE001
-            print(f'schedule fetch failed for {day}: {e}', file=sys.stderr)
-            return 2
-    for g in todo:
-        if not a.include_noncounting and not a.pk and g.get('gameType') not in COUNTING:
-            continue
-        try:
-            feed = ls.fetch_feed(g['pk'])
-        except Exception as e:                                              # noqa: BLE001
-            flags.append(f"{g['pk']}: feed fetch failed ({type(e).__name__}: {e})")
-            continue
-        rows = ls.score_feed(feed, pk=g['pk'], scorer=sc)
-        rA, rH, err = verify(g['pk'])
-        final = None
-        plays = feed['liveData']['plays']['allPlays']
-        if plays:
-            final = [plays[-1]['result'].get('awayScore'), plays[-1]['result'].get('homeScore')]
-        verified = bool(rA is not None and final == [rA, rH])
-        if rA is None:
-            flags.append(f"{g['pk']}: linescore unavailable ({err})")
-        elif not verified:
-            flags.append(f"{g['pk']}: feed {final} != official linescore [{rA}, {rH}]")
-        scored = [r for r in rows if r.get('status') == 'scored']
-        errs = [r for r in scored if r['official_call'] == 'error']
-        agree = sum(r['model_agrees_with_call'] for r in scored)
-        g2 = dict(g)
-        g2.update({
-            'plays': len(plays) if plays else 0, 'batted_balls': len(scored),
-            'errors': len(errs), 'top_pick_agrees': agree,
-            'risp_runs_at_stake': sum(1 for r in scored if r['risp'] and r['run_scored']),
-            'overturned_reviews': sum(1 for r in scored if r.get('review_overturned') is True),
-            'final': final, 'official_linescore': [rA, rH], 'verified': int(verified),
-            'feed_url': ls.API.format(pk=g['pk']) + '?fields=' + ls.SLIM,
-            'linescore_url': LINESCORE.format(pk=g['pk']),
-            'model_rows': scored,
-        })
-        games.append(g2)
-        if not a.quiet:
-            print(f"{g['pk']} {g.get('away_abbr') or g.get('away')} @ "
-                  f"{g.get('home_abbr') or g.get('home')} [{g.get('state')}] "
-                  f"{len(scored)} batted balls, top pick agrees {agree}/{len(scored)}, "
-                  f"{len(errs)} error(s), verified={int(verified)}")
-            for r in scored[:0]:
-                print(r)
+    games, failures = [], []
 
-    report = {
-        'generated_utc': datetime.now(timezone.utc).isoformat(timespec='seconds'),
-        'game_date': day,
-        'source': 'https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live (official MLB Stats API)',
-        'note': ('Rows are pre-ruling model estimates produced before the human scoring judgment is '
-                 'final. The official scorer\u2019s ruling in the feed is the source of record.'),
-        'model': {'model_json': 'docs/data/model.json',
-                  'score_100_meaning': '100 x P(the play is ruled an error)'},
-        'summary': {
-            'games': len(games),
-            'games_verified_vs_linescore': sum(g['verified'] for g in games),
-            'batted_balls': sum(g['batted_balls'] for g in games),
-            'errors': sum(g['errors'] for g in games),
-            'risp_runs_at_stake': sum(g['risp_runs_at_stake'] for g in games),
-            'overturned_reviews': sum(g['overturned_reviews'] for g in games),
-            'top_pick_agreement': (
-                f"{sum(g['top_pick_agrees'] for g in games)}/"
-                f"{sum(g['batted_balls'] for g in games)}"),
-        },
-        'flags': flags,
+    if a.feed:                                     # offline mode: score committed fixtures only
+        for f in a.feed:
+            p = Path(f)
+            pk = int(p.stem.replace('feed_', '')) if p.stem.replace('feed_', '').isdigit() else p.stem
+            feed = json.load(open(p))
+            rows = ls.score_feed(feed, pk=pk, scorer=sc, meta={'source': f})
+            plays = (feed.get('liveData') or {}).get('plays', {}).get('allPlays', [])
+            # the fixture is stored with only the `liveData` projection, so its official identity comes
+            # from the committed verification ledger (date/teams/final score, each with its own URL)
+            led = {}
+            vpath = ROOT / 'docs' / 'data' / 'verification.json'
+            if vpath.exists():
+                led = {g['pk']: g for g in json.loads(vpath.read_text()).get('games', [])}
+            g = led.get(pk, {})
+            games.append({
+                'game_pk': pk,
+                'matchup': f"{g.get('away', '')} @ {g.get('home', '')}".strip(' @'),
+                'game_day': g.get('date', ''),
+                'state': 'Final (committed fixture)',
+                'official_feed_url': f'{STATS}/api/v1.1/game/{pk}/feed/live',
+                'savant_url': f'{SAVANT}/gamefeed?gamePk={pk}',
+                'final_away': (plays[-1]['result'].get('awayScore') if plays else None)
+                if not g else g.get('rA'),
+                'final_home': (plays[-1]['result'].get('homeScore') if plays else None)
+                if not g else g.get('rH'),
+                'linescore_url': g.get('api', ''),
+                'plays': rows, 'source': f})
+    else:
+        meta = slate(day)
+        if a.pk:
+            meta = [m for m in meta if m['game_pk'] in set(a.pk)] or [
+                {'game_pk': pk, 'matchup': '', 'state': 'requested'} for pk in a.pk]
+        for m in meta[:a.max_games]:
+            try:
+                feed = ls.fetch_feed(m['game_pk'])
+                rows = ls.score_feed(feed, pk=m['game_pk'], scorer=sc,
+                                     meta={'source': m.get('official_feed_url', '')})
+                plays = feed['liveData']['plays']['allPlays']
+                info = {'plays': len(plays),
+                        'final_away': plays[-1]['result'].get('awayScore'),
+                        'final_home': plays[-1]['result'].get('homeScore')}
+                games.append({**m, **info, 'plays': rows})
+            except Exception as e:                                   # noqa: BLE001
+                failures.append({'game_pk': m['game_pk'], 'error': f'{type(e).__name__}: {e}'[:200]})
+
+    played = [r for g in games for r in g.get('plays', []) if r.get('status') == 'scored']
+    agree = sum(r['model_agrees_with_call'] for r in played)
+    model = json.load(open(ROOT / 'docs' / 'data' / 'model.json'))
+    offline = bool(a.feed)
+    doc = {
+        'mode': 'offline-fixture' if offline else 'live-slate',
+        'generated_utc': '' if offline else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'note': ('Built by tools/run_all.py from the committed fixture feed: this is the labelled '
+                 'fallback the page shows when a browser cannot reach statsapi.mlb.com. CI replaces '
+                 'this file with the real slate (tools/fetch_live.py, mode live-slate).'
+                 if offline else 'Fetched from the official schedule + feed endpoints by CI.'),
+        'game_day': day,
+        'source': f'{STATS}/api/v1/schedule?sportId=1&startDate={day}&endDate={day}',
+        'model': {'dataset': model['meta'].get('dataset'), 'n_bip': model['meta'].get('n_bip'),
+                  'auc_grouped': model['primary'].get('cv_auc'),
+                  'auc_ci95': model['primary'].get('cv_auc_ci95'),
+                  'dataset_note': model['meta'].get('dataset_note', '')},
+        'summary': {'games': len(games), 'games_with_balls': sum(1 for g in games if g.get('plays')),
+                    'batted_balls_scored': len(played),
+                    'top_pick_agrees_with_official': agree,
+                    'failures': len(failures)},
+        'failures': failures,
         'games': games,
     }
-    Path(a.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(a.out).write_text(json.dumps(report, indent=1))
-    if a.csv:
-        rows = [r for g in games for r in g['model_rows']]
-        ls.write_csv(rows, a.csv)
-    if not a.quiet:
-        print(json.dumps(report['summary'], indent=1))
-        for f in flags:
-            print('FLAG:', f)
-    print('wrote', a.out)
+    if offline and games and games[0].get('game_day'):
+        day = games[0]['game_day']
+        doc['game_day'] = day
+    out = ROOT / a.out
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(doc, indent=1))
+    flat = [{k: v for k, v in r.items() if not isinstance(v, (list, dict))} for r in played]
+    if flat:
+        keys = []
+        for r in flat:
+            for k in r:
+                if k not in keys:
+                    keys.append(k)
+        with open(ROOT / a.csv_out, 'w', newline='') as f:
+            w = csv.DictWriter(f, fieldnames=keys)
+            w.writeheader()
+            w.writerows(flat)
+    print(json.dumps(doc['summary'], indent=1))
+    print(f'wrote {a.out} and {a.csv_out}')
     return 0
 
 

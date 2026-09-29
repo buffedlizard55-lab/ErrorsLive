@@ -17,6 +17,9 @@
 
   <div id="headline"><div class="card">Loading model.json…</div></div>
 
+  <h2>Which data, exactly</h2>
+  <div class="note" id="datasets"></div>
+
   <h2>How it is validated</h2>
   <div class="grid cols2">
     <div class="card"><h3>Grouped cross-validation (the headline)</h3><p class="muted">
@@ -82,6 +85,16 @@ const $ = id => document.getElementById(id);
 (async function () {
   const M = await loadJSON('data/model.json');
   const m = M.meta, p = M.primary, h = M.honesty, mc = M.multiclass;
+  const K = await loadMaybe('data/site_kpis.json') || {};
+  $('datasets').innerHTML = `The published model is fitted on <code>${esc(m.dataset)}</code> — ${esc(m.dataset_note)}
+    That file is the whole-population window sample: <b>${esc((m.n_model || 0).toLocaleString())}</b> batted balls
+    the model was fitted on out of <b>${esc((m.n_bip || 0).toLocaleString())}</b> collected
+    (<b>${esc(m.n_quarantined)}</b> quarantined for an incomplete Statcast vector — never imputed), from
+    <b>${esc(m.games)}</b> official games.
+    Kept separate, and never mixed into the model, is the <b>24-game error-enriched audit sample</b>
+    (<code>docs/data/bip.csv</code>): it is <b>NOT self-weighting</b> — its 1.91% error rate is roughly double the
+    real rate — so it is used only as a hand-checkable audit set and for the historical verification ledger.
+    ${K.ingested ? `The collector has ingested <b>${esc((K.ingested.games || 0).toLocaleString())}</b> games so far.` : ''}`;
   $('headline').innerHTML = `<div class="grid cols3">
     ${kpiCard(p.cv_auc, `out-of-fold AUC — <b>GroupKFold by game</b> (${p.n_splits} folds)`) +
       kpiCard(p.cv_auc_random_kfold, 'the same model under random folds — the optimistic bound') +
@@ -91,7 +104,9 @@ const $ = id => document.getElementById(id);
       kpiCard(p.cv_auc_gradient_boosting_grouped, 'gradient-boosted trees on the same grouped folds')}
     </div>
     <p class="legend" style="margin-top:10px">Dataset: <code>${esc(m.dataset)}</code> — ${esc(m.dataset_note)}</p>`;
-  $('gap').innerHTML = `<b>${M.honesty.grouped_vs_random_auc_gap}</b> AUC points (random minus grouped).`;
+  $('gap').innerHTML = `<b>${M.honesty.grouped_vs_random_auc_gap}</b> AUC points (random minus grouped) — a
+    negative number means the random-fold bound came out <i>lower</i>, so within-game leakage was not inflating the
+    headline. It is printed as it fell; nothing here was re-tuned to make the story tidier.`;
   $('gbm').innerHTML = `grouped AUC <b>${p.cv_auc_gradient_boosting_grouped}</b> for trees vs
     <b>${p.cv_auc}</b> for logistic regression.`;
   $('cal').innerHTML = `<tr><th>predicted P(error)</th><th class="right">n</th><th class="right">mean predicted</th><th class="right">observed rate</th></tr>` +
