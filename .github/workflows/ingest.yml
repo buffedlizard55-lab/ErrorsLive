@@ -1,51 +1,65 @@
 name: ingest
 
 # The build sandbox has no route to statsapi.mlb.com / baseballsavant.mlb.com, but a GitHub-hosted
-# runner does. This workflow is therefore the project's *data collection* half: it fetches from the
-# official endpoints, derives the published artifacts, and uploads them so the sandbox (and the
-# repo) get verifiable, timestamped data instead of hand-typed numbers.
+# runner does. This workflow is therefore the project's data-collection half: it fetches from the
+# official endpoints, derives the published artifacts, and commits them back to the branch so the
+# sandbox (and the repo) get verifiable, timestamped data instead of hand-typed numbers.
 #
-# Triggers:
-#   * push to an arena/* branch  -> run + upload artifacts (how the agent collects data)
-#   * workflow_dispatch          -> run any job on demand with parameters
-#   * schedule (cron)            -> refresh the live snapshot so the Pages site is current
-#
-# Nothing here writes to git except the explicit `snapshot-live` job, which commits one JSON file.
+# Triggers
+#   * push to an arena/* branch  -> collect + commit (this is how data enters the repo)
+#   * workflow_dispatch          -> same, on demand
+# Guard: a commit whose message contains [ci-data] does not re-trigger collection (no loops).
 
 on:
   push:
     branches: ['arena/**']
-  pull_request:
   workflow_dispatch:
-    inputs:
-      command:
-        description: 'which tool to run (probe | live | replay)'
-        required: false
-        default: 'probe'
-      args:
-        description: 'extra CLI args for that tool'
-        required: false
-        default: ''
 
 permissions:
   contents: write
 
 jobs:
-  probe:
-    # Read-only reconnaissance of the official endpoints: statuses, byte counts, CORS headers,
-    # reviewDetails coverage by era, and whether the archived short-links still resolve.
-    if: github.event_name != 'schedule'
+  collect:
+    if: "!(github.event_name == 'push' && contains(github.event.head_commit.message, '[ci-data]'))"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Probe the official endpoints (no dependencies, no writes)
-        run: python3 tools/probe_api.py --json probe_report.json
+      - name: Probe the official endpoints (reachability, CORS, era coverage, short-links)
+        run: python3 tools/probe_api.py --json data/ingest/probe_report.json
+        continue-on-error: true
+      - name: Ingest games from the official Stats API
+        run: python3 tools/ingest_official.py --plan data/ingest/plan.json
+        continue-on-error: true
+      - name: Show what was produced
+        run: |
+          ls -l data/ingest docs/data | head -40
+          python3 - <<'PY'
+          import json, pathlib
+          for p in ('data/ingest/ingest_report.json', 'data/ingest/probe_report.json'):
+              f = pathlib.Path(p)
+              if f.exists():
+                  d = json.loads(f.read_text())
+                  print('==', p, '==')
+                  print(json.dumps(d.get('summary', d), indent=1)[:4000])
+          PY
+      - name: Commit the derived data back to the branch
+        run: |
+          git config user.name "LiveScoringErrors ingest"
+          git config user.email "ingest@users.noreply.github.com"
+          git add -A data/ingest docs/data
+          if git diff --cached --quiet; then echo "no data changes to commit"; exit 0; fi
+          git commit -m "[ci-data] official ingest $(date -u +%FT%TZ) from $GITHUB_SHA"
+          git push origin HEAD:${{ github.ref_name }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: probe-report
-          path: probe_report.json
+          name: ingest-report
+          path: |
+            data/ingest/probe_report.json
+            data/ingest/ingest_report.json
           if-no-files-found: warn

@@ -1,0 +1,9 @@
+{
+  "_comment": "Scope for tools/ingest_official.py. The CI job (.github/workflows/ingest.yml) runs it and commits only the derived CSVs/JSON - never the raw feeds.",
+  "windows": [
+    {"start": "2026-09-25", "end": "2026-09-28", "game_types": ["R", "F", "D", "L", "W"]}
+  ],
+  "max_games": 80,
+  "workers": 12,
+  "videos": true
+}
