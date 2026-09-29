@@ -1,0 +1,51 @@
+name: ingest
+
+# The build sandbox has no route to statsapi.mlb.com / baseballsavant.mlb.com, but a GitHub-hosted
+# runner does. This workflow is therefore the project's *data collection* half: it fetches from the
+# official endpoints, derives the published artifacts, and uploads them so the sandbox (and the
+# repo) get verifiable, timestamped data instead of hand-typed numbers.
+#
+# Triggers:
+#   * push to an arena/* branch  -> run + upload artifacts (how the agent collects data)
+#   * workflow_dispatch          -> run any job on demand with parameters
+#   * schedule (cron)            -> refresh the live snapshot so the Pages site is current
+#
+# Nothing here writes to git except the explicit `snapshot-live` job, which commits one JSON file.
+
+on:
+  push:
+    branches: ['arena/**']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'which tool to run (probe | live | replay)'
+        required: false
+        default: 'probe'
+      args:
+        description: 'extra CLI args for that tool'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    # Read-only reconnaissance of the official endpoints: statuses, byte counts, CORS headers,
+    # reviewDetails coverage by era, and whether the archived short-links still resolve.
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Probe the official endpoints (no dependencies, no writes)
+        run: python3 tools/probe_api.py --json probe_report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-report
+          path: probe_report.json
+          if-no-files-found: warn

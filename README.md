@@ -9,32 +9,70 @@ statistical model, and the public site.
 
 ---
 
-## Section 0 — The original brief (verbatim)
+## Section 0 — the original brief (verbatim)
 
-> 1. Investigate whether MLB official-scoring decisions can be predicted:
->    (a) predict the outcome of pending scoring decisions — whether an error gets overturned into a
->    fielder's choice or a hit;
->    (b) RBI impact — an error ruling means no RBI with a runner on 2nd/3rd, but a fielder's choice
->    or hit may award an RBI (cite MLB Rules 9.12 / 9.16 / 10.04);
->    (c) build the "best scientific model" producing a live score out of 100 for live events
->    ("if a ball gets hit, how will it be scored") using Baseball Savant live play-by-play batted-ball
->    stats and "advanced correlation methods";
->    (d) research all MLB overturned calls from
->    https://github.com/buffedlizard55-lab/MLB-overturned-calls and find videos for plays where a run
->    was removed — click-to-download or click-to-watch in the browser;
->    (e) create a GitHub Pages site for buffedlizard55-lab/LiveScoringErrors: clean, user-friendly,
->    organized UI with all relevant info and official verified links;
->    (f) "Own the Outcome" core values from the Arena AI team as a focal point;
->    (g) create a pull request and merge it onto main;
->    (h) make suggestions for remaining work / limitations for the next session;
->    (i) run 3 passes (implement+verify → bug/edge-case review+fix → re-check vs. the original
->    request + improve); do not stop after pass 1.
+> **VERBATIM — DO NOT EDIT. Read this at the start of every session.**
 >
-> Standing constraints: no hallucinations — verify line by line from official, verified, trusted
-> sources and provide links for manual review; no manual input — work autonomously and flag
-> irregularities; re-read this brief at the start of every session; the site must be GitHub Pages
-> with a clean/simple UI and official verified source links; create the PR and merge to main; run
-> all 3 passes; solve the problem of manually checking everything and aim for an up-to-date live feed.
+> I want to investigate if there is a way to accurately predict the outcome of any scoring decision such as a pending scoring decision, or if we can tell if an error would be overturned into another play such as a fielders choice or a hit.  There's also the possibility of if the play is initially ruled an error that the batter gets no RBI if there is a runner on 2nd or 3rd.  However if they rule it as a fielders choice or a hit, there's a chance that the batter would be awarded an RBI.
+>
+> Review the repo.
+>
+> I want to create a website that does the following:  I want to investigate if there is a way to accurately predict the outcome of any scoring decision such as a pending scoring decision, or if we can tell if an error would be overturned into another play such as a fielders choice or a hit.  There's also the possibility of if the play is initially ruled an error that the batter gets no RBI if there is a runner on 2nd or 3rd.  However if they rule it as a fielders choice or a hit, there's a chance that the batter would be awarded an RBI.
+>
+> *[The brief repeats that paragraph here, word for word — it is reproduced as written; see the editor's note below.]*
+>
+> Let's see if these sites help with figuring out a game plan and then executing it so that we get the best scientific model that can generate a live score out of 100 for live events.  Like if a ball gets hit, how will it be scored, let's see if baseballsavant live play by play batted ball game stats could help us.  Use advanced correlation methods to generate live scoring.
+>
+> `[[https://github.com/buffedlizard55-lab/MLB-overturned-calls](https://github.com/buffedlizard55-lab/MLB-overturned-calls)](https://github.com/buffedlizard55-lab/MLB-overturned-calls](https://github.com/buffedlizard55-lab/MLB-overturned-calls))`
+> *(as received: a quadruple-wrapped link. Canonical target:  `https://github.com/buffedlizard55-lab/MLB-overturned-calls`)*
+>
+> It should be pretty straight forward, research and understand all the MLB overturned calls, and then find the videos that correspond to the play that resulted in a run being removed from the score.  It should be as easy as click to download or make it so that i can click it and watch it in my browser.
+>
+> Put this prompt into the repo readme and read it everytime we work on the project as a starting point to make sure we are building what we are aiming for and have a strong base to continue building and improving on making something useful for everyday use.  It should solve the problem of having to manually check everything ourselves and have an up to date current feed.
+>
+> Review the repo.
+>
+> The following is taken from the Arena AI team and I think it makes a good point on building a successful project, so let's keep the Core Values and Own the Outcome as a focal point when building, developing, researching, suggesting upgrades, and implementing the work.
+>
+> **Own the Outcome**
+>
+> We own results end to end — not just our individual slice of the work. When problems arise and we have the means to act, we do so without waiting for permission or assignment. We treat failure and success as signals and use them to improve. At Arena, we stay accountable to the final outcome.
+>
+> Work line by line verifying from official verified trusted sources, provide links for manual review.  There should be no manual input, work on your own to complete tasks.  Flag any irregularities for review.  No hallucinations.
+>
+> Verify no hallucinations.
+>
+> The goal of this project is to get a full list that follow our requirements.  No hallucinations.  Verify line by line.
+>
+> Site creation
+>
+> Create a github page for this repo that has clean ui, user friendly, simple and easy to use.
+>
+> It should be organized and clean.  It should include all relevant information in an easy to read format with official verified links as sources for review.  Work line by line verify everything no hallucinations.
+>
+> Go ahead and create a pull request and then merge the pull request onto the main. Make suggestions for what work still needs to be done and any limitations that is in the way of a successful project.  It should be worked on in this next session or the next session.  Work line by line verify everything no hallucinations.
+>
+> Run this task through multiple passes.
+>
+> Pass 1: Implement the task completely and verify the result.
+>
+> Pass 2: Review your work for bugs, missing requirements, incorrect assumptions, and edge cases. Fix everything you find.
+>
+> Pass 3: Re-check the entire implementation against the original request. Improve accuracy, reliability, completeness, and code quality. Fix any remaining issues.
+>
+> Do not stop after the first pass. Each pass must build on the previous one. Before finishing, verify that the final result fully satisfies the original request.  Work line by line verify everything no hallucinations.
+>
+> **Editor's notes (facts, verified 2026-09-29 — not part of the brief):**
+> 1. The brief was sent as one message with the opening paragraph posted twice; the second copy is
+>    marked above rather than silently deleted.
+> 2. `github.com/buffedlizard55-lab/MLB-overturned-calls` **does not exist**: the GitHub REST API
+>    returns HTTP 404 for that path (`gh api repos/buffedlizard55-lab/MLB-overturned-calls`), as does
+>    the HTML page. The archive the brief describes is the NY Daily News one,
+>    `github.com/nydailynews/mlb-overturned-calls` (HTTP 200, public, 2014–2018). Both facts are
+>    re-checked by `tests/test_pipeline.py` where they can be checked offline, and by
+>    `tools/probe_api.py` where they need the network.
+> 3. `MLB-overturned-calls` is a *sister* project name the brief's author controls; the pipeline in
+>    this repo ingests the NYDN archive because that is the only overturn archive that exists.
 
 ---
 
