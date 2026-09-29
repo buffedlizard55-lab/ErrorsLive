@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Overturned Calls 2014–2018 — LiveScoringErrors</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<header class="nav"><div class="nav-inner"></div></header>
+<main>
+  <h1>MLB overturned replay calls, 2014–2018</h1>
+  <p class="lede">Source: <a href="https://github.com/nydailynews/mlb-overturned-calls" target="_blank" rel="noopener">NY Daily News –
+  mlb-overturned-calls</a> (the repo referenced in the brief as “MLB-overturned-calls”), all manager/instant-replay
+  challenges tracked 2014–2018 with video links. <b>Two different overturn mechanisms exist in baseball — this page
+  covers umpire-call reviews; the scorer's hit/error revisions are the model pages.</b> Both change runs and both
+  belong in one honest UI, clearly labeled.</p>
+
+  <div class="warn"><b>Video-link status (verified 2026-09-29):</b> the archive's <code>t.co</code>/<code>bit.ly</code>/<code>atmlb.com</code>
+  short links point at MLB.com video pages from 2014–2018; MLB later migrated its video platform and many links now
+  404 or redirect (spot checks returned Cloudflare 5xx). Every row below offers the original source link <i>and</i> a
+  one-click <b>MLB Film Room search</b> for the same play (player + game) — currently the most reliable way to watch the
+  play inside your browser. No videos are re-hosted; all links are official-source only.</div>
+
+  <div class="grid cols3" id="kpi" style="margin-top:14px"></div>
+
+  <h2>Plays where a run was removed or kept off the board <span class="pill err">heuristic</span></h2>
+  <p class="muted">Flag rule (from <code>tools/build_nydn.py</code>, printed verbatim):
+  <code>result == Overturned AND (initial_call mentions score/home/plate/run OR play-type mentions Timing / HP / Home / Plate / Collisions)</code>.
+  It is a heuristic — MLB's official record of whether the run was erased is the box score; this column is an index aid, not gospel.</p>
+  <div class="filterbar">
+    <div><label>Season</label><select id="fYear"><option value="">All</option></select></div>
+    <div><label>Result</label><select id="fRes"><option value="">All</option><option>Overturned</option><option>Confirmed</option><option>Stands</option><option>Rules Check</option><option>Record Keeping</option></select></div>
+    <div><label>Play type contains</label><input id="fType" placeholder="Tag Play, Force Play, HR…"></div>
+    <div><label>Runner/run row?</label><select id="fRR"><option value="">All</option><option value="1">Run-affected (heuristic)</option><option value="0">Other</option></select></div>
+    <div><label>Find text</label><input id="fQ" placeholder="player, team, umpire…"></div>
+    <div><button class="btn" id="apply">Apply</button></div>
+  </div>
+  <p class="legend" id="count"></p>
+  <p class="note">The amber ⚾ <b>run</b> chip is a heuristic <i>match check</i> on the call description — it marks
+  plays that <i>plausibly</i> decided a run at the plate; the authoritative answer is the recompiled box score
+  (roadmap item #3).</p>
+  <div style="overflow-x:auto"><table id="tbl"></table></div>
+</main>
+<footer><div class="inner"><span>6,168 replay rows parsed from the NYDN archive; 61 source irregularities flagged in data/nydn_quality.json</span>
+<span>Own the Outcome: links verified where possible, decayed links labeled, none re-hosted</span></div></footer>
+<script src="site.js"></script>
+<script>
+let ROWS=[];const page=250;
+(async function(){
+  ROWS=await loadCSV('data/overturned_calls.csv');
+  const years=[...new Set(ROWS.map(r=>r.season))].sort();
+  document.getElementById('fYear').innerHTML='<option value="">All</option>'+years.map(y=>`<option>${y}</option>`).join('');
+  kpi();render();
+  document.getElementById('apply').onclick=render;
+  document.getElementById('fQ').addEventListener('keydown',e=>{if(e.key==='Enter')render();});
+})();
+function filmroomURL(r){
+  const teams=(r.game||'').replace(/@/g,' ').replace(/,/g,' ');
+  return 'https://www.mlb.com/video/search?q='+encodeURIComponent((r.player?r.player+' ':'')+teams+(r.date||''));
+}
+function kpi(){
+  const tot=ROWS.length,ov=ROWS.filter(r=>r.overturned==='1').length,rr=ROWS.filter(r=>r.run_removed_heuristic==='1').length;
+  document.getElementById('kpi').innerHTML=`
+   <div class="card" id="kTot"><div class="kpi">${tot.toLocaleString()}<small>replay rulings parsed 2014–2018</small></div></div>
+   <div class="card" id="kOv"><div class="kpi">${ov.toLocaleString()}<small>calls overturned (${(100*ov/tot).toFixed(1)}%)</small></div></div>
+   <div class="card" id="kRr"><div class="kpi">${rr}<small>run-affected overturns (heuristic)</small></div></div>`;
+}
+function render(){
+  const y=document.getElementById('fYear').value,res=document.getElementById('fRes').value,
+        ty=document.getElementById('fType').value.toLowerCase(),rr=document.getElementById('fRR').value,
+        q=document.getElementById('fQ').value.toLowerCase();
+  const r0=ROWS.filter(r=>
+    (!y||r.season===y)&&(!res||r.result===res)&&
+    (!ty||r.play_type.toLowerCase().includes(ty))&&
+    (rr===''||r.run_removed_heuristic===rr)&&
+    (!q||(r.player+' '+r.game+' '+r.calling_umpire+' '+r.crew_chief+' '+r.initial_call).toLowerCase().includes(q)));
+  document.getElementById('count').textContent=`${r0.length.toLocaleString()} rows match (showing first ${Math.min(page,r0.length)}; refine filters to narrow)`;
+  const show=r0.slice(0,page);
+  document.getElementById('tbl').innerHTML=
+   '<tr><th>Date</th><th>Game</th><th>Inn</th><th>Challenger</th><th>Player</th><th>Initial call</th><th>Play type</th><th>Result</th><th>Run?</th><th>Video</th></tr>'+
+   show.map(r=>`<tr>
+     <td>${r.date}</td><td>${r.game}</td><td>${r.inning}</td><td>${r.manager_or_ump}</td><td>${r.player}</td>
+     <td>${r.initial_call}</td><td>${r.play_type}</td>
+     <td><span class="pill ${r.overturned==='1'?'err':'on'}">${r.result}</span></td>
+     <td>${r.run_removed_heuristic==='1'?'<span class="pill err">⚾ run</span>':''}</td>
+     <td><a class="chip" href="${r.video}" target="_blank" rel="noopener">source&nbsp;↗</a>
+         <a class="chip" href="${filmroomURL(r)}" target="_blank" rel="noopener">film&nbsp;room&nbsp;↗</a></td>
+   </tr>`).join('');
+}
+</script>
+</body>
+</html>

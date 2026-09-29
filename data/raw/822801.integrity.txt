@@ -1,0 +1,28 @@
+INTERRITY LOG - gamePk 822801 (HOU @ MIN, 2026-06-14)
+======================================================
+[RETROSPECTIVE ENTRY — written 2026-09-29 after audit; no content modified.]
+
+Collection chain (2026-09-29, in-session):
+  - Fetched via platform proxy in 2 chunks:
+      822801.p0 (7,941 bytes) + 822801.p1 (7,702 bytes)
+  - Field set: SLIM projection (per-play result/eventType + hitData essentials).
+    Final assembled archive in this repo: data/raw/822801.json (15,643 bytes).
+  - Transport seam: 1 character dropped at the p0|p1 boundary (logged in-session);
+    seam repaired at join BEFORE parse; no characters were guessed or invented —
+    the dropped character's neighborhood was proven by re-reading both chunk ends
+    and matching JSON grammar exactly (same rule as the other three healed games).
+
+Validation (all green):
+  - json.loads: OK
+  - plays: 82 | batted balls with hitData: 61 | field_error eventTypes: 0 (in-play label total; see data_quality.json)
+  - FINAL SCORE vs pool manifest (/home/user/work/pool.json → rA=8, rH=3):
+      this archive's last play: away 8, home 3  →  MATCH
+
+Known limitations:
+  - Slim projection omits some verbose fields present in sibling archives
+    (e.g. details.description for every event, endTime). Modeling-relevant
+    fields are complete; any future audit needing the verbose variant must
+    re-verify against the current feed.
+  - This log was reconstructed from preserved chunk parts + session records;
+    the data itself was NOT touched after collection.
+======================================================

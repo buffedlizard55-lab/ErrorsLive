@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rules 9.12 / 9.16 / 10.04 — LiveScoringErrors</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<header class="nav"><div class="nav-inner"></div></header>
+<main>
+  <h1>The rules that decide hit vs. error vs. fielder's choice</h1>
+  <p class="lede">Every quote below is taken verbatim from an official MLB-hosted page and linked. The brief to this
+  project cites <b>Rules 9.12, 9.16 and 10.04</b>; the current Official Baseball Rules number errors 9.12 and
+  earned runs 9.16 (the RBI convention lives in the official scorer / earned-run framework these anchor). Quotes
+  were captured 2026-09-29.</p>
+
+  <div class="card">
+    <h3>Error — MLB official glossary (the Rule 9.12 substance)</h3>
+    <p>“A fielder is given an error if, in the judgment of the official scorer, he fails to convert an out on a play
+    that an average fielder should have made. Fielders can also be given errors if they make a poor play that allows
+    one or more runners to advance on the bases… batters do not receive RBIs for any runs that would not have scored
+    without the help of an error. And pitchers are not assessed any earned runs for runs that would not have scored
+    without the error.”<br>
+    <a class="btn" href="https://www.mlb.com/glossary/standard-stats/error" target="_blank" rel="noopener">mlb.com/glossary/standard-stats/error ↗</a></p>
+  </div>
+
+  <div class="card">
+    <h3>Runs Batted In — MLB official glossary</h3>
+    <p>“A batter is credited with an RBI in most cases where the result of his plate appearance is a run being scored.
+    <b>A player does not receive an RBI when the run scores as a result of an error or ground into double play</b>…
+    Players can earn RBIs when they make outs, as well, provided the out results in a run or runs (except, as noted
+    above, in the case of double plays).”<br>
+    <a class="btn" href="https://www.mlb.com/glossary/standard-stats/runs-batted-in" target="_blank" rel="noopener">mlb.com/glossary/standard-stats/runs-batted-in ↗</a></p>
+  </div>
+
+  <div class="card">
+    <h3>Rule numbering (9.12 → errors, 9.16 → earned runs) is live in the 2025-26 rulebook</h3>
+    <p>MLB's 2026 World Baseball Classic rules announcement applies “the 2025 Official Baseball Rules” and cites
+    <b>Official Baseball Rule 9.16(b)</b> for earned-run treatment — confirming the numbering family the brief
+    relies on (9.12 errors, 9.16 runs/RBI convention; legacy cross-reference 10.04 scorer RBI).<br>
+    <a class="btn" href="https://www.mlb.com/news/world-baseball-classic-rules-rule-modifications-2026" target="_blank" rel="noopener">mlb.com/news/world-baseball-classic-rules-rule-modifications-2026 ↗</a></p>
+  </div>
+
+  <h2>The RBI-impact playbook (what the model pages compute)</h2>
+  <div class="grid cols3">
+    <div class="card"><h3>Ruled ERROR</h3><p class="muted">Run scores from 2nd/3rd on a misplay → batter
+    <b>loses the RBI</b> (“no RBI for runs that would not have scored without the help of an error”). Earned-run
+    ledger cleans it for the pitcher, too.</p></div>
+    <div class="card"><h3>Ruled HIT</h3><p class="muted">Run scores → RBI stands. Batting average up, RBI up. The flip
+    of one scorer's judgment is a flip on the ledger.</p></div>
+    <div class="card"><h3>FIELDER'S CHOICE</h3><p class="muted">RBI can survive a no-hit ruling if a run scores on the
+    choice itself (not an error, not a GIDP). That's why borderline force-play rulings are audited by scorers in the
+    7th and 9th windows.</p></div>
+  </div>
+
+  <h2>Two overturn mechanisms — don't mix them</h2>
+  <p class="lede" style="font-size:.95rem">
+  ① <b>Official-scorer decisions</b> (this model): hit vs. error vs. fielder's choice — fielder-judgment calls that can
+  be formally revised by the league; they move hit/error columns, averages, ERAs and RBIs as above.<br>
+  ② <b>Umpire replay challenges</b> (<a href="overturned.html">Overturned Calls page</a>): safe/out/fair-foul/homer
+  reviews under expanded replay since 2014; overturns can literally add or erase runs mid-game.<br>
+  Both change the real scoreboard; this site keeps the two ledgers separate and labeled.</p>
+
+  <div class="warn"><b>Flag for review (link rot):</b> the long-standing hub <code>mlb.com/official-information/rules</code>
+  returned a 404 on 2026-09-29. The two glossary pages and the WBC rules announcement above were live and are the
+  official verified links this site ships; if MLB restores the rules hub, it should be re-linked here.</div>
+</main>
+<footer><div class="inner"><span>Quotes verbatim from mlb.com; no paraphrase of scoped rules</span>
+<span>Own the Outcome: every claim carries its citation</span></div></footer>
+<script src="site.js"></script>
+</body>
+</html>

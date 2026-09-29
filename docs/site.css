@@ -1,0 +1,62 @@
+:root{
+  --bg:#0b1220;--panel:#121a2b;--panel2:#17223a;--ink:#e8edf7;--dim:#9fb0cf;
+  --accent:#f5b301;--accent2:#4cc2ff;--good:#37d67a;--bad:#ff5d73;--line:#24304d;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+a{color:var(--accent2)}
+header.nav{position:sticky;top:0;z-index:9;background:rgba(11,18,32,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:4px 18px;align-items:center;padding:10px 16px}
+.nav-inner .brand{font-weight:800;letter-spacing:.4px;text-decoration:none;color:var(--ink)}
+.nav-inner .brand span{color:var(--accent)}
+.nav-inner a.navlink{color:var(--dim);text-decoration:none;padding:6px 10px;border-radius:8px}
+.nav-inner a.navlink:hover,.nav-inner a.navlink.on{color:var(--ink);background:var(--panel2)}
+main{max-width:1100px;margin:0 auto;padding:26px 16px 80px}
+h1{font-size:1.9rem;margin:.2em 0 .4em}
+h2{font-size:1.25rem;margin:1.6em 0 .5em;border-left:4px solid var(--accent);padding-left:10px}
+h3{font-size:1.02rem;margin:1.2em 0 .3em}
+p.lede{color:var(--dim);font-size:1.05rem;max-width:60em}
+.grid{display:grid;gap:14px}
+.grid.cols2{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.grid.cols3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.card h3{margin-top:0}
+.kpi{font-size:2rem;font-weight:800}
+.kpi small{display:block;font-size:.8rem;font-weight:500;color:var(--dim)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{color:var(--accent);font-weight:700;white-space:nowrap}
+tr:hover td{background:#ffffff08}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;font-size:.75rem;border:1px solid var(--line);color:var(--dim)}
+.pill.on{background:var(--accent);color:#1a1400;font-weight:700;border-color:var(--accent)}
+.pill.err{background:#4d1622;color:#ffb0bd;border-color:#6e1f30}
+.btn{display:inline-block;background:var(--panel2);border:1px solid var(--line);color:var(--ink);
+     padding:8px 14px;border-radius:10px;text-decoration:none;font-size:.9rem;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.warn{background:#2a1a05;border-color:#5a3d0d;color:var(--accent)}
+.note{background:#1b2136;border:1px dashed #3a4566;padding:10px 14px;border-radius:10px;color:var(--dim);font-size:.9rem}
+.warn{background:#2a1408;border:1px solid #6b3410;padding:10px 14px;border-radius:10px;color:#ffd9a8;font-size:.9rem}
+footer{border-top:1px solid var(--line);color:var(--dim);font-size:.85rem}
+footer .inner{max-width:1100px;margin:0 auto;padding:18px 16px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+.ownout{max-width:1100px;margin:34px auto 0;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(90deg,#1a2140,#101a33)}
+.ownout b{color:var(--accent)}
+input,select{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 10px;font-size:1rem;width:100%}
+label{font-size:.82rem;color:var(--dim);display:block;margin-bottom:4px}
+input[type=range]{padding:0}
+.scorebox{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.dial{min-width:190px;text-align:center;background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:14px}
+.dial .num{font-size:3.2rem;font-weight:900;line-height:1}
+.dial .cap{color:var(--dim);font-size:.8rem}
+.bar{height:10px;border-radius:99px;background:var(--panel2);overflow:hidden;position:relative}
+.bar > i{position:absolute;inset:0 100% 0 0;border-radius:99px}
+.legend{font-size:.8rem;color:var(--dim)}
+.svgbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px}
+.filterbar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:12px 0}
+.filterbar > div{min-width:130px}
+.muted{color:var(--dim)}
+.hide{display:none}
+code{background:var(--panel2);border-radius:6px;padding:1px 6px;font-size:.85em}
+.chip{display:inline-block;padding:1px 8px;border:1px solid var(--line);border-radius:99px;
+      font-size:.78rem;text-decoration:none;color:var(--accent2)}
+.chip:hover{border-color:var(--accent2)}
+@media(max-width:640px){h1{font-size:1.5rem}.dial{min-width:150px}}

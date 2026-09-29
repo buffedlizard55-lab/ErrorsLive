@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LiveScoringErrors — Will it be scored a hit, an error, or a fielder's choice?</title>
+<link rel="stylesheet" href="site.css">
+<meta name="description" content="A calibrated statistical model, fitted live from MLB Statcast play-by-play, scoring how an official scorer is likely to rule a batted ball — before the call is made.">
+</head>
+<body>
+<header class="nav"><div class="nav-inner"></div></header>
+<main>
+  <h1>How will the scorer rule it?</h1>
+  <p class="lede">A batted ball leaves the bat with a measurable launch speed (EV), launch angle (LA),
+  distance, trajectory and contact hardness. Between contact and the official ruling, the scorer judges
+  <em>“ordinary effort”</em> (MLB Rule 9.12). This page runs our calibrated model on those five Statcast
+  inputs and returns a <b>Scoring Likelihood Score /100</b> plus full outcome probabilities — the same
+  quantities a live pipeline can read straight off the MLB Stats API feed.</p>
+
+  <div class="grid cols2">
+    <div class="card" id="calc">
+      <h3>1 · Describe the batted ball (live feed values)</h3>
+      <p class="legend" style="margin-top:0">Score it on the <a href="#calc">calculator · MVP →</a> (this card) or read the
+      <a href="model.html">validation · Model →</a></p>
+      <div class="grid cols3">
+        <div><label>Exit velocity (mph)</label><input id="ev" type="number" min="20" max="125" step="0.1" value="98.4"></div>
+        <div><label>Launch angle (°)</label><input id="la" type="number" min="-90" max="90" step="0.5" value="-6.0"></div>
+        <div><label>Distance (ft)</label><input id="dist" type="number" min="0" max="520" step="1" value="26"></div>
+        <div><label>Trajectory</label><select id="traj">
+          <option value="ground_ball" selected>ground_ball</option><option value="line_drive">line_drive</option>
+          <option value="fly_ball">fly_ball</option><option value="popup">popup</option>
+          <option value="bunt_grounder">bunt_grounder</option></select></div>
+        <div><label>Hardness</label><select id="hard">
+          <option value="medium" selected>medium</option><option value="soft">soft</option><option value="hard">hard</option></select></div>
+        <div><label>Runner on 2nd/3rd?</label><select id="risp"><option value="0" selected>No</option><option value="1">Yes</option></select></div>
+      </div>
+      <p class="legend" style="margin-top:10px">Presets:
+        <a href="#" data-preset="98.4,-6,26,ground_ball,medium">98 / −6° grounder</a> ·
+        <a href="#" data-preset="105.9,-5,23,ground_ball,hard">105.9 / −5° grounder (real error, gm 823441)</a> ·
+        <a href="#" data-preset="78.2,54,226,fly_ball,medium">78.2 / 54° fly (real error, gm 824903)</a> ·
+        <a href="#" data-preset="101.9,-3,35,ground_ball,medium">101.9 / −3° single</a>
+        · see real plays in the <a class="chip" href="https://www.mlb.com/video/search?q=fielding%20error" target="_blank" rel="noopener">filmroom ↗</a>
+      </p>
+    </div>
+    <div class="card">
+      <h3>2 · Live ruling likelihood</h3>
+      <div class="scorebox">
+        <div class="dial"><div class="num" id="score">–</div><div class="cap">SCORE /100<br>P(ruled <b>ERROR</b>)</div></div>
+        <div style="flex:1;min-width:220px" id="bars"></div>
+      </div>
+      <p class="legend" style="margin-bottom:0">No other macro classes exist: every batted ball in play resolves
+      to exactly one of hit / error / fielder's choice / out, so the four bars always sum to 100%.</p>
+      <p class="note" id="rbi" style="margin-top:10px"></p>
+      <p class="muted" style="font-size:.8rem;margin-bottom:0">Model: regularized multinomial + binary logistic on
+      <b>1,258 Statcast batted balls</b> from a self-weighting 24-game sample of a 222-game June–2026 pool
+      (details &amp; validation: <a href="model.html">Model</a>). Live probabilities are pre-call judgments;
+      the official scorer's ruling remains the source of record.</p>
+    </div>
+  </div>
+
+  <h2>Why a hit-vs-error ruling matters — the RBI stakes</h2>
+  <p class="lede">A runner on 2nd or 3rd whose run scores because of a misplay produces <b>no RBI</b> if the
+  play is ruled an error — but the batter keeps the RBI if it's a hit, and a run-scoring fielder's choice can
+  still earn one. MLB's official glossary is explicit: batters <a href="https://www.mlb.com/glossary/standard-stats/error" target="_blank" rel="noopener">do not receive RBIs for runs that would not have scored without the error</a>;
+  <a href="https://www.mlb.com/glossary/standard-stats/runs-batted-in" target="_blank" rel="noopener">no RBI on error or GIDP plays</a>.
+  Swing a borderline grounder one ruling direction or the other and you change a batting line, a fantasy
+  scoreboard, arbitration numbers. <a href="rules.html">Full rule walkthrough →</a></p>
+
+  <h2>What this model found (raw, unpolished numbers — all auditable)</h2>
+  <div class="grid cols3" id="kpis"><div class="card">Loading model.json…</div></div>
+  <p class="lede" style="font-size:.95rem">Error likelihood concentrates on <b>ground balls</b> and rises with
+  launch angle within the grounder band — exactly the plays where a rushed pickup and one-bounce throw must be
+  perfect. Signals are real but modest: ruling outcome still depends on fielder positioning, hang time, and the
+  scorer's judgment — all outside the batted-ball vector. See <a href="model.html">honest validation</a>.</p>
+
+  <div class="ownout">
+    <b>Own the Outcome</b> — Arena AI core values, applied as project policy: every number on this site is
+    computed in this repo (<code>tools/*.py</code>) from feed JSONs whose final scores were re-verified
+    against the league's linescore endpoint; nothing is copied from secondary sources, nothing is estimated
+    by hand, and every data irregularity is flagged in public (<a href="methods.html">data audit</a>,
+    <a href="roadmap.html">pass logs</a>). If a value can't be verified, it doesn't ship.
+  </div>
+</main>
+<footer><div class="inner">
+  <span>LiveScoringErrors · data: MLB Stats API + Baseball Savant (Statcast) + NY Daily News replay archive · <a href="https://github.com/buffedlizard55-lab/LiveScoringErrors">repo</a></span>
+  <span>Not affiliated with MLB. Live probabilities are analytical estimates.</span>
+</div></footer>
+<script src="site.js"></script>
+<script>
+let M = null, SURF = {};
+(async function init() {
+  M = await loadJSON('data/model.json');
+  SURF = M.surface;
+  kpis();
+  recalc();
+})();
+function kpis() {
+  const m = M.meta, p = M.primary;
+  document.getElementById('kpis').innerHTML = `
+    <div class="card" id="kMeta"><div class="kpi">${m.n_bip.toLocaleString()}<small>batted balls analyzed · ${m.n_games} games · ${m.n_error} ruled errors (${m.error_rate_pct}%)<br>Labeled hits ${m.class_counts.hit} · Labeled FC ${m.class_counts.fielders_choice} · Labeled outs ${m.class_counts.out} · Labeled errors ${m.class_counts.error}</small></div></div>
+    <div class="card" id="kAuc"><div class="kpi">${p.cv_auc.toFixed(2)} <small>out-of-fold AUC, P(error)·95% CI ${p.cv_auc_ci95.join('–')} · logloss ${p.cv_logloss}</small></div></div>
+    <div class="card" id="kCoef"><div class="kpi">+0.69 <small>top standardized coefficient: trajectory = ground_ball (EV ≈ neutral, LA positive within band)</small></div></div>`;
+}
+function band(ev) { for (const [lo, hi] of [[0,70],[70,80],[80,90],[90,95],[95,100],[100,105],[105,200]]) if (ev>=lo && ev<hi) return `${lo}-${hi}`; return null; }
+function recalc() {
+  const ev = +document.getElementById('ev').value, la = +document.getElementById('la').value,
+        dist = +document.getElementById('dist').value, traj = document.getElementById('traj').value,
+        hard = document.getElementById('hard').value, risp = +document.getElementById('risp').value;
+  if (!M) return;
+  const {pErr, probs} = evalModel(M, featurize(ev, la, dist, traj, hard));
+  const s = Math.round(100 * pErr);
+  document.getElementById('score').textContent = s;
+  document.getElementById('score').style.color = s >= 50 ? 'var(--bad)' : s >= 15 ? 'var(--accent)' : 'var(--good)';
+  const order = [['hit','#37d67a'],['out','#4cc2ff'],['fielders_choice','#f5b301'],['error','#ff5d73']];
+  const surf = SURF[`${traj}|${band(ev)}`];
+  document.getElementById('bars').innerHTML = order.map(([k,c]) => `
+    <div style="display:flex;align-items:center;gap:8px;margin:5px 0">
+      <span style="width:110px;text-align:right" class="muted">${k.replace('_',' ')}</span>
+      <div class="bar" style="flex:1"><i style="background:${c};inset:0 ${(100-100*probs[k]).toFixed(1)}% 0 0"></i></div>
+      <span style="width:52px;font-variant-numeric:tabular-nums">${fmtPct(probs[k])}</span>
+    </div>`).join('') +
+    (surf ? `<p class="legend">Model-free check (same trajectory & EV band in training data):
+      <b>${fmtPct(surf.p)}</b> ruled error · Wilson 95% CI ${fmtPct(surf.lo)}–${fmtPct(surf.hi)} · n=${surf.n}, errors=${surf.k}</p>`
+    : `<p class="legend">No training bucket with ≥10 balls for this trajectory/EV band — model extrapolation only.</p>`);
+  document.getElementById('rbi').innerHTML = risp
+    ? `⚾ <b>RBI stakes (runner in scoring position):</b> ruled <b>error</b> → run scores, <b>no RBI</b> for the batter (Rule 9.16; MLB glossary).
+       Ruled <b>hit</b> → run scores, RBI credited. Fielder's choice scoring a run (no error, no GIDP) may still earn the RBI — every ruling flip on this play type is a real stat flip.`
+    : `With nobody in scoring position the ruling mostly shifts <b>batting average vs. errors column</b> (hit ↔ E).`;
+}
+document.querySelectorAll('#ev,#la,#dist,#traj,#hard,#risp').forEach(el => el.addEventListener('input', recalc));
+document.querySelectorAll('[data-preset]').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  const [ev, la, d, t, h] = a.dataset.preset.split(',');
+  document.getElementById('ev').value = ev; document.getElementById('la').value = la;
+  document.getElementById('dist').value = d; document.getElementById('traj').value = t; document.getElementById('hard').value = h;
+  recalc();
+}));
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+{
+ "rows_total": 6168,
+ "overturned": 2984,
+ "run_removed_heuristic": 227,
+ "by_year": {
+  "2014-mlb-replays.csv": {
+   "rows": 1171,
+   "overturned": 553,
+   "rr": 47
+  },
+  "2014-postseason-replays.csv": {
+   "rows": 11,
+   "overturned": 4,
+   "rr": 0
+  },
+  "2015-mlb-replays.csv": {
+   "rows": 1285,
+   "overturned": 633,
+   "rr": 54
+  },
+  "2015-postseason-replays.csv": {
+   "rows": 12,
+   "overturned": 4,
+   "rr": 0
+  },
+  "2016-mlb-replays.csv": {
+   "rows": 1499,
+   "overturned": 757,
+   "rr": 60
+  },
+  "2016-postseason-replays.csv": {
+   "rows": 18,
+   "overturned": 11,
+   "rr": 0
+  },
+  "2017-mlb-replays.csv": {
+   "rows": 1395,
+   "overturned": 660,
+   "rr": 35
+  },
+  "2017-postseason-replays.csv": {
+   "rows": 31,
+   "overturned": 11,
+   "rr": 1
+  },
+  "2018-mlb-replays.csv": {
+   "rows": 746,
+   "overturned": 351,
+   "rr": 30
+  }
+ },
+ "flags": [
+  "2014-mlb-replays.csv: bad time \"1;21\" date=2014-06-13",
+  "2014-mlb-replays.csv: short row len=9: ['Sep. 6,NYM @ CIN,T9,Price,E. Young', ' Jr.\"', 'Safe at 3rd']... skipped",
+  "2014-mlb-replays.csv: short row len=1: ['Sep. 28,SD @ SF,B7,Bochy,Panik,Out at 1st,Force play,Hallion,Hallion,Overturned,3:46,http://t.co/7F5J8bO7aN\\r\\n']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-05-14', 'COL @ LAD', 'B7']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-05-15', 'ATL @ MIA', 'T2']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-05-16', 'PIT @ CHI', 'B3']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-05-17', 'SF @ CIN', 'T2']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-05-22', 'LAA @ BOS', 'B8']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-6', 'CIN @ WSH', 'T6']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-7', 'TB @ KC', 'T7']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-7', 'TB @ KC', 'T9']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-7', 'HOU @ CLE', 'T6']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-7', 'BAL @ MIN', 'B4']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-7', 'BAL @ MIN', 'T8']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-7', 'PHI @ LAD', 'B5']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-8', 'ATL @ MIL', 'T4']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-8', 'NYM @ SF', 'B3']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-8', 'ATL @ MIL', 'T9']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-8', 'DET @ SEA', 'T6']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-8', 'ARI @ TEX', 'B4']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-8', 'STL @ CHI', 'B8']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-8', 'TOR @ CWS', 'B8']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-9', 'DET @ MIN', 'T8']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-9', 'ATL @ COL', 'T3']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-9', 'LAA @ SEA', 'T9']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'CWS @ CHI', 'B3']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'OAK @ CLE', 'T1']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'STL @ PIT', 'T4']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'HOU @ TB', 'T6']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'WSH @ BAL', 'T7']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'ARI @ NYM', 'T9']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'SD @ TEX', 'B6']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'ATL @ COL', 'T7']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'DET @ MIN', 'T7']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'MIL @ LAD', 'T3']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'PHI @ SF', 'B3']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'DET @ MIN', 'B9']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-10', 'TOR @ KC', 'B6']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'ARI @ NYM', 'B5']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'HOU @ TB', 'B6']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'DET @ MIN', 'B6']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'CWS @ CHI', 'T8']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'ATL @ COL', 'T8']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'ATL @ COL', 'T8']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'STL @ PIT', 'T5']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'SD @ TEX', 'T1']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'LAA @ SEA', 'B3']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'PHI @ SF', 'T6']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-11', 'SD @ TEX', 'T9']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-12', 'OAK @ CLE', 'T1']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-12', 'ARI @ NYM', 'B2']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-12', 'DET @ MIN', 'B1']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-12', 'TOR @ KC', 'T2']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-12', 'TOR @ KC', 'T7']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-12', 'LAA @ SEA', 'T3']... skipped",
+  "2015-mlb-replays.csv: no video in row: ['2015-07-12', 'SD @ TEX', 'B7']... skipped",
+  "2015-postseason-replays.csv: short row len=2: ['2015-10-31', 'KC @ NYM, G4,B3,Yost,Flores,Retouched,Tag-Up,Everitt,Cederstrom,Stands,2:23,https://t.co/SmfWcYKsIj\\r\\n']... skipped",
+  "2016-mlb-replays.csv: no video in row: ['', '', '']... skipped",
+  "2018-mlb-replays.csv: no video in row: ['2018-03-30', 'PHI @ ATL', 'B3']... skipped",
+  "2018-mlb-replays.csv: no video in row: ['2018-05-2', 'COL @ CHI', 'T7']... skipped",
+  "2018-mlb-replays.csv: no video in row: ['2018-05-18', 'MIA @ ATL', 'B6']... skipped"
+ ],
+ "flag_summary": {
+  "bad_time_format": 1,
+  "short_row_comma_name?": 3,
+  "no_video_link": 57
+ },
+ "heuristic_rule": "result==Overturned AND (initial_call matches score/home/plate/run OR play_type/initial_call matches Timing/HP/Home/Plate/Collisions)"
+}
