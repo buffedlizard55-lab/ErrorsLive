@@ -511,7 +511,7 @@ def main(argv=None):
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--plan', help='JSON plan file: {windows:[{start,end,game_types}],max_games,workers,videos}')
     ap.add_argument('--dates', help='YYYY-MM-DD or YYYY-MM-DD:YYYY-MM-DD (overrides the plan)')
-    ap.add_argument('--max-games', type=int, default=200)
+    ap.add_argument('--max-games', type=int, help='cap on games fetched (plan wins when omitted)')
     ap.add_argument('--workers', type=int, default=12)
     ap.add_argument('--videos', action='store_true', help='attach mp4 links to run-affected reviews')
     ap.add_argument('--skip-links', action='store_true', help='do not resolve NYDN short-links')
@@ -525,7 +525,7 @@ def main(argv=None):
     if a.dates:
         s, e = parse_dates(a.dates)
         windows = [{'start': s.isoformat(), 'end': e.isoformat()}]
-    max_games = a.max_games or plan.get('max_games') or 200
+    max_games = a.max_games if a.max_games else (plan.get('max_games') or 200)
     workers = a.workers or plan.get('workers') or 12
     videos = a.videos or bool(plan.get('videos'))
     out_dir = ROOT / a.out_dir
