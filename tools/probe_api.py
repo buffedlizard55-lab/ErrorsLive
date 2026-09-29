@@ -173,6 +173,21 @@ def main():
     status, body = get('https://www.mlb.com/video/?q=overturned+call')
     record('film_room_search', 'https://www.mlb.com/video/?q=overturned+call', status, body)
 
+    # Can a browser call the official endpoint directly? The live page tries exactly this before
+    # falling back to the committed snapshot, so the answer belongs in the committed evidence.
+    req = urllib.request.Request(
+        'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=2026-09-27',
+        headers={**UA, 'Origin': 'https://buffedlizard55-lab.github.io'})
+    try:
+        with urllib.request.urlopen(req, timeout=45) as r:
+            acao = r.headers.get('Access-Control-Allow-Origin', '')
+            record('cors_statsapi', req.full_url, r.status, r.read(),
+                   origin_sent='https://buffedlizard55-lab.github.io',
+                   access_control_allow_origin=acao or '(absent)',
+                   browser_bundle_cannot_read=not acao)
+    except Exception as e:                                       # noqa: BLE001
+        record('cors_statsapi', req.full_url, -1, str(e).encode(), error=str(e)[:160])
+
     REPORT = {'generated_utc': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
               'note': 'Observed official-endpoint behaviour; committed by .github/workflows/probe.yml. '
                       'Re-run: gh workflow run probe.yml',
