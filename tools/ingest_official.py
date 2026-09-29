@@ -273,7 +273,7 @@ def points_of_interest(play):
         'hit_coord_y': (hd or {}).get('coordY', (hd or {}).get('hitCoordinates', {}).get('coordY', '')
                        if isinstance(hd, dict) else ''),
         'multi_hitdata': multi,
-        'play_id': pid, 'play_ids': ' '.join(all_ids),
+        'play_id': pid,
         'savant_url': f'{SAVANT}/sporty-videos?playId={pid}' if pid else '',
     }
     # the final ruling text (for overturned plays) is what a human needs next to the video
@@ -371,7 +371,6 @@ def ingest_game(meta, want_videos=False):
             row['rbi_if_hit'] = rbi_if_ruled('hit', run_scored, et) or ''
             row['rbi_if_fc'] = rbi_if_ruled('fielders_choice', run_scored, et) or ''
             row['mlb_gameday'] = f'https://www.mlb.com/gameday/{pk}'
-            row['savant_gamefeed'] = f'{SAVANT}/gamefeed?gamePk={pk}'
             reps.append(row)
     ledger = {
         'game_pk': pk, 'date': meta['date'], 'gameType': meta['gameType'],
@@ -638,6 +637,9 @@ def main(argv=None):
         'games_verified_vs_linescore': sum(r['verified'] for r in ledger_all),
         'games_unverified': [r['game_pk'] for r in ledger_all if not r['verified']],
         'review_types': dict(Counter(r['review_type'] for r in rep_all if r['review_type'])),
+        'review_subjects': dict(Counter(r['review_subject'] or 'unstated' for r in rep_all)),
+        'pitch_challenges': sum(int(r['is_pitch_challenge'] or 0) for r in rep_all),
+        'replay_reviews': sum(1 - int(r['is_pitch_challenge'] or 0) for r in rep_all),
         'dates': [min((r['date'] for r in ledger_all), default=''),
                   max((r['date'] for r in ledger_all), default='')],
         'videos_attached': sum(1 for v in vid_all if not v['no_mp4_found']),
@@ -648,6 +650,14 @@ def main(argv=None):
     }
     log['content_api_schema_probe'] = log_video_schema
     log['summary'] = summary
+    # a small, site-safe copy so the pages render the build's own numbers instead of typed ones
+    (ROOT / 'docs' / 'data' / 'ingest_summary.json').write_text(json.dumps({
+        'generated_utc': log['generated_utc'], 'windows': log['windows'], 'summary': summary,
+        'endpoints': log['endpoints'], 'run_removal_rule': log['run_removal_rule'],
+        'flags': log['flags'][:50], 'flag_count': len(log['flags']),
+        'game_failures': log['game_failures'][:20], 'game_failure_count': len(log['game_failures']),
+        'hard_run_removal_examples': log['hard_run_removal_examples'],
+    }, indent=1))
     (out_dir / 'ingest_report.json').write_text(json.dumps(log, indent=1))
     print(json.dumps(summary, indent=1))
     return 0
