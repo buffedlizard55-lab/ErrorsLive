@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-29T21:28:42+00:00",
+ "generated_utc": "2026-09-29T22:48:51+00:00",
  "windows": [
   {
    "start": "2026-03-25",
@@ -74,20 +74,45 @@
    "NN": 1,
    "NO": 2
   },
+  "review_subjects": {
+   "unstated": 7929,
+   "pitch result": 2661,
+   "play at 1st": 392,
+   "tag play": 296,
+   "catch or drop": 18,
+   "force play": 75,
+   "hit by pitch": 80,
+   "touching a base": 4,
+   "shift violation": 2,
+   "catcher interference": 25,
+   "slide interference": 5,
+   "home-plate collision": 11,
+   "timing play": 4,
+   "fair or foul in outfield": 8,
+   "stadium boundary call": 8,
+   "passing runners": 1,
+   "grounds rule": 1,
+   "trap play": 5,
+   "tag-up play": 2,
+   "fan interference": 1
+  },
+  "pitch_challenges": 2661,
+  "replay_reviews": 8867,
   "dates": [
    "2026-03-25",
    "2026-09-27"
   ],
-  "videos_attached": 0,
-  "video_rows": 0,
-  "link_rows": 2500,
+  "videos_attached": 17,
+  "video_rows": 17,
+  "link_rows": 3700,
   "link_status": {
-   "520": 2352,
+   "520": 2427,
    "403": 25,
-   "200": 116,
-   "": 7
+   "200": 233,
+   "": 1012,
+   "404": 3
   },
-  "elapsed_s": 169.9
+  "elapsed_s": 2254.7
  },
  "endpoints": {
   "feed": "https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live?fields=liveData,plays,allPlays,about,atBatIndex...",
@@ -102,6 +127,5 @@
  "flag_count": 1,
  "game_failures": [],
  "game_failure_count": 0,
- "hard_run_removal_examples": [],
- "source": "data/ingest/ingest_report.json (written by tools/ingest_official.py in CI)"
+ "hard_run_removal_examples": []
 }
