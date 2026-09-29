@@ -25,6 +25,7 @@
   "errors": 1,
   "risp_runs_at_stake": 2,
   "overturned_reviews": 2,
+  "pending_rulings": 0,
   "top_pick_agreement": "32/46",
   "failures": 0
  },
@@ -3194,6 +3195,7 @@
    "url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
    "savant": "https://baseballsavant.mlb.com/gamefeed?gamePk=823441",
    "batted_balls": 46,
+   "pending_rulings": 0,
    "errors": 1,
    "top_pick_agrees": 32,
    "risp_runs_at_stake": 2,
