@@ -36,7 +36,7 @@
   "run_removed_hard": 0,
   "run_removed_heuristic": 17,
   "with_watch_link": 17,
-  "with_mp4": 0,
+  "with_mp4": 17,
   "pitch_challenges": 2661,
   "replay_reviews": 8867,
   "window": [
@@ -55,10 +55,10 @@
    "2017",
    "2018"
   ],
-  "links_checked": 2500,
-  "links_ok": 116,
-  "links_dead": 2377,
-  "links_unknown": 7
+  "links_checked": 3700,
+  "links_ok": 233,
+  "links_dead": 2455,
+  "links_unknown": 1012
  },
  "ingest": {
   "games": 2430,
@@ -118,23 +118,48 @@
    "NN": 1,
    "NO": 2
   },
+  "review_subjects": {
+   "unstated": 7929,
+   "pitch result": 2661,
+   "play at 1st": 392,
+   "tag play": 296,
+   "catch or drop": 18,
+   "force play": 75,
+   "hit by pitch": 80,
+   "touching a base": 4,
+   "shift violation": 2,
+   "catcher interference": 25,
+   "slide interference": 5,
+   "home-plate collision": 11,
+   "timing play": 4,
+   "fair or foul in outfield": 8,
+   "stadium boundary call": 8,
+   "passing runners": 1,
+   "grounds rule": 1,
+   "trap play": 5,
+   "tag-up play": 2,
+   "fan interference": 1
+  },
+  "pitch_challenges": 2661,
+  "replay_reviews": 8867,
   "dates": [
    "2026-03-25",
    "2026-09-27"
   ],
-  "videos_attached": 0,
-  "video_rows": 0,
-  "link_rows": 2500,
+  "videos_attached": 17,
+  "video_rows": 17,
+  "link_rows": 3700,
   "link_status": {
-   "520": 2352,
+   "520": 2427,
    "403": 25,
-   "200": 116,
-   "": 7
+   "200": 233,
+   "": 1012,
+   "404": 3
   },
-  "elapsed_s": 169.9
+  "elapsed_s": 2254.7
  },
  "ingest_meta": {
-  "generated_utc": "2026-09-29T21:28:42+00:00",
+  "generated_utc": "2026-09-29T22:48:51+00:00",
   "windows": [
    {
     "start": "2026-03-25",

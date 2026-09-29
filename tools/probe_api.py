@@ -173,6 +173,19 @@ def main():
     status, body = get('https://www.mlb.com/video/?q=overturned+call')
     record('film_room_search', 'https://www.mlb.com/video/?q=overturned+call', status, body)
 
+    # the exact schedule URL tools/watch_rulings.py uses (multi game-type filter, rolling window)
+    wurl = ('https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-09-09'
+            '&endDate=2026-09-29&gameType=R,F,D,L,W')
+    status, body = get(wurl)
+    try:
+        dates = json.loads(body.decode())['dates']
+        ngames = sum(len(d.get('games', [])) for d in dates)
+        finals = sum(1 for d in dates for g in d.get('games', [])
+                     if g['status']['abstractGameState'] == 'Final')
+    except Exception:                                            # noqa: BLE001
+        ngames = finals = None
+    record('schedule_watcher_window', wurl, status, body, games=ngames, final_games=finals)
+
     # Can a browser call the official endpoint directly? The live page tries exactly this before
     # falling back to the committed snapshot, so the answer belongs in the committed evidence.
     req = urllib.request.Request(

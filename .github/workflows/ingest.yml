@@ -36,10 +36,15 @@ jobs:
         run: python3 tools/ingest_official.py --plan data/ingest/plan.json
         continue-on-error: true
       - name: Watch official rulings change (the 'pending decision' evidence table)
+        # run_safely() writes data/ingest/ruling_watch_status.json either way, so a failure here is
+        # committed and readable instead of vanishing into a log.
         run: python3 tools/watch_rulings.py --days 21
         continue-on-error: true
       - name: Publish today's slate for the live board
         run: python3 tools/fetch_live.py --out docs/data/live_slate.json --csv-out docs/data/live_slate.csv
+        continue-on-error: true
+      - name: Rebuild the derived page data from the freshly collected tables
+        run: python3 tools/build_site_data.py
         continue-on-error: true
       - name: Show what was produced
         run: |

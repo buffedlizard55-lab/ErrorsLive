@@ -88,6 +88,7 @@ const $ = id => document.getElementById(id);
     kpiCard(s.errors, 'ruled errors by the official scorer') +
     kpiCard(s.risp_runs_at_stake, 'runs scored with a runner on 2nd/3rd — RBI at stake') +
     kpiCard(s.overturned_reviews, 'challenges overturned') +
+    kpiCard(s.pending_rulings || 0, 'balls in play still awaiting the scorer (model answer shown)') +
     kpiCard(s.top_pick_agreement, 'top pick matched the official call');
   $('fGame').insertAdjacentHTML('beforeend', LIVE.games.map(g =>
     `<option value="${esc(g.pk)}">${esc(g.away_abbr || g.away)} @ ${esc(g.home_abbr || g.home)} — ${esc(g.state || '')}</option>`).join(''));
@@ -120,9 +121,9 @@ function render() {
     r.map(x => `<tr>
       <td class="nowrap">${esc(x.matchup || '')}</td>
       <td class="nowrap">${esc((x.half || '').charAt(0).toUpperCase())}${esc(x.inning || '')}</td>
-      <td><span class="pill ${x.official_call === 'error' ? 'err' : x.official_call === 'out' ? '' : 'on'}">${esc(callName(x.official_call))}</span></td>
+      <td><span class="pill ${x.official_call === 'error' ? 'err' : x.official_call === 'pending' ? 'mid' : x.official_call === 'out' ? '' : 'on'}">${esc(callName(x.official_call))}</span></td>
       <td class="right"><b style="color:${x.score_100 >= 3 ? 'var(--bad)' : x.score_100 >= 1.5 ? 'var(--accent)' : 'var(--good)'}">${x.score_100}</b></td>
-      <td class="muted">${esc(callName(x.top_pick))}${x.top_pick !== x.official_call ? ' <span class="no">(≠ call)</span>' : ''}</td>
+      <td class="muted">${esc(callName(x.top_pick))}${x.official_call === 'pending' ? ' <span class="mid">(not ruled yet)</span>' : x.top_pick !== x.official_call ? ' <span class="no">(≠ call)</span>' : ''}</td>
       <td class="right muted">${(100 * x.top_prob).toFixed(0)}%</td>
       <td class="right nowrap">${x.launch_speed} / ${x.launch_angle}° / ${x.distance}ft<br>
         <span class="muted">${esc((x.trajectory || '').replace('_', ' '))} · ${esc(x.hardness || '')}</span></td>

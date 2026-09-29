@@ -64,7 +64,8 @@ def slate(day):
 def game_stats(rows):
     """Per-game counts the pages print, derived only from the scored rows."""
     played = [r for r in rows if r.get('status') == 'scored']
-    return {'batted_balls': len(played),
+    pending = [r for r in rows if r.get('status') == 'pending_ruling']
+    return {'batted_balls': len(played), 'pending_rulings': len(pending),
             'errors': sum(1 for r in played if r['official_call'] == 'error'),
             'top_pick_agrees': sum(r['model_agrees_with_call'] for r in played),
             'risp_runs_at_stake': sum(1 for r in played if r['risp'] and r['run_scored']),
@@ -177,6 +178,8 @@ def main(argv=None):
             'errors': sum(1 for r in played if r['official_call'] == 'error'),
             'risp_runs_at_stake': sum(1 for r in played if r['risp'] and r['run_scored']),
             'overturned_reviews': sum(1 for r in played if r.get('review_overturned') is True),
+            'pending_rulings': sum(1 for g in games for r in g.get('model_rows', [])
+                                   if r.get('status') == 'pending_ruling'),
             'top_pick_agreement': f'{agree}/{len(played)}' if played else '0/0',
             'failures': len(failures),
         },

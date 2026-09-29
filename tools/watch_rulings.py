@@ -149,6 +149,7 @@ def main(argv=None):
 
     old = load_snapshot()
     now_utc = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    print(f'fetched {len(rows)} scoring-relevant plays from {len(games)} games', flush=True)
     changes = []
     changes_path = CHANGES if CHANGES.exists() else None
     seen = set()
@@ -207,11 +208,38 @@ def main(argv=None):
             write_csv(CHANGES, existing + changes, CHANGE_KEYS)
         print(f'wrote {SNAP.relative_to(ROOT)} ({len(rows) + len(prev_only)} rows) '
               f'and {CHANGES.relative_to(ROOT)} ({len(changes)} new)', flush=True)
-    summary = {'window': [start, anchor.isoformat()], 'games': len(games), 'plays': len(rows),
-               'changes': len(changes), 'failures': failures[:20], 'detected_utc': now_utc}
+    summary = {'ok': True, 'window': [start, anchor.isoformat()], 'games': len(games),
+               'plays': len(rows), 'changes': len(changes), 'failures': failures[:20],
+               'detected_utc': now_utc}
     print(json.dumps(summary))
     return 0
 
 
+def run_safely(argv=None):
+    """Run the watch and always leave a status file behind.
+
+    A silent no-op is worse than a visible failure: this is the tool that answers the brief's
+    "pending scoring decision" question, so if it could not do its job the reason has to be in the
+    repository, not in a workflow log nobody can download.
+    """
+    status_path = ROOT / 'data' / 'ingest' / 'ruling_watch_status.json'
+    try:
+        rc = main(argv)
+        status = {'ok': rc == 0, 'exit_code': rc,
+                  'detected_utc': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}
+    except BaseException as e:                                   # noqa: BLE001 - report, never hide
+        status = {'ok': False, 'error': f'{type(e).__name__}: {e}'[:400],
+                  'detected_utc': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}
+        print('WATCH FAILED ' + json.dumps(status), flush=True)
+    for name in ('ruling_snapshot.csv', 'ruling_changes.csv'):
+        path = ROOT / 'data' / 'ingest' / name
+        status[name] = {'rows': (sum(1 for _ in open(path)) - 1) if path.exists() else None,
+                        'bytes': path.stat().st_size if path.exists() else 0}
+    status_path.parent.mkdir(parents=True, exist_ok=True)
+    status_path.write_text(json.dumps(status, indent=1))
+    print('WROTE ' + str(status_path.relative_to(ROOT)))
+    return 0 if status.get('ok') else 1
+
+
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(run_safely())

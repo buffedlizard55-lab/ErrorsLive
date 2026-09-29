@@ -127,5 +127,6 @@
  "flag_count": 1,
  "game_failures": [],
  "game_failure_count": 0,
- "hard_run_removal_examples": []
+ "hard_run_removal_examples": [],
+ "source": "data/ingest/ingest_report.json (written by tools/ingest_official.py in CI)"
 }

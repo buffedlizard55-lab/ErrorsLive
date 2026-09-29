@@ -374,6 +374,24 @@ check('published live board matches a fresh run of the tool',
       load_json(ROOT / 'docs/data/live_sample.json') == [
           {**r, 'source': 'data/source/feed_823441.json'} for r in ls.score_feed(
               fixture, pk=823441, scorer=scorer, meta={'source': 'data/source/feed_823441.json'})])
+pending_feed = {'liveData': {'plays': {'allPlays': [{
+    'result': {'description': 'In play, run(s)', 'rbi': 0, 'awayScore': 1, 'homeScore': 0},
+    'about': {'atBatIndex': 7, 'inning': 4, 'halfInning': 'top'},
+    'matchup': {'batSide': {'code': 'R'}, 'pitchHand': {'code': 'L'}},
+    'playEvents': [{'hitData': {'launchSpeed': 101.2, 'launchAngle': 12.0, 'totalDistance': 210.0,
+                                'trajectory': 'line_drive', 'hardness': 'hard'}, 'playId': 'p-1'}],
+    'runners': [{'movement': {'start': '3B', 'end': 'score'}}]}]}}}
+prow = ls.score_feed(pending_feed, pk=1, scorer=scorer)[0]
+check('an unruled ball in a live feed is carried as a PENDING decision, not dropped or crashed',
+      prow['status'] == 'pending_ruling' and prow['official_call'] == 'pending'
+      and prow['model_agrees_with_call'] == 0 and 0 <= prow['score_100'] <= 100,
+      json.dumps({k: prow[k] for k in ('status', 'official_call', 'score_100', 'top_pick')}))
+check('the pending row still carries the model answers and the RBI stakes it can',
+      prow['top_pick'] in ('hit', 'out', 'error', 'fielders_choice') and prow['risp'] == 1
+      and prow['run_scored'] == 1 and prow['rbi_if_error'].startswith('NO RBI'))
+check('watch_rulings.py always leaves a readable status file',
+      'ruling_watch_status.json' in (ROOT / 'tools/watch_rulings.py').read_text()
+      and 'run_safely' in (ROOT / 'tools/watch_rulings.py').read_text())
 ov = [r for r in rows if r['reviewed']]
 check('fixture challenges are surfaced (3 reviewed plays, 2 overturned)',
       len(ov) == 3 and sum(r['review_overturned'] is True for r in ov) == 2, str(len(ov)))

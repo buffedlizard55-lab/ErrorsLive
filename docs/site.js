@@ -105,7 +105,8 @@ const fmtPct = (v, d = 1) => (100 * v).toFixed(d) + '%';
 const num = (v, d = 2) => (v === null || v === undefined || v === '') ? '–' : Number(v).toFixed(d);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const callName = c => ({ hit: 'hit', error: 'error', fielders_choice: "fielder's choice", out: 'out' }[c] || c);
+const callName = c => ({ hit: 'hit', error: 'error', fielders_choice: "fielder's choice", out: 'out',
+  pending: 'awaiting the scorer' }[c] || c);
 
 function downloadBlob(filename, text, type = 'text/csv') {
   const a = document.createElement('a');

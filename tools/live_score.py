@@ -175,7 +175,10 @@ def score_feed(feed, pk=None, scorer=None, meta=None):
     rows = []
     for pl in plays:
         res = pl['result']
-        et = res['eventType']
+        # In a live game the current play can have contact data and no `eventType` yet: the scorer has
+        # not ruled. That is the project's central case, so it is carried as its own status instead of
+        # being skipped or crashing the walk.
+        et = res.get('eventType') or ''
         hd = next((e['hitData'] for e in pl.get('playEvents', []) if 'hitData' in e), None)
         if hd is None:
             continue
@@ -196,11 +199,13 @@ def score_feed(feed, pk=None, scorer=None, meta=None):
         for ev in pl.get('playEvents', []):
             if ev.get('playId'):
                 pid = ev['playId']
+        ruling_in = bool(et)
         row = {
             'game_pk': pk, 'at_bat': pl.get('about', {}).get('atBatIndex'),
             'inning': pl.get('about', {}).get('inning'),
             'half': pl.get('about', {}).get('halfInning'),
-            'event_type': et, 'official_call': macro_class(et), 'status': 'scored',
+            'event_type': et, 'official_call': macro_class(et) if ruling_in else 'pending',
+            'status': 'scored' if ruling_in else 'pending_ruling',
             'description': res.get('description', ''),
             'launch_speed': hd['launchSpeed'], 'launch_angle': hd['launchAngle'],
             'distance': hd['totalDistance'], 'trajectory': hd.get('trajectory', ''),
@@ -209,7 +214,7 @@ def score_feed(feed, pk=None, scorer=None, meta=None):
             'p_hit': round(probs['hit'], 4), 'p_error': round(p_err, 4),
             'p_fielders_choice': round(probs['fielders_choice'], 4), 'p_out': round(probs['out'], 4),
             'top_pick': top, 'top_prob': round(probs[top], 4),
-            'model_agrees_with_call': int(top == macro_class(et)),
+            'model_agrees_with_call': int(ruling_in and top == macro_class(et)),
             'runners_on': ','.join(bases) or '-', 'risp': int(bool(RISP_BASES & set(bases))),
             'outs_before': st['outs'],
             'run_scored': int(run_scored), 'rbi_official': res.get('rbi', 0),
