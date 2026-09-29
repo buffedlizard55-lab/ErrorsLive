@@ -59,4 +59,30 @@ code{background:var(--panel2);border-radius:6px;padding:1px 6px;font-size:.85em}
 .chip{display:inline-block;padding:1px 8px;border:1px solid var(--line);border-radius:99px;
       font-size:.78rem;text-decoration:none;color:var(--accent2)}
 .chip:hover{border-color:var(--accent2)}
+/* honesty banner — used wherever a probability is shown */
+.truth{background:#12203a;border:1px solid #2c4a7d;border-left:4px solid var(--accent2);
+      padding:12px 16px;border-radius:12px;margin:14px 0;font-size:.92rem}
+.truth b{color:#bcd8ff}
+.truth.gold{border-left-color:var(--accent);background:#1d1a10;border-color:#5a4a15}
+.truth.gold b{color:var(--accent)}
+/* two-up metric */
+.mini{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:baseline;margin-top:10px}
+.mini .v{font-weight:800;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.mini .k{color:var(--dim);font-size:.84rem}
+/* stat strip */
+.strip{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 0 0;padding:0;list-style:none;font-size:.86rem;color:var(--dim)}
+.strip b{color:var(--ink)}
+/* callout verdict */
+.verdict{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px;padding:10px 12px;
+         border-radius:10px;background:#1b2136;border:1px dashed #3a4566;font-size:.9rem}
+.verdict .big{font-weight:900;font-size:1.3rem}
+.ok{color:var(--good)}.no{color:var(--bad)}.mid{color:var(--accent)}
+table.compact{font-size:.84rem}
+table.compact th,table.compact td{padding:4px 6px}
+.scroll{overflow-x:auto}
+.nowrap{white-space:nowrap}
+.right{text-align:right}
+a.plain{color:var(--ink)}
+.stack{display:flex;flex-direction:column;gap:8px}
+.rowflex{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 @media(max-width:640px){h1{font-size:1.5rem}.dial{min-width:150px}}

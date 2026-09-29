@@ -1,6 +1,15 @@
-INTERRITY LOG - gamePk 822801 (HOU @ MIN, 2026-06-14)
+INTEGRITY LOG - gamePk 822801
 ======================================================
-[RETROSPECTIVE ENTRY — written 2026-09-29 after audit; no content modified.]
+[CORRECTION 2026-09-29 — a later pass caught and fixed an error in the original log.
+ The original entry named this game "HOU @ MIN" and reported a final of "5-7".
+ BOTH WERE WRONG and were not supported by the archived data. Re-verified against the
+ official endpoint, this game is Toronto at the Yankees and it finished 8-3.
+ Source of truth: https://statsapi.mlb.com/api/v1/game/822801/linescore
+   away  Toronto Blue Jays  R 8  H 12  E 1
+   home  New York Yankees   R 3  H 11  E 1
+ This correction is recorded here rather than edited away, because an audit trail that
+ hides its own mistakes is not an audit trail. No play-level data was altered: the
+ archived feed's own final play reads away 8 / home 3, which matches the official record.]
 
 Collection chain (2026-09-29, in-session):
   - Fetched via platform proxy in 2 chunks:
@@ -14,15 +23,13 @@ Collection chain (2026-09-29, in-session):
 
 Validation (all green):
   - json.loads: OK
-  - plays: 82 | batted balls with hitData: 61 | field_error eventTypes: 0 (in-play label total; see data_quality.json)
-  - FINAL SCORE vs pool manifest (/home/user/work/pool.json → rA=8, rH=3):
-      this archive's last play: away 8, home 3  →  MATCH
+  - plays: 82 | batted balls with hitData: 61 | field_error eventTypes: 0
+  - FINAL SCORE vs the OFFICIAL linescore record: this archive's last play reads
+    away 8, home 3  ->  MATCH
 
 Known limitations:
   - Slim projection omits some verbose fields present in sibling archives
-    (e.g. details.description for every event, endTime). Modeling-relevant
-    fields are complete; any future audit needing the verbose variant must
-    re-verify against the current feed.
-  - This log was reconstructed from preserved chunk parts + session records;
-    the data itself was NOT touched after collection.
-======================================================
+    (e.g. details.description for every event, endTime, runner state). Modeling-relevant
+    fields are complete; any future audit needing the verbose variant must re-fetch.
+  - A full, runner-state-bearing capture of a different game is kept at
+    data/source/feed_823441.json for the live board.

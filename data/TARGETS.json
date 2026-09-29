@@ -1,1 +1,12 @@
-{"rule": "first-k per stratum by selection index; stratum by eT (team errors): A>=3, B==2, C<=1", "A": [822722, 823615, 824823, 823532, 823854, 824825, 823441, 823763, 824738, 824890], "B": [822801, 823368, 823777, 824994, 822885, 823126, 824263, 823531, 824581, 824903], "C": [823937, 822794, 823038, 823283], "rationale": "trim of 48-game seed-20260929 selection to 24 (context-budget); sampling fraction 0.5 in every stratum; inverse-selection weight = 2.0 uniform; conditional P(error|EV,LA) unbiased under stratum-based game selection (covariate shift only in marginal game mix)"}
+{
+ "rule": "Stratify the 222-game June-September 2026 pool by total team errors (eT = away E + home E): A eT>=3, B eT==2, C eT<=1. Take the first k of each stratum by selection index, then trim to 24 games for the context budget.",
+ "A": [822722, 823615, 824823, 823532, 823854, 824825, 823441, 823763, 824738, 824890],
+ "B": [822801, 823368, 823777, 824994, 822885, 823126, 824263, 823531, 824581, 824903],
+ "C": [823937, 822794, 823038, 823283],
+ "pool_strata_games": {"A": 20, "B": 51, "C": 151, "total": 222},
+ "sampling_fractions": {"A": 0.5, "B": 0.196, "C": 0.026},
+ "raking_weights": {"A": 2.0, "B": 5.1, "C": 37.75},
+ "self_weighting": false,
+ "rationale": "The sample is ERROR-ENRICHED by intent and is NOT self-weighting. The per-stratum sampling fractions differ by a factor of ~19 (0.500 / 0.196 / 0.026), so any pool-representative rate requires the raking weights above; applying them reconstructs the pool mean of 1.113 team-errors/game as 1.258, the residual being sampling noise at n=24. The fitted objects model P(class | batted-ball features) WITHIN a play, which is far less distorted than the game-level error rate, but the 1.91% base rate quoted on the site is the SAMPLE rate, not the pool rate. An earlier version of this file claimed a uniform 0.5 fraction in every stratum and a uniform weight of 2.0; that was wrong and was removed on 2026-09-29.",
+ "verification": "Every game's eT, official date and final score is independently re-checked against https://statsapi.mlb.com/api/v1/game/{pk}/linescore; the ledger is data/verified_linescores.json and tests/test_pipeline.py fails if any of the 24 disagrees with the official record or with the stratum filed here."
+}

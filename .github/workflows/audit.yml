@@ -1,0 +1,25 @@
+name: audit
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Rebuild every published artifact from source
+        run: |
+          python3 tools/run_all.py
+          git diff --exit-code -- docs/data data/data_quality.json data/nydn_quality.json \
+            || (echo "::error::committed artifacts are not reproducible from source" && exit 1)
+      - name: Audit suite (numbers vs pages, site vs tool, official ledger)
+        run: python3 tests/test_pipeline.py
+      - name: Live scorer runs against the committed official feed capture
+        run: python3 tools/live_score.py --feed data/source/feed_823441.json --quiet --json /tmp/live.json

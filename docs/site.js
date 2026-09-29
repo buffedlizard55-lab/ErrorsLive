@@ -1,11 +1,14 @@
-/* Shared helpers: nav, CSV parse, model evaluation. Data files are served from ./data/. */
+/* Shared helpers: nav, CSV parse, model evaluation, formatting.
+   Data files are served from ./data/. The model math here is mirrored byte-for-byte by
+   tools/live_score.py; tests/test_pipeline.py asserts the two agree to 1e-9. */
 const NAV = [
   ['index.html', 'Live Score /100'],
+  ['live.html', 'Live Board'],
   ['model.html', 'Model & Validation'],
   ['overturned.html', 'Overturned Calls 2014–18'],
-  ['rules.html', 'Rules 9.12 / 9.16 / 10.04'],
-  ['methods.html', 'Methods & Data Audit'],
-  ['roadmap.html', 'Limitations & Roadmap'],
+  ['rules.html', 'Rules & RBI'],
+  ['methods.html', 'Methods & Audit'],
+  ['roadmap.html', 'Limitations'],
 ];
 (function buildNav() {
   const host = document.querySelector('.nav-inner');
@@ -40,7 +43,7 @@ function parseCSV(text) {
 async function loadJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(url); return r.json(); }
 async function loadCSV(url) { const r = await fetch(url); if (!r.ok) throw new Error(url); return parseCSV(await r.text()); }
 
-/* ---------- model evaluation ---------- */
+/* ---------- model evaluation (mirror of tools/live_score.py Scorer.predict) ---------- */
 const TRAJ = ['ground_ball', 'line_drive', 'fly_ball', 'popup', 'bunt_grounder'];
 const HARD = ['soft', 'medium', 'hard'];
 function featurize(ev, la, dist, traj, hard) {
@@ -48,7 +51,7 @@ function featurize(ev, la, dist, traj, hard) {
 }
 function evalModel(M, x) {
   const p = M.primary;
-  const z = p.feature_names.map((_, i) => (x[i] - p.scaler_mean[i]) / p.scaler_scale[i]);
+  const z = p.feature_names.map((_, i) => (x[i] - p.scaler_mean[i]) / (p.scaler_scale[i] || 1));
   const logit = p.intercept + z.reduce((s, v, i) => s + v * p.coef[p.feature_names[i]], 0);
   const pErr = 1 / (1 + Math.exp(-logit));
   const mc = M.multiclass; const classes = Object.keys(mc.coef);
@@ -57,4 +60,29 @@ function evalModel(M, x) {
   const probs = Object.fromEntries(classes.map((c, i) => [c, exps[i] / tot]));
   return { pErr, probs };
 }
+
+/* Where does this ball sit among the 1,258 archived batted balls? A 0-100 dial on a
+   probability that never leaves 0-7 is misleading; the percentile is the honest scale. */
+function errorPercentile(M, pErr) {
+  const g = M.honesty && M.honesty.p_error_percentile_grid;
+  if (!g || !g.length) return null;
+  let lo = 0;
+  for (let i = 0; i < g.length; i++) if (pErr >= g[i].p_error) lo = i;
+  const a = g[lo], b = g[Math.min(lo + 1, g.length - 1)];
+  if (a === b) return a.percentile;
+  const t = (pErr - a.p_error) / ((b.p_error - a.p_error) || 1);
+  return Math.round(a.percentile + t * (b.percentile - a.percentile));
+}
+
 const fmtPct = (v, d = 1) => (100 * v).toFixed(d) + '%';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function downloadCSV(filename, rows) {
+  if (!rows.length) return;
+  const keys = [...new Set(rows.flatMap(Object.keys))];
+  const q = v => { v = v == null ? '' : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const csv = [keys.join(','), ...rows.map(r => keys.map(k => q(r[k])).join(','))].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = filename; a.click(); URL.revokeObjectURL(a.href);
+}

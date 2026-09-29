@@ -123,6 +123,33 @@ def main():
             per_class_auc[cname] = round(roc_auc_score((yc == ci).astype(int), oofm[:, ci]), 3)
         except ValueError:
             per_class_auc[cname] = None
+    # Honest end-to-end metrics: can the model actually NAME the right call, and does it ever
+    # nominate 'error'? Both are reported so the site cannot overstate a 0-100 dial.
+    oof_top1 = oofm.argmax(axis=1)
+    top1_acc = float((oof_top1 == yc).mean())
+    top1_by_class = {c: {'n': int((yc == i).sum()),
+                         'correct': int((oof_top1[yc == i] == i).sum()),
+                         'recall': round(float((oof_top1[yc == i] == i).mean()), 3)}
+                     for i, c in enumerate(CLASSES)}
+    never_error_top1 = int((oof_top1 == CLASSES.index('error')).sum())
+
+    # OOF calibration of P(error) - is the number trustworthy at the top of its range?
+    cal_bins, edges = [], [0, .01, .02, .03, .04, .05, .07, .10, .20, 1.01]
+    for lo, hi in zip(edges[:-1], edges[1:]):
+        m = (oof >= lo) & (oof < hi)
+        if m.sum():
+            cal_bins.append({'lo': lo, 'hi': hi, 'n': int(m.sum()),
+                             'mean_pred': round(float(oof[m].mean()), 4),
+                             'observed': round(float(yb[m].mean()), 4)})
+
+    # Observed P(error) range + a percentile lookup, so "/100" can be shown honestly.
+    p_all = 1 / (1 + np.exp(-(base.intercept_[0] + Xs @ base.coef_[0])))
+    pct = np.sort(p_all)
+
+    def percentile(x):
+        return int(round(100 * np.searchsorted(pct, x, side='right') / len(pct)))
+    pct_grid = [{'p_error': round(float(q), 5), 'percentile': percentile(q)}
+                for q in np.quantile(p_all, np.linspace(0, 1, 101))]
 
     # correlations with binary error label (point-biserial = pearson on 0/1)
     corr = {}
@@ -165,6 +192,29 @@ def main():
             'platt_oof_grid': None,
         },
         'surface': surface, 'curve': curve,
+        'honesty': {
+            'headline': ('READ THIS BEFORE TRUSTING THE /100 DIAL. Across the %d modelling batted '
+                         'balls the fitted P(error) never exceeds %.1f/100 and never falls below '
+                         '%.1f/100, and out-of-fold the 4-class model nominates "error" as its most '
+                         'likely call %d times out of %d. The score is a real ranking signal '
+                         '(OOF AUC %.3f) but it is NOT a calibrated 0-100 confidence, and it will '
+                         'essentially never tell you "this is an error".'
+                         % (len(yb), 100 * float(p_all.max()), 100 * float(p_all.min()),
+                            never_error_top1, len(yb), float(auc))),
+            'oof_top1_accuracy': round(top1_acc, 4),
+            'oof_top1_recall_by_class': top1_by_class,
+            'oof_error_nominated_top1': never_error_top1,
+            'oof_error_recall': round(float((oof_top1[yb == 1] == CLASSES.index('error')).mean()), 3),
+            'p_error_observed_min_x100': round(100 * float(p_all.min()), 2),
+            'p_error_observed_max_x100': round(100 * float(p_all.max()), 2),
+            'p_error_percentile_grid': pct_grid,
+            'calibration_oof': cal_bins,
+            'what_it_is_good_for': ('ranking batted balls against each other and flagging the rare '
+                                    'top-decile "this one deserves a second look" case'),
+            'what_it_is_not_good_for': ('declaring a call an error, settling a scoring decision, or '
+                                        'replacing the official scorer - it never nominates error '
+                                        'as the top call and its absolute level is uncalibrated'),
+        },
         'multiclass': {
             'cv_logloss': round(float(ll_m), 4),
             'per_class_cv_auc': per_class_auc,

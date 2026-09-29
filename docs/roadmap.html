@@ -8,89 +8,148 @@
 <body>
 <header class="nav"><div class="nav-inner"></div></header>
 <main>
-  <h1>Limitations, pass logs, and where the next session starts</h1>
-  <p class="lede">Three passes were mandated and executed: <b>(1)</b> implement + verify, <b>(2)</b> bug &amp;
-  edge-case review with fixes, <b>(3)</b> re-check against the original brief. The logs below are the public
-  record. Nothing here is aspirational — every item either shipped or is listed with its blocking fact.</p>
+  <h1>Limitations, pass log, and where the next session starts</h1>
+  <p class="lede">Every item below either shipped or is listed with the specific fact that blocks it. The
+  corrections section is deliberately unflattering: this pass found real errors in the previous pass's own
+  published pages, and they are recorded here rather than quietly patched.</p>
 
-  <h2>Pass 1 — build + verify (collection → pipeline → site)</h2>
+  <h2>What this pass changed</h2>
   <ul>
-    <li>24/24 stratified games collected from live feeds, <b>final scores re-verified</b> against the 222-game
-    linescore pool (4 games healed at transport seams; all heals logged in <code>data/raw/*.integrity.txt</code>).</li>
-    <li>Pipeline: <code>build_dataset.py</code> → 1,271-batted-ball CSV; <code>train_model.py</code> → calibrated
-    binary + multinomial models (AUC 0.64 [0.52, 0.75]); <code>build_nydn.py</code> → 6,168-row replay table with
-    video links + heuristic run-removal flag.</li>
-    <li>5-page GitHub Pages site shipped with a live /100 scoring calculator, model-free empirical surface,
-    rule citations and the NYDN watch list.</li>
+    <li><b>The pipeline runs again.</b> Previously <code>build_dataset.py</code> and <code>build_nydn.py</code>
+    pointed at a scratch directory (<code>/home/user/work</code>) that no longer exists, so
+    <code>tools/run_all.py</code> could not be executed at all. Both now read from committed sources
+    (<code>data/raw/</code> and <code>data/source/nydn/</code>) and the whole pipeline was re-run end to end:
+    <code>bip.csv</code> and <code>model.json</code> rebuilt <b>byte-for-byte identically</b>, and
+    <code>overturned_calls.csv</code> rebuilt byte-for-byte identically from the vendored NYDN CSVs.</li>
+    <li><b>All 24 games re-verified against MLB's official linescore endpoint</b> — final score, both teams'
+    error totals, and official date — and the ledger published at
+    <a href="methods.html">Methods §1</a> with a per-game link. The 222-game pool was independently
+    re-counted from the schedule endpoint (15 dates summing to exactly 222).</li>
+    <li><b>Live scoring shipped</b> (<code>tools/live_score.py</code> + <a href="live.html">Live Board</a>):
+    a real feed walk that emits a /100 score, all four class probabilities, the runner-on-base state read from
+    the feed, and what the batter's RBI would be under each candidate ruling.</li>
+    <li><b>Honest validation added.</b> The model now publishes out-of-fold top-1 accuracy, per-class recall,
+    an OOF calibration table, and the observed range of P(error) — which is
+    <b>0.01–6.48 out of 100</b>, and where the model <b>never nominates “error”</b>. The site's /100 dial is
+    now presented with that context instead of implying a 0–100 confidence.</li>
+    <li><b>Errors found and fixed in this site's own text</b> — see the corrections table below.</li>
   </ul>
 
-  <h2>Pass 2 — bugs & edge cases found in review → fixed</h2>
-  <ul>
-    <li><b>Missing hitData fields</b>: feed sometimes returns <code>hitData</code> without
-    launchSpeed/launchAngle (e.g. hardened 2026 feeds) — 12 rows now routed to a missing-numeric quarantine in
-    data_quality.json instead of silent zero-fill.</li>
-    <li><b>Error-after-strikeout play</b> (8/24 NYM game): reach-on-error with aborted-K hitData shaped
-    differently → labeled as lower-bound honesty metric, not dropped or forced.</li>
-    <li><b>sklearn 1.9 removed <code>multi_class=</code></b> keyword → compatibility fix; scipy optional with
-    numpy-only fallback so the pipeline runs anywhere.</li>
-    <li><b>NYDN "Record Keeping"</b> status discovered (not in published vocab) → added, not dropped.</li>
-    <li><b>Dead official links</b>: mlb.com rules hub 404s (flagged on rules page); 2014–18 replay video links
-    largely decayed → each row gets a regenerated MLB Film Room search link; nothing re-hosted.</li>
-  </ul>
-
-  <h2>Pass 2.5 — narrative audit (wording bugs count too)</h2>
-  <ul>
-    <li><b>"Self-weighting" claim scrubbed.</b> The sample is error-ENRICHED, not self-weighting (real fractions
-    A 0.500 / B 0.196 / C 0.026). Design narrative corrected in model.json, methods page and README; raking
-    weights (A 2.0, B 5.1, C 37.75) published and validated by reconstructing the pool mean (1.258 ≈ 1.113);
-    a negative test now fails the build if the wording regresses.</li>
-    <li><b>822801 integrity log</b> reconstructed retroactively (marked RETROSPECTIVE) from preserved chunk
-    parts; its pool-cross-check re-run live (away 8, home 3 → MATCH).</li>
-    <li><b>Page↔data audit suite</b> (<code>tests/test_pipeline.py</code>) now verifies every published KPI
-    against repo data: 24 archives, 24 score cross-checks, model internals (AUC/CI/Brier/coef), NYDN counts,
-    page wiring and official-link strings. 36 checks, exit 0 required.</li>
-  </ul>
-
-  <h2>Pass 3 — re-check vs. the brief</h2>
-  <ul>
-    <li><b>(a) predict pending scoring rulings</b> → live /100 calculator + per-class model, shipped.</li>
-    <li><b>(b) RBI impact</b> → rules page + calculator RBI toggle, with official glossary citations for
-    9.12/9.16/10.04 substance.</li>
-    <li><b>(c) best scientific model + advanced correlation</b> → calibrated logistic pair, bootstrap CIs,
-    point-biserial table, model-free Wilson surface published alongside.</li>
-    <li><b>(d) all overturned calls + run-removal videos</b> → full 2014–2018 NYDN set normalized; 227 run-affected
-    plays indexed with watch links + Film Room fallback.</li>
-    <li><b>(e) GitHub Pages UI</b> → shipped, Pages-enabled, linked from repo.</li>
-    <li><b>(f) Own the Outcome</b> → verification-first policy, audit pages, public flag lists.</li>
-    <li><b>(g) PR → main</b>: branch workflow executed in-repo.</li>
-    <li><b>(h) suggestions + (i) 3 passes</b> → this page.</li>
-  </ul>
+  <h2>Corrections made to previously published pages</h2>
+  <p class="muted">Each of these was a claim on the site that the repository's own data did not support. All
+  were found by re-deriving every published number from source, not by reading for style.</p>
+  <div class="scroll">
+  <table>
+    <tr><th>Where</th><th>What it said</th><th>What the data shows</th></tr>
+    <tr><td><code>methods.html</code>, <code>data/raw/822801.integrity.txt</code></td>
+        <td>game 822801 was “HOU @ MIN, final 5–7”</td>
+        <td>official linescore: <b>TOR @ NYY, final 8–3</b>. The integrity log carried a fabricated
+        matchup and a fabricated score; corrected and the correction recorded in the file.</td></tr>
+    <tr><td><code>methods.html</code>, <code>roadmap.html</code></td>
+        <td>“25 plays carry <code>field_error</code>; one (8/24 vs NYM, J.&nbsp;McNeil) returned incomplete
+        hitData”</td>
+        <td>the archive contains exactly <b>24</b> <code>field_error</code> plays and <b>all 24 carry a
+        complete vector</b>. There is no 2026-08-24 game in the sample at all (it spans 2026-06-14 to
+        2026-08-01), and no batter names exist in the slim archives. The claim was unsupported; removed.</td></tr>
+    <tr><td><code>model.html</code></td>
+        <td>“<b>Self-weighting sample</b>: … a uniform 0.5 sampling fraction in every error stratum … raw
+        averages over this sample are unbiased for pool averages; no post-stratification weights are applied
+        because none are needed.”</td>
+        <td>flatly contradicted by the project's own data: the fractions are 0.500 / 0.196 / 0.026 and raking
+        weights A 2.0 / B 5.1 / C 37.75 are required. The claim had survived a previous pass because the
+        automated check that was supposed to catch it was <b>case-sensitive</b> and matched only lowercase
+        “self-weighting”. Fixed, and the check is now case-insensitive.</td></tr>
+    <tr><td><code>methods.html</code></td>
+        <td>“bip.csv … gamePk, date, play/batter/pitcher ids, … half/score state”</td>
+        <td>the shipped columns do not include a date, batter or pitcher id, or inning half. The description
+        now lists the actual columns.</td></tr>
+    <tr><td><code>rules.html</code></td>
+        <td>“MLB's 2026 WBC rules announcement … cites Official Baseball Rule 9.16(b)”</td>
+        <td>that page was read in full; it is about rosters, eligibility and player restrictions and does
+        <b>not</b> cite 9.16(b). The claim was removed. The same page had also implied a Rule 10.04 RBI
+        section — the 2025 Official Baseball Rules put Runs Batted In at <b>9.04</b>; the discrepancy is now
+        flagged on the rules page.</td></tr>
+    <tr><td><code>overturned.html</code></td>
+        <td>Film Room links pointed at <code>mlb.com/video/search?q=</code></td>
+        <td>that path 302-redirects; the working canonical form is <code>mlb.com/video/?q=</code>. Links
+        updated.</td></tr>
+    <tr><td><code>README.md</code></td>
+        <td>“all 222 games played on 15 dates <b>in June 2026</b>”</td>
+        <td>the pool spans 2026-06-13 to 2026-09-26. Corrected.</td></tr>
+    <tr><td><code>data/TARGETS.json</code></td>
+        <td>“sampling fraction 0.5 in every stratum; inverse-selection weight = 2.0 uniform”</td>
+        <td>the same stale self-weighting fiction, left behind in the machine-readable manifest after it had
+        been removed from the prose. Corrected to the real per-stratum fractions and raking weights.</td></tr>
+  </table>
+  </div>
 
   <h2>Known limitations (don't read past these)</h2>
   <ul>
-    <li><b>24 labeled errors is a thin positive class.</b> AUC CI [0.52, 0.75] overlaps coin-flip; treat /100 scores
-    as directional, not precise. Growing the sample is fix #1.</li>
-    <li><b>Error label is a lower bound</b>: throwing-error runs hidden inside 'single' etc. aren't labeled; scorer
-    revisions after game end aren't captured in the feed.</li>
-    <li><b>No fielder positioning / hang-time features</b>: two grounders at 98 mph are not the same play when one
-    is at a shifted shortstop. Requires defense-tracking feeds (next data tier).</li>
-    <li><b>Run-removal flag is a heuristic</b>, printed in-page; a true run-removal ledger needs per-play boxscore-diff.</li>
-    <li><b>Replay video links decayed at source</b> (MLB platform migration); site links regenerate via Film Room
-    search, but some 2014–15 clips may be unrecoverable online.</li>
-    <li><b>June–2026 pool</b>: season-fatigue and weather effects on error rates are unmeasured.</li>
+    <li><b>24 labelled errors is a very thin positive class.</b> The AUC confidence interval
+    [0.518, 0.748] includes coin-flip. Out-of-fold the model names the correct ruling on 72.8% of plays
+    overall, but that is carried almost entirely by “out” (87.9% recall) and “hit” (50.5%); on
+    <b>error it scores 0/24 and on fielder's choice 0/10</b>. The score is a ranking aid, not a
+    classifier. Growing the sample is fix #1.</li>
+    <li><b>The error label is a lower bound.</b> Errors charged inside other event types (a throwing error on
+    a play scored a single) are not labelled <code>field_error</code>, so the observed rate understates the
+    true one. Post-game scorer revisions never appear in the live feed at all.</li>
+    <li><b>No fielder positioning, hang time, or fielder identity.</b> Two 98 mph grounders are different
+    plays when one is at a shifted shortstop. These are outside the five Statcast inputs, which is precisely
+    why the error probability tops out near 6/100 instead of spanning 0–100.</li>
+    <li><b>The pool's per-game error column was not re-verified this pass.</b> Re-deriving 247 team errors
+    needs 222 individual linescore calls. See <a href="methods.html">Methods §2</a>.</li>
+    <li><b>The run-removal flag on the replay archive is a heuristic</b>, printed verbatim in the UI. A true
+    ledger needs a box-score diff before and after each challenge.</li>
+    <li><b>Replay video links decayed at source.</b> The 2014–2018 short links point at a video platform MLB
+    has since replaced. Nothing is re-hosted; every row keeps its original link plus a Film Room search.
+    Some 2014–15 clips are likely unrecoverable.</li>
+    <li><b>The live feed path is unexercised in this sandbox.</b> Direct HTTPS to <code>statsapi.mlb.com</code>
+    is blocked here, so the live board replays a stored, verbatim official capture. The network path itself
+    (<code>--today</code>, <code>--pk</code>) is implemented but has not been run end to end against a live
+    game from this environment.</li>
+    <li><b>June–September 2026 pool only</b> — season-fatigue, weather and park effects on error rates are
+    unmeasured, and generalising to other seasons is an extrapolation.</li>
+    <li><b>The scoring model ignores game context</b>: score, outs, inning and leverage. A scorer at the end
+    of a one-run game is not the same decision as one in the first inning of a blowout, and none of that is
+    in the current feature set.</li>
   </ul>
 
-  <h2>Next-session backlog (ordered)</h2>
+  <h2>Next-session backlog (ordered by value per unit of effort)</h2>
+  <div class="scroll">
   <table>
-    <tr><th>#</th><th>Task</th><th>Unblocks</th></tr>
-    <tr><td>1</td><td>Grow collection to ≥100 pool games with same verification rules (target: 100+ labeled errors)</td><td>tighter AUC CI; per-team/per-position models</td></tr>
-    <tr><td>2</td><td>Add pre-play defensive alignment + sprint speed features from Savant per-batter endpoints</td><td>physics-correct error likelihood</td></tr>
-    <tr><td>3</td><td>Boxscore-diff ledger for true "run removed/added" enumeration of replay overturns</td><td>replace heuristic with measurement</td></tr>
-    <tr><td>4</td><td>Live-following mode: poll today's schedule → score ongoing at-bats as pitches land</td><td>the original "live feed" ask, fully online</td></tr>
-    <tr><td>5</td><td>Preserve legacy replay clips where retrievable (official-only, in-repo manifest)</td><td>(d) completeness for 2014–15</td></tr>
+    <tr><th class="right">#</th><th>Task</th><th>Unblocks</th><th>Blocked by</th></tr>
+    <tr><td class="right">1</td><td>Grow the archive toward ≥100 pool games under the same verification
+        rules (target 100+ labelled errors)</td><td>a CI that no longer includes coin-flip; per-position
+        and per-team models</td><td>outbound network access to statsapi.mlb.com</td></tr>
+    <tr><td class="right">2</td><td>Run <code>live_score.py --today</code> from an unrestricted host and
+        publish the result as the site's standing live board, refreshed on a schedule</td>
+        <td>the “up-to-date current feed” ask, end to end</td><td>a machine with egress + a publish job</td></tr>
+    <tr><td class="right">3</td><td>Box-score-diff ledger: capture the scorecard before and after each replay
+        challenge to enumerate true “run added / run removed” overturns</td><td>replaces the 230-row
+        heuristic with a measurement</td><td>historical box scores for 2014–2018</td></tr>
+    <tr><td class="right">4</td><td>Add pre-play defensive alignment and sprint speed per batter</td>
+        <td>the missing context that should lift P(error) into a usable range</td><td>an alignment data feed</td></tr>
+    <tr><td class="right">5</td><td>Add game context features: inning, outs, score differential, leverage index</td>
+        <td>modelling the scorer's situation-dependent judgment</td><td>nothing — the fields already exist in the feed</td></tr>
+    <tr><td class="right">6</td><td>Re-verify the 222-game pool's per-game error column</td>
+        <td>lets the sampling weights be validated rather than asserted</td><td>222 API calls; scriptable</td></tr>
+    <tr><td class="right">7</td><td>Preserve retrievable legacy replay clips (official sources only, manifest
+        in-repo)</td><td>completeness of the 2014–15 video list</td><td>MLB video platform retention</td></tr>
+    <tr><td class="right">8</td><td>Rescue the 56 rows whose <code>video</code> cell is blank by matching
+        (date, teams, player, umpire) against MLB's own video search — they are real replay decisions
+        with no clickable clip today</td><td>watchable coverage for ~0.9% of the archive</td>
+        <td>MLB video search result pages; nothing else</td></tr>
+    <tr><td class="right">9</td><td>Resolve the five <code>2014-04-31</code> rows from the source (the archive
+        gives no way to tell Mar 31 from Apr 30 — an external game log could)</td>
+        <td>5 rows of real ISO dates instead of a published typo</td><td>an outside 2014 schedule source</td></tr>
+    <tr><td class="right">10</td><td>Run <code>tools/verify_official.py</code> on a host with egress and commit
+        the refreshed ledger</td><td>a re-verification stamp newer than 2026-09-29</td>
+        <td>outbound HTTPS (the script exits 2 rather than faking a pass)</td></tr>
   </table>
+  </div>
 </main>
-<footer><div class="inner"><span>Passes 1–3 executed 2026-09-29; this page is the standing agenda</span>
+<footer><div class="inner"><span>Passes 1–3 re-executed 2026-09-29; this page is the standing agenda.
+  Items 8–10 were added after the replay-archive parser was found to be silently dropping rows.</span>
 <span>Own the Outcome</span></div></footer>
 <script src="site.js"></script>
 </body>

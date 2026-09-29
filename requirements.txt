@@ -1,0 +1,5 @@
+# Pinned to the versions this project was last reproduced with (2026-09-29).
+# Re-running tools/train_model.py on these versions reproduces docs/data/model.json byte-for-byte.
+numpy==2.4.6
+scipy==1.17.1
+scikit-learn==1.9.1
