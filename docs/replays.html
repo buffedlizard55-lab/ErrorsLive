@@ -137,7 +137,7 @@ function renderRuns() {
                 score_delta, run_removed_hard, run_removed_heuristic, rule, description, watch_url, mp4,
                 feed_url, play_id }) => ({ date, matchup, inning, half, batter, review_type, review_subject,
                 event_type, runs_by_movement, score_delta, run_removed_hard, run_removed_heuristic, rule,
-                description, watch_url, mp4, feed_url, play_id })));
+                description, watch_url, mp4, feed_url, play_id }))));
   $('dlIdx').addEventListener('click', () => downloadCSV('overturned_index.csv', IDX.map(r => ({
     date: r.d, game: r.m, game_pk: r.g, inning: r.n, half: r.h, batter: r.b, review_type: r.t,
     review_subject: r.s, final_call: r.c, play_id: r.p,

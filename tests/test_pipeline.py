@@ -536,6 +536,24 @@ for page, files in DATA_FILES.items():
               f in src and (ci_only or (ROOT / 'docs' / f).exists()),
               f'cited={f in src} exists={(ROOT / "docs" / f).exists()}')
 
+# --- every inline script must at least parse (a real bug was caught this way) --------------
+import shutil, subprocess, tempfile                                            # noqa: E402
+if shutil.which('node'):
+    bad_js = []
+    for name, src in PAGES.items():
+        for i, block in enumerate(re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', src, re.S)):
+            code = ('(async function(){' + block + '})()') if ('await' in block and
+                                                              not block.lstrip().startswith('(async')) else block
+            with tempfile.NamedTemporaryFile('w', suffix='.js', delete=False) as fh:
+                fh.write(code)
+                path = fh.name
+            r = subprocess.run(['node', '--check', path], capture_output=True, text=True)
+            if r.returncode:
+                bad_js.append(f'{name} block {i+1}: {r.stderr.strip().splitlines()[-1][:120]}')
+    check(f'every inline page script parses ({len(PAGES)} pages)', not bad_js, ' | '.join(bad_js))
+else:
+    print('  --   (node not installed: skipped the JavaScript syntax check)')
+
 # --- numbers printed on pages must exist in the artifacts they load ----------
 kpis = load_json(ROOT / 'docs/data/site_kpis.json')
 check('site_kpis.json repeats the model file exactly (auc, rows, games, errors)',
