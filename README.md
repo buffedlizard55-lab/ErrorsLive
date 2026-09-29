@@ -70,32 +70,49 @@ statistical model, and the public site.
 ## Repo layout
 
 ```
-tools/            Pipeline sources (build_dataset.py, train_model.py, build_nydn.py, run_all.py, fetch_feed.py)
+tools/            Pipeline sources (build_dataset.py, train_model.py, build_nydn.py, live_score.py,
+                  run_all.py, verify_official.py, fetch_feed.py)
 data/raw/         24 validated per-game feed JSONs + 4 integrity notes (audit trail; heals logged, never invented)
 data/*.json       pool_summary.json, TARGETS.json, data_quality.json, nydn_quality.json (structured flag summary)
-docs/             GitHub Pages site (index, model, overturned, rules, methods, roadmap + site.css/site.js)
-docs/data/        Site artifacts: bip.csv (1,271 rows), games.csv (24), model.json, overturned_calls.csv (6,168)
+data/source/      feed_823441.json (the published live-board fixture) + nydn/ (9 vendored archive CSVs)
+docs/             GitHub Pages site (index, live, model, overturned, rules, methods, roadmap + site.css/site.js)
+docs/data/        Site artifacts: bip.csv (1,271 rows), games.csv (24), model.json, verification.json,
+                  overturned_calls.csv (6,361), nydn_summary.json, live_sample.json/csv
 tests/            test_pipeline.py — audit suite: raw-set, scores, model internals, page↔data consistency, NYDN
 ```
 
 ## Reproduce
 
 ```bash
+pip install -r requirements.txt
 python3 tools/run_all.py          # rebuilds docs/data/* from data/raw/*.json (exit 0 on green)
 python3 tests/test_pipeline.py    # full audit suite (exit 0 = all checks pass)
+python3 tools/verify_official.py  # re-check all 24 games + the 222-game pool against the live API
 ```
 
+`run_all.py` is **byte-for-byte reproducible**: run it twice and `git diff` is empty. CI
+(`.github/workflows/audit.yml`) enforces that on every push, then runs the audit suite and a
+live-scorer smoke run.
+
 Serving the site locally for review: `cd docs && python3 -m http.server 8080` → http://localhost:8080/.
-Live-fetching new games from the Stats API is documented in `tools/fetch_feed.py`.
+Live-fetching new games from the Stats API is documented in `tools/fetch_feed.py`; scoring a live
+feed is `tools/live_score.py` (see [docs/live.html](docs/live.html)).
 
-## Headline results (pass 1 shipped numbers)
+## Headline results (verified 2026-09-29)
 
-- 24 games / 1,868 plays / **1,271 batted balls** with Statcast vectors; **24 labeled errors** (1.91% base rate;
-  one reach-on-error lacked hitData and is documented in data_quality.json).
+- 24 games / 1,868 plays / **1,271 batted balls** with Statcast vectors; **24 labeled errors** (1.91% base rate),
+  every one of them with a complete Statcast vector (`errors_without_hitdata: 0`, `multi_hitdata: 0` in
+  `data/data_quality.json`). 1,259 balls have a full numeric vector; 12 are quarantined out of the model rather
+  than imputed.
 - Binary P(error) model: OOF **AUC 0.641 [0.518, 0.748]**, Brier 0.0186; multinomial per-class AUC
   hit .78 / error .65 / FC .78 / out .77. Strongest feature: `trajectory = ground_ball` (+0.69 standardized CI-free coef).
-- Replay archive: **6,168** rows 2014–2018, **2,984 overturned**, **227 run-affected** (printed heuristic);
-  61 source irregularities flagged in `data/nydn_quality.json`.
+- Replay archive: **6,361** rows 2014–2018, **3,067 overturned**, **230 run-affected** (printed heuristic);
+  2,688 source irregularities categorised in `data/nydn_quality.json`. Every one of the 6,362 source data
+  lines is accounted for (6,361 rows + 1 junk header fragment).
+- Live board: game 823441 (NYY @ NYM, 1–6) — 75 plays, 46 batted balls scored, the model's top pick agrees
+  with the official ruling on 34 of 46; the highest-scoring ball in the game (6.4/100) is its only ruled error.
+  Full-season backtest: 918/1,259 top picks (72.9%), 0/24 errors flagged — which is the honest headline:
+  the model is useful for *ruling out* errors, not for finding them.
 
 ## Passes (user requirement i)
 

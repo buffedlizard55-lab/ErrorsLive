@@ -1,0 +1,37 @@
+date,game,series-game,inning,manager-ump,player-referenced,initial-call,play-type,calling-umpire,crew-chief,result,time-to-ruling,video
+2016-10-5,"SF @ NYM, WC,T4,Bochy,Span,Out,Tag Play,Mike Everitt,Winters,Stands,1:37,http://atmlb.com/2ehej3Z
+2016-10-6,"TOR @ TEX, G1,T2,Gibbons,Pillar,Out,Force Play,Lance Barksdale,West,Stands,2:03,http://atmlb.com/2eoODyp
+2016-10-6,"TOR @ TEX, G1,T3,Banister,Donaldson,Safe,Tag Play,Sam Holbrook,West,Stands,2:03,http://atmlb.com/2e2sZEm
+2016-10-6,"BOS @ CLE, G1,T1,Francona,Holt,Safe,Tag Play,Brian Knight,Miller,Overturned,0:48,http://atmlb.com/2en3fgB
+2016-10-6,"BOS @ CLE, G1,B2,Farrell,Chisenhall,Safe,Tag Play,Tony Randazzo,Miller,Overturned,1:41,http://atmlb.com/2eoPVcQ
+2016-10-6,"BOS @ CLE, G1,T8,Francona,Ortiz,Safe,Tag Play,Tony Randazzo,Miller,Stands,1:35,http://atmlb.com/2ee63hv
+2016-10-7,"TOR @ TEX, G2,B7,Banister,Desmond,Out,Tag Play,Lance Barksdale,West,Stands,1:52,http://atmlb.com/2e2rs16
+2016-10-7,"BOS @ CLE, G2,B5,Farrell,J. Ramirez,Safe,Tag Play,Paul Emmel,Miller,Overturned,1:13,http://atmlb.com/2ee7JYz
+2016-10-8,"SF @ CHI, G2,B6,Bochy,Baez,Safe,Tag Play,Marvin Hudson,Hirschbeck,Overturned,1:20,http://atmlb.com/2eoP5Nb
+2016-10-9,"TEX @ TOR, G3,B10,Banister,Encarnacion,No Violation,Slide Rule,Joe West,West,Confirmed,0:53,http://atmlb.com/2ee5ap9
+2016-10-9,"TEX @ TOR, G3,B10,Banister,Donaldson,Touch,Touching a Base,Sam Holbrook,West,Confirmed,0:53,http://atmlb.com/2ee5ap9
+2016-10-10,"WSH @ LAD, G3,B2,Roberts,Pederson,No Hit by Pitch,Hit by Pitch,Ron Kulpa,Kellogg,Stands,1:48,http://atmlb.com/2ehdUyr
+2016-10-10,"CHI @ SF, G3,B6,Bochy,Gillaspie,Out,Force Play,Marvin Hudson,Hirschbeck,Stands,2:23,http://atmlb.com/2dvV7Nl
+2016-10-10,"CHI @ SF, G3,T12,Bochy,Span,No Catch,Catch/no catch,John Hirschbeck,Hirschbeck,Overturned,1:01,http://atmlb.com/2dJIz2m
+2016-10-10,"CHI @ SF, G3,T13,Maddon,D. Ross,Out,Force Play,Marvin Hudson,Hirschbeck,Stands,2:35,http://atmlb.com/2e0nsMe
+2016-10-11,"CHI @ SF, G4,B3,Bochy,Span,Out,Force Play,John Hirschbeck,Hirschbeck,Overturned,1:09,http://atmlb.com/2e0iBL3
+2016-10-11,"CHI @ SF, G4,B5,UMPIRE,B. Crawford,No Home Run,Potential HR,Larry Vanover,Hirschbeck,Confirmed,0:52,http://atmlb.com/2e2pRbV
+2016-10-15,"LAD @ CHI, G1,B3,Maddon,A. Russell,Out,Force Play,Eric Cooper,Cederstrom,Overturned,0:44,http://atmlb.com/2e0kWpa
+2016-10-17,"CLE @ TOR, G3,B7,Francona,Pillar,Safe at 2nd,Tag Play,Everitt,Gorman,Stands,1:21,https://t.co/JKH42abh1M
+2016-10-17,"CLE @ TOR, G3,T8,Gibbons,Lindor,Safe at 2nd,Tag Play,Everitt,Gorman,Overturned,1:47,http://atmlb.com/2fln7lu
+2016-10-18,"CHI @ LAD, G3,T7,Roberts,Coghlan,Safe at 1st,Force Play,Hernandez,Cederstrom,Overturned,0:38,https://t.co/EWkSGpg0o7
+2016-10-19,"CLE @ TOR, G5,B6,Gibbons,Donaldson,Out at 1st,Force Play,Nelson,Gorman,Confirmed,1:17,https://t.co/H1Rlmgxr00
+2016-10-19,"CHI @ LAD, G4,B2,Roberts,A. Gonzalez,Out at home,Tag Play,Hernandez,Cederstrom,Stands,2:53,http://atmlb.com/2eBGwwW
+2016-10-19,"CHI @ LAD, G4,T6,Maddon,Zobrist,Out at 1st,Force Play,Marquez,Cederstrom,Overturned,1:06,https://t.co/Sl9Ylaaud0
+2016-10-20,"CHI @ LAD, G5,B4,Roberts,Kendrick,Out at 3rd,Tag Play,Cooper,Cederstrom,Overturned,0:59,https://t.co/pcymkARdCz
+2016-10-20,"CHI @ LAD, G5,B7,Maddon,A. Gonzalez,Safe at 1st,Force Play,T. Barrett,Cederstrom,Overturned,1:06,https://t.co/3nmldHpBRs
+2016-10-20,"CHI @ LAD, G5,T8,Roberts,Bryant,Safe at 1st,Force Play,T. Barrett,Cederstrom,Confirmed,0:56,https://t.co/T8QJFJghwz
+2016-10-20,"CHI @ LAD, G5,T8,Maddon,Fowler,Out at 2nd,Force Play,B. Welke,Cederstrom,Overturned,0:57,https://t.co/ky3lhuJWSU
+2016-10-28,"CLE @ CHI, G3,T1,Maddon,Lindor,Safe at 1st,Tag Play,Hudson,Hirschbeck,Overturned,0:54,https://t.co/wW2GX4b7t6
+2016-10-28,"CLE @ CHI, G3,T7,Maddon,M. Martinez,Safe at 3rd,Tag Play,West,Hirschbeck,Stands,1:30,https://t.co/37FHZT35l1
+2016-10-28,"CLE @ CHI, G3,T7,Francona,Kipnis,Out at 1st,Force Play,Hudson,Hirschbeck,Stands,1:29,https://t.co/Jd12zdMWE5
+2016-10-29,"CLE @ CHI, G4,B2,Francona,Baez,Safe at 1st,Force Play,Randazzo,Hirschbeck,Overturned,0:27,https://t.co/5xlgwq3yXl
+2016-11-1,"CHI @ CLE, G6,B7,Maddon,Lindor,Safe at 1st,Force Play,Holbrook,Hirschbeck,Overturned,1:03,https://t.co/CPxom4ZD9i
+2016-11-2,"CHI @ CLE, G7,B3,Francona,C. Santana,Out at 2nd,Force Play,Hirschbeck,Hirschbeck,Overturned,1:27,https://t.co/iGrPKXc88f
+2016-11-2,"CHI @ CLE, G7,T5,Maddon,Schwarber,Out at 1st,Force Play,Guccione,Hirschbeck,Confirmed,0:44,https://t.co/BhdqCvxTEz
+2016-11-2,"CHI @ CLE, G7,T9,Francona,Coghlan,Out at 2nd; no violation,Slide Rule,Hirschbeck,Hirschbeck,Confirmed,0:52,https://t.co/rLL8iksXmR

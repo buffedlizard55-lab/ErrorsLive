@@ -4,88 +4,158 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Overturned Calls 2014–2018 — LiveScoringErrors</title>
 <link rel="stylesheet" href="site.css">
+<meta name="description" content="Every MLB replay ruling from 2014-2018 normalised from the NY Daily News archive, with click-to-watch links and a filterable index of the plays that affected a run.">
 </head>
 <body>
 <header class="nav"><div class="nav-inner"></div></header>
 <main>
   <h1>MLB overturned replay calls, 2014–2018</h1>
-  <p class="lede">Source: <a href="https://github.com/nydailynews/mlb-overturned-calls" target="_blank" rel="noopener">NY Daily News –
-  mlb-overturned-calls</a> (the repo referenced in the brief as “MLB-overturned-calls”), all manager/instant-replay
-  challenges tracked 2014–2018 with video links. <b>Two different overturn mechanisms exist in baseball — this page
-  covers umpire-call reviews; the scorer's hit/error revisions are the model pages.</b> Both change runs and both
-  belong in one honest UI, clearly labeled.</p>
+  <p class="lede">Every manager / instant-replay challenge the New York Daily News tracked between 2014 and
+  2018, normalised from their public archive into a single searchable table with a watch link on every row.
+  <b>Two different overturn mechanisms exist in baseball and this page covers only one of them:</b>
+  ① <b>umpire replay challenges</b> (safe/out, fair/foul, homer reviews — this page) versus
+  ② <b>official-scorer hit/error revisions</b> (the <a href="index.html">model</a> pages). Both move runs;
+  keeping them in separate, clearly-labelled ledgers is the honest way to present them.</p>
 
-  <div class="warn"><b>Video-link status (verified 2026-09-29):</b> the archive's <code>t.co</code>/<code>bit.ly</code>/<code>atmlb.com</code>
-  short links point at MLB.com video pages from 2014–2018; MLB later migrated its video platform and many links now
-  404 or redirect (spot checks returned Cloudflare 5xx). Every row below offers the original source link <i>and</i> a
-  one-click <b>MLB Film Room search</b> for the same play (player + game) — currently the most reliable way to watch the
-  play inside your browser. No videos are re-hosted; all links are official-source only.</div>
+  <div class="warn"><b>Source-of-record note, verified 2026-09-29.</b> The URL in the original brief,
+  <code>github.com/buffedlizard55-lab/MLB-overturned-calls</code>, <b>returns HTTP 404</b> — that repository
+  does not exist under that name. The archive this page actually uses is the public, verifiable original:
+  <a href="https://github.com/nydailynews/mlb-overturned-calls" target="_blank" rel="noopener">github.com/nydailynews/mlb-overturned-calls ↗</a>
+  (9 published CSVs, vendored byte-for-byte into <code>data/source/nydn/</code> so the build is reproducible
+  offline). If the buffedlizard55-lab repo is later created, it should be checked against this one rather
+  than assumed to be the same data.</div>
 
-  <div class="grid cols3" id="kpi" style="margin-top:14px"></div>
+  <div class="grid cols3" id="kpi"></div>
+  <p class="legend" id="kRep"></p>
+  <div class="warn"><b>What “normalised” means here — the full policy, printed.</b> The archive's date
+  column is messy in four different ways, all of them verified by reading the vendored source files line by
+  line. Every repair below removes a formatting artefact and <i>no</i> data, the original string is always kept
+  in the <code>date_raw</code> column, and each repair is counted in <code>data/nydn_quality.json</code>:
+  <ul>
+    <li><b>2,109 rows zero-padded</b> — <code>2014-4-1</code> → <code>2014-04-01</code>. The same day, written without leading zeros.</li>
+    <li><b>234 rows written in prose</b> — <code>Sep. 1</code> → <code>2014-09-01</code>. The year is taken from the file the row was published in,
+    never guessed from the row; a prose date in an off-season month is left verbatim because the year would be ambiguous.</li>
+    <li><b>279 rows carried a stray quote</b> — <code>2018-05-29"</code> → <code>2018-05-29</code>.</li>
+    <li><b>271 rows were being swallowed by the CSV reader</b> — 206 lines in the 2014 file open with a stray quote and
+    65 postseason lines open a quoted cell they never close. A plain reader merged each of those records into the
+    previous one, silently losing them. The quote is removed before parsing; no other character is touched.</li>
+  </ul>
+  <b>What is deliberately <i>not</i> repaired:</b> five rows the archive dated <code>2014-04-31</code>. April 31st does
+  not exist. Whether the archive meant March 31st or April 30th cannot be determined from the source, so those rows
+  keep the impossible date verbatim and are flagged rather than being “fixed” into a game that never happened.
+  A sixth irregularity is a junk line of commas at 2016-mlb-replays.csv:1501 — a fragment of a re-inserted header,
+  not a record, so it is dropped and the drop is logged.</div>
+
+  <h2>Watch it in your browser</h2>
+  <p class="muted">Every row carries two links. <b>source ↗</b> is the original link from the archive — these
+  are <code>bit.ly</code>/<code>t.co</code>/<code>atmlb.com</code> short links to MLB.com video pages from
+  2014–2018, and MLB has since migrated its video platform, so many now 404 or bounce.
+  <b>film room ↗</b> opens MLB's own Film Room search for the same player and game, which is the most
+  reliable way to actually watch the play today. Nothing is re-hosted — every link points at an
+  official MLB or original-source URL.</p>
 
   <h2>Plays where a run was removed or kept off the board <span class="pill err">heuristic</span></h2>
-  <p class="muted">Flag rule (from <code>tools/build_nydn.py</code>, printed verbatim):
-  <code>result == Overturned AND (initial_call mentions score/home/plate/run OR play-type mentions Timing / HP / Home / Plate / Collisions)</code>.
-  It is a heuristic — MLB's official record of whether the run was erased is the box score; this column is an index aid, not gospel.</p>
+  <p class="muted">Flag rule, printed verbatim from <code>tools/build_nydn.py</code>:
+  <code>result == Overturned AND (initial_call matches score/home/plate/run OR play_type or initial_call matches Timing / HP / Home / Plate / Collisions)</code>.
+  <b>This is a heuristic, not a measurement.</b> It is an index aid to get you to the right rows; the
+  authoritative record of whether a run was erased is the recompiled box score, which this project does not
+  yet have (see <a href="roadmap.html">roadmap item 3</a>).</p>
   <div class="filterbar">
     <div><label>Season</label><select id="fYear"><option value="">All</option></select></div>
     <div><label>Result</label><select id="fRes"><option value="">All</option><option>Overturned</option><option>Confirmed</option><option>Stands</option><option>Rules Check</option><option>Record Keeping</option></select></div>
     <div><label>Play type contains</label><input id="fType" placeholder="Tag Play, Force Play, HR…"></div>
-    <div><label>Runner/run row?</label><select id="fRR"><option value="">All</option><option value="1">Run-affected (heuristic)</option><option value="0">Other</option></select></div>
+    <div><label>Runner / run row?</label><select id="fRR"><option value="">All</option><option value="1">Run-affected (heuristic)</option><option value="0">Other</option></select></div>
     <div><label>Find text</label><input id="fQ" placeholder="player, team, umpire…"></div>
-    <div><button class="btn" id="apply">Apply</button></div>
+    <div><button class="btn" id="apply">Apply</button>
+         <button class="btn warn" id="onlyRun">Run-affected only</button>
+         <button class="btn" id="dl">Download CSV</button></div>
   </div>
   <p class="legend" id="count"></p>
-  <p class="note">The amber ⚾ <b>run</b> chip is a heuristic <i>match check</i> on the call description — it marks
-  plays that <i>plausibly</i> decided a run at the plate; the authoritative answer is the recompiled box score
-  (roadmap item #3).</p>
-  <div style="overflow-x:auto"><table id="tbl"></table></div>
+  <p class="note">The amber <b>⚾ run</b> chip is a heuristic <i>match check</i> on the call description — it
+  marks plays that <i>plausibly</i> decided a run at the plate. It is not a box-score diff.</p>
+  <div class="scroll"><table class="compact" id="tbl"></table></div>
+  <p class="legend" id="more"></p>
 </main>
-<footer><div class="inner"><span>6,168 replay rows parsed from the NYDN archive; 61 source irregularities flagged in data/nydn_quality.json</span>
-<span>Own the Outcome: links verified where possible, decayed links labeled, none re-hosted</span></div></footer>
+<footer><div class="inner">
+  <span id="footCount">Replay rows parsed from the NY Daily News archive; source irregularities are listed in data/nydn_quality.json</span>
+  <span>Own the Outcome: links verified where possible, decayed links labelled, nothing re-hosted</span>
+</div></footer>
 <script src="site.js"></script>
 <script>
-let ROWS=[];const page=250;
-(async function(){
-  ROWS=await loadCSV('data/overturned_calls.csv');
-  const years=[...new Set(ROWS.map(r=>r.season))].sort();
-  document.getElementById('fYear').innerHTML='<option value="">All</option>'+years.map(y=>`<option>${y}</option>`).join('');
-  kpi();render();
-  document.getElementById('apply').onclick=render;
-  document.getElementById('fQ').addEventListener('keydown',e=>{if(e.key==='Enter')render();});
+let ROWS = [], MATCHED = [], SUM = null;
+const page = 250;
+(async function () {
+  [ROWS, SUM] = await Promise.all([loadCSV('data/overturned_calls.csv'),
+                                   loadJSON('data/nydn_summary.json').catch(() => null)]);
+  const years = [...new Set(ROWS.map(r => r.season))].sort();
+  document.getElementById('fYear').innerHTML = '<option value="">All</option>' + years.map(y => `<option>${y}</option>`).join('');
+  kpi();
+  if (location.hash === '#run') { document.getElementById('fRR').value = '1'; }
+  render();
+  document.getElementById('apply').onclick = render;
+  document.getElementById('fRR').onchange = render;
+  document.getElementById('fQ').addEventListener('keydown', e => { if (e.key === 'Enter') render(); });
+  document.getElementById('fQ').addEventListener('input', debounce(render, 250));
+  document.getElementById('onlyRun').onclick = () => {
+    const s = document.getElementById('fRR');
+    s.value = s.value === '1' ? '' : '1'; render();
+  };
+  document.getElementById('dl').onclick = () => downloadCSV('overturned_calls_filtered.csv', MATCHED);
 })();
-function filmroomURL(r){
-  const teams=(r.game||'').replace(/@/g,' ').replace(/,/g,' ');
-  return 'https://www.mlb.com/video/search?q='+encodeURIComponent((r.player?r.player+' ':'')+teams+(r.date||''));
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+/* MLB Film Room search: mlb.com/video/search redirects to mlb.com/video/?q= (verified 2026-09-29) */
+function filmroomURL(r) {
+  const teams = (r.game || '').replace(/@/g, ' ').replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
+  return 'https://www.mlb.com/video/?q=' + encodeURIComponent(((r.player || '') + ' ' + teams).trim());
 }
-function kpi(){
-  const tot=ROWS.length,ov=ROWS.filter(r=>r.overturned==='1').length,rr=ROWS.filter(r=>r.run_removed_heuristic==='1').length;
-  document.getElementById('kpi').innerHTML=`
-   <div class="card" id="kTot"><div class="kpi">${tot.toLocaleString()}<small>replay rulings parsed 2014–2018</small></div></div>
+function kpi() {
+  const tot = ROWS.length, ov = ROWS.filter(r => r.overturned === '1').length,
+        rr = ROWS.filter(r => r.run_removed_heuristic === '1').length;
+  // Every number here is recomputed from the published CSV; the build's own summary is used only
+  // for the parts the CSV cannot carry (date-repair counts and the flag breakdown).
+  const rep = SUM ? SUM.date_repaired_rows : null;
+  const flags = SUM ? Object.values(SUM.flag_summary).reduce((a, b) => a + b, 0) : null;
+  document.getElementById('kpi').innerHTML = `
+   <div class="card" id="kTot"><div class="kpi">${tot.toLocaleString()}<small>replay rulings parsed, 2014–2018</small></div></div>
    <div class="card" id="kOv"><div class="kpi">${ov.toLocaleString()}<small>calls overturned (${(100*ov/tot).toFixed(1)}%)</small></div></div>
-   <div class="card" id="kRr"><div class="kpi">${rr}<small>run-affected overturns (heuristic)</small></div></div>`;
+   <div class="card" id="kRr"><div class="kpi">${rr}<small>run-affected overturns (heuristic) — <a href="#run">show them</a></small></div></div>`;
+  document.getElementById('kRep') && (document.getElementById('kRep').innerHTML =
+    `<b>${rep === null ? '—' : rep.toLocaleString()}</b> rows had a malformed date in the source and were normalised; ` +
+    `<b>${SUM ? SUM.dates_kept_verbatim : '—'}</b> could not be normalised and are published exactly as the archive wrote them.`);
+  document.getElementById('footCount').textContent = SUM
+    ? `${tot.toLocaleString()} replay rows parsed from the NY Daily News archive; ${flags.toLocaleString()} ` +
+      `source irregularities flagged in data/nydn_quality.json`
+    : `${tot.toLocaleString()} replay rows parsed from the NY Daily News archive`;
 }
-function render(){
-  const y=document.getElementById('fYear').value,res=document.getElementById('fRes').value,
-        ty=document.getElementById('fType').value.toLowerCase(),rr=document.getElementById('fRR').value,
-        q=document.getElementById('fQ').value.toLowerCase();
-  const r0=ROWS.filter(r=>
-    (!y||r.season===y)&&(!res||r.result===res)&&
-    (!ty||r.play_type.toLowerCase().includes(ty))&&
-    (rr===''||r.run_removed_heuristic===rr)&&
-    (!q||(r.player+' '+r.game+' '+r.calling_umpire+' '+r.crew_chief+' '+r.initial_call).toLowerCase().includes(q)));
-  document.getElementById('count').textContent=`${r0.length.toLocaleString()} rows match (showing first ${Math.min(page,r0.length)}; refine filters to narrow)`;
-  const show=r0.slice(0,page);
-  document.getElementById('tbl').innerHTML=
-   '<tr><th>Date</th><th>Game</th><th>Inn</th><th>Challenger</th><th>Player</th><th>Initial call</th><th>Play type</th><th>Result</th><th>Run?</th><th>Video</th></tr>'+
-   show.map(r=>`<tr>
-     <td>${r.date}</td><td>${r.game}</td><td>${r.inning}</td><td>${r.manager_or_ump}</td><td>${r.player}</td>
-     <td>${r.initial_call}</td><td>${r.play_type}</td>
-     <td><span class="pill ${r.overturned==='1'?'err':'on'}">${r.result}</span></td>
-     <td>${r.run_removed_heuristic==='1'?'<span class="pill err">⚾ run</span>':''}</td>
-     <td><a class="chip" href="${r.video}" target="_blank" rel="noopener">source&nbsp;↗</a>
-         <a class="chip" href="${filmroomURL(r)}" target="_blank" rel="noopener">film&nbsp;room&nbsp;↗</a></td>
+function render() {
+  const y = document.getElementById('fYear').value, res = document.getElementById('fRes').value,
+        ty = document.getElementById('fType').value.toLowerCase(), rr = document.getElementById('fRR').value,
+        q = document.getElementById('fQ').value.toLowerCase();
+  MATCHED = ROWS.filter(r =>
+    (!y || r.season === y) && (!res || r.result === res) &&
+    (!ty || (r.play_type || '').toLowerCase().includes(ty)) &&
+    (rr === '' || r.run_removed_heuristic === rr) &&
+    (!q || (r.player + ' ' + r.game + ' ' + r.calling_umpire + ' ' + r.crew_chief + ' ' +
+            r.initial_call + ' ' + r.play_type).toLowerCase().includes(q)));
+  document.getElementById('count').textContent =
+    `${MATCHED.length.toLocaleString()} rows match — showing the first ${Math.min(page, MATCHED.length)} by date.`;
+  const show = MATCHED.slice(0, page);
+  document.getElementById('tbl').innerHTML =
+   '<tr><th>Date</th><th>Game</th><th>Inn</th><th>Challenger</th><th>Player</th><th>Initial call</th>' +
+   '<th>Play type</th><th>Result</th><th>Run?</th><th>Watch</th></tr>' +
+   show.map(r => `<tr>
+     <td class="nowrap">${esc(r.date)}</td><td class="nowrap">${esc(r.game)}</td><td>${esc(r.inning)}</td>
+     <td>${esc(r.manager_or_ump)}</td><td class="nowrap">${esc(r.player)}</td>
+     <td>${esc(r.initial_call)}</td><td>${esc(r.play_type)}</td>
+     <td><span class="pill ${r.overturned === '1' ? 'err' : 'on'}">${esc(r.result)}</span></td>
+     <td>${r.run_removed_heuristic === '1' ? '<span class="pill err">⚾ run</span>' : ''}</td>
+     <td class="nowrap"><a class="chip" href="${esc(r.video)}" target="_blank" rel="noopener">source&nbsp;↗</a>
+         <a class="chip" href="${esc(filmroomURL(r))}" target="_blank" rel="noopener">film&nbsp;room&nbsp;↗</a></td>
    </tr>`).join('');
+  document.getElementById('more').textContent = MATCHED.length > page
+    ? `Showing ${page} of ${MATCHED.length.toLocaleString()}. Narrow the filters, or use “Download CSV” to take all matched rows.`
+    : '';
 }
 </script>
 </body>

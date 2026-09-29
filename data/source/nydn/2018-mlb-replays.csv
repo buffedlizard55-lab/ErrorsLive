@@ -1,0 +1,750 @@
+date,game,inning,manager-ump,player-referenced,initial-call,play-type,calling-umpire,crew-chief,result,time-to-ruling,video
+2018-03-29,NYY @ TOR,T6,Boone,T. Austin,Out at 1st,Force Play,Nauert,Danley,Stands,2:02,https://bit.ly/2EeUyBo
+2018-03-29,MIN @ BAL,B10,Molitor,C. Davis,Safe at 2nd,Force Play,Foster,West,Confirmed,0:56,https://bit.ly/2GJNy51
+2018-03-29,LAA @ OAK,T11,Melvin,M. Maldonado,Safe at 2nd,Force Play,Fairchild,T. Barrett,Confirmed,1:01,https://bit.ly/2Gy7yUA
+2018-03-29,COL @ ARI,B6,Lovullo,J. Dyson,Out at 1st,Force Play,Cooper,Cederstrom,Overturned,0:49,https://bit.ly/2H42AjN
+2018-03-29,CLE @ SEA,T9,Francona,L. Chisenhall,Ball; No Hit by Pitch,HBP,Holbrook,Holbrook,Overturned,0:39,https://bit.ly/2H3WoIv
+2018-03-30,PIT @ DET,T4,Gardenhire,S. Marte,Safe at 1st,Force Play,B. Welke,Everitt,Overturned,0:53,https://bit.ly/2GteylN
+2018-03-30,PIT @ DET,B10,Hurdle,N. Castellanos,Safe at home,Tag Play,Randazzo,B. Welke,Overturned,3:37,https://bit.ly/2GvNH8P
+2018-03-30,PHI @ ATL,B3,UMPIRE,N/A,Technical Issue,Rules Check,G. Gibson,Layne,Rules Check,1:59,N/A
+2018-03-30,CHI @ MIA,B5,Mattingly,D. Dietrich,Out at 1st,Force Play,Guccione,Vanover,Overturned,1:00,https://bit.ly/2Ik3F6r
+2018-03-30,HOU @ TEX,B3,Hinch,R. Rua,Safe at 1st,Force Play,Hickox,Meals,Confirmed,1:21,https://bit.ly/2uFFb5L
+2018-03-30,BOS @ TB,T9,Cora,E. Nuñez,Out at 1st,Force Play,Fletcher,Nelson,Confirmed,0:31,https://bit.ly/2IpwVZz
+2018-03-30,HOU @ TEX,T6,Banister,N. Mazara,Trap; No Catch,Catch/No Catch,Morales,Meals,Stands,1:52,https://bit.ly/2JfPPDu
+2018-03-30,HOU @ TEX,T6,UMPIRE,J. Altuve,Safe at 2nd,Force Play,Morales,Meals,Stands,1:41,https://bit.ly/2pZ3Gpt
+2018-03-30,HOU @ TEX,T6,UMPIRE,J. Altuve,Runner Scores,Runner Placement,Morales,Meals,Overturned,1:41,https://bit.ly/2pZ3Gpt
+2018-03-30,PHI @ ATL,T8,Kapler,R. Hoskins,Out at 1st,Tag Play,Carapazza,Layne,Overturned,1:19,https://bit.ly/2Ef8ons
+2018-03-30,PHI @ ATL,B8,Kapler,P. Bourjos,Safe at home,Tag Play,G. Gibson,Layne,Overturned,1:06,https://bit.ly/2ImLFrT
+2018-03-30,HOU @ TEX,B8,UMPIRE,S. Choo,In play; Double,Potential HR,Meals,Meals,Confirmed,1:16,https://bit.ly/2InSnhp
+2018-03-30,SF @ LAD,T5,Bochy,H. Pence,Out at 1st,Force Play,DiMuro,Wegner,Overturned,0:33,https://bit.ly/2uL8rbk
+2018-03-30,CHI @ MIA,T15,Maddon,K. Bryant,Out at 2nd,Force Play,Torres,Vanover,Stands,1:36,https://bit.ly/2uGEskr
+2018-03-30,SF @ LAD,T9,Roberts,A. McCutchen,Safe at 1st,Tag Play,DiMuro,Wegner,Overturned,1:06,https://bit.ly/2GJXRpJ
+2018-03-30,COL @ ARI,T8,Lovullo,M. Tauchman,Safe at 1st,Force Play,Blaser,Cederstrom,Confirmed,0:53,https://bit.ly/2Eb6STn
+2018-03-31,LAA @ OAK,T6,Scioscia,J. Marte,Out at 3rd,Tag Play,Barksdale,T. Barrett,Overturned,1:26,https://bit.ly/2pZ5IpE
+2018-03-31,NYY @ TOR,B7,Gibbons,C. Granderson,Out at 2nd,Tag Play,Danley,Danley,Confirmed,0:38,https://bit.ly/2ImH5tM
+2018-03-31,LAA @ OAK,T8,Melvin,Z. Cozart,Hit by Pitch,HBP,Fairchild,T. Barrett,Stands,1:13,https://bit.ly/2pZWvg5
+2018-03-31,BOS @ TB,T9,Cash,M. Betts,Safe at 2nd,Tag Play,Nelson,Nelson,Overturned,1:10,https://bit.ly/2Gu06Os
+2018-03-31,CHI @ MIA,T10,Mattingly,A. Russell,Safe at 3rd,Tag Play,Wendelstedt,Vanover,Stands,0:54,https://bit.ly/2InEG1W
+2018-03-31,CHI @ MIA,T10,UMPIRE,V. Caratini,Safe at home,Tag Play,Guccione,Vanover,Stands,1:30,https://bit.ly/2uHHXHp
+2018-04-1,CHI @ MIA,B5,Mattingly,B. Anderson,Out at 3rd,Tag Play,Guccione,Vanover,Stands,1:55,https://bit.ly/2Io2TW9
+2018-04-1,STL @ NYM,T5,Callaway,J. Martínez,Hit by Pitch,HBP,Bucknor,Culbreth,Confirmed,0:46,https://bit.ly/2EeFXWD
+2018-04-1,PIT @ DET (G2),T2,UMPIRE,G. Polanco,Foul Ball,Potential HR,B. Welke,B. Welke,Confirmed,1:27,https://bit.ly/2q4tlwv
+2018-04-1,PIT @ DET (G2),T3,UMPIRE,J. Harrison,In play; Double,Potential HR,Libka,B. Welke,Overturned,0:57,https://bit.ly/2uLYV7s
+2018-04-2,MIN @ PIT,T7,Molitor,L. Morrison,Ball; No Hit by Pitch,HBP,Conroy,Culbreth,Overturned,1:03,https://bit.ly/2Hc80Jq
+2018-04-2,STL @ MIL,T6,Matheny,T. Pham,Out at 2nd,Tag Play,Segal,Kellogg,Stands,2:34,https://bit.ly/2Hcyoml
+2018-04-2,KC @ DET,T9,Yost,P. Orlando,Out at 1st,Force Play,Cuzzi,Hallion,Overturned,1:24,https://bit.ly/2q9sTNl
+2018-04-2,CWS @ TOR,T3,Gibbons,Y. Sánchez,Hit by Pitch,HBP,Baker,Layne,Stands,1:46,https://bit.ly/2Jpqhns
+2018-04-2,CLE @ LAA,B2,Francona,A. Simmons,Safe at 1st,Tag Play,Reynolds,Wegner,Stands,1:43,https://bit.ly/2IxeMJt
+2018-04-3,SEA @ SF,B6,Bochy,A. Jackson,Out at 1st,Force Play,Barksdale,T. Barrett,Overturned,1:13,https://bit.ly/2GZZ78f
+2018-04-3,SEA @ SF,B8,Bochy,G. Blanco,Foul Ball,Fair/Foul,Little,T. Barrett,Overturned,3:13,https://bit.ly/2GzDFaA
+2018-04-3,BOS @ MIA,B7,Mattingly,C. Maybin,Out at 2nd,Tag Play,Hickox,Meals,Overturned,2:17,https://bit.ly/2uTEoOK
+2018-04-3,BOS @ MIA,T8,Cora,J. Bradley,Out at home,Tag Play,May,Meals,Confirmed,1:10,https://bit.ly/2GBL5WJ
+2018-04-3,STL @ MIL,T8,Counsell,Y. Molina,Safe at 2nd,Tag Play,Hudson,Kellogg,Stands,1:49,https://bit.ly/2q6Qvmm
+2018-04-3,CLE @ LAA,B8,UMPIRE,R. Rivera,In Play; Double,Potential HR,DiMuro,Wegner,Overturned,0:37,https://bit.ly/2GYfbYc
+2018-04-4,CLE @ LAA,T5,Scioscia,F. Lindor,Safe at 2nd,Tag Play,Wegner,Wegner,Stands,2:14,https://bit.ly/2uUD79M
+2018-04-4,MIN @ PIT,T4,UMPIRE,M. Sanó,In play; Double,Potential HR,O'Nora,Culbreth,Confirmed,0:31,https://bit.ly/2q7UApK
+2018-04-4,CWS @ TOR,T5,Renteria,C. Granderson,Catch,Catch/No Catch,Layne,Layne,Overturned,1:43,https://bit.ly/2Jihtjb
+2018-04-4,MIN @ PIT,T7,Hurdle,E. Rosario,Safe at 1st,Tag Play,O'Nora,Culbreth,Stands,3:04,https://bit.ly/2GA5qf9
+2018-04-4,CWS @ TOR,T8,Gibbons,M. Davidson,Hit by Pitch,HBP,G.Gibson,Layne,Confirmed,0:56,https://bit.ly/2GERJM4
+2018-04-5,NYM @ WSH,T3,Martinez,M. Conforto,Safe at 1st,Force Play,Foster,West,Overturned,1:23,https://bit.ly/2GFFS0c
+2018-04-5,NYM @ WSH,T5,UMPIRE,M. Conforto,In play; Double,Potential HR,West,West,Overturned,1:54,https://bit.ly/2qaM3Dg
+2018-04-5,TEX @ OAK,T2,Banister,D. Robinson,Out at 2nd,Tag Play,Holbrook,Holbrook,Confirmed,1:04,https://bit.ly/2GW0Hbl
+2018-04-5,DET @ CWS,T2,Renteria,L. Martin,Safe at 2nd,Tag Play,Kellogg,Kellogg,Overturned,1:02,https://bit.ly/2IvIoH6
+2018-04-5,TB @ BOS,B9,Cora,J. Bradley,Out at 1st,Force Play,Porter,Miller,Stands,2:08,https://bit.ly/2GKwOra
+2018-04-5,DET @ CWS,T4,Renteria,J. McCann,Safe at 1st,Tag Play,Hoye,Kellogg,Overturned,0:49,https://bit.ly/2HgCom2
+2018-04-5,BAL @ NYY,T1,Boone,T. Mancini,Safe at home,Tag Play,Kulpa,Meals,Overturned,0:51,https://bit.ly/2uZi8mD
+2018-04-5,DET @ CWS,T10,Gardenhire,J. Iglesias,Out at 2nd,Force Play,Kellogg,Kellogg,Overturned,1:05,https://bit.ly/2EpHF7T
+2018-04-5,BAL @ NYY,B8,Boone,B. Gardner,Ball; No Hit by Pitch,HBP,Kulpa,Meals,Confirmed,0:54,https://bit.ly/2JsjB7V
+2018-04-5,ARI @ STL,T7,Matheny,C. Owings,Safe at 1st,Tag Play,Winters,Winters,Overturned,1:58,https://bit.ly/2qbroyg
+2018-04-6,CIN @ PIT,T7,Price,S. Gennett,Out at 1st,Force Play,Layne,Layne,Stands,1:00,https://bit.ly/2qigBTM
+2018-04-6,CHI @ MIL,B6,Maddon,L. Cain,Fair Ball; Double,Fair/Foul,O'Nora,Culbreth,Confirmed,1:21,https://bit.ly/2H7elbr
+2018-04-6,BAL @ NYY,B11,Boone,R. Torreyes,Out at 1st,Force Play,Meals,Meals,Overturned,1:12,https://bit.ly/2qk7qBw
+2018-04-6,BAL @ NYY,B11,Boone,M. Givens,No violation,Collision Rule,Hickox,Meals,Confirmed,1:21,https://bit.ly/2EyonNA
+2018-04-6,BAL @ NYY,B11,Boone,D. Gregorius,Out at home,Tag Play,Hickox,Meals,Confirmed,1:21,https://bit.ly/2EyonNA
+2018-04-7,DET @ CWS,T4,Gardenhire,J. Jones,Out at 2nd,Tag Play,Segal,Kellogg,Overturned,2:15,https://bit.ly/2qgcBDc
+2018-04-7,NYM @ WSH,T8,Martinez,B. Nimmo,Safe at 2nd,Tag Play,West,West,Stands,1:44,https://bit.ly/2qkKO3N
+2018-04-7,DET @ CWS,T6,Renteria,J. Iglesias,Safe at 1st,Force Play,Kellogg,Kellogg,Overturned,0:37,https://bit.ly/2H9ulK8
+2018-04-7,CHI @ MIL,T5,Maddon,T. La Stella,Out at home,Tag Play,Conroy,Culbreth,Stands,2:25,https://bit.ly/2GLNIp6
+2018-04-7,KC @ CLE,B5,Francona,R. Davis,Out at 1st,Force Play,T. Barrett,T. Barrett,Stands,1:42,https://bit.ly/2JyeH9y
+2018-04-7,MIA @ PHI,B4,UMPIRE,M. Franco,In play; Double,Potential HR,Nauert,Danley,Confirmed,1:32,https://bit.ly/2IBtjnl
+2018-04-7,ATL @ COL,T3,Black,E. Inciarte,Safe at 1st,Force Play,Randazzo,Welke,Overturned,1:10,https://bit.ly/2HckTWn
+2018-04-7,ATL @ COL,T6,Snitker,O. Albies,Out at 1st,Force Play,Randazzo,Welke,Stands,1:40,https://bit.ly/2EwYHAU
+2018-04-7,SD @ HOU,B10,Hinch,D. Fisher,Out at 2nd,Tag Play,Wolf,Holbrook,Overturned,1:43,https://bit.ly/2qodmJR
+2018-04-8,TB @ BOS,T3,Cash,M. Duffy,Out at 1st,Force Play,Hernandez,Miller,Overturned,1:22,https://bit.ly/2GJXl7P
+2018-04-8,CHI @ MIL,B1,Maddon,L. Cain,Safe at 1st,Tag Play,O'Nora,Culbreth,Overturned,1:19,https://bit.ly/2GKyJzJ
+2018-04-8,BAL @ NYY,B5,Boone,J. Peterson,Out at 1st,Force Play,Kulpa,Meals,Overturned,0:58,https://bit.ly/2qgyodM
+2018-04-8,KC @ CLE,B8,Yost,J. Ramírez,Safe at 1st,Force Play,Barksdale,T. Barrett,Overturned,1:12,https://bit.ly/2ExDDdq
+2018-04-8,TB @ BOS,T7,Cash,X. Bogaerts,Ball in Play,Stadium Boundary,Miller,Miller,Confirmed,2:37,https://bit.ly/2GN0qEi
+2018-04-8,CHI @ MIL,B9,Counsell,D. Santana,Out at 1st,Force Play,O'Nora,Culbreth,Confirmed,0:27,https://bit.ly/2GOJDk9
+2018-04-8,NYM @ WSH,B10,Martinez,B. Harper,Out at 1st,Force Play,West,West,Confirmed,1:21,https://bit.ly/2qe0bf9
+2018-04-9,TB @ CWS,T8,Cash,M. Smith,Out at home,Tag Play,Scheurwater,Cederstrom,Stands,2:11,https://bit.ly/2EJSPEI
+2018-04-9,ATL @ WSH,B2,Snitker,M. Taylor,Safe at 1st,Force Play,O'Nora,Culbreth,Overturned,1:05,https://bit.ly/2IOPEOc
+2018-04-9,CIN @ PHI,B3,Price,R. Hoskins,Safe at 3rd,Tag Play,May,Meals,Confirmed,1:18,https://atmlb.com/2v8y321
+2018-04-9,DET @ CLE,B7,Gardenhire,B. Zimmer,Safe at 2nd,Tag Play,Fletcher,Nelson,Overturned,1:04,https://bit.ly/2vbLtu0
+2018-04-9,ATL @ WSH,B6,Snitker,M. Taylor,Safe at 2nd,Tag Play,Whitson,Culbreth,Overturned,0:34,https://bit.ly/2v7lAvf
+2018-04-9,SEA @ KC,B2,Yost,M. Moustakas,Out at 1st,Force Play,Carlson,Davis,Overturned,0:40,https://bit.ly/2JIeWiw
+2018-04-9,LAA @ TEX,T4,Banister,R. Schimpf,Safe at 1st,Tag Play,Tichenor,Miller,Overturned,1:14,https://bit.ly/2GVXcy2
+2018-04-9,LAA @ TEX,T6,Scioscia,M. Maldonado,Out at home,Tag Play,Hernandez,Miller,Overturned,1:41,https://bit.ly/2Hhpuql
+2018-04-9,SD @ COL,B6,UMPIRE,C. Gonzalez,HR; No Interference,Potential HR,Iassogna,Gorman,Stands,2:32,https://bit.ly/2EGFvRe
+2018-04-9,HOU @ MIN,B8,Molitor,J. Mauer,Out at 2nd,Force Play,Marquez,Marquez,Overturned,1:14,https://bit.ly/2GU9cQL
+2018-04-9,HOU @ MIN,B9,UMPIRE,B. Buxton,Foul Ball,Potential HR,Dreckman,Marquez,Confirmed,0:23,https://bit.ly/2HhQGp2
+2018-04-10,PIT @ CHI,B1,Hurdle,W. Contreras,Safe at 3rd,Tag Play,Cuzzi,Hallion,Overturned,1:05,https://bit.ly/2qryjUL
+2018-04-10,DET @ CLE,T2,Gardenhire,N. Goodrum,Out at 2nd,Tag Play,Gonzalez,Nelson,Overturned,2:53,https://bit.ly/2qxFgUD
+2018-04-10,ATL @ WSH,T1,Snitker,O. Albies,Out at 3rd,Tag Play,Bucknor,Culbreth,Stands,2:16,https://bit.ly/2EG1FTR
+2018-04-10,HOU @ MIN,B1,Molitor,B. Dozier,Out at 1st,Force Play,Marquez,Marquez,Overturned,0:59,https://bit.ly/2qsWRvL
+2018-04-10,SEA @ KC,T5,Servais,M. Marjama,Out at 2nd,Tag Play,Davis,Davis,Stands,1:08,https://bit.ly/2INgaYi
+2018-04-10,MIL @ STL,B10,Matheny,D. Santana,Catch,Catch/No Catch,Randazzo,Welke,Stands,2:27,https://bit.ly/2HhR1bi
+2018-04-10,ARI @ SF,B6,Lovullo,A. McCutchen,Safe at home,Tag Play,Nauert,Danley,Overturned,2:09,https://bit.ly/2JIfxkg
+2018-04-11,ATL @ WSH,T7,Snitker,P. Tucker,Out at 2nd,Force Play,Bucknor,Culbreth,Overturned,1:29,https://bit.ly/2HkjKvU
+2018-04-11,TB @ CWS,B4,Cash,T. Anderson,Safe at 1st,Tag Play,Blaser,Cederstrom,Overturned,1:15,https://bit.ly/2qrR0XH
+2018-04-11,ATL @ WSH,B9,Martinez,A. Rendon,Out at 1st,Force Play,Culbreth,Culbreth,Confirmed,1:04,https://bit.ly/2qrcV25
+2018-04-11,MIL @ STL,B9,UMPIRE,T. Pham,In play; Double,Potential HR,L. Barrett,Welke,Overturned,3:21,https://bit.ly/2EGWFOD
+2018-04-11,ATL @ WSH,T10,Snitker,E. Inciarte,Out at home,Tag Play,Whitson,Culbreth,Stands,1:56,https://bit.ly/2veYItI
+2018-04-11,SD @ COL,B3,Green,I. Desmond,Safe at 2nd,Tag Play,Johnson,Gorman,Confirmed,1:48,https://bit.ly/2JDfbLs
+2018-04-11,NYY @ BOS,T3,UMPIRE,T. Austin,Out at 2nd,Rules Check,Rackley,Vanover,Rules Check,2:09,https://atmlb.com/2HiQLbT
+2018-04-11,TOR @ BAL,B5,Showalter,M. Machado,Foul Ball,Fair/Foul,Kellogg,Kellogg,Overturned,4:32,https://bit.ly/2JG2xLH
+2018-04-11,CIN @ PHI,T9,UMPIRE,S. Gennett,In play; Double,Potential HR,Morales,Meals,Confirmed,1:28,https://bit.ly/2qnDxB5
+2018-04-11,LAA @ TEX,T8,Scioscia,S. Ohtani,Out at 1st,Tag Play,Miller,Miller,Overturned,1:56,https://bit.ly/2qtO7pp
+2018-04-12,STL @ CIN,T6,Matheny,M. Ozuna,Out at 1st,Force Play,Hernandez,Miller,Stands,1:57,https://bit.ly/2GVZ5ee
+2018-04-12,CWS @ MIN,B3,Molitor,B. Buxton,Out at 2nd,Tag Play,Lentz,Welke,Overturned,0:58,https://bit.ly/2Hf8Ojp
+2018-04-12,CWS @ MIN,T5,Molitor,T. Anderson,Safe at 1st,Tag Play,L. Barrett,Welke,Stands,3:41,https://bit.ly/2GVBz53
+2018-04-12,SF @ SD,T6,Bochy,H. Pence,Out at 1st,Force Play,Timmons,Winters,Overturned,1:09,https://bit.ly/2IQFIUs
+2018-04-13,ATL @ CHI,B6,Snitker,K. Bryant,Safe at 1st,Force Play,Fairchild,Marquez,Stands,1:12,https://bit.ly/2J1UUhD
+2018-04-13,NYY @ DET,T3,Boone,R. Torreyes,Out at 2nd,Force Play,O'Nora,Culbreth,Overturned,1:36,https://bit.ly/2qCqhYz
+2018-04-13,STL @ CIN,B5,Matheny,D. Mesoraco,Safe at 1st,Force Play,Tichenor,Miller,Stands,3:02,https://bit.ly/2HlXHoT
+2018-04-13,BAL @ BOS,T4,Showalter,A. Jones,Live Ball; Not Lodged,Stadium Boundary,Scheurwater,Cederstrom,Stands,2:43,https://bit.ly/2H48ale
+2018-04-13,BAL @ BOS,B6,Cora,M. Moreland,Out at 1st,Force Play,Scheurwater,Cederstrom,Overturned,0:55,https://bit.ly/2qB9eXx
+2018-04-13,ARI @ LAD,T3,Lovullo,D. Peralta,Out at 2nd,Force Play,T. Gibson,Gorman,Overturned,2:22,https://bit.ly/2HD34h5
+2018-04-13,SF @ SD,B5,Green,C. Asuaje,Out at 1st,Force Play,Drake,Winters,Overturned,1:05,https://bit.ly/2qCvgcx
+2018-04-13,OAK @ SEA,B8,Servais,G. Heredia,Out at 2nd,Tag Play,Nauert,Danley,Confirmed,1:40,https://bit.ly/2HDPJVJ
+2018-04-14,COL @ WSH,B6,Martinez,B. Harper,Out at home,Tag Play,Morales,Meals,Overturned,1:17,https://bit.ly/2vlqbdl
+2018-04-14,COL @ WSH,B6,Martinez,M. Sierra,Out at 3rd,Tag Play,Kulpa,Meals,Stands,1:33,https://bit.ly/2JR7z8b
+2018-04-14,MIL @ NYM,T3,Callaway,D. Santana,Safe at 1st,Tag Play,Wendelstedt,Vanover,Stands,2:21,https://bit.ly/2HqMLpT
+2018-04-14,OAK @ SEA,T3,Servais,M. Semien,In Play,Stadium Boundary,Torres,Danley,Overturned,1:26,https://bit.ly/2HupYta
+2018-04-14,ARI @ LAD,T4,Roberts,D. Marrero,HR; Did not pass runner,Passing Runners,T. Gibson,Gorman,Overturned,2:38,https://bit.ly/2HCggCM
+2018-04-14,OAK @ SEA,T4,Servais,M. Joyce,Safe at 1st,Force Play,Nauert,Danley,Overturned,0:54,https://bit.ly/2HESrKq
+2018-04-14,SF @ SD,T7,Bochy,J. Panik,Out at home,Tag Play,Drake,Winters,Stands,2:44,https://atmlb.com/2ER2kBP
+2018-04-15,PIT @ MIA,T7,Mattingly,S. Marte,Safe at home,Tag Play,Fletcher,Nelson,Confirmed,1:09,https://bit.ly/2JRs1pR
+2018-04-15,BAL @ BOS,B7,Cora,A. Benintendi,Out at home,Tag Play,Cederstrom,Cederstrom,Stands,1:35,https://bit.ly/2vjWF82
+2018-04-15,PHI @ TB,B8,Cash,J. Sucre,Foul ball,Fair/Foul,Holbrook,Holbrook,Stands,1:04,https://bit.ly/2H5FNTR
+2018-04-15,STL @ CIN,B9,Price,T. Barnhart,In Play; Batter at 1B,Stadium Boundary,Miller,Miller,Overturned,1:53,https://bit.ly/2HDFLna
+2018-04-15,STL @ CIN,B9,Matheny,D. Mesoraco,Hit by Pitch,HBP,Porter,Miller,Stands,1:24,https://bit.ly/2qzoIeW
+2018-04-15,OAK @ SEA,B8,Servais,D. Gordon,Out at 1st,Force Play,Torres,Danley,Confirmed,1:27,https://bit.ly/2HtX5NV
+2018-04-15,ARI @ LAD,T9,Lovullo,P. Goldschmidt,Out at 1st,Tag Play,Gorman,Gorman,Overturned,2:23,https://bit.ly/2HntHZJ
+2018-04-16,COL @ PIT,T9,Black,T. Story,Out at 1st,Force Play,Rehak,Davis,Overturned,0:44,https://bit.ly/2Hdtdlt
+2018-04-16,CIN @ MIL,B9,Price,R. Braun,Safe at 1st,Force Play,Wolcott,Kellogg,Overturned,0:59,https://bit.ly/2EZkIbZ
+2018-04-16,WSH @ NYM,B9,Callaway,A. Cabrera,Out at 3rd,Tag Play,T. Barrett,T. Barrett,Stands,1:31,https://bit.ly/2HLIJWR
+2018-04-16,HOU @ SEA,T5,Hinch,A. Bregman,Out at 1st,Force Play,Barber,Gorman,Stands,1:16,https://bit.ly/2qHCjRq
+2018-04-17,KC @ TOR (G1),T5,Yost,K. Pillar,Catch,Catch/No Catch,Kulpa,Kulpa,Overturned,1:12,https://bit.ly/2vpbUwi
+2018-04-17,KC @ TOR (G1),B5,Gibbons,J. Smoak,Out at 3rd,Tag Play,Morales,Kulpa,Stands,2:00,https://bit.ly/2qQ80In
+2018-04-17,MIA @ NYY,B7,Mattingly,B. Gardner,Safe at 1st,Force Play,Welke,Welke,Overturned,0:49,https://bit.ly/2K2bOhp
+2018-04-17,CLE @ MIN,T8,UMPIRE,Y. Alonso,Home Run,Potential HR,Cooper,Cederstrom,Stands,0:59,https://bit.ly/2HcAmGK
+2018-04-17,BOS @ LAA,T4,Scioscia,E. Nuñez,Safe at home,Tag Play,Carapazza,Layne,Overturned,0:53,https://bit.ly/2Hca8Qz
+2018-04-17,HOU @ SEA,T8,Servais,D. Fisher,Safe at 1st,Tag Play,Johnson,Gorman,Stands,2:01,https://bit.ly/2F2jFrE
+2018-04-17,LAD @ SD,B12,Roberts,Y. Puig,Trap; No Catch,Catch/No Catch,Wendelstedt,Danley,Overturned,0:32,https://bit.ly/2vsLxWl
+2018-04-18,COL @ PIT,T2,Hurdle,C. Gonzalez,Safe at 1st,Tag Play,Hoberg,Davis,Stands,2:13,https://bit.ly/2qK5hza
+2018-04-18,TEX @ TB,T5,UMPIRE,R. Nunez,2B; Fan Interference,Potential HR,Estabrook,Marquez,Stands,2:48,https://bit.ly/2HBB5AF
+2018-04-18,BAL @ DET,B7,Gardenhire,J. Iglesias,Out at 1st,Force Play,Vanover,Vanover,Overturned,0:49,https://bit.ly/2HBBqTX
+2018-04-18,CWS @ OAK,B2,Melvin,J. Lowrie,Out at 1st,Force Play,Miller,Wegner,Overturned,1:19,https://bit.ly/2qJLbG5
+2018-04-18,KC @ TOR,B3,Gibbons,R. Martin,Out at 2nd,Force Play,Hickox,Kulpa,Overturned,0:35,https://bit.ly/2JcFojg
+2018-04-18,PHI @ ATL,B5,Kapler,O. Albies,Safe at 1st,Tag Play,Ripperger,West,Overturned,1:49,https://bit.ly/2F1EC5V
+2018-04-18,SF @ ARI,T5,Lovullo,A. McCutchen,Safe at 1st,Tag Play,Hallion,Hallion,Overturned,1:22,https://bit.ly/2vwuiU8
+2018-04-18,LAD @ SD,B7,Roberts,C. Asuaje,No Fan Interference,Fan Interference,Danley,Danley,Confirmed,1:23,https://bit.ly/2F0iR6A
+2018-04-19,SF @ ARI,T3,Lovullo,G. Blanco,Safe at 2nd,Tag Play,Bellino,Hallion,Overturned,1:59,https://bit.ly/2HMIfj6
+2018-04-19,NYM @ ATL,B8,Snitker,M. Conforto,Catch,Catch/No Catch,Davis,Davis,Stands,1:57,https://bit.ly/2HPvIeK
+2018-04-20,KC @ DET (G1),B6,Yost,J. Candelario,Safe at 1st,Tag Play,Ortiz,Danley,Overturned,1:21,https://bit.ly/2qT1ro6
+2018-04-20,MIN @ TB,T5,Cash,M. Smith,No Catch,Catch/No Catch,Wolcott,Kellogg,Confirmed,1:12,https://bit.ly/2F8rkoo
+2018-04-20,SEA @ TEX,T3,Servais,G. Heredia,Ball; No Hit by Pitch,HBP,Cooper,Cederstrom,Overturned,0:49,https://bit.ly/2Hm4Z8M
+2018-04-20,CIN @ STL,B2,Riggleman,J. Martínez,Safe at 2nd,Tag Play,Rackley,Vanover,Stands,1:49,https://bit.ly/2qU0f36
+2018-04-20,NYM @ ATL,T6,Snitker,A. Cabrera,Foul; No Fan Interference,Fan Interference,Rehak,Davis,Overturned,2:18,https://bit.ly/2JklId5
+2018-04-20,NYM @ ATL,T6,Callaway,W. Flores,Out at home,Tag Play,Rehak,Davis,Confirmed,0:54,https://bit.ly/2HJvcBy
+2018-04-20,CHI @ COL,T4,Black,A. Russell,Safe at 1st,Tag Play,Baker,G. Gibson,Overturned,1:07,https://bit.ly/2Faid6H
+2018-04-20,SD @ ARI,B1,Lovullo,J. Dyson,Out at 2nd,Tag Play,Whitson,Wegner,Overturned,0:35,https://bit.ly/2HVazQA
+2018-04-20,CIN @ STL,B5,Matheny,H. Bader,Out at 1st,Force Play,Guccione,Vanover,Overturned,0:44,https://bit.ly/2HmD34p
+2018-04-20,CHI @ COL,T5,Maddon,J. Baez,Out at 3rd,Tag Play,G. Gibson,G. Gibson,Overturned,0:46,https://bit.ly/2JmWzhN
+2018-04-20,MIN @ TB,B10,Molitor,D. Span,Safe at 1st,Force Play,Hoye,Kellogg,Stands,2:29,https://bit.ly/2HmSUnX
+2018-04-20,BOS @ OAK,B1,UMPIRE,C. Pinder,Foul Ball,Potential HR,Wendelstedt,Gorman,Stands,1:19,https://bit.ly/2JhcKgU
+2018-04-20,CIN @ STL,B8,UMPIRE,M. Carpenter,Safe at 1st,Force Play,Guccione,Vanover,Overturned,0:30,https://bit.ly/2HkM5TP
+2018-04-20,NYM @ ATL,T12,Snitker,A. Cabrera,Safe at 2nd,Tag Play,Davis,Davis,Overturned,1:50,https://bit.ly/2HVzMKu
+2018-04-21,CIN @ STL,T9,Matheny,J. Peraza,Hit by Pitch,HBP,Guccione,Vanover,Stands,0:59,https://bit.ly/2qTjj1B
+2018-04-21,PIT @ PHI,B6,Kapler,C. Santana,Ball; No Hit by Pitch,HBP,L. Barrett,Welke,Overturned,0:49,https://bit.ly/2qVdErD
+2018-04-21,PIT @ PHI,B8,Hurdle,R. Hoskins,Safe at home,Force Play,L. Barrett,Welke,Confirmed,1:05,https://bit.ly/2HnrP40
+2018-04-21,CHI @ COL,T1,UMPIRE,W. Contreras,In play; Double,Potential HR,Carapazza,G. Gibson,Stands,2:23,https://bit.ly/2Kbxw2q
+2018-04-21,NYM @ ATL,B6,Callaway,E. Inciarte,Safe at 3rd,Tag Play,Iassogna,Davis,Overturned,1:25,https://bit.ly/2JlqBT4
+2018-04-21,NYM @ ATL,T8,Callaway,J. Reyes,Out at 2nd,Force Play,Hoberg,Davis,Overturned,1:57,https://bit.ly/2HJath2
+2018-04-21,SEA @ TEX,T4,UMPIRE,N. Cruz,Foul Ball,Potential HR,Cooper,Cederstrom,Stands,1:22,https://bit.ly/2JiKElc
+2018-04-21,SEA @ TEX,B9,Banister,R. Guzman,Out at 1st,Force Play,Visconti,Cederstrom,Stands,1:17,https://bit.ly/2HUx3kH
+2018-04-22,HOU @ CWS,B3,Renteria,Y. Moncada,Out at home,Tag Play,Gonzalez,Nelson,Stands,1:36,https://bit.ly/2vFKPoH
+2018-04-22,TOR @ NYY,B8,Boone,T. Austin,Out at 1st,Force Play,T. Barrett,T. Barrett,Stands,1:44,https://atmlb.com/2HUy647
+2018-04-22,PIT @ PHI,B11,UMPIRE,A. Knapp,In Play; Triple,Potential HR,L. Barrett,Welke,Confirmed,0:53,https://bit.ly/2qS8MEu
+2018-04-22,SF @ LAA,B6,Bochy,I. Kinsler,Safe at 2nd,Force Play,Ripperger,West,Stands,1:25,https://bit.ly/2JjRHKo
+2018-04-22,CHI @ COL,B9,Maddon,N. Arenado,Safe at home,Tag Play,Blaser,G. Gibson,Overturned,1:16,https://bit.ly/2qTpHpv
+2018-04-22,WSH @ LAD,B7,Martinez,C. Taylor,Safe at 2nd,Tag Play,Segal,Hallion,Overturned,1:55,https://bit.ly/2HT6Pim
+2018-04-22,WSH @ LAD,T8,Roberts,M. Taylor,Safe at 2nd,Tag Play,Segal,Hallion,Confirmed,1:54,https://bit.ly/2qUmEOw
+2018-04-23,CLE @ BAL,B5,Francona,C. Gentry,Safe at 1st,Force Play,Morales,Meals,Overturned,1:00,https://bit.ly/2r2eqmK
+2018-04-23,MIA @ LAD,T1,Mattingly,J. Realmuto,Foul Ball,Fair/Foul,Ripperger,West,Stands,0:59,https://bit.ly/2vPapaX
+2018-04-23,OAK @ TEX,T9,Melvin,J. Lowrie,Out at 1st,Force Play,Carapazza,G. Gibson,Overturned,1:07,https://bit.ly/2r3tf9q
+2018-04-23,LAA @ HOU,B9,Scioscia,Y. Gurriel,Safe at 3rd,Tag Play,Blaser,Cederstrom,Overturned,1:10,https://bit.ly/2FkM7VI
+2018-04-24,SEA @ CWS,B4,Servais,W. Castillo,Safe at 1st,Force Play,Marquez,Marquez,Confirmed,1:17,https://bit.ly/2vVuHPY
+2018-04-24,CHI @ CLE,B2,Maddon,T. Naquin,Safe at 1st,Tag Play,Barksdale,T. Barrett,Overturned,1:13,https://bit.ly/2vP2lXR
+2018-04-24,CHI @ CLE,B3,Francona,R. Davis,Out at home,Tag Play,T. Barrett,T. Barrett,Stands,1:46,https://bit.ly/2KintsE
+2018-04-24,NYM @ STL,T1,Matheny,M. Conforto,Safe at 1st,Tag Play,Gorman,Gorman,Stands,2:01,https://bit.ly/2HuXhJs
+2018-04-24,OAK @ TEX,B1,Melvin,N. Mazara,Safe at 1st,Force Play,Baker,Layne,Overturned,1:10,https://bit.ly/2r3V295
+2018-04-24,ATL @ CIN,T12,Snitker,N. Markakis,Out at 1st,Force Play,Culbreth,Culbreth,Confirmed,1:06,https://bit.ly/2r56Urh
+2018-04-24,LAA @ HOU,B8,Scioscia,K. Calhoun,Trap; No Catch,Catch/No Catch,Blaser,Cederstrom,Stands,1:28,https://bit.ly/2r336Hc
+2018-04-24,NYM @ STL,T10,UMPIRE,J. Bruce,HR; Touched First,Touching a Base,Gorman,Gorman,Confirmed,1:06,https://bit.ly/2HxPI4O
+2018-04-24,MIA @ LAD,T5,Roberts,D. Peters,Safe at 1st,Force Play,West,West,Overturned,1:10,https://bit.ly/2Hx9gKs
+2018-04-25,SEA @ CWS,T9,Renteria,R. Cano,Safe at 1st,Force Play,Dreckman,Marquez,Stands,1:14,https://atmlb.com/2Ke7ifM
+2018-04-25,SD @ COL,T6,Green,J. Pirela,Out at 2nd,Tag Play,Hallion,Hallion,Stands,1:58,https://bit.ly/2KibpHF
+2018-04-25,DET @ PIT (G1),B3,Hurdle,S. Marte,Out at 2nd,Force Play,Drake,Winters,Overturned,2:16,https://bit.ly/2HvbpGP
+2018-04-25,ATL @ CIN,B5,Riggleman,A. Duvall,Out at home,Tag Play,Culbreth,Culbreth,Overturned,2:10,https://bit.ly/2HZQp7S
+2018-04-25,BOS @ TOR,T5,Gibbons,C. Vazquez,Did not pass lead runner,Passing Runners,Barry,Danley,Confirmed,1:00,https://bit.ly/2r1vaeI
+2018-04-25,ARI @ PHI,B5,Lovullo,C. Hernandez,Safe at 2nd,Tag Play,Meals,Meals,Overturned,0:46,https://bit.ly/2r1R3tG
+2018-04-25,OAK @ TEX,B4,Melvin,J. Centeno,Safe at 1st,Force Play,Layne,Layne,Stands,1:37,https://bit.ly/2r41rlp
+2018-04-25,ATL @ CIN,T9,Snitker,N. Markakis,Out at 1st,Force Play,Bucknor,Culbreth,Overturned,0:42,https://bit.ly/2HtSGvc
+2018-04-25,DET @ PIT (G2),B5,Gardenhire,D. Freese,Safe at 1st,Force Play,Drake,Timmons,Overturned,1:14,https://bit.ly/2HTR2lT
+2018-04-25,MIN @ NYY,T9,Molitor,E. Escobar,Out at 1st,Force Play,Reyburn,Holbrook,Confirmed,1:12,https://bit.ly/2KicL5d
+2018-04-25,MIA @ LAD,T8,Mattingly,D. Dietrich,Out at 1st,Force Play,Eddings,West,Overturned,1:09,https://bit.ly/2HSnIMO
+2018-04-25,DET @ PIT (G2),B8,Gardenhire,J. Mercer,Safe at home,Tag Play,Timmons,Timmons,Confirmed,1:13,https://bit.ly/2JtDn21
+2018-04-26,MIN @ NYY,T1,Molitor,J. Mauer,Out at 1st,Force Play,Holbrook,Holbrook,Overturned,1:24,https://bit.ly/2r7FdOz
+2018-04-26,ATL @ CIN,T6,UMPIRE,D. Swanson,Foul Ball,Potential HR,Culbreth,Culbreth,Confirmed,1:27,https://bit.ly/2r4jisn
+2018-04-26,MIN @ NYY,B4,Molitor,B. Gardner,Safe at 1st,Tag Play,Holbrook,Holbrook,Overturned,0:54,https://bit.ly/2HVDRRq
+2018-04-26,DET @ PIT,T8,Hurdle,L. Martin,Safe at 1st,Force Play,Muchlinski,Winters,Stands,1:15,https://bit.ly/2I47kX0
+2018-04-26,DET @ PIT,B9,UMPIRE,C. Dickerson,HR; No Interference,Potential HR,Winters,Winters,Stands,1:32,https://bit.ly/2HTphdg
+2018-04-26,SEA @ CLE,T5,UMPIRE,R. Cano,Home Run,Potential HR,Wegner,Wegner,Overturned,1:02,https://bit.ly/2I41ogN
+2018-04-26,TB @ BAL,T3,Cash,J. Wendle,Out at 1st,Force Play,Randazzo,Everitt,Overturned,0:59,https://bit.ly/2HwvOLz
+2018-04-26,MIL @ CHI,T6,Counsell,C. Anderson,Out at 1st,Force Play,Scheurwater,Cederstrom,Confirmed,1:40,https://bit.ly/2r4mww5
+2018-04-26,BOS @ TOR,B8,Gibbons,R. Grichuk,Out at 1st,Force Play,Danley,Danley,Stands,1:26,https://bit.ly/2JwN1Ry
+2018-04-26,TB @ BAL,B8,Showalter,P. Alvarez,Out at 1st,Force Play,Randazzo,Everitt,Stands,1:00,https://bit.ly/2vRTnZF
+2018-04-26,CWS @ KC,T7,Yost,T. Anderson,Safe at 1st,Force Play,G. Gibson,Layne,Overturned,1:18,https://bit.ly/2vRTPXR
+2018-04-27,TEX @ TOR,B2,Gibbons,R. Martin,Out at 3rd,Tag Play,Drake,Winters,Overturned,1:16,https://bit.ly/2rcmQrK
+2018-04-27,TEX @ TOR,B2,Banister,A. Diaz,Hit by Pitch,HBP,Muchlinski,Winters,Stands,1:31,https://bit.ly/2HIGJho
+2018-04-27,COL @ MIA,T3,Black,D. LeMahieu,Out at 2nd,Tag Play,Culbreth,Culbreth,Stands,1:56,https://bit.ly/2jn5qW9
+2018-04-27,ARI @ WSH,B3,Martinez,M. Wieters,Out at 1st,Force Play,Lentz,Everitt,Overturned,1:07,https://bit.ly/2KoNaYw
+2018-04-27,CIN @ MIN,B1,UMPIRE,L. Morrison,Home Run,Potential HR,T. Barrett,T. Barrett,Stands,3:01,https://bit.ly/2JHYmhB
+2018-04-27,TEX @ TOR,T8,UMPIRE,I. Kiner-Falefa,Out at 2nd,Tag Play,Timmons,Winters,Confirmed,0:59,https://bit.ly/2I1YyeK
+2018-04-27,ATL @ PHI,B8,Snitker,R. Hoskins,Safe at 1st,Force Play,Danley,Danley,Confirmed,1:00,https://bit.ly/2JIBheZ
+2018-04-27,OAK @ HOU,T8,Melvin,M. Semien,Out at 1st,Force Play,Hallion,Hallion,Overturned,1:02,https://bit.ly/2vXL3rF
+2018-04-27,LAD @ SF,T4,Roberts,C. Bellinger,Interference; 2nd & 3rd,Runner Placement,Johnson,Gorman,Confirmed,1:37,https://bit.ly/2FssNpz
+2018-04-28,LAD @ SF (G1),T4,Bochy,J. Pederson,Safe at 1st,Force Play,Ortiz,Iassogna,Stands,1:55,https://bit.ly/2rdjZyP
+2018-04-28,ATL @ PHI,T3,UMPIRE,F. Freeman,Out; Catch,Potential HR,Nauert,Danley,Confirmed,0:45,https://bit.ly/2Fu8Lv1
+2018-04-28,ATL @ PHI,T3,Snitker,E. Inciarte,Out at 3rd,Tag Play,Nauert,Danley,Overturned,1:23,https://bit.ly/2HIDypO
+2018-04-28,LAD @ SF (G1),B7,UMPIRE,A. Hanson,HR; No Interference,Potential HR,Ortiz,Iassogna,Stands,1:38,https://bit.ly/2KlLjUt
+2018-04-28,OAK @ HOU,B2,Hinch,J. Altuve,Out at 2nd,Tag Play,Hamari,Hallion,Overturned,1:12,https://bit.ly/2HXEtWX
+2018-04-28,NYM @ SD,B1,Green,J. Pirela,Out at 1st,Force Play,Ripperger,West,Overturned,0:48,https://bit.ly/2I9fiAu
+2018-04-28,NYY @ LAA,T1,Boone,N. Walker,Out at 1st,Force Play,Hernandez,Miller,Overturned,0:51,https://bit.ly/2I00C6L
+2018-04-28,LAD @ SF (G2),T1,Roberts,C. Utley,Out at 1st,Force Play,Iassogna,Gorman,Overturned,0:43,https://bit.ly/2r8icMs
+2018-04-28,LAD @ SF (G2),T5,Bochy,A. Wood,Out in front of HP,Tag Play,Gorman,Gorman,Confirmed,0:53,https://bit.ly/2KpOD0T
+2018-04-28,LAD @ SF (G2),T5,Bochy,A. Verdugo,Safe at 3rd,Tag Play,Ortiz,Gorman,Confirmed,0:53,https://bit.ly/2KpOD0T
+2018-04-29,TB @ BOS,T4,Cora,M. Smith,Safe at 1st,Tag Play,Reyburn,Holbrook,Overturned,0:49,https://bit.ly/2vZPz8N
+2018-04-29,TEX @ TOR,B6,Gibbons,R. Rua,Catch,Catch/No Catch,Winters,Winters,Stands,2:26,https://bit.ly/2vUWxvQ
+2018-04-29,TB @ BOS,T7,Cash,D. Robertson,Out at 2nd,Force Play,Holbrook,Holbrook,Overturned,1:00,https://bit.ly/2I5uEGc
+2018-04-29,TB @ BOS,T7,Cash,A. Hechavarria,Out at 1st,Force Play,Reyburn,Holbrook,Confirmed,0:59,https://bit.ly/2r9LXvq
+2018-04-29,OAK @ HOU,B5,UMPIRE,M. Stassi,Fan Interference,Potential HR,Bellino,Hallion,Confirmed,1:06,https://bit.ly/2JE9RGT
+2018-04-29,SEA @ CLE,B7,Francona,B. Gamel,Catch,Catch/No Catch,Wegner,Wegner,Overturned,2:21,https://bit.ly/2HEIakX
+2018-04-29,MIL @ CHI,T6,Counsell,L. Cain,Foul Ball; No HBP,HBP,Cederstrom,Cederstrom,Stands,1:23,https://bit.ly/2Ftf3ev
+2018-04-29,ATL @ PHI,T9,Kapler,K. Suzuki,Hit by Pitch,HBP,Barry,Danley,Stands,1:16,https://bit.ly/2FtflSD
+2018-04-29,NYY @ LAA,T5,Boone,G. Torres,Out at 1st,Force Play,Tichenor,Miller,Overturned,0:47,https://bit.ly/2jl9Igy
+2018-04-30,COL @ CHI,T1,Maddon,C. Blackmon,Hit by Pitch,HBP,Nelson,Nelson,Stands,0:46,https://bit.ly/2HPUgrB
+2018-04-30,TEX @ CLE,B4,Banister,Y. Gomes,Safe at 2nd,Force Play,Carlson,Davis,Overturned,1:08,https://bit.ly/2KCOfvS
+2018-04-30,TEX @ CLE,B4,Banister,Y. Gomes,No Violation,Slide Rule,Carlson,Davis,Confirmed,1:09,https://bit.ly/2KCOfvS
+2018-04-30,TEX @ CLE,B5,Banister,B. Zimmer,Safe at home,Tag Play,Davis,Davis,Stands,2:49,https://bit.ly/2HSDWGB
+2018-04-30,PHI @ MIA,B3,Kapler,C. Maybin,Safe at 1st,Force Play,Rehak,Kellogg,Overturned,0:37,https://bit.ly/2HPpTkT
+2018-04-30,PIT @ WSH,B7,Hurdle,T. Turner,Safe at 2nd,Tag Play,Cooper,Cooper,Stands,3:01,https://bit.ly/2jx3CcW
+2018-04-30,PHI @ MIA,B6,Kapler,J. Realmuto,Safe at 2nd,Tag Play,Hoye,Kellogg,Overturned,1:17,https://bit.ly/2IevJfc
+2018-04-30,COL @ CHI,T8,Black,N. Cuevas,Out at 1st,Force Play,Diaz,Nelson,Confirmed,1:06,https://bit.ly/2HS7yzr
+2018-04-30,COL @ CHI,T9,UMPIRE,R. McMahon,Safe at 2nd,Force Play,Fletcher,Nelson,Overturned,0:30,https://bit.ly/2IhCYmy
+2018-04-30,TOR @ MIN,T8,Gibbons,L. Gurriel,Out at 2nd,Tag Play,Bellino,Cuzzi,Stands,0:57,https://bit.ly/2HSttXj
+2018-04-30,LAD @ ARI,T8,Lovullo,A. Barnes,Hit by Pitch,HBP,Layne,Layne,Stands,1:07,https://bit.ly/2HN49WK
+2018-05-1,TEX @ CLE,B1,Banister,F. Lindor,Safe at 3rd,Tag Play,Hoberg,Davis,Overturned,0:38,https://bit.ly/2HSRFsE
+2018-05-1,TEX @ CLE,B2,UMPIRE,Y. Gomes,Swinging Strike/HBP,Rules Check,Hoberg,Davis,Rules Check,1:08,https://atmlb.com/2FLMZmr
+2018-05-1,TEX @ CLE,B5,Francona,Y. Gomes,Out at 1st,Force Play,Carlson,Davis,Overturned,0:47,https://bit.ly/2HNOwOJ
+2018-05-1,ATL @ NYM,T2,Snitker,O. Albies,Out at 1st,Force Play,L. Barrett,Everitt,Stands,1:28,https://bit.ly/2jx2upS
+2018-05-1,PHI @ MIA,B6,Kapler,L. Brinson,Safe at 1st,Tag Play,Hoye,Kellogg,Overturned,1:24,https://bit.ly/2rlL2s0
+2018-05-1,MIL @ CIN,B5,Counsell,A. Duvall,Safe at 1st,Tag Play,Winters,Winters,Stands,1:14,https://bit.ly/2Ij0HCZ
+2018-05-1,CWS @ STL,T3,Matheny,Y. Moncada,Safe at 1st,Force Play,Holbrook,Holbrook,Overturned,1:08,https://bit.ly/2wkmhBU
+2018-05-1,MIL @ CIN,B5,Riggleman,A. Duvall,Out at 2nd,Tag Play,Timmons,Winters,Stands,2:04,https://atmlb.com/2we3FU7
+2018-05-1,MIL @ CIN,T7,UMPIRE,H. Perez,Home Run,Potential HR,Drake,Winters,Confirmed,0:35,https://bit.ly/2wcPNcV
+2018-05-1,ATL @ NYM,B9,UMPIRE,N. Markakis,Trap; No Catch,Catch/No Catch,L. Barrett,Everitt,Confirmed,0:40,https://bit.ly/2ju5FOU
+2018-05-1,TOR @ MIN,T9,Molitor,A. Diaz,Safe at 1st,Force Play,Bellino,Cuzzi,Overturned,2:30,https://bit.ly/2Ij0QX3
+2018-05-2,KC @ BOS,T3,Yost,J. Soler,Out at 2nd,Tag Play,Bucknor,Culbreth,Overturned,1:05,https://bit.ly/2rnHy8l
+2018-05-2,KC @ BOS,T6,Cora,J. Jay,Safe at 1st,Force Play,Culbreth,Culbreth,Overturned,0:53,https://bit.ly/2JQwIzm
+2018-05-2,TEX @ CLE,B5,Francona,J. Kipnis,Ball; No Hit by Pitch,HBP,Segal,Carlson,Overturned,0:54,https://bit.ly/2KzPxYu
+2018-05-2,KC @ BOS,B6,Yost,E. Nuñez,Safe at 1st,Tag Play,Culbreth,Culbreth,Overturned,0:44,https://bit.ly/2wdHPQP
+2018-05-2,KC @ BOS,T9,Cora,L. Duda,No HBP; Dropped 3rd Strike,HBP,O'Nora,Culbreth,Overturned,0:58,https://bit.ly/2KCv3i3
+2018-05-2,COL @ CHI,T7,Maddon,D. Castro,Safe at 1st,Force Play,Gonzalez,Nelson,Stands,1:26,N/A
+2018-05-2,SD @ SF,T8,Green,F. Galvis,Out at 1st,Force Play,Rackley,Vanover,Confirmed,1:02,https://bit.ly/2FIJFZj
+2018-05-2,PIT @ WSH,T1,Hurdle,S. Marte,Out at 2nd,Force Play,Dreckman,Cooper,Overturned,1:29,https://atmlb.com/2jwjcWb
+2018-05-2,PIT @ WSH,T1,Hurdle,J. Bell,Out at 2nd,Force Play,Dreckman,Cooper,Stands,2:02,https://bit.ly/2jveZ5h
+2018-05-2,PHI @ MIA,B2,Kapler,M. Rojas,Safe at 1st,Tag Play,Wolcott,Kellogg,Overturned,1:01,https://bit.ly/2rlq90H
+2018-05-2,PHI @ MIA,B8,Kapler,J. Shuck,Safe at 1st,Force Play,Wolcott,Kellogg,Overturned,0:49,https://bit.ly/2FM9GqG
+2018-05-2,BAL @ LAA,B4,Scioscia,Z. Cozart,Out at 1st,Force Play,Gorman,Gorman,Stands,1:41,https://bit.ly/2rneOMH
+2018-05-2,OAK @ SEA,B8,Servais,J. Segura,Out at 2nd,Tag Play,Hernandez,Miller,Overturned,1:12,https://bit.ly/2rqsGGm
+2018-05-2,OAK @ SEA,B9,Servais,D. Gordon,Out at 1st,Force Play,Miller,Miller,Overturned,1:24,https://bit.ly/2jviDMz
+2018-05-3,NYY @ HOU,B7,Boone,A. Bregman,Hit by Pitch,HBP,Reynolds,Wegner,Stands,2:35,https://bit.ly/2rmoY0p
+2018-05-3,LAD @ ARI,B6,Roberts,P. Goldschmidt,Safe at home,Tag Play,Baker,G. Gibson,Confirmed,1:16,https://bit.ly/2HWMnfF
+2018-05-3,LAD @ ARI,B8,Lovullo,A. Pollock,Out at 1st,Tag Play,Woodring,G. Gibson,Stands,1:21,https://bit.ly/2wbEiTd
+2018-05-3,TOR @ CLE (G1),B11,Francona,J. Ramírez,Ball; No Hit by Pitch,HBP,Carlson,Davis,Overturned,0:47,https://bit.ly/2JPC25V
+2018-05-3,TOR @ CLE (G2),B3,Gibbons,E. Gonzalez,Safe at 2nd,Tag Play,Hoberg,Davis,Stands,1:21,https://bit.ly/2I9SoJB
+2018-05-3,BOS @ TEX,T4,Cora,E. Nuñez,Out at 2nd,Tag Play,Johnson,Cuzzi,Overturned,1:17,https://bit.ly/2KByxRS
+2018-05-4,COL @ NYM,T1,Black,T. Wolters,Out at 1st,Force Play,Estabrook,Cooper,Overturned,0:53,https://bit.ly/2FYv3W5
+2018-05-4,CLE @ NYY,T4,Francona,J. Ramírez,Out at 3rd,Tag Play,Barksdale,Timmons,Stands,1:25,https://bit.ly/2I41UOY
+2018-05-4,SF @ ATL,T2,Bochy,A. Hanson,Out at home,Tag Play,Layne,Layne,Overturned,0:59,https://bit.ly/2ruFSKY
+2018-05-4,MIN @ CWS,T4,Molitor,J. Castro,Out at home,Tag Play,Blaser,Cederstrom,Confirmed,0:48,https://bit.ly/2IrgsHS
+2018-05-4,DET @ KC,B5,Gardenhire,J. Jay,No violation,Slide Rule,Visconti,Nelson,Confirmed,0:48,https://bit.ly/2I05olr
+2018-05-4,DET @ KC,B5,Gardenhire,L. Duda,Safe at 1st,Force Play,Diaz,Nelson,Overturned,0:48,https://bit.ly/2I05olr
+2018-05-4,PIT @ MIL,T5,Counsell,F. Cervelli,Safe at 2nd,Tag Play,Hudson,Kellogg,Overturned,0:37,https://bit.ly/2Ip4A9b
+2018-05-4,DET @ KC,T7,Yost,J. McCann,Safe at 2nd,Tag Play,Visconti,Nelson,Overturned,0:34,https://bit.ly/2I8y0VR
+2018-05-4,HOU @ ARI,T2,Lovullo,C. Correa,Fair Ball; Double,Fair/Foul,DiMuro,Gorman,Stands,1:17,https://bit.ly/2rBfe3l
+2018-05-4,HOU @ ARI,T4,Hinch,G. Springer,Out at 1st,Force Play,DiMuro,Gorman,Overturned,0:57,https://bit.ly/2jKu82z
+2018-05-4,LAD @ SD,B7,Green,F. Cordero,Foul Ball; No HBP,HBP,Tumpane,Wegner,Stands,1:25,https://bit.ly/2K7sQd8
+2018-05-4,BAL @ OAK,T7,Showalter,A. Jones,Out at 1st,Tag Play,Vanover,Vanover,Confirmed,0:46,https://bit.ly/2FXWUWr
+2018-05-5,CHI @ STL,T2,Maddon,A. Russell,Out at home,Tag Play,Hernandez,Miller,Overturned,1:47,https://bit.ly/2ru6mva
+2018-05-5,CHI @ STL,B2,Maddon,L. Weaver,Safe at 2nd,Force Play,Porter,Miller,Overturned,1:50,https://bit.ly/2IuTcJe
+2018-05-5,TOR @ TB,B4,Gibbons,M. Smith,Safe at 1st,Force Play,Rehak,Culbreth,Stands,1:49,https://bit.ly/2rwr0uH
+2018-05-5,COL @ NYM,B8,Black,Y. Cespedes,Safe at 1st,Force Play,Cooper,Cooper,Stands,1:20,https://bit.ly/2KP1f1x
+2018-05-5,LAD @ SD,T6,Green,C. Taylor,Hit by Pitch,HBP,Wegner,Wegner,Stands,1:28,https://bit.ly/2jI2e7k
+2018-05-5,COL @ NYM,T9,UMPIRE,N. Cuevas,Out at home,Tag Play,Estabrook,Cooper,Confirmed,1:03,https://bit.ly/2wxgSHM
+2018-05-5,SF @ ATL,T9,Snitker,G. Hernandez,Safe at 1st,Force Play,Carapazza,Layne,Stands,0:57,https://bit.ly/2K5bMo7
+2018-05-5,BAL @ OAK,B3,Showalter,M. Joyce,Safe at 1st,Force Play,Wendelstedt,Vanover,Stands,1:31,https://bit.ly/2rBV9cn
+2018-05-5,MIN @ CWS,T8,Molitor,R. LaMarre,Out at 2nd,Tag Play,Cederstrom,Cederstrom,Confirmed,1:09,https://bit.ly/2KLauzQ
+2018-05-5,LAD @ SD,B8,UMPIRE,M. Szczur,Out at 1st,Force Play,Marquez,Wegner,Stands,1:24,https://bit.ly/2rvXgy9
+2018-05-5,HOU @ ARI,B9,Hinch,J. Dyson,Safe at 1st,Tag Play,Ortiz,Gorman,Stands,1:15,https://bit.ly/2KP1mKv
+2018-05-5,BAL @ OAK,B10,Melvin,M. Canha,Out at 1st,Tag Play,Wendelstedt,Vanover,Confirmed,0:48,https://bit.ly/2wnOZSF
+2018-05-5,LAA @ SEA,B8,Scioscia,G. Heredia,Safe at home,Tag Play,Reyburn,Holbrook,Confirmed,0:41,https://bit.ly/2I5Nqhx
+2018-05-5,LAA @ SEA,B10,Servais,J. Segura,Out at 2nd,Tag Play,Blakney,Holbrook,Confirmed,0:41,https://bit.ly/2jLzDhM
+2018-05-6,TOR @ TB,B3,Gibbons,C. Gomez,Safe at 2nd,Tag Play,Culbreth,Culbreth,Overturned,0:49,https://bit.ly/2rxZEV5
+2018-05-6,COL @ NYM,B4,Black,J. Bruce,Safe at 1st,Force Play,Fairchild,Cooper,Overturned,0:47,https://bit.ly/2K7KYnm
+2018-05-6,COL @ NYM,T8,Callaway,G. Parra,Safe at 2nd,Tag Play,Dreckman,Cooper,Overturned,0:37,https://bit.ly/2Ibzy1v
+2018-05-6,PHI @ WSH,B7,Martinez,M. Wieters,Out at 1st,Force Play,Winters,Winters,Overturned,0:42,https://bit.ly/2jI3NCe
+2018-05-6,BOS @ TEX,B3,Cora,J. Profar,Safe at 1st,Force Play,Cuzzi,Cuzzi,Overturned,0:57,https://bit.ly/2I3G91V
+2018-05-6,BOS @ TEX,T4,Banister,J. Bradley,Safe at 1st,Tag Play,Cuzzi,Cuzzi,Overturned,0:55,https://bit.ly/2ItFg22
+2018-05-6,PHI @ WSH,T9,Kapler,R. Hoskins,Out at 1st,Tag Play,Winters,Winters,Overturned,1:47,https://bit.ly/2Ka0wqS
+2018-05-6,BAL @ OAK,B4,Melvin,M. Olson,Out at 3rd,Tag Play,Vanover,Vanover,Stands,1:12,https://bit.ly/2rv7jUW
+2018-05-6,LAA @ SEA,B5,Scioscia,B. Gamel,Safe at 3rd,Tag Play,Reyburn,Holbrook,Overturned,0:38,https://bit.ly/2I1z2qG
+2018-05-7,DET @ TEX,T7,Gardenhire,J. Iglesias,Foul Ball,Fair/Foul,Miller,Miller,Overturned,1:29,https://bit.ly/2rys0iJ
+2018-05-7,HOU @ OAK,T2,Hinch,C. Correa,Out at 1st,Force Play,Eddings,West,Overturned,0:41,https://bit.ly/2rwEjwg
+2018-05-7,DET @ TEX,T8,Banister,N. Castellanos,Safe at 2nd,Force Play,Hernandez,Miller,Overturned,1:43,https://bit.ly/2I6EecH
+2018-05-8,PIT @ CWS,B1,Renteria,L. Garcia,Out at 1st,Force Play,Tumpane,Wegner,Overturned,0:34,https://bit.ly/2IcwaDx
+2018-05-8,SF @ PHI,T5,Kapler,G. Blanco,Safe at 1st,Tag Play,Hoberg,Davis,Stands,1:38,https://bit.ly/2rxTEf2
+2018-05-8,MIA @ CHI,T3,Maddon,B. Anderson,Safe at 1st,Force Play,T. Barrett,T. Barrett,Overturned,1:19,https://bit.ly/2Icwcv9
+2018-05-8,PIT @ CWS,T3,Renteria,C. Moran,Safe at 1st,Force Play,Tumpane,Wegner,Stands,2:10,https://bit.ly/2KRvLbl
+2018-05-8,SF @ PHI,B8,Bochy,S. Kingery,Safe at 1st,Force Play,Hoberg,Davis,Overturned,1:09,https://bit.ly/2jOwUUs
+2018-05-8,LAA @ COL,B6,Black,N. Cuevas,Ball; No Hit by Pitch,HBP,Baker,Layne,Overturned,0:47,https://bit.ly/2rxZe12
+2018-05-8,LAA @ COL,B7,Scioscia,N. Arenado,Safe at home,Tag Play,Baker,Layne,Stands,1:31,https://bit.ly/2I5K3Y0
+2018-05-8,PIT @ CWS,B9,UMPIRE,L. Garcia,Out at 1st,Force Play,Tumpane,Wegner,Stands,1:07,https://bit.ly/2KRupgH
+2018-05-8,WSH @ SD,T9,Green,R. Zimmerman,Safe at home,Tag Play,T. Gibson,Gorman,Confirmed,1:08,https://bit.ly/2It8KNj
+2018-05-8,WSH @ SD,T9,UMPIRE,R. Zimmerman,Did not leave early,Tag-Up,Gorman,Gorman,Confirmed,0:41,https://bit.ly/2IrBKFg
+2018-05-9,LAA @ COL,T8,Black,A. Simmons,Safe at 1st,Force Play,G. Gibson,Layne,Overturned,0:38,https://bit.ly/2ryRLPY
+2018-05-9,SF @ PHI,B5,Kapler,S. Kingery,Out at 1st,Force Play,Carlson,Davis,Overturned,0:43,https://bit.ly/2wwNQIn
+2018-05-9,SEA @ TOR,B6,Servais,T. Hernandez,Fan Interference; 3B,Runner Placement,Wolcott,Kellogg,Overturned,2:27,https://bit.ly/2rAqj3J
+2018-05-9,KC @ BAL,B6,Yost,M. Trumbo,Safe at 1st,Force Play,Danley,Danley,Overturned,1:30,https://bit.ly/2KRuOQf
+2018-05-9,KC @ BAL,T9,Yost,W. Merrifield,Out at 2nd,Force Play,Barry,Danley,Overturned,1:04,https://bit.ly/2IvHlKQ
+2018-05-9,SEA @ TOR,B8,Servais,Y. Solarte,Safe at 2nd,Tag Play,Kellogg,Kellogg,Confirmed,2:29,https://bit.ly/2wvnR41
+2018-05-9,WSH @ SD,T4,Martinez,H. Kendrick,Out at 2nd,Tag Play,Gorman,Gorman,Confirmed,0:58,https://bit.ly/2rz7Bud
+2018-05-9,ARI @ LAD,B1,Lovullo,C. Taylor,Safe at 2nd,Tag Play,Wendelstedt,Vanover,Overturned,0:45,https://atmlb.com/2rRMyD0
+2018-05-10,BOS @ NYY,T2,Boone,C. Vazquez,Safe at 1st,Tag Play,Cooper,Cederstrom,Overturned,0:33,https://bit.ly/2wxHpVE
+2018-05-10,MIL @ COL,T4,Black,C. Yelich,Safe at 1st,Force Play,Barksdale,T. Barrett,Stands,1:33,https://bit.ly/2jRnLuA
+2018-05-10,KC @ BAL,T9,Yost,J. Soler,Out at 2nd,Force Play,Torres,Danley,Stands,2:49,https://bit.ly/2IwhRNf
+2018-05-10,MIN @ LAA,T1,Scioscia,B. Dozier,Safe at 2nd,Tag Play,Guccione,Vanover,Overturned,0:53,https://bit.ly/2Ke9umJ
+2018-05-10,STL @ SD,B4,Green,J. Pirela,Out at 2nd,Tag Play,Gonzalez,Nelson,Stands,2:18,https://bit.ly/2I8ZPBz
+2018-05-10,WSH @ ARI,B7,Lovullo,K. Marte,Ball; No Hit by Pitch,HBP,Ripperger,West,Overturned,0:46,https://bit.ly/2KbjRb1
+2018-05-10,WSH @ ARI,B9,Martinez,N. Ahmed,Hit by Pitch,HBP,Ripperger,West,Overturned,1:52,https://bit.ly/2Iea2Zp
+2018-05-11,BOS @ TOR,T3,Cora,L. Maile,No violation,Collision Rule,Hickox,Meals,Confirmed,1:07,https://bit.ly/2IL1Ao4
+2018-05-11,BOS @ TOR,T3,Cora,H. Ramirez,Out at home,Tag Play,Hickox,Meals,Stands,1:07,https://bit.ly/2IL1Ao4
+2018-05-11,BOS @ TOR,T6,Gibbons,E. Nuñez,Safe at 1st,Force Play,Kulpa,Meals,Overturned,0:37,https://bit.ly/2rLbX0r
+2018-05-11,NYM @ PHI,T7,Callaway,J. Reyes,Out at 1st,Tag Play,May,Reynolds,Confirmed,0:44,https://bit.ly/2jVXDi6
+2018-05-11,SF @ PIT,B6,Hurdle,C. Moran,Out at home,Tag Play,Segal,Hallion,Stands,2:44,https://bit.ly/2L3K1Ok
+2018-05-11,MIL @ COL,B3,Counsell,C. Blackmon,Safe at 3rd,Tag Play,Lentz,T. Barrett,Stands,1:58,https://bit.ly/2rIZuug
+2018-05-11,BOS @ TOR,B9,Gibbons,K. Pillar,Out at 3rd,Tag Play,Morales,Meals,Stands,1:44,https://bit.ly/2IKOzdZ
+2018-05-11,BOS @ TOR,T10,UMPIRE,M. Betts,Out at 2nd,Tag Play,Meals,Meals,Overturned,1:46,https://bit.ly/2IlWKde
+2018-05-12,TB @ BAL,B2,Cash,J. Peterson,Safe at 2nd,Tag Play,Carlson,Davis,Stands,1:19,https://bit.ly/2InGXKU
+2018-05-12,OAK @ NYY,T9,Boone,M. Olson,Safe at home,Tag Play,Hoye,Kellogg,Overturned,1:07,https://bit.ly/2IkxaoR
+2018-05-12,BOS @ TOR,T7,Cora,C. Vazquez,Out at 3rd,Tag Play,Hickox,Meals,Confirmed,0:57,https://bit.ly/2rII0hy
+2018-05-12,ATL @ MIA,T4,Mattingly,E. Inciarte,Safe at 2nd,Tag Play,Drake,Winters,Stands,1:12,https://bit.ly/2wFfiUE
+2018-05-12,MIL @ COL,B1,UMPIRE,T. Story,HR; No Interference,Potential HR,Lentz,T. Barrett,Stands,1:03,https://bit.ly/2Kr2NOa
+2018-05-12,MIL @ COL,T2,UMPIRE,J. Aguilar,Foul Ball,Potential HR,Barksdale,T. Barrett,Stands,1:27,https://bit.ly/2rII4Ok
+2018-05-12,TB @ BAL,T8,Cash,M. Smith,Out at 3rd,Tag Play,Livensparger,Carlson,Overturned,0:51,https://bit.ly/2jW0mrY
+2018-05-12,SEA @ DET,T7,Gardenhire,N. Cruz,Safe at 2nd,Tag Play,Danley,Danley,Stands,1:44,https://bit.ly/2GiARtp
+2018-05-12,SEA @ DET,T7,Servais,R. Healy,Out at home,Tag Play,Torres,Danley,Confirmed,1:15,https://bit.ly/2rJfXzr
+2018-05-12,MIN @ LAA,B12,Molitor,K. Calhoun,Safe at 1st,Tag Play,Rackley,Vanover,Overturned,1:00,https://bit.ly/2GhyVkU
+2018-05-13,ATL @ MIA,T9,Mattingly,E. Inciarte,Safe at 3rd,Tag Play,Winters,Winters,Overturned,1:00,https://bit.ly/2IjnZcn
+2018-05-13,SF @ PIT,B7,Hurdle,S. Marte,Out at 1st,Force Play,Hamari,Hallion,Overturned,1:17,https://bit.ly/2rH4lNi
+2018-05-13,MIN @ LAA,T9,Molitor,E. Adrianza,Out at home,Tag Play,Rackley,Vanover,Confirmed,0:50,https://bit.ly/2L4BScf
+2018-05-13,WSH @ ARI,T3,Lovullo,T. Turner,Safe at 1st,Force Play,Ripperger,West,Overturned,1:38,https://bit.ly/2L4C635
+2018-05-14,ATL @ CHI,B3,Snitker,A. Rizzo,Safe at 2nd,Tag Play,Johnson,Gorman,Stands,1:46,https://bit.ly/2KxiO5h
+2018-05-14,TB @ KC,T8,Cash,C. Gomez,Out at 1st,Force Play,Barber,Timmons,Stands,1:01,https://bit.ly/2ItGVkP
+2018-05-14,SEA @ MIN,T6,Molitor,N. Cruz,Hit by Pitch,HBP,Reyburn,Hernandez,Stands,1:00,https://bit.ly/2wQrwJT
+2018-05-15,CHI @ ATL,B5,Snitker,J. Camargo,Out at home,Tag Play,Wolf,Holbrook,Stands,2:20,https://bit.ly/2GsTMC6
+2018-05-15,CWS @ PIT,B6,Renteria,A. Frazier,Safe at home,Tag Play,Fairchild,Danley,Stands,1:08,https://bit.ly/2Ixq3da
+2018-05-15,TOR @ NYM,B4,UMPIRE,A. Rosario,In Play; Double,Potential HR,Lentz,Welke,Confirmed,0:54,https://bit.ly/2Kz5ddT
+2018-05-15,TOR @ NYM,B4,Callaway,J. Lagares,Out at 2nd,Tag Play,Randazzo,Welke,Overturned,0:42,https://bit.ly/2IoqOcp
+2018-05-15,HOU @ LAA,B1,Scioscia,A. Simmons,Out at 2nd,Tag Play,Bucknor,Culbreth,Stands,1:19,https://bit.ly/2KzrDf6
+2018-05-15,CIN @ SF,B2,Bochy,B. Crawford,Out at 2nd,Tag Play,Foster,West,Overturned,1:26,https://bit.ly/2wZBiK7
+2018-05-16,CWS @ PIT,B2,Renteria,S. Rodriguez,Safe at 3rd,Tag Play,Danley,Danley,Overturned,0:50,https://bit.ly/2LaBp8l
+2018-05-16,CWS @ PIT,B7,Hurdle,J. Bell,Out at 2nd,Force Play,Danley,Danley,Overturned,1:29,https://bit.ly/2GuIME6
+2018-05-16,TOR @ NYM,T6,Callaway,T. Hernandez,Safe at 2nd,Force Play,L. Barrett,Welke,Overturned,1:11,https://bit.ly/2Kxj0l1
+2018-05-16,TEX @ SEA,T9,Servais,S. Choo,Safe at 1st,Force Play,Diaz,Nelson,Confirmed,0:44,https://bit.ly/2L6FbQ6
+2018-05-16,OAK @ BOS,B6,Melvin,S. Piscotty,No Catch; Foul Ball,Catch/No Catch,Reynolds,Wegner,Overturned,1:40,https://bit.ly/2Gu2WxY
+2018-05-16,LAD @ MIA,T8,Roberts,M. Muncy,Out at 2nd,Force Play,Carapazza,Layne,Stands,1:54,https://bit.ly/2k5Zml9
+2018-05-17,PHI @ STL,B8,Matheny,P. DeJong,Foul Ball; No HBP,HBP,De Jesus,Vanover,Overturned,0:42,https://bit.ly/2IuyxWr
+2018-05-17,DET @ SEA,T1,Servais,N. Castellanos,Safe at 2nd,Tag Play,Barber,Timmons,Stands,1:40,https://bit.ly/2Gw4Z4N
+2018-05-17,COL @ SF,B6,UMPIRE,B. Belt,In Play; Double,Potential HR,O'Nora,O'Nora,Overturned,1:57,https://bit.ly/2Ldyhcb
+2018-05-18,MIA @ ATL,B2,Mattingly,J. Camargo,Safe at 2nd,Tag Play,Ortiz,Meals,Overturned,1:10,https://bit.ly/2KLfx2G
+2018-05-18,MIA @ ATL,B6,Snitker,J. Realmuto,Catch,Catch/No Catch,Meals,Meals,Overturned,1:22,https://bit.ly/2s1xYIn
+2018-05-18,MIA @ ATL,B6,UMPIRE,T. Flowers,Count Check,Record Keeping,Meals,Meals,Record Keeping,1:21,N/A
+2018-05-18,ARI @ NYM,B8,Callaway,D. Descalso,Catch,Catch/No Catch,Layne,Layne,Confirmed,0:47,https://bit.ly/2GCrrcF
+2018-05-18,OAK @ TOR,T9,Gibbons,M. Chapman,Safe at 2nd,Tag Play,Gorman,Gorman,Overturned,2:02,https://bit.ly/2Lj7g73
+2018-05-18,MIA @ ATL,B8,Snitker,R. Acuna,Out at 1st,Force Play,Morales,Meals,Stands,1:14,https://bit.ly/2kfgSn3
+2018-05-18,SD @ PIT,B9,Green,C. Dickerson,Safe at 2nd,Tag Play,Woodring,T. Barrett,Confirmed,1:46,https://bit.ly/2IZnS5w
+2018-05-18,CLE @ HOU,B7,Francona,D. Fisher,Safe at home,Tag Play,Miller,Miller,Stands,1:02,https://bit.ly/2s2zvOo
+2018-05-19,CHI @ CIN,T5,Maddon,V. Caratini,Out at 1st,Force Play,Barber,Reynolds,Overturned,0:58,https://bit.ly/2IBI4em
+2018-05-19,PHI @ STL,B4,Kapler,T. Pham,Safe at 2nd,Tag Play,De Jesus,Vanover,Stands,1:43,https://bit.ly/2x2VM4u
+2018-05-19,PHI @ STL,B4,Matheny,J. Martinez,Out at 1st,Force Play,Wendelstedt,Vanover,Overturned,1:36,https://bit.ly/2IXSPXu
+2018-05-19,LAD @ WSH,T8,Martinez,Y. Grandal,Out at 2nd; No violation,Slide Rule,Fairchild,Dreckman,Confirmed,1:15,https://bit.ly/2wVOT4S
+2018-05-19,COL @ SF,T5,Bochy,G. Parra,Safe at 3rd,Tag Play,O'Nora,O'Nora,Overturned,2:10,https://bit.ly/2IAPEBD
+2018-05-19,PHI @ STL,B8,Matheny,K. Wong,Out at 1st,Force Play,Wendelstedt,Vanover,Stands,1:22,https://bit.ly/2s1dVK9
+2018-05-19,CLE @ HOU,B8,UMPIRE,J. Altuve,Home Run,Potential HR,Rehak,Miller,Overturned,0:53,https://bit.ly/2IGGK61
+2018-05-19,MIL @ MIN,B2,Molitor,R. Grossman,Out at 2nd,Force Play,Eddings,West,Confirmed,0:41,https://bit.ly/2s0XsGL
+2018-05-19,MIL @ MIN,B2,Molitor,J. Cave,Out at 1st,Force Play,West,West,Overturned,0:42,https://bit.ly/2s0XsGL
+2018-05-19,NYY @ KC,B5,Yost,M. Moustakas,Out at home,Tag Play,Wolf,Holbrook,Stands,1:46,https://bit.ly/2GEEbiR
+2018-05-19,ARI @ NYM,T4,Callaway,J. Dyson,Safe at 2nd,Tag Play,Baker,Layne,Stands,2:05,https://bit.ly/2keM3Pr
+2018-05-19,SD @ PIT,T9,Hurdle,T. Jankowski,Safe at 2nd,Tag Play,Little,T. Barrett,Stands,1:23,https://bit.ly/2ICOPws
+2018-05-19,NYY @ KC,B7,Boone,J. Soler,Safe at 1st,Force Play,Torres,Holbrook,Overturned,1:04,https://bit.ly/2rZuwPe
+2018-05-19,NYY @ KC,B9,Boone,H. Dozier,Safe at 2nd,Tag Play,Blakney,Holbrook,Overturned,1:51,https://bit.ly/2kcQuKv
+2018-05-19,TB @ LAA,T7,Cash,W. Ramos,Out at 1st,Force Play,Nelson,Nelson,Overturned,1:44,https://bit.ly/2GEjTGe
+2018-05-20,ARI @ NYM,T6,Lovullo,P. Goldschmidt,Out at 2nd,Tag Play,Carapazza,Layne,Stands,2:34,https://bit.ly/2GADmYp
+2018-05-20,SD @ PIT,B5,Hurdle,J. Harrison,Out at 1st,Force Play,Little,T. Barrett,Overturned,1:10,https://bit.ly/2GEEWZf
+2018-05-20,TEX @ CWS,T4,Banister,R. Rua,Foul Ball; No HBP,HBP,Hernandez,Hernandez,Stands,2:19,https://bit.ly/2IDTuOR
+2018-05-20,PHI @ STL,B6,Kapler,D. Fowler,Safe at 2nd,Tag Play,Eddings,Vanover,Stands,2:26,https://bit.ly/2GEFA97
+2018-05-20,COL @ SF,B2,Black,G. Hernandez,Safe at 1st,Force Play,Segal,O'Nora,Overturned,0:49,https://bit.ly/2Lj7KKp
+2018-05-21,ARI @ MIL,T5,Counsell,D. Peralta,Safe at 1st,Force Play,Hernandez,Vanover,Overturned,0:49,https://bit.ly/2KRRzCO
+2018-05-21,DET @ MIN,B5,Gardenhire,M. Kepler,Safe at home,Tag Play,Kellogg,Kellogg,Overturned,2:23,https://bit.ly/2INSxmT
+2018-05-21,ATL @ PHI,T9,Snitker,E. Inciarte,Out at 1st,Force Play,L. Barrett,Welke,Confirmed,0:43,https://bit.ly/2scz842
+2018-05-21,ARI @ MIL,B7,Lovullo,J. Villar,Safe at 1st,Tag Play,Hernandez,Vanover,Stands,0:45,https://bit.ly/2sd46Jq
+2018-05-21,MIA @ NYM,T9,Mattingly,L. Brinson,Out at 1st,Force Play,Estabrook,Danley,Confirmed,1:05,https://bit.ly/2Lr8uNv
+2018-05-21,COL @ LAD,B9,Roberts,Y. Grandal,Ball; No Hit by Pitch,HBP,Blakney,Holbrook,Stands,1:38,https://bit.ly/2KPLyq0
+2018-05-22,KC @ STL,T1,Matheny,R. Goins,Safe at 1st,Force Play,Ripperger,West,Overturned,1:15,https://bit.ly/2GPUkC7
+2018-05-22,LAA @ TOR,B4,Scioscia,K. Morales,Safe at 2nd,Tag Play,Reynolds,Wegner,Stands,1:25,https://bit.ly/2krTwe1
+2018-05-22,SD @ WSH,T6,Martinez,J. Pirela,Safe at home,Tag Play,Cooper,Cederstrom,Overturned,1:31,https://bit.ly/2KRRIpQ
+2018-05-22,DET @ MIN,T5,Gardenhire,J. Iglesias,Out at 1st,Force Play,Whitson,Kellogg,Stands,1:39,https://bit.ly/2s9Ub80
+2018-05-22,NYY @ TEX,B5,Boone,R. Odor,Safe at 1st,Tag Play,Lentz,Davis,Overturned,0:45,https://bit.ly/2x86Tcm
+2018-05-22,KC @ STL,B8,Matheny,M. Ozuna,Out at 1st,Force Play,Ripperger,West,Confirmed,1:10,https://atmlb.com/2Lr9zVz
+2018-05-22,DET @ MIN,B7,Molitor,E. Rosario,Out at 1st,Force Play,Whitson,Kellogg,Stands,1:31,https://bit.ly/2s8dazR
+2018-05-23,ARI @ MIL,B4,Lovullo,J. Bandy,Safe at 3rd,Tag Play,Guccione,Vanover,Stands,1:36,https://bit.ly/2s8aF0D
+2018-05-23,SD @ WSH,T1,Green,E. Hosmer,Out at 2nd,Tag Play,Scheurwater,Cederstrom,Stands,2:37,https://atmlb.com/2GOykrr
+2018-05-23,SF @ HOU,B8,Bochy,C. Correa,Safe at 1st,Force Play,Winters,Winters,Overturned,2:00,https://bit.ly/2knB6uO
+2018-05-23,LAA @ TOR,T2,Scioscia,A. Simmons,Out at 1st,Tag Play,Reynolds,Wegner,Overturned,0:53,https://bit.ly/2GR2TfV
+2018-05-23,LAA @ TOR,T6,Scioscia,K. Calhoun,Out at 3rd,Tag Play,DiMuro,Wegner,Confirmed,0:49,https://bit.ly/2s6Kvew
+2018-05-23,LAA @ TOR,T6,Scioscia,M. Maldonado,Run Does Not Score,Timing Play,Wegner,Wegner,Confirmed,0:48,https://bit.ly/2s6Kvew
+2018-05-23,ATL @ PHI,T8,Snitker,R. Acuna,Out at 1st,Force Play,Welke,Welke,Stands,1:34,https://bit.ly/2KUvpzJ
+2018-05-23,NYY @ TEX,T8,Banister,G. Stanton,Hit by Pitch,HBP,Lentz,Carlson,Stands,1:44,https://bit.ly/2kpBk4x
+2018-05-23,CLE @ CHI,B7,Maddon,A. Rizzo,Out at home,Tag Play,T. Barrett,T. Barrett,Confirmed,1:06,https://bit.ly/2IMa12W
+2018-05-23,SEA @ OAK,B8,Melvin,Du. Fowler,Out at 2nd,Tag Play,Conroy,O'Nora,Confirmed,1:03,https://bit.ly/2LuhHVt
+2018-05-24,LAA @ TOR,T9,Scioscia,S. Ohtani,Out at 2nd,Tag Play,DiMuro,Wegner,Overturned,2:12,https://bit.ly/2sdb4OA
+2018-05-24,PIT @ CIN,T9,Hurdle,E. Diaz,Out at 1st,Force Play,Nelson,Nelson,Confirmed,0:36,https://bit.ly/2GOMuZE
+2018-05-24,BOS @ TB,B6,Cora,M. Duffy,Safe at home,Tag Play,Hallion,Hallion,Overturned,0:55,https://bit.ly/2KTK2TP
+2018-05-25,LAA @ NYY,B2,Boone,D. Gregorius,Out at 1st,Force Play,Cuzzi,Danley,Overturned,1:10,https://bit.ly/2kvy9bE
+2018-05-25,CWS @ DET,B8,Renteria,L. Martin,Safe at home,Tag Play,Carlson,Carlson,Stands,1:47,https://bit.ly/2si99YW
+2018-05-25,SD @ LAD,B4,Roberts,L. Forsythe,Out at 2nd,Force Play,O'Nora,O'Nora,Stands,2:45,https://bit.ly/2kAa3N8
+2018-05-26,WSH @ MIA,B4,Mattingly,M. Rojas,Out at 1st,Force Play,De Jesus,Vanover,Stands,1:49,https://bit.ly/2L4ploj
+2018-05-26,STL @ PIT,B4,Matheny,G. Polanco,Out at 1st,Tag Play,Tichenor,Miller,Overturned,0:29,https://bit.ly/2IXyIph
+2018-05-26,CWS @ DET,B6,Gardenhire,J. McCann,Out at 1st,Force Play,Hoberg,Carlson,Stands,1:58,https://bit.ly/2shxBuo
+2018-05-26,BAL @ TB,B8,Showalter,R. Refsnyder,Safe at 1st,Force Play,Wegner,Wegner,Overturned,1:28,https://bit.ly/2L7bQnX
+2018-05-26,BAL @ TB,T9,Showalter,A. Jones,Ball; No Hit by Pitch,HBP,DiMuro,Wegner,Stands,1:11,https://bit.ly/2L4NgUN
+2018-05-26,NYM @ MIL,B7,Counsell,H. Perez,Out at 1st,Force Play,Drake,Winters,Overturned,0:30,https://bit.ly/2JkrqPI
+2018-05-26,SF @ CHI,B4,Bochy,W. Contreras,Safe at 1st,Force Play,Cooper,Cederstrom,Overturned,1:12,https://bit.ly/2LFMrCX
+2018-05-26,HOU @ CLE,T7,Francona,A. Bregman,Safe at 1st,Force Play,Randazzo,Welke,Overturned,1:02,https://bit.ly/2kzn9dg
+2018-05-26,MIN @ SEA,B8,Servais,M. Haniger,Out at 1st,Force Play,Little,T. Barrett,Stands,1:01,https://bit.ly/2JaUTvw
+2018-05-27,KC @ TEX,B1,Banister,D. DeShields,Out at 3rd,Tag Play,Hudson,Kellogg,Overturned,1:08,https://bit.ly/2ISgMAh
+2018-05-27,NYM @ MIL,T5,UMPIRE,M. Conforto,Home Run,Potential HR,Muchlinski,Winters,Overturned,1:23,https://bit.ly/2xn4Y3P
+2018-05-27,KC @ TEX,T7,Yost,J. Jay,Out at 2nd,Tag Play,Kellogg,Kellogg,Overturned,1:23,https://bit.ly/2kxVRE8
+2018-05-27,ARI @ OAK,T6,Lovullo,D. Peralta,Out at 1st,Force Play,Holbrook,Holbrook,Overturned,0:44,https://bit.ly/2LFMJK3
+2018-05-27,MIN @ SEA,B8,Servais,B. Gamel,Out at 2nd,Tag Play,Barksdale,T. Barrett,Stands,1:16,https://bit.ly/2ISqqD2
+2018-05-28,HOU @ NYY,B2,Boone,A. Hicks,Ball; No Hit by Pitch,HBP,Johnson,Gorman,Overturned,0:50,https://bit.ly/2shqnqj
+2018-05-28,LAA @ DET,B7,UMPIRE,L. Martin,HR; No Interference,Potential HR,G. Gibson,G. Gibson,Confirmed,0:31,https://bit.ly/2LDlNuq
+2018-05-28,CHI @ PIT,T8,UMPIRE,A. Rizzo,Out at home,Rules Check,Welke,Carlson,Rules Check,1:29,https://bit.ly/2kwErrz
+2018-05-28,CHI @ PIT,T8,Hurdle,A. Rizzo,No violation,Slide Rule,Welke,Carlson,Stands,1:29,https://bit.ly/2kwErrz
+2018-05-28,STL @ MIL,B7,Matheny,C. Yelich,Safe at 2nd,Tag Play,Scheurwater,Cederstrom,Stands,2:07,https://bit.ly/2IXNAnI
+2018-05-28,TB @ OAK,B9,Melvin,J. Lowrie,Out at 3rd,Force Play,Torres,Nauert,Confirmed,0:55,https://bit.ly/2shysLn
+2018-05-28,MIN @ KC,B8,Yost,A. Escobar,Ball; No Hit by Pitch,HBP,Hallion,Hallion,Overturned,0:41,https://bit.ly/2kzqRUt
+2018-05-28,PHI @ LAD,B8,Kapler,J. Turner,Safe at 1st,Force Play,Danley,T. Barrett,Confirmed,0:44,https://bit.ly/2L3kQKM
+2018-05-29",WSH @ BAL,T6,Martinez,M. Taylor,Out at 2nd,Tag Play,Gonzalez,Nelson,Overturned,1:12,https://bit.ly/2kEIAtz
+2018-05-29",CHI @ PIT,T7,UMPIRE,A. Rizzo,HR; No Interference,Potential HR,Davis,Davis,Stands,1:41,https://bit.ly/2syEGpt
+2018-05-29",NYM @ ATL,B3,Snitker,N. Markakis,Out at 1st,Force Play,May,Cuzzi,Confirmed,0:36,https://bit.ly/2syF5Z1
+2018-05-29",WSH @ BAL,B9,Martinez,T. Mancini,Hit by Pitch,HBP,Nelson,Nelson,Confirmed,0:58,https://bit.ly/2kEfpqC
+2018-05-29",SF @ COL,B5,Black,K. Freeland,Out at 1st,Force Play,Hudson,Kellogg,Confirmed,1:08,https://bit.ly/2syHkvF
+2018-05-29",TB @ OAK,T4,Melvin,D. Robertson,Safe at 2nd,Tag Play,Torres,Nauert,Overturned,2:03,https://bit.ly/2HbvhJO
+2018-05-29",TEX @ SEA,T6,Servais,D. DeShields,Hit by Pitch,HBP,Meals,Meals,Overturned,1:35,https://bit.ly/2Jnp8PO
+2018-05-29",MIA @ SD,T9,Mattingly,T. Jankowski,Catch,Catch/No Catch,Blakney,Marquez,Overturned,1:01,https://bit.ly/2HaH2R3
+2018-05-30",STL @ MIL,B1,Matheny,C. Yelich,Safe at 1st,Tag Play,Cooper,Cederstrom,Overturned,0:47,https://bit.ly/2xzj565
+2018-05-30",TOR @ BOS,B3,Gibbons,A. Benintendi,Safe at 2nd,Tag Play,Baker,Layne,Overturned,1:00,https://bit.ly/2LgrKwy
+2018-05-30",TOR @ BOS,B3,Gibbons,J. Bradley,Safe at home,Tag Play,Layne,Layne,Overturned,0:45,https://bit.ly/2spiLC9
+2018-05-30",TOR @ BOS,B5,UMPIRE,E. Nuñez,HR; No Interference,Potential HR,Carapazza,Layne,Confirmed,0:45,https://bit.ly/2LRGDX8
+2018-05-30",CHI @ PIT,B3,UMPIRE,J. Musgrove,Out at 2nd,Rules Check,Welke,Davis,Rules Check,2:04,https://atmlb.com/2Ha9lPx
+2018-05-30",MIN @ KC,B2,UMPIRE,J. Soler,Home Run,Potential HR,Hamari,Hallion,Overturned,2:06,https://bit.ly/2JgEwOf
+2018-05-30",TB @ OAK,T7,Cash,C. Arroyo,Out at 1st,Force Play,Torres,Nauert,Stands,1:40,https://bit.ly/2srlj2z
+2018-05-31",BOS @ HOU,T3,Hinch,A. Benintendi,Safe at home,Tag Play,Wendelstedt,Cuzzi,Stands,1:53,https://bit.ly/2JmdncA
+2018-05-31",BOS @ HOU,B4,Cora,J. Davis,Safe at home,Tag Play,Wendelstedt,Cuzzi,Stands,2:00,https://bit.ly/2syGgrw
+2018-05-31",PHI @ LAD,B9,Kapler,J. Turner,Safe at 1st,Force Play,T. Barrett,T. Barrett,Overturned,1:17,https://bit.ly/2xy9dd7
+2018-05-31",CLE @ MIN,T8,Francona,M. Garver,No Violation,Collision Rule,Visconti,Layne,Confirmed,1:45,https://bit.ly/2sxUp8B
+2018-05-31",CLE @ MIN,T8,Francona,M. Brantley,Out at home,Tag Play,VIsconti,Layne,Stands,1:45,https://bit.ly/2sxUp8B
+2018-06-1",TOR @ DET,T2,Gardenhire,R. Grichuk,Safe at 1st,Force Play,Fletcher,Nelson,Overturned,0:55,https://bit.ly/2JrmsRA
+2018-06-1",PIT @ STL,B1,Hurdle,H. Bader,No violation,Slide Rule,Hudson,Kellogg,Overturned,1:35,https://bit.ly/2swWwdk
+2018-06-1",TOR @ DET,B6,Gardenhire,J. Jones,Out at 2nd,Tag Play,Nelson,Nelson,Stands,1:50,https://bit.ly/2LicXkP
+2018-06-1",LAD @ COL,B9,Roberts,G. Parra,Safe at 1st,Force Play,Lentz,Davis,Stands,2:47,https://bit.ly/2HkOnxe
+2018-06-1",TB @ SEA,T8,Servais,J. Field,Hit by Pitch,HBP,Reyburn,Marquez,Confirmed,1:25,https://bit.ly/2xFjEeX
+2018-06-1",CIN @ SD,T7,Green,E. Suarez,Safe at home,Tag Play,Nauert,Nauert,Stands,1:38,https://bit.ly/2J9I8Cd
+2018-06-2",OAK @ KC,B2,Yost,R. Goins,Out at 1st,Force Play,Blaser,Cederstrom,Overturned,1:47,https://bit.ly/2Ju5mCp
+2018-06-2",CLE @ MIN,B3,Francona,E. Adrianza,Safe at 2nd,Tag Play,Visconti,Layne,Confirmed,2:21,https://bit.ly/2sENytP
+2018-06-2",LAD @ COL,T4,Roberts,B. Valera,Out at 1st,Force Play,Carlson,Davis,Overturned,1:41,https://bit.ly/2kPeP9C
+2018-06-2",CIN @ SD,B5,Riggleman,J. Pirela,Safe at 2nd,Tag Play,Torres,Nauert,Overturned,1:29,https://bit.ly/2xERUXS
+2018-06-2",TEX @ LAA,B6,Scioscia,M. Trout,Out at 2nd,Tag Play,O'Nora,Culbreth,Overturned,1:07,https://bit.ly/2JgJYxg
+2018-06-2",PHI @ SF,B6,Kapler,J. Panik,Safe at home,Tag Play,Meals,Meals,Stands,1:35,https://bit.ly/2HkOMQg
+2018-06-2",MIA @ ARI,T6,UMPIRE,S. Castro,In play; Double,Potential HR,Little,T. Barrett,Stands,2:00,https://bit.ly/2sxpxpe
+2018-06-2",TB @ SEA,T6,UMPIRE,W. Ramos,In play; Double,Potential HR,Marquez,Marquez,Confirmed,0:58,https://bit.ly/2JdI1pv
+2018-06-2",TEX @ LAA,T9,Banister,C. Tocci,Out at 2nd,Tag Play,O'Nora,Culbreth,Confirmed,1:27,https://bit.ly/2JgVXL7
+2018-06-2",TEX @ LAA,T9,Banister,J. Profar,Run Does Not Score,Timing Play,Bucknor,Culbreth,Overturned,1:27,https://bit.ly/2JgVXL7
+2018-06-2",TB @ SEA,B6,Servais,D. Gordon,Out at 1st,Force Play,Blakney,Marquez,Overturned,0:59,https://bit.ly/2J8Tuq1
+2018-06-2",TB @ SEA,T9,Cash,M. Smith,Out at 1st,Force Play,Blakney,Marquez,Confirmed,0:52,https://bit.ly/2sHij1e
+2018-06-3",MIL @ CWS,T6,Counsell,J. Villar,Out at 2nd,Tag Play,Ripperger,G. Gibson,Stands,1:11,https://bit.ly/2LY6zQT
+2018-06-3",CLE @ MIN,T7,UMPIRE,Y. Gomes,In play; Double,Potential HR,Carapazza,Layne,Confirmed,1:25,https://bit.ly/2sEDXTS
+2018-06-3",WSH @ ATL,B9,Snitker,D. Swanson,Out at 2nd,Tag Play,Hallion,Hallion,Overturned,1:05,https://bit.ly/2JhfPxV
+2018-06-3",PHI @ SF,T3,Kapler,C. Santana,Out at 2nd,Force Play,Hickox,Meals,Confirmed,1:35,https://bit.ly/2Hj4Q5e
+2018-06-3",TB @ SEA,B4,Cash,D. Gordon,Safe at 1st,Tag Play,Marquez,Marquez,Stands,1:50,https://bit.ly/2xHjWld
+2018-06-3",MIA @ ARI,T9,Mattingly,C. Owings,Catch,Catch/No Catch,Little,T. Barrett,Overturned,3:48,https://bit.ly/2kN75EU
+2018-06-3",BOS @ HOU,B7,Hinch,A. Bregman,Out at 2nd,Force Play,Cuzzi,Cuzzi,Stands,2:15,https://bit.ly/2Lm7klB
+2018-06-4",NYY @ DET (G1),T5,Gardenhire,D. Gregorius,Safe at 2nd,Tag Play,Miller,Miller,Overturned,1:15,https://bit.ly/2JiwQeW
+2018-06-4",KC @ LAA,T2,Scioscia,A. Escobar,Safe at 2nd,Tag Play,Meals,Meals,Stands,1:58,https://bit.ly/2JGYXDW
+2018-06-4",ARI @ SF,B4,Bochy,J. Panik,Ball; No Hit by Pitch,HBP,L. Barrett,Welke,Overturned,0:38,https://bit.ly/2JDPxsU
+2018-06-5",DET @ BOS,B1,Cora,A. Benintendi,Out at 2nd,Tag Play,Rehak,Wegner,Overturned,1:43,https://bit.ly/2kZvyah
+2018-06-5",DET @ BOS,B3,Gardenhire,J. Bradley,Safe at 1st,Tag Play,DiMuro,Wegner,Overturned,1:02,https://bit.ly/2sY9YGT
+2018-06-5",NYY @ TOR,T6,Gibbons,B. Gardner,Safe at 2nd,Tag Play,Porter,Miller,Overturned,0:51,https://bit.ly/2Jr5Cif
+2018-06-5",COL @ CIN,B7,Riggleman,J. Winker,Out at home,Tag Play,Gorman,Gorman,Stands,2:17,https://bit.ly/2JsQiBN
+2018-06-5",CWS @ MIN (G2),B7,Renteria,E. Adrianza,Safe at 2nd,Tag Play,Conroy,Culbreth,Overturned,2:12,https://bit.ly/2xSsKoL
+2018-06-5",ARI @ SF,B9,Lovullo,A. Hanson,Fair Ball; Double,Fair/Foul,Welke,Welke,Confirmed,0:47,https://bit.ly/2HxLIAt
+2018-06-6",TB @ WSH,B2,Martinez,A. Rendon,Out at 1st,Force Play,Barksdale,T. Barrett,Overturned,2:12,https://bit.ly/2JIeSCg
+2018-06-6",TB @ WSH,B4,Cash,B. Harper,Safe at 2nd,Tag Play,Woodring,T. Barrett,Overturned,0:52,https://bit.ly/2LyL7kk
+2018-06-6",ARI @ SF,T6,Lovullo,N. Hundley,No violation,Collision Rule,Welke,Welke,Confirmed,1:17,https://bit.ly/2JqMLnn
+2018-06-6",ARI @ SF,T6,Lovullo,P. Goldschmidt,Out at home,Tag Play,Welke,Welke,Stands,1:17,https://bit.ly/2JqMLnn
+2018-06-6",ARI @ SF,T10,UMPIRE,D. Peralta,Foul Ball,Potential HR,Knight,Welke,Confirmed,1:15,https://bit.ly/2sHx8Sx
+2018-06-6",OAK @ TEX,T4,Melvin,M. Canha,Out at 1st,Force Play,May,Vanover,Overturned,0:46,https://bit.ly/2Jl4pwV
+2018-06-6",LAD @ PIT,B6,Hurdle,C. Dickerson,Out at 1st,Force Play,Ortiz,Reynolds,Overturned,1:29,https://bit.ly/2sJBHvm
+2018-06-6",CWS @ MIN,T6,Molitor,A. Engel,Safe at 1st,Force Play,Conroy,Culbreth,Overturned,2:04,https://bit.ly/2JEtKBu
+2018-06-6",OAK @ TEX,T8,Melvin,R. Chirinos,No violation,Collision Rule,Guccione,Vanover,Confirmed,0:18,https://bit.ly/2sQaRkE
+2018-06-6",OAK @ TEX,T8,Melvin,K. Davis,Out at home,Tag Play,Guccione,Vanover,Confirmed,0:18,https://bit.ly/2sQaRkE
+2018-06-6",KC @ LAA,T8,Yost,M. Moustakas,Out at 3rd,Tag Play,Hickox,Meals,Overturned,1:19,https://bit.ly/2LuLVXm
+2018-06-7",COL @ CIN,T1,Riggleman,N. Arenado,Safe at 1st,Force Play,Whitson,Gorman,Overturned,0:52,https://bit.ly/2MbJI4j
+2018-06-7",COL @ CIN,B2,Black,A. Duvall,Safe at home,Tag Play,T. Gibson,Gorman,Stands,1:49,https://bit.ly/2MairiI
+2018-06-7",COL @ CIN,T4,Riggleman,T. Wolters,Out at 2nd; No violation,Slide Rule,Gorman,Gorman,Confirmed,0:48,https://bit.ly/2LzlNL1
+2018-06-7",CWS @ MIN,T6,Molitor,C. Tilson,Safe at 1st,Tag Play,O'Nora,Culbreth,Stands,1:32,https://bit.ly/2M9WYXs
+2018-06-7",PHI @ CHI,B5,Maddon,A. Knapp,No violation,Collision Rule,Mahrley,Layne,Overturned,2:36,https://bit.ly/2JFK30N
+2018-06-7",DET @ BOS,B3,Gardenhire,E. Nuñez,Safe at 1st,Force Play,Wegner,Wegner,Overturned,0:54,https://bit.ly/2JECjw8
+2018-06-7",SEA @ TB,T4,Cash,D. Gordon,Safe at 2nd,Tag Play,Vanover,Vanover,Overturned,1:47,https://bit.ly/2kWyGDK
+2018-06-8",SD @ MIA,B3,Mattingly,B. Anderson,Out at 1st,Tag Play,Baker,Layne,Confirmed,0:52,https://bit.ly/2HGgOWA
+2018-06-8",CWS @ BOS,B7,Cora,M. Moreland,Out at 1st,Force Play,Livensparger,Kellogg,Overturned,0:53,https://bit.ly/2sXJHbF
+2018-06-8",MIL @ PHI,B7,UMPIRE,N. Williams,In Play; Triple,Potential HR,Bucknor,Culbreth,Confirmed,1:31,https://bit.ly/2t00oTz
+2018-06-8",BAL @ TOR,T9,Showalter,D. Valencia,Out at 2nd,Tag Play,T. Barrett,T. Barrett,Stands,2:38,https://bit.ly/2HGgW8w
+2018-06-8",SD @ MIA,B8,UMPIRE,S. Castro,Out at 2nd,Tag Play,Carapazza,Layne,Overturned,1:45,https://bit.ly/2y5t1EU
+2018-06-8",ATL @ LAD,B1,Roberts,Y. Puig,Out at 1st,Tag Play,Hernandez,Miller,Stands,1:17,https://bit.ly/2JDgB8v
+2018-06-9",PIT @ CHI,T1,Maddon,A. Meadows,Safe at 1st,Force Play,VIsconti,West,Overturned,0:47,https://bit.ly/2t3KesG
+2018-06-9",KC @ OAK,T4,Yost,P. Orlando,Out at 1st,Tag Play,Welke,Welke,Overturned,1:51,https://bit.ly/2LF5BIm
+2018-06-9",KC @ OAK,T4,Yost,A. Escobar,Out at home,Tag Play,Randazzo,Welke,Stands,1:51,https://bit.ly/2LF5BIm
+2018-06-9",SEA @ TB,B3,UMPIRE,M. Smith,Home Run,Potential HR,Guccione,Hudson,Overturned,1:20,https://bit.ly/2Jtro9o
+2018-06-9",SEA @ TB,B8,Cash,M. Smith,Out at 2nd,Tag Play,May,Hudson,Stands,1:35,https://bit.ly/2xYpqIy
+2018-06-9",STL @ CIN,B8,Riggleman,S. Schebler,Out at 1st,Force Play,Davis,Davis,Confirmed,1:11,https://bit.ly/2l3K0y5
+2018-06-9",ARI @ COL,B5,Lovullo,T. Story,Safe at 2nd,Tag Play,Meals,Meals,Overturned,0:47,https://bit.ly/2JB0JDg
+2018-06-10",STL @ CIN,T1,Riggleman,J. Martinez,Safe at 2nd,Tag Play,Carlson,Davis,Overturned,0:49,https://bit.ly/2MfRES6
+2018-06-10",SD @ MIA,B1,Green,J. Realmuto,Hit by Pitch,HBP,Carapazza,Layne,Confirmed,0:15,https://bit.ly/2LFsyuU
+2018-06-10",STL @ CIN,T3,Matheny,J. Winker,Catch,Catch/No Catch,Knight,Davis,Overturned,1:55,https://bit.ly/2MhPFg4
+2018-06-10",STL @ CIN,B4,Matheny,B. Hamilton,Safe at 3rd,Tag Play,Knight,Davis,Stands,1:34,https://bit.ly/2t0fQ2b
+2018-06-10",CLE @ DET,T6,Gardenhire,R. Perez,Hit by Pitch,HBP,Johnson,Gorman,Confirmed,1:09,https://bit.ly/2y4Gs7S
+2018-06-10",BAL @ TOR,B6,Showalter,Y. Solarte,Safe at 1st,Force Play,Barksdale,T. Barrett,Stands,1:30,https://bit.ly/2MiOFs8
+2018-06-10",CWS @ BOS,T9,Renteria,Y. Moncada,Out at 1st,Force Play,Wolcott,Kellogg,Overturned,0:43,https://bit.ly/2JDhVbt
+2018-06-10",NYY @ NYM,T8,Boone,M. Andujar,Out at 2nd,Force Play,Wegner,Wegner,Overturned,2:34,https://bit.ly/2HEUexC
+2018-06-11",SF @ MIA,B4,UMPIRE,L. Brinson,In play; Triple,Potential HR,Tumpane,Wegner,Confirmed,0:40,https://bit.ly/2lbedva
+2018-06-11",SF @ MIA,T5,Mattingly,G. Hernandez,Safe at 2nd,Force Play,Tumpane,Wegner,Stands,1:30,https://bit.ly/2JOxGQ6
+2018-06-11",TOR @ TB,B7,Gibbons,W. Ramos,Safe at home,Tag Play,West,West,Confirmed,1:25,https://bit.ly/2y8D8sE
+2018-06-11",PIT @ ARI,T6,Hurdle,J. Bell,Out at 1st,Force Play,Blakney,Holbrook,Stands,1:25,https://bit.ly/2laOX8o
+2018-06-11",PIT @ ARI,B8,UMPIRE,K. Marte,Safe at 3rd,Tag Play,Holbrook,Holbrook,Stands,1:37,https://bit.ly/2JVsnOT
+2018-06-12",WSH @ NYY,T6,Boone,M. Taylor,Safe at 2nd,Tag Play,Culbreth,Culbreth,Overturned,1:43,https://bit.ly/2l7Ir1X
+2018-06-12",SD @ STL,T4,Matheny,F. Galvis,Safe at home,Tag Play,Segal,Meals,Stands,2:08,https://bit.ly/2JLXVTW
+2018-06-12",SF @ MIA,B8,Bochy,B. Anderson,Hit by Pitch,HBP,Wegner,Wegner,Overturned,0:59,https://bit.ly/2t8t5hu
+2018-06-12",NYM @ ATL,B6,Snitker,T. Flowers,Out at 1st,Force Play,Cooper,Cederstrom,Overturned,0:41,https://bit.ly/2MqEIcl
+2018-06-12",LAA @ SEA,B2,Servais,G. Heredia,Out at 1st,Force Play,Hallion,Hallion,Overturned,0:51,https://bit.ly/2t9SZkG
+2018-06-13",BOS @ BAL,B2,Showalter,M. Trumbo,Ball; No Hit by Pitch,HBP,Knight,Carlson,Overturned,1:16,https://bit.ly/2JA7mKl
+2018-06-13",BOS @ BAL,T5,Showalter,J. Martinez,Safe at home,Tag Play,Knight,Carlson,Stands,1:06,https://atmlb.com/2JOlxYh
+2018-06-13",LAA @ SEA,B7,Servais,J. Segura,Out at home,Tag Play,Hallion,Hallion,Stands,2:50,https://bit.ly/2l7uwc6
+2018-06-13",WSH @ NYY,T3,Martinez,T. Turner,Out at 1st,Tag Play,Culbreth,Culbreth,Stands,3:08,https://bit.ly/2t6KNSv
+2018-06-13",CLE @ CWS,B1,Francona,Y. Sanchez,Safe at 2nd,Tag Play,Nauert,Nauert,Stands,2:36,https://bit.ly/2yaBZjZ
+2018-06-13",MIN @ DET,B5,Gardenhire,V. Reyes,Out at 1st,Force Play,Drake,Winters,Overturned,2:27,https://bit.ly/2JSWmac
+2018-06-13",WSH @ NYY,T8,UMPIRE,M. Taylor,Out at 2nd,Tag Play,Bucknor,Culbreth,Stands,1:50,https://bit.ly/2HNLllw
+2018-06-13",TEX @ LAD,T4,Roberts,A. Beltre,Safe at home,Tag Play,Barber,Welke,Stands,2:46,https://bit.ly/2JLODaE
+2018-06-13",TEX @ LAD,T5,UMPIRE,S. Choo,In play; Double,Potential HR,Welke,Welke,Confirmed,0:35,https://bit.ly/2LSyX6i
+2018-06-13",TEX @ LAD,B11,Banister,K. Hernandez,Safe at home,Tag Play,Barber,Welke,Confirmed,0:49,https://bit.ly/2sUVhoO
+2018-06-14",COL @ PHI,T2,Kapler,G. Parra,Safe at 1st,Tag Play,Hoye,Kellogg,Overturned,1:33,https://bit.ly/2t9InDx
+2018-06-14",SD @ ATL,B7,Green,T. Flowers,Hit by Pitch,HBP,Ripperger,West,Stands,2:50,https://bit.ly/2t3E1O6
+2018-06-15",SD @ ATL,B3,Green,F. Freeman,Safe at home,Tag Play,West,West,Overturned,1:31,https://bit.ly/2JJAWND
+2018-06-15",CHI @ STL,B3,Matheny,M. Wacha,Out at 1st,Force Play,Woodring,Nauert,Overturned,0:49,https://bit.ly/2JYdpHW
+2018-06-15",CHI @ STL,B3,Matheny,H. Bader,Out at 1st,Tag Play,Woodring,Nauert,Confirmed,1:28,https://bit.ly/2ykKF7K
+2018-06-15",MIN @ CLE,B8,Francona,J. Ramirez,Out at 2nd,Tag Play,Reyburn,Holbrook,Stands,2:28,https://bit.ly/2JLnQzp
+2018-06-15",SD @ ATL,T9,Snitker,H. Renfroe,Safe at 2nd,Force Play,Mahrley,West,Stands,2:07,https://bit.ly/2MwngDe
+2018-06-15",HOU @ KC,T8,Hinch,J. Reddick,Out at 1st,Force Play,Wegner,Wegner,Overturned,0:47,https://bit.ly/2lctkV3
+2018-06-15",HOU @ KC,T9,Hinch,J. Marisnick,Out at 2nd,Force Play,Tumpane,Wegner,Stands,1:31,https://bit.ly/2JVLwjP
+2018-06-15",NYM @ ARI,B6,Lovullo,J. Jay,Out at 2nd,Tag Play,Reynolds,Reynolds,Stands,2:33,https://bit.ly/2JVLGYt
+2018-06-16",TB @ NYY,T1,Boone,J. Bauers,Safe at 2nd,Tag Play,Morales,Meals,Overturned,0:58,https://bit.ly/2t62HW9
+2018-06-16",HOU @ KC,T7,Yost,A. Bregman,Safe at 1st,Force Play,Tumpane,Wegner,Overturned,1:02,https://bit.ly/2teQX2L
+2018-06-16",LAA @ OAK,T3,Scioscia,D. Fletcher,Out at 1st,Force Play,Carlson,Carlson,Stands,1:30,https://bit.ly/2tg5Ou5
+2018-06-16",COL @ TEX,T5,Banister,C. Gonzalez,Safe at 1st,Force Play,Porter,Miller,Overturned,1:14,https://bit.ly/2t2pDFA
+2018-06-16",PHI @ MIL,B4,Kapler,L. Cain,Safe at 1st,Tag Play,Diaz,Nelson,Overturned,2:10,https://bit.ly/2HY2Sav
+2018-06-16",COL @ TEX,T9,Black,T. Murphy,Out at 2nd,Tag Play,Hernandez,Miller,Confirmed,0:58,https://bit.ly/2JK4Xg5
+2018-06-16",BOS @ SEA,T5,Cora,X. Bogaerts,Out at 1st,Force Play,Carapazza,Welke,Stands,1:54,https://bit.ly/2HWgt2c
+2018-06-16",CHI @ STL,B9,Matheny,M. Carpenter,Foul Ball,Fair/Foul,Nauert,Nauert,Stands,1:12,https://bit.ly/2yhOXN3
+2018-06-16",NYM @ ARI,B8,UMPIRE,P. Goldschmidt,Foul Ball,Potential HR,Reynolds,Reynolds,Stands,1:31,https://bit.ly/2M17YFI
+2018-06-17",CIN @ PIT,B2,Riggleman,J. Mercer,Hit by Pitch,HBP,Timmons,Winters,Overturned,0:53,https://bit.ly/2yiloLg
+2018-06-17",MIN @ CLE,B5,Francona,Y. Gomes,Out at 1st,Force Play,Blakney,Holbrook,Confirmed,1:06,https://bit.ly/2t56nHU
+2018-06-17",HOU @ KC,B3,Yost,M. Moustakas,Out at home,Tag Play,Tumpane,Wegner,Stands,1:55,https://bit.ly/2MBtYrJ
+2018-06-17",WSH @ TOR,T6,Martinez,W. Difo,Out at 3rd,Tag Play,Ortiz,Kellogg,Stands,2:11,https://bit.ly/2JZu6CV
+2018-06-17",PHI @ MIL,B5,Kapler,C. Yelich,Safe at 1st,Tag Play,Gonzalez,Nelson,Overturned,0:42,https://bit.ly/2t2XiPJ
+2018-06-17",CIN @ PIT,B8,Hurdle,C. Casali,No violation,Collision Rule,Timmons,Winters,Confirmed,0:44,https://bit.ly/2K3oQxS
+2018-06-17",CIN @ PIT,B8,Hurdle,J. Bell,Out at home,Tag Play,Timmons,Winters,Stands,0:44,https://bit.ly/2K3oQxS
+2018-06-17",LAA @ OAK,B7,Scioscia,J. Lowrie,Safe at 3rd,Tag Play,Lentz,Carlson,Stands,2:24,https://bit.ly/2HZXXWI
+2018-06-17",NYM @ ARI,B8,Lovullo,P. Goldschmidt,Out at 1st,Force Play,Dreckman,Reynolds,Overturned,0:50,https://bit.ly/2JMawdS
+2018-06-17",NYM @ ARI,B9,Callaway,A. Avila,Safe at 1st,Force Play,Dreckman,Reynolds,Stands,2:56,https://bit.ly/2JTnrH0
+2018-06-17",CHI @ STL,B7,Matheny,H. Bader,Out at 2nd,Tag Play,Nauert,Nauert,Stands,2:00,https://bit.ly/2tgYHBB
+2018-06-18",NYY @ WSH,T1,Boone,A. Hicks,Out at 2nd,Force Play,Meals,Meals,Overturned,0:40,https://bit.ly/2MidUdd
+2018-06-18",MIL @ PIT,B5,Counsell,G. Polanco,Safe at 2nd,Tag Play,Wendelstedt,Vanover,Overturned,1:14,https://bit.ly/2tBd1Fh
+2018-06-18",STL @ PHI,B7,UMPIRE,R. Hoskins,Foul Ball,Potential HR,Scheurwater,Cederstrom,Confirmed,0:59,https://bit.ly/2MPWNAM
+2018-06-18",TEX @ KC,T7,Banister,D. DeShields,Out at 2nd,Tag Play,Fairchild,Marquez,Confirmed,0:43,https://bit.ly/2yyznge
+2018-06-18",ARI @ LAA,B1,Lovullo,M. Trout,Safe at 2nd,Tag Play,Baker,Layne,Overturned,0:51,https://bit.ly/2KcC0c9
+2018-06-18",STL @ PHI,B10,Matheny,O. Herrera,Safe at 1st,Force Play,Cederstrom,Cederstrom,Overturned,0:45,https://bit.ly/2lqmVFR
+2018-06-18",NYM @ COL,T8,Black,J. deGrom,Safe at 1st,Force Play,Welke,Welke,Overturned,0:39,https://bit.ly/2MQeHTR
+2018-06-19",CWS @ CLE,T3,UMPIRE,J. Abreu,Fair Ball; Home Run,Potential HR,Barksdale,T. Barrett,Overturned,0:39,https://bit.ly/2yykvhR
+2018-06-19",TB @ HOU,B3,Hinch,A. Bregman,Out at 2nd,Tag Play,Davis,Davis,Stands,2:00,https://bit.ly/2McynjI
+2018-06-19",OAK @ SD,T2,Melvin,K. Davis,Out at 2nd,Force Play,Cuzzi,Hallion,Overturned,1:02,https://bit.ly/2tuIGYS
+2018-06-19",NYM @ COL,B3,UMPIRE,N. Cuevas,In play; Double,Potential HR,Randazzo,Welke,Confirmed,0:50,https://bit.ly/2Kb2Zol
+2018-06-19",BOS @ MIN,B8,Molitor,S. Leon,No violation,Collision Rule,Torres,Nelson,Confirmed,0:38,https://bit.ly/2K0PecO
+2018-06-19",BOS @ MIN,B8,Molitor,R. Grossman,Out at home,Tag Play,Torres,Nelson,Confirmed,0:39,https://bit.ly/2K0PecO
+2018-06-19",ARI @ LAA,B8,Lovullo,M. Maldonado,Safe at 2nd,Force Play,Carapazza,Layne,Overturned,1:10,https://bit.ly/2tlxxtS
+2018-06-20",CWS @ CLE,B3,Renteria,M. Brantley,Safe at 3rd,Tag Play,Additon,T. Barrett,Overturned,0:46,https://bit.ly/2K8kZjt
+2018-06-20",DET @ CIN,B6,UMPIRE,E. Suarez,In play; Double,Potential HR,Blakney,Holbrook,Overturned,1:11,https://bit.ly/2Kc5erE
+2018-06-20",LAD @ CHI,B7,Roberts,K. Bryant,Safe at 1st,Tag Play,Johnson,Gorman,Overturned,0:48,https://bit.ly/2tgMk9p
+2018-06-20",BOS @ MIN,T8,Molitor,M. Kepler,No Catch,Catch/No Catch,Barry,Nelson,Overturned,0:37,https://bit.ly/2tklahX
+2018-06-20",NYM @ COL,B7,Black,T. Murphy,Out at 2nd,Tag Play,Randazzo,Welke,Confirmed,0:57,https://bit.ly/2IggvC0
+2018-06-21",CHI @ CIN,B3,Riggleman,J. Peraza,Out at 2nd,Tag Play,G. Gibson,Layne,Overturned,2:29,https://bit.ly/2MJlgYx
+2018-06-22",SEA @ BOS,T2,Cora,An. Romine,Safe at home,Tag Play,Estabrook,Marquez,Stands,1:29,https://bit.ly/2yJMmeY
+2018-06-22",CHI @ CIN,T3,Maddon,C. Gimenez,Out at 1st,Tag Play,G. Gibson,Layne,Overturned,0:43,https://bit.ly/2IrZxke
+2018-06-22",NYY @ TB,B4,Cash,W. Adames,Out at 2nd,Tag Play,Hallion,Hallion,Overturned,1:16,https://bit.ly/2MihGTW
+2018-06-22",ARI @ PIT,T8,Hurdle,J. Dyson,Safe at 1st,Tag Play,Cederstrom,Cederstrom,Overturned,1:14,https://bit.ly/2lyxbf9
+2018-06-22",CHI @ CIN,T6,Riggleman,J. Baez,Hit by Pitch,HBP,Rehak,Layne,Stands,2:29,https://bit.ly/2KlSBar
+2018-06-22",ARI @ PIT,T11,Lovullo,E. Diaz,No violation,Collision Rule,Cooper,Cederstrom,Confirmed,0:24,https://bit.ly/2MVugtA
+2018-06-22",ARI @ PIT,T11,Lovullo,P. Goldschmidt,Out at home,Tag Play,Cooper,Cederstrom,Confirmed,0:24,https://bit.ly/2MVugtA
+2018-06-22",TEX @ MIN,T7,Molitor,D. DeShields,Safe at 1st,Force Play,T. Gibson,Gorman,Overturned,1:17,https://bit.ly/2Ip4f2v
+2018-06-22",TEX @ MIN,T7,Banister,R. Guzman,Out at 2nd,Force Play,Gorman,Gorman,Stands,1:15,https://bit.ly/2yGJtLR
+2018-06-22",SD @ SF,T6,Green,C. Spangenberg,Out at 1st,Force Play,Hoberg,Davis,Overturned,0:41,https://bit.ly/2MXagqx
+2018-06-22",TOR @ LAA,T7,Scioscia,R. Grichuk,Safe at 1st,Force Play,Fletcher,Diaz,Overturned,0:48,https://bit.ly/2tsS9R1
+2018-06-22",TOR @ LAA,T7,Gibbons,M. Hermosillo,Catch,Catch/No Catch,Fletcher,Diaz,Overturned,0:50,https://bit.ly/2KlDugU
+2018-06-22",BAL @ ATL,B13,Snitker,O. Albies,Out at 1st,Force Play,Barksdale,T. Barrett,Confirmed,0:57,https://bit.ly/2N1yRdU
+2018-06-23",OAK @ CWS,B1,Renteria,Y. Moncada,Foul Ball; No HBP,HBP,Blakney,Holbrook,Overturned,1:27,https://bit.ly/2KozagQ
+2018-06-23",STL @ MIL,B1,Matheny,E. Thames,Safe at 2nd,Force Play,Muchlinski,Winters,Overturned,1:25,https://bit.ly/2KlGcDl
+2018-06-23",BAL @ ATL,T1,UMPIRE,J. Schoop,Foul Ball,Potential HR,T. Barrett,T. Barrett,Stands,1:12,https://bit.ly/2MihTqc
+2018-06-23",CHI @ CIN,T2,UMPIRE,W. Contreras,HR; No Interference,Potential HR,Baker,Layne,Confirmed,0:44,https://bit.ly/2KlSQST
+2018-06-23",PHI @ WSH,T3,Martinez,C. Santana,Safe at 1st,Force Play,Rackley,Vanover,Overturned,1:46,https://bit.ly/2tDabPY
+2018-06-23",MIA @ COL,T7,Mattingly,S. Castro,Out at 1st,Force Play,Nelson,Nelson,Overturned,0:48,https://bit.ly/2KhqVGH
+2018-06-23",PHI @ WSH,T7,Martinez,M. Franco,Safe at home,Tag Play,Vanover,Vanover,Stands,2:21,https://bit.ly/2K6WlAh
+2018-06-23",STL @ MIL,B9,Matheny,H. Perez,Safe at 1st,Tag Play,Winters,Winters,Confirmed,0:59,https://bit.ly/2tCbsXn
+2018-06-23",SEA @ BOS,B1,Servais,R. Devers,Strike; No HBP,HBP,Marquez,Marquez,Overturned,1:13,https://bit.ly/2lxGGLF
+2018-06-23",ARI @ PIT,T9,Hurdle,D. Peralta,Safe at 1st,Tag Play,Blaser,Cederstrom,Overturned,0:50,https://bit.ly/2N0fsd1
+2018-06-23",KC @ HOU,T8,Hinch,R. Herrera,Safe at 1st,Force Play,L. Barrett,Welke,Overturned,0:54,https://bit.ly/2KlDYne
+2018-06-23",KC @ HOU,T9,Hinch,A. Mondesi,Safe at 2nd,Tag Play,Hamari,Welke,Overturned,1:12,https://bit.ly/2tE8y4z
+2018-06-23",TOR @ LAA,B7,Gibbons,J. Fernandez,Safe at 2nd,Tag Play,Diaz,Diaz,Overturned,2:20,https://bit.ly/2MXbnX2
+2018-06-24",CHI @ CIN,B7,Maddon,J. Votto,Safe at 2nd,Tag Play,Rehak,Layne,Stands,2:03,https://bit.ly/2K8ujoh
+2018-06-24",OAK @ CWS,B5,Renteria,T. Anderson,Out at 2nd,Tag Play,Reyburn,Holbrook,Stands,1:41,https://bit.ly/2KlWL5b
+2018-06-24",KC @ HOU,B4,Hinch,A. Bregman,Foul Ball; No HBP,HBP,L. Barrett,Welke,Stands,1:42,https://bit.ly/2tHxIiS
+2018-06-24",KC @ HOU,T7,Yost,D. Butera,Out at 1st,Tag Play,Hamari,Welke,Overturned,1:40,https://bit.ly/2K8rROy
+2018-06-24",NYY @ TB,B11,Cash,W. Adames,Out at 2nd,Tag Play,Cuzzi,Hallion,Overturned,1:08,https://bit.ly/2KkNJlT
+2018-06-24",TOR @ LAA,B5,Scioscia,K. Calhoun,Out at 3rd,Tag Play,Fletcher,Diaz,Stands,1:37,https://bit.ly/2Kn5dRQ
+2018-06-24",TOR @ LAA,B8,Gibbons,A. Simmons,Safe at 1st,Force Play,Diaz,Diaz,Stands,2:25,https://bit.ly/2MXKQsI
+2018-06-24",PHI @ WSH,B7,Martinez,W. Difo,Out at 2nd,Force Play,Guccione,Vanover,Stands,1:53,https://bit.ly/2MqjxXd
+2018-06-25",ARI @ MIA,T3,Mattingly,P. Goldschmidt,Safe at 2nd,Force Play,Bellino,Hallion,Stands,1:05,https://bit.ly/2Kt11zU
+2018-06-25",PIT @ NYM,B5,UMPIRE,M. Conforto,Foul Ball,Potential HR,Culbreth,Culbreth,Confirmed,0:49,https://bit.ly/2MyUT6E
+2018-06-25",SD @ TEX,T4,Green,J. Pirela,Out at 1st,Force Play,Libka,Welke,Stands,1:04,https://bit.ly/2lIxK6r
+2018-06-25",CLE @ STL,B8,Matheny,H. Bader,Out at 2nd,Tag Play,Vanover,Vanover,Overturned,1:39,https://bit.ly/2MA6fr6
+2018-06-26",SEA @ BAL,B2,Servais,J. Schoop,Safe at home,Tag Play,Cooper,Cederstrom,Overturned,1:12,https://bit.ly/2KxZdlZ
+2018-06-26",PIT @ NYM,B5,Hurdle,G. Polanco,No Catch; Trap,Catch/No Catch,Conroy,Culbreth,Overturned,1:08,https://bit.ly/2tV3lFM
+2018-06-26",MIN @ CWS,B3,Molitor,J. Abreu,Hit by Pitch,HBP,Davis,Davis,Stands,0:46,https://bit.ly/2KACLJb
+2018-06-26",COL @ SF,T9,Black,T. Wolters,Out at 2nd,Force Play,Wegner,Wegner,Confirmed,0:23,https://bit.ly/2Ku73Nv
+2018-06-26",COL @ SF,T9,Black,D. LeMahieu,Out at 1st,Force Play,DiMuro,Wegner,Confirmed,0:23,https://bit.ly/2Ku73Nv
+2018-06-27",CIN @ ATL,B5,Riggleman,D. Santana,Hit by Pitch,HBP,Torres,Danley,Stands,0:57,https://bit.ly/2KyX89v
+2018-06-27",KC @ MIL,B9,Yost,R. Braun,Safe at 1st,Force Play,Layne,Layne,Overturned,1:18,https://bit.ly/2KxinZg
+2018-06-27",LAA @ BOS,B5,Cora,E. Nuñez,Out at 1st,Tag Play,Hickox,Meals,Stands,2:09,https://bit.ly/2KzsyMX
+2018-06-27",OAK @ DET,B7,Melvin,J. Iglesias,Safe at 2nd,Tag Play,Little,T. Barrett,Overturned,1:55,https://bit.ly/2tMl6Xq
+2018-06-28",ARI @ MIA,B2,Mattingly,B. Holaday,Out at 1st,Force Play,Hamari,Hallion,Stands,1:13,https://bit.ly/2KgsMwe
+2018-06-28",MIN @ CWS,B2,Renteria,Y. Sanchez,Foul Ball,Fair/Foul,Hoberg,Davis,Stands,1:09,https://bit.ly/2tMwlQP
+2018-06-28",MIN @ CWS,T10,UMPIRE,R. Grossman,Safe at 1st,Force Play,Carlson,Davis,Stands,1:16,https://bit.ly/2lHVBTG
+2018-06-28",MIN @ CWS,B11,UMPIRE,T. Anderson,Out at 2nd,Tag Play,Davis,Davis,Confirmed,0:47,https://bit.ly/2MBWQiS
+2018-06-28",MIN @ CWS,B13,UMPIRE,Y. Sanchez,Out at 1st,Force Play,Carlson,Davis,Confirmed,0:46,https://bit.ly/2MzzZnR
+2018-06-28",HOU @ TB,B1,Hinch,K. Kiermaier,Safe at 1st,Force Play,Carapazza,Layne,Overturned,1:52,https://bit.ly/2MzSgBw
+2018-06-28",WSH @ PHI,B4,Kapler,J. Alfaro,Out at 1st,Force Play,Nauert,Danley,Overturned,0:39,https://atmlb.com/2Ko9NjG
+2018-06-29",MIN @ CHI,B5,Maddon,K. Schwarber,Out at home,Tag Play,Rackley,Vanover,Stands,1:59,https://bit.ly/2IO2Dzk
+2018-06-29",LAA @ BAL,T6,Scioscia,A. Simmons,Out at home,Tag Play,Hamari,Hallion,Overturned,2:08,https://bit.ly/2KKmfpX
+2018-06-29",ATL @ STL,T5,Snitker,R. Acuna,Out at 1st,Force Play,Segal,Meals,Confirmed,0:48,https://bit.ly/2NjluWu
+2018-06-29",NYM @ MIA,T7,Mattingly,B. Nimmo,Safe at 1st,Force Play,Cooper,Cederstrom,Overturned,0:51,https://bit.ly/2KJxZZV
+2018-06-29",MIL @ CIN,B9,Riggleman,K. Broxton,Catch,Catch/No Catch,Fairchild,Marquez,Confirmed,1:33,https://bit.ly/2INSS4j
+2018-06-29",SF @ ARI,B6,Lovullo,C. Owings,Out at 1st,Force Play,Whitson,T. Barrett,Overturned,0:40,https://bit.ly/2KLbxm6
+2018-06-29",COL @ LAD,T8,Roberts,T. Story,Safe at 2nd,Tag Play,Barksdale,Gorman,Overturned,2:20,https://bit.ly/2lQ8FXh
+2018-06-29",CLE @ OAK,B8,UMPIRE,J. Lowrie,Home Run,Potential HR,Libka,Welke,Confirmed,0:40,https://bit.ly/2KHOYPa
+2018-06-29",CLE @ OAK,B8,Melvin,M. Olson,Out at 1st,Force Play,Randazzo,Welke,Stands,0:59,https://bit.ly/2KFQAG2
+2018-06-29",PIT @ SD,T9,Green,J. Osuna,Safe at 3rd,Tag Play,Porter,Miller,Overturned,1:22,https://bit.ly/2IOUn1T
+2018-06-30",CLE @ OAK,B8,Francona,S. Piscotty,Safe at 2nd,Tag Play,Welke,Welke,Confirmed,1:32,https://bit.ly/2lOOKYB
+2018-06-30",ATL @ STL,B3,Snitker,T. Pham,Safe at 1st,Tag Play,Morales,Meals,Overturned,0:41,https://bit.ly/2z6iyte
+2018-06-30",BOS @ NYY,T7,UMPIRE,R. Devers,In play; Double,Potential HR,Culbreth,Culbreth,Confirmed,1:12,https://bit.ly/2KJ4E1E
+2018-06-30",BOS @ NYY,T9,Cora,B. Holt,Foul Ball,Fair/Foul,Conroy,Culbreth,Confirmed,1:08,https://bit.ly/2KJasYU
+2018-06-30",PIT @ SD,T9,Green,G. Polanco,Safe at 3rd,Tag Play,Hernandez,Miller,Confirmed,1:06,https://bit.ly/2Kw9GSY
+2018-07-1",WSH @ PHI,T5,Kapler,T. Turner,Safe at 1st,Force Play,Danley,Danley,Overturned,0:45,https://bit.ly/2z8FhF4
+2018-07-1",ATL @ STL,T6,Matheny,R. Acuna,Safe at 3rd,Tag Play,Segal,Meals,Stands,1:48,https://bit.ly/2lROE2m
+2018-07-1",CWS @ TEX,T4,Banister,L. Garcia,Safe at 1st,Force Play,Eddings,West,Overturned,0:47,https://bit.ly/2KJwDhB
+2018-07-1",PIT @ SD,T1,Green,A. Meadows,Safe at 1st,Force Play,Porter,Miller,Overturned,1:00,https://bit.ly/2u1fj0B
+2018-07-1",MIN @ CHI,B8,Molitor,J. Baez,Safe at 2nd,Tag Play,Rackley,Vanover,Confirmed,0:58,https://bit.ly/2tPDoYV
+2018-07-1",CLE @ OAK,B7,Melvin,M. Canha,Out at 2nd,Tag Play,L. Barrett,Welke,Stands,1:53,https://bit.ly/2MJ11sX
+2018-07-2",SF @ COL,B1,Black,T. Story,Out at 2nd,Force Play,Miller,Miller,Overturned,0:50,https://bit.ly/2J2fDBB
+2018-07-2",MIN @ MIL,B5,Molitor,J. Villar,Safe at 1st,Force Play,Foster,West,Stands,1:50,https://bit.ly/2KCzYDb
+2018-07-2",CWS @ CIN,B8,Renteria,S. Gennett,Safe at home,Tag Play,Scheurwater,Cederstrom,Confirmed,2:06,https://bit.ly/2tXNHtZ
+2018-07-2",CWS @ CIN,B8,UMPIRE,J. Peraza,Safe at 3rd,Tag Play,Barber,Cederstrom,Stands,2:38,https://bit.ly/2MXtQ58
+2018-07-2",PIT @ LAD,T8,Roberts,J. Bell,Safe at 2nd,Tag Play,Visconti,Nelson,Overturned,0:36,https://bit.ly/2J2fQ7R
+2018-07-3",MIN @ MIL,T4,Molitor,M. Kepler,Out at 2nd,Force Play,Ripperger,West,Overturned,0:44,https://bit.ly/2KDjA5j
+2018-07-3",TB @ MIA,T3,Mattingly,J. Bauers,Safe at 1st,Force Play,Segal,Meals,Overturned,0:31,https://bit.ly/2KERI0I
+2018-07-3",NYM @ TOR,B4,Gibbons,T. Hernandez,Out at 2nd,Tag Play,Blakney,Holbrook,Confirmed,1:18,https://bit.ly/2KUTwyB
+2018-07-3",TB @ MIA,B4,Cash,J. Riddle,Safe at 2nd,Tag Play,Morales,Meals,Overturned,1:34,https://bit.ly/2ziZ9W7
+2018-07-3",CWS @ CIN,B8,Renteria,B. Hamilton,Safe at home,Tag Play,Cooper,Cederstrom,Stands,1:45,https://bit.ly/2J38AIG
+2018-07-3",SD @ OAK,T5,Melvin,E. Hosmer,Safe at 1st,Tag Play,Drake,Winters,Overturned,1:44,https://bit.ly/2J1UzeB
+2018-07-3",CLE @ KC,B8,Francona,S. Perez,Safe at home,Tag Play,Conroy,Culbreth,Overturned,0:39,https://bit.ly/2m1ZlPS
+2018-07-3",BAL @ PHI,T8,Showalter,C. Davis,Out at 1st,Force Play,Davis,Davis,Confirmed,1:06,https://bit.ly/2KTkWoF
+2018-07-3",PIT @ LAD,B4,UMPIRE,Y. Grandal,In play; Triple,Potential HR,Nelson,Nelson,Confirmed,0:36,https://bit.ly/2ufnIgM
+2018-07-3",HOU @ TEX,T9,Hinch,G. Springer,Out at 1st,Force Play,Wolcott,Kellogg,Stands,1:31,https://bit.ly/2MUKqCE
+2018-07-3",TB @ MIA,T14,Mattingly,M. Duffy,Safe at 1st,Force Play,Segal,Meals,Overturned,1:04,https://bit.ly/2KTosTb
+2018-07-3",CWS @ CIN,T12,UMPIRE,Y. Sanchez,In play; Triple,Potential HR,Cederstrom,Cederstrom,Confirmed,0:54,https://bit.ly/2KFIwt7
+2018-07-3",PIT @ LAD,T6,Roberts,J. Harrison,Safe at 1st,Force Play,Visconti,Nelson,Overturned,0:51,https://bit.ly/2ucl2AI
+2018-07-3",TB @ MIA,T15,Cash,V. Nuno,Out at 2nd,Tag Play,Morales,Meals,Confirmed,0:34,https://bit.ly/2NANPrg
+2018-07-3",STL @ ARI,B8,UMPIRE,J. Lamb,HR; No Interference,Potential HR,Fletcher,Welke,Overturned,1:36,https://bit.ly/2ziraNv
+2018-07-3",LAA @ SEA,B8,Servais,D. Span,Out at 1st,Force Play,Gorman,Gorman,Stands,1:03,https://bit.ly/2uaAL3b
+2018-07-3",TB @ MIA,B16,Mattingly,J. Realmuto,Out at 1st,Force Play,Segal,Meals,Overturned,0:35,https://bit.ly/2MXmJcT
+2018-07-4",MIN @ MIL,B3,Counsell,E. Thames,Out at 2nd,Tag Play,Eddings,West,Stands,1:41,https://bit.ly/2J38f8R
+2018-07-4",SD @ OAK,B5,Green,D. Fowler,Safe at 1st,Tag Play,Whitson,Winters,Stands,1:27,https://bit.ly/2lZ5tIT
+2018-07-4",MIN @ MIL,B8,Molitor,C. Yelich,Safe at 1st,Force Play,Ripperger,West,Confirmed,0:33,https://bit.ly/2ucup3e
+2018-07-4",SF @ COL,B1,Black,T. Story,Out at 1st,Force Play,Tichenor,Miller,Overturned,0:34,https://bit.ly/2KQFL7s
+2018-07-4",PIT @ LAD,T5,Roberts,M. Moroff,Safe at 2nd,Force Play,Diaz,Nelson,Confirmed,0:57,https://bit.ly/2KE6rZD
+2018-07-4",SF @ COL,B7,UMPIRE,C. Iannetta,Home Run,Potential HR,Hernandez,Miller,Stands,1:22,https://bit.ly/2uhofiy
+2018-07-4",CLE @ KC,T8,Francona,J. Ramirez,Out at 2nd,Tag Play,Bucknor,Culbreth,Overturned,0:35,https://bit.ly/2KUAEzH
+2018-07-5",BAL @ MIN,B6,Showalter,M. Kepler,In play; run scores,Stadium Boundary,Baker,Layne,Overturned,1:02,https://bit.ly/2zkQToy
+2018-07-5",ATL @ MIL,T7,Counsell,R. Acuna,Hit by Pitch,HBP,Kellogg,Kellogg,Stands,1:13,https://bit.ly/2NzCdVx
+2018-07-5",STL @ SF,T1,Matheny,K. Wong,Out at 2nd,Tag Play,Conroy,Culbreth,Stands,3:03,https://bit.ly/2zk83T7
+2018-07-6",TEX @ DET,T3,Banister,D. DeShields,Out at 2nd,Tag Play,Segal,Meals,Stands,2:02,https://bit.ly/2MXl2wc
+2018-07-6",OAK @ CLE,T6,Francona,M. Olson,Safe at 2nd,Tag Play,Cooper,Cederstrom,Overturned,2:10,https://bit.ly/2J2gAJW
+2018-07-6",TB @ NYM,T9,Cash,H. Wood,Out at home,Tag Play,Knight,Davis,Confirmed,1:43,https://bit.ly/2MZcdlB
+2018-07-6",PHI @ PIT,T6,Kapler,S. Kingery,Out at 1st,Force Play,Ortiz,Marquez,Overturned,2:20,https://bit.ly/2KREmxf
+2018-07-6",CWS @ HOU,B5,Hinch,J. Altuve,Out at 1st,Force Play,Hernandez,Miller,Overturned,1:13,https://bit.ly/2u1gAoT
+2018-07-6",COL @ SEA,B1,Black,D. Gordon,Safe at 2nd,Tag Play,West,West,Overturned,1:35,https://bit.ly/2tZswrA
+2018-07-6",ATL @ MIL,T9,Snitker,D. Swanson,Out at 2nd,Tag Play,Wolcott,Kellogg,Stands,1:34,https://bit.ly/2KUVyyJ
+2018-07-6",PHI @ PIT,B8,Hurdle,S. Marte,Foul Ball; No HBP,HBP,Marquez,Marquez,Overturned,0:32,https://bit.ly/2KDcuxM
+2018-07-6",LAD @ LAA,B4,Roberts,A. Simmons,Safe at 2nd,Tag Play,Timmons,Winters,Stands,1:46,https://bit.ly/2KUBv3n

@@ -1,0 +1,22 @@
+{
+ "rows_total": 6361,
+ "overturned": 3067,
+ "run_removed_heuristic": 230,
+ "date_repaired_rows": 2109,
+ "dates_kept_verbatim": 5,
+ "impossible_dates_kept_verbatim": [
+  "2014-04-31"
+ ],
+ "flag_summary": {
+  "bad_time_format": 1,
+  "date_impossible_kept": 5,
+  "date_prose_resolved": 234,
+  "date_stray_quote_stripped": 279,
+  "date_zero_padded": 2109,
+  "junk_mid_file_line": 1,
+  "no_video_link": 56,
+  "quote_repair": 3
+ },
+ "repair_policy": "date_raw is always the source string; date is ISO only when the source proves it. Zero-padding, stray quotes and prose dates are lossless and applied; an impossible calendar date is NEVER altered, because the correct day cannot be derived from the source.",
+ "heuristic_rule": "result==Overturned AND (initial_call matches score/home/plate/run OR play_type/initial_call matches Timing/HP/Home/Plate/Collisions)"
+}

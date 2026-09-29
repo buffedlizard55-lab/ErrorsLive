@@ -8,90 +8,204 @@
 <body>
 <header class="nav"><div class="nav-inner"></div></header>
 <main>
-  <h1>Methods & data audit</h1>
-  <p class="lede">Reproducibility is the product. <code>python3 tools/run_all.py</code> rebuilds every artifact from
-  the raw feed archives in <code>data/raw/</code> — and every feed archive was verified against the league's own
-  linescore endpoint before it was admitted. This page is the audit trail.</p>
+  <h1>Methods &amp; data audit</h1>
+  <p class="lede">Reproducibility is the product. <code>python3 tools/run_all.py</code> rebuilds every published
+  artifact from source files that live in this repo — the 24 archived feeds under <code>data/raw/</code> and the
+  nine replay CSVs under <code>data/source/nydn/</code>. No step depends on a scratch directory, a personal
+  machine, or a network call. This page is the audit trail, including the things we got wrong.</p>
 
-  <h2>1 · Sampling design (error-enriched stratified — raking-weighted, not self-weighting)</h2>
+  <h2>1 · Every game re-verified against the league's own linescore</h2>
+  <p class="lede" style="font-size:.95rem">Each archived feed's final score is re-checked against
+  <code>https://statsapi.mlb.com/api/v1/game/{gamePk}/linescore</code> — MLB's official record — for all 24
+  games, along with both teams' error totals and the official date. The result is committed as
+  <code>data/verified_linescores.json</code>, which carries a per-game <code>api</code> link so any row can be
+  checked by hand.</p>
+  <div class="scroll">
+  <table class="compact" id="verify"></table>
+  </div>
+  <p class="note">All 24 final scores match. All 24 team-error totals match the stratum each game was filed
+  under in <code>data/TARGETS.json</code> (A = ≥3 team errors, B = exactly 2, C = ≤1), which independently
+  confirms the stratification. All 24 official dates match <code>docs/data/games.csv</code>.</p>
+
+  <h2>2 · The 222-game pool, independently counted</h2>
+  <p class="lede" style="font-size:.95rem">The pool was rebuilt from
+  <code>statsapi.mlb.com/api/v1/schedule?sportId=1&amp;date=MM/DD/2026&amp;gameType=R</code> over the same 15
+  dates: 15 + 15 + 14 + 15 + 15 + 15 + 16 + 15 + 15 + 15 + 17 + 15 + 15 + 15 + 13 = <b>222</b>, matching
+  <code>data/pool_summary.json</code>.</p>
+  <div class="warn"><b>Flagged irregularities found while re-counting the pool:</b>
+  <ul style="margin:6px 0 0">
+    <li>Three games appear on a slate date but carry a <i>different</i> officialDate: game
+    <code>824424</code> (slate 2026-06-14 → officialDate 2026-09-04), <code>824664</code> (slate 2026-06-21 →
+    2026-08-06) and <code>823523</code> (slate 2026-07-18 → 2026-07-19, an ordinary make-up doubleheader).
+    None are in the 24-game sample and the 222 total is unaffected.</li>
+    <li>Game <code>824581</code>'s linescore carries the official note “One out when winning run scored”
+    (a walk-off). Its final 1–2 and eT = 2 are unaffected.</li>
+    <li><b>Not re-verified in this pass:</b> the per-game <i>error</i> column of the 222-game pool
+    (<code>team_errors_total</code> = 247 and the 0/1/2/3/4/7 distribution in
+    <code>pool_summary.json</code>). Re-deriving it would need 222 individual linescore calls. It is retained as
+    previously published and is listed as unverified in <a href="roadmap.html">the roadmap</a>.</li>
+  </ul></div>
+
+  <h2>3 · Sampling design (error-enriched — raking-weighted, NOT self-weighting)</h2>
   <table>
-    <tr><th>Stratum (team errors)</th><th>Pool games</th><th>Sampled</th><th>Sampling fraction</th><th>Raking weight</th></tr>
-    <tr><td>A — ≥ 3 team errors</td><td>20</td><td>10</td><td>0.500</td><td>2.00</td></tr>
-    <tr><td>B — exactly 2</td><td>51</td><td>10</td><td>0.196</td><td>5.10</td></tr>
-    <tr><td>C — ≤ 1</td><td>151</td><td>4</td><td>0.026</td><td>37.75</td></tr>
+    <tr><th>Stratum (team errors)</th><th class="right">Pool games</th><th class="right">Sampled</th><th class="right">Sampling fraction</th><th class="right">Raking weight</th></tr>
+    <tr><td>A — ≥ 3 team errors</td><td class="right">20</td><td class="right">10</td><td class="right">0.500</td><td class="right">2.00</td></tr>
+    <tr><td>B — exactly 2</td><td class="right">51</td><td class="right">10</td><td class="right">0.196</td><td class="right">5.10</td></tr>
+    <tr><td>C — ≤ 1</td><td class="right">151</td><td class="right">4</td><td class="right">0.026</td><td class="right">37.75</td></tr>
   </table>
-  <p class="muted">Pool = 222 MLB regular-season games on 15 audited dates (June–September 2026), extracted from
-  <b>official linescore</b> endpoints only — every game in the sample is verifiable from the league's own scorekeeping
-  feed. The design is <b>error-ENRICHED</b> (by intent: boring games are cheap to score, error games are the
-  specimen) and is <b>not</b> self-weighting: any pool-representative rate must apply the raking weights above —
-  <b>validated</b> by reconstructing the pool's mean 1.113 team-errors/game from this sample as 1.258 (sampling
-  noise at n=24). Model objects fit P(class | batted-ball features) <i>within play</i>, which is far less
-  distorted than the game-level error rate; the reported 1.91% base rate is the sample rate, labeled as such on
-  the model page.</p>
+  <p class="muted">The pool is 222 MLB regular-season games on 15 audited dates spanning
+  <b>June–September 2026</b>, extracted from the official schedule+linescore endpoints only. The design is
+  <b>error-ENRICHED by intent</b> (boring games are cheap to score; error games are the specimen) and is
+  <b>not</b> self-weighting. Any pool-representative rate must apply the raking weights above; applying them
+  reconstructs the pool's mean 1.113 team-errors/game as <b>1.258</b>, the residual being sampling noise at
+  n = 24. The fitted objects model P(class | batted-ball features) <i>within a play</i>, which is far less
+  distorted than the game-level error rate — but the <b>1.91% base rate quoted on this site is the sample rate,
+  not the pool rate</b>, and is labelled that way wherever it appears.</p>
 
-  <h2>2 · Verification pipeline per feed archive</h2>
-  <p class="lede" style="font-size:.95rem">Each live-feed JSON (gamePk <code>822xxx–824xxx</code>) was fetched in
-  platform chunks, joined with byte-exact no-whitespace rules, <code>json.loads</code>-validated, and its
-  <b>final score cross-checked against the league pool manifest</b> (222 games). Games that landed ON the chunk
-  seam were healed at play boundaries, and every heal and every dropped character is logged forever in
-  <code>data/raw/{pk}.integrity.txt</code>:</p>
+  <h2>4 · Transport-seam integrity log (4 healed games)</h2>
+  <p class="lede" style="font-size:.95rem">The original collection was chunked, and four payloads were damaged at
+  a transport seam. The standing rule is <b>never guess or invent a character</b>: a seam that could be proven
+  deterministically was healed; one that could not was resolved by dropping the straddling play and logging the
+  loss. Every heal has a permanent log in <code>data/raw/{pk}.integrity.txt</code>.</p>
   <table>
-    <tr><th>Game</th><th>Integrity event</th><th>Disposition</th></tr>
-    <tr><td>823777 (ARI @ COL)</td><td>~28 chars dropped by transport seam</td><td>re-cut at play boundary; 2 straddling plays logged &amp; dropped (1 field_out w/ full Statcast vector + 1 strikeout); 64 plays, final 0–4 ✓pool</td></tr>
-    <tr><td>822801 (HOU @ MIN)</td><td>1 char dropped at seam</td><td>healed by re-fetch; 82 plays, final 5–7 ✓pool</td></tr>
-    <tr><td>823531 (NYY @ CLE)</td><td>a single <code>"</code> dropped at seam</td><td>re-inserted after proof-grep defined exact neighborhood; 72 plays, final 2–1 ✓pool</td></tr>
-    <tr><td>824738 (OAK @ NYY)</td><td>seam heal</td><td>72 plays, final 6–7 ✓pool</td></tr>
+    <tr><th>Game</th><th>Official matchup &amp; final</th><th>Integrity event</th><th>Disposition</th></tr>
+    <tr><td><code>823777</code></td><td>PHI 0 – MIL 4 ✓</td><td>~28 characters dropped by the chunker</td>
+        <td>2 straddling plays logged and dropped (one <code>field_out</code> with a full Statcast vector,
+            one strikeout); 64 plays retained</td></tr>
+    <tr><td><code>822801</code></td><td>TOR 8 – NYY 3 ✓</td><td>1 character dropped at the seam</td>
+        <td>healed at the join; 82 plays retained</td></tr>
+    <tr><td><code>823531</code></td><td>NYY 4 – CIN 1 ✓</td><td>a single <code>"</code> dropped at the seam</td>
+        <td>re-inserted after the exact neighbourhood was proven; 72 plays retained</td></tr>
+    <tr><td><code>824738</code></td><td>TB 6 – BOS 7 ✓</td><td>seam heal</td>
+        <td>72 plays retained</td></tr>
   </table>
-  <p class="note">Rule: never guess or invent characters. Where a seam could not be deterministically healed, the game
-  was re-fetched whole; where a heal dropped a play, the play-level coverage loss is in the integrity file, and the
-  missing-play count (if any) is printed in data_quality.json's coverage section.</p>
+  <div class="warn"><b>Corrections applied to this page in the current pass.</b> The previous version of this
+  table named game 822801 as “HOU @ MIN, final 5–7” and game 823777 as “ARI @ COL”. Both were wrong: the
+  official linescore records show 822801 was <b>Toronto at the Yankees, 8–3</b>, and 823777 was
+  <b>Philadelphia at Milwaukee, 0–4</b>. The matchups and scores above are now read from the verified
+  official record. The stale matchup label inside <code>data/raw/822801.integrity.txt</code> was corrected the
+  same way, with the correction noted in the file.</div>
 
-  <h2>3 · Dataset build</h2>
+  <h2>5 · Dataset build</h2>
   <div class="grid cols2">
-    <div class="card"><h3>bip.csv</h3><p class="muted">One row per batted ball in play with a Statcast
-    <code>hitData</code> object: gamePk, date, play/batter/pitcher ids, event type (hit/error/FC/out label),
-    exit velocity, launch angle, distance, trajectory, hardness, RBI on play, half/score state, review flag.
-    <b>1,271 rows / 1,868 plays</b> across 24 games.</p></div>
-    <div class="card"><h3>Label honesty</h3><p class="muted"><b>25</b> plays carry official eventType
-    <code>field_error</code>; one (8/24 vs NYM, J. McNeil reach-on-error-aborted-strikeout) returned incomplete
-    hitData, so the modeling set holds <b>24 labeled errors / 1,258 rows</b> → 1.91% base rate. Errors charged
-    <i>within</i> other eventTypes (throwing errors on a hit) are not labeled error → observed rate is a
-    <b>lower bound</b>, printed on the model page.</p></div>
-    <div class="card"><h3>games.csv</h3><p class="muted">24 games: date, park, both teams' R/H/E from the
-    verified pool manifest — the stratum audit readers can join back to the 222-game pool.</p></div>
-    <div class="card"><h3>data_quality.json</h3><p class="muted">Machine-readable audit: totals, missing-numeric
-    vectors (12), multi-hitData anomalies (0), 'other' class rows (1), per-team error coverage vs. pool
-    (lower bound 24/25, explained), and re-verified final scores for all 24 games.</p></div>
+    <div class="card"><h3>bip.csv — 1,271 rows</h3><p class="muted">One row per batted ball in play that
+    carried a Statcast <code>hitData</code> object. Columns, exactly as shipped:
+    <code>game_pk, play_index, event_type, macro_class, rbi, away_score, home_score, launch_speed,
+    launch_angle, distance, trajectory, hardness, numeric_ok, review_overturned, review_type</code>.
+    Across 24 games and 1,868 plays. 12 rows have an incomplete vector and are quarantined via
+    <code>numeric_ok = 0</code> rather than zero-filled.</p></div>
+    <div class="card"><h3>Label honesty</h3><p class="muted">The 24 games contain exactly
+    <b>24 plays labelled <code>field_error</code>, and all 24 carry a complete Statcast vector</b> — there is no
+    error-without-vector case in this archive, and none is claimed. The modelling set is
+    <b>1,258 rows</b> (1,271 minus 12 quarantined minus 1 <code>catcher_interf</code> play, which resolves to
+    none of the four macro classes) → a 1.91% sample error rate. Errors charged <i>within</i> other eventTypes
+    (a throwing error on a play scored a single) are <b>not</b> labelled error, so the observed rate is a
+    <b>lower bound</b>.</p></div>
+    <div class="card"><h3>games.csv — 24 rows</h3><p class="muted">Official date, both teams' abbreviations,
+    each team's runs/hits/errors, play and batted-ball counts, the integrity-heal flag, and a direct
+    <code>official_url</code> for manual re-checking.</p></div>
+    <div class="card"><h3>data_quality.json</h3><p class="muted">Machine-readable audit: totals, the full
+    event-type census, per-game play/battled-ball counts, the stratum tally, the missing-numeric quarantine
+    (12), multi-<code>hitData</code> anomalies (0) and 'other'-class rows (1), plus the per-game
+    score-check result against the official record.</p></div>
   </div>
 
-  <h2>4 · Modeling</h2>
-  <p class="lede" style="font-size:.95rem">sklearn 1.9 dataframe-free pipeline —
-  <b>StandardScaler + multinomial logistic</b> (5 features + 8 indicators) for P{hit, error, FC, out} and a
-  parallel binary logistic for P(error). Validation: 5-fold stratified OOF (seed 20260929), AUC 0.64
-  [0.52–0.75], Brier 0.019, 1,000× bootstrap CIs; isotonic-on-OOF recalibration reported, not smuggled into
-  metrics. Empirical trajectory × EV-band surface (Wilson 95% CIs) is published next to every model curve —
-  if the model ever disagrees with the surface in a data-dense bucket, the surface wins the argument.</p>
+  <h2>6 · Modeling</h2>
+  <p class="lede" style="font-size:.95rem">StandardScaler + L2-regularized logistic regression (5 features
+  + 8 indicators, 1,258 rows) for P{hit, error, fielder's choice, out}, and a parallel binary logistic for
+  P(error). Logistic rather than a tree ensemble because the decision is a smooth threshold judgement
+  (“ordinary effort”), the sample is small with 24 positives, and a calibrated probability surface is more
+  honest than a black box at this n. Validation: 5-fold stratified out-of-fold (seed 20260929), AUC and
+  per-class AUC, top-1 accuracy and per-class recall, a calibration table, an empirical trajectory × EV
+  surface with Wilson 95% intervals, and 1,000× bootstrap CIs.</p>
+  <p class="muted">Reproduced bit-for-bit on Python 3.11.2 / numpy 2.4.6 / scipy 1.17.1 /
+  scikit-learn 1.9.1 (pinned in <code>requirements.txt</code>).</p>
 
-  <h2>5 · NYDN replay archive normalization</h2>
-  <p class="lede" style="font-size:.95rem">9 published CSVs (2014–2018 regular + postseason where the repo
-  published them) with 4 real-world schema faults fixed deterministically in <code>tools/build_nydn.py</code>:
-  mis-quoted game cells, comma-split player names (12 lost rows, logged), an extra "Record Keeping" status added
-  to the vocabulary (not dropped), and source typos (e.g. <code>2014-04-31</code>, <code>1;21</code> timestamp)
-  kept verbatim and flagged in <code>data/nydn_quality.json</code>. 6,168 rows → 2,984 overturned → 227
-  run-affected by the printed heuristic.</p>
+  <h2>7 · NYDN replay archive normalization</h2>
+  <p class="lede" style="font-size:.95rem">The nine published CSVs (2014–2018 regular season plus the 2014–2017
+  postseason files the archive actually contains) are vendored at <code>data/source/nydn/</code> and parsed by
+  <code>tools/build_nydn.py</code>, which repairs four real-world schema faults deterministically:
+  mis-quoted game cells in the postseason files, comma-split player names, an
+  “Record Keeping” status that is not in the published vocabulary (added, not dropped), four different
+  malformed-date formats, and source typos such as the date <code>2014-04-31</code> (April 31st does not
+  exist) and the timestamp <code>1;21</code> — both kept verbatim and flagged rather than silently “fixed”.
+  Result:
+  <b>6,361 rows → 3,067 overturned → 230 run-affected</b> by the printed heuristic, with <b>2,688 source
+  irregularities</b> recorded in <code>data/nydn_quality.json</code>.</p>
+  <p class="legend">The first build of this page reported 6,168 rows. The 193 missing records were not a
+  counting error in the archive — they were a parsing error here. 206 lines in the 2014 file begin with a stray
+  double quote and 65 postseason lines open a quoted cell that is never closed; Python's CSV reader merged each
+  of those records into its neighbour and dropped it, and a further 57 rows were discarded because their
+  <code>video</code> cell was blank. Both classes are now repaired losslessly and counted. 6,362 source data
+  lines minus one junk header fragment equals the 6,361 rows published. Separately, the <code>season</code>
+  column was being filled with the source <i>filename</i> rather than the year, which silently broke the
+  Season filter.</p>
+  <table>
+    <tr><th>Date repair applied</th><th>Rows</th><th>Example</th><th>Lossless?</th></tr>
+    <tr><td>Zero-padded ISO components</td><td class="right">2,109</td>
+        <td><code>2014-4-1</code> → <code>2014-04-01</code></td><td>yes</td></tr>
+    <tr><td>Prose date resolved with the file's year</td><td class="right">234</td>
+        <td><code>Sep. 1</code> → <code>2014-09-01</code></td><td>yes</td></tr>
+    <tr><td>Stray trailing quote removed</td><td class="right">279</td>
+        <td><code>2018-05-29&quot;</code> → <code>2018-05-29</code></td><td>yes</td></tr>
+    <tr><td>Broken quoting repaired <i>before</i> parsing (rows the CSV reader was swallowing)</td>
+        <td class="right">271</td><td><code>"Sep. 6,NYM @ CIN,…</code></td><td>yes</td></tr>
+    <tr><td><b>Impossible calendar date — deliberately NOT repaired</b></td><td class="right">5</td>
+        <td><code>2014-04-31</code> → unchanged</td><td><b>no — published verbatim</b></td></tr>
+  </table>
+  <p class="legend">The <code>date_raw</code> column of <code>overturned_calls.csv</code> holds the archive's own
+  string for every row, so any reader can undo the normalisation. An off-season prose date is also left verbatim,
+  because taking the file's year for e.g. “Jan. 3” would be a guess. The complete 2,688-flag breakdown is in
+  <code>data/nydn_quality.json</code>; the site reads its numbers from
+  <code>docs/data/nydn_summary.json</code>, which the build writes, so the page cannot drift from the data.</p>
+  <p class="legend"><b>Re-verification.</b> All 24 games were re-checked against
+  <code>statsapi.mlb.com/api/v1/game/{pk}/linescore</code> on 2026-09-29 (24/24 pass, full ledger in
+  <code>data/verified_linescores.json</code>, published on this page), and games 822801, 823441 and 822722 were
+  spot re-checked a second time against the live endpoint while this section was written — all three still match
+  the ledger exactly. <code>tools/verify_official.py</code> repeats the full check and refuses to report a pass
+  when the network is unavailable (it exits 2 with “VERIFICATION NOT PERFORMED” rather than silently succeeding).</p>
 
-  <h2>6 · Sources (all official / trusted)</h2>
+  <h2>8 · Sources (all official or verifiably public)</h2>
   <table>
     <tr><th>Source</th><th>Used for</th><th>Link</th></tr>
-    <tr><td>MLB Stats API feed/live + content endpoints</td><td>play-by-play, Statcast hitData, review flags</td><td><code>statsapi.mlb.com</code></td></tr>
-    <tr><td>MLB linescore/schedule endpoint</td><td>222-game pool, final-score verification</td><td><code>statsapi.mlb.com/api/v1/schedule</code></td></tr>
-    <tr><td>Baseball Savant (Statcast)</td><td>metric definitions (EV/LA/distance/trajectory)</td><td><a href="https://baseballsavant.mlb.com/savant-player" target="_blank" rel="noopener">baseballsavant.mlb.com ↗</a></td></tr>
-    <tr><td>NY Daily News mlb-overturned-calls</td><td>replay archive 2014–2018</td><td><a href="https://github.com/nydailynews/mlb-overturned-calls" target="_blank" rel="noopener">github.com/nydailynews/mlb-overturned-calls ↗</a></td></tr>
-    <tr><td>MLB.com glossaries</td><td>rule quotes (errors, RBI)</td><td><a href="rules.html">rules page</a></td></tr>
+    <tr><td>MLB Stats API — live feed</td><td>play-by-play, Statcast <code>hitData</code>, runner state, review flags</td>
+        <td><code>statsapi.mlb.com/api/v1.1/game/{pk}/feed/live</code></td></tr>
+    <tr><td>MLB Stats API — linescore</td><td>official final score, R/H/E, official date (all 24 games)</td>
+        <td><code>statsapi.mlb.com/api/v1/game/{pk}/linescore</code></td></tr>
+    <tr><td>MLB Stats API — schedule</td><td>the 222-game, 15-date pool manifest</td>
+        <td><code>statsapi.mlb.com/api/v1/schedule</code></td></tr>
+    <tr><td>2025 Official Baseball Rules</td><td>Rule 9.01 / 9.04 / 9.12 / 9.16 section titles</td>
+        <td><a href="https://mktg.mlbstatic.com/mlb/official-information/2025-official-baseball-rules.pdf" target="_blank" rel="noopener">mktg.mlbstatic.com/…/2025-official-baseball-rules.pdf ↗</a></td></tr>
+    <tr><td>MLB.com glossaries</td><td>the verbatim error and RBI quotations</td>
+        <td><a href="rules.html">rules page</a></td></tr>
+    <tr><td>NY Daily News — mlb-overturned-calls</td><td>replay archive 2014–2018</td>
+        <td><a href="https://github.com/nydailynews/mlb-overturned-calls" target="_blank" rel="noopener">github.com/nydailynews/mlb-overturned-calls ↗</a></td></tr>
   </table>
+  <div class="warn"><b>Source discrepancy, flagged not smoothed over.</b> The repository named in the brief,
+  <code>github.com/buffedlizard55-lab/MLB-overturned-calls</code>, returns <b>HTTP 404</b> — it does not
+  exist. The replay data used here comes from the public original,
+  <code>github.com/nydailynews/mlb-overturned-calls</code>. If the buffedlizard55-lab repository is created
+  later it must be diffed against this one before being treated as the same source.</div>
 </main>
-<footer><div class="inner"><span>Raw archives + pipeline + this audit ship in the same repo</span>
+<footer><div class="inner"><span>Raw archives, vendored sources, pipeline and this audit all ship in the same repo</span>
 <span>Own the Outcome</span></div></footer>
 <script src="site.js"></script>
+<script>
+(async function () {
+  const V = await loadJSON('data/verification.json');
+  const rows = V.games.slice().sort((a, b) => a.pk - b.pk);
+  document.getElementById('verify').innerHTML =
+    '<tr><th>gamePk</th><th>Official date</th><th>Matchup</th><th class="right">Final (A–H)</th>' +
+    '<th class="right">E (away+home)</th><th>Stratum</th><th>Check</th></tr>' +
+    rows.map(g => `<tr>
+      <td><a href="${g.api}" target="_blank" rel="noopener">${g.pk} ↗</a></td>
+      <td class="nowrap">${g.date}</td>
+      <td class="nowrap">${g.away} @ ${g.home}</td>
+      <td class="right">${g.rA}–${g.rH}</td>
+      <td class="right">${g.eA}+${g.eH} = ${g.eT}</td>
+      <td>${g.stratum}</td>
+      <td class="ok">match</td></tr>`).join('');
+})();
+</script>
 </body>
 </html>

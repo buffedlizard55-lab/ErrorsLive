@@ -642,6 +642,495 @@
    ]
   }
  },
+ "honesty": {
+  "headline": "READ THIS BEFORE TRUSTING THE /100 DIAL. Across the 1258 modelling batted balls the fitted P(error) never exceeds 6.5/100 and never falls below 0.0/100, and out-of-fold the 4-class model nominates \"error\" as its most likely call 0 times out of 1258. The score is a real ranking signal (OOF AUC 0.641) but it is NOT a calibrated 0-100 confidence, and it will essentially never tell you \"this is an error\".",
+  "oof_top1_accuracy": 0.7281,
+  "oof_top1_recall_by_class": {
+   "hit": {
+    "n": 428,
+    "correct": 216,
+    "recall": 0.505
+   },
+   "error": {
+    "n": 24,
+    "correct": 0,
+    "recall": 0.0
+   },
+   "fielders_choice": {
+    "n": 10,
+    "correct": 0,
+    "recall": 0.0
+   },
+   "out": {
+    "n": 796,
+    "correct": 700,
+    "recall": 0.879
+   }
+  },
+  "oof_error_nominated_top1": 0,
+  "oof_error_recall": 0.0,
+  "p_error_observed_min_x100": 0.01,
+  "p_error_observed_max_x100": 6.48,
+  "p_error_percentile_grid": [
+   {
+    "p_error": 0.00011,
+    "percentile": 0
+   },
+   {
+    "p_error": 0.00069,
+    "percentile": 1
+   },
+   {
+    "p_error": 0.00167,
+    "percentile": 2
+   },
+   {
+    "p_error": 0.00215,
+    "percentile": 3
+   },
+   {
+    "p_error": 0.00259,
+    "percentile": 4
+   },
+   {
+    "p_error": 0.00273,
+    "percentile": 5
+   },
+   {
+    "p_error": 0.00281,
+    "percentile": 6
+   },
+   {
+    "p_error": 0.00288,
+    "percentile": 7
+   },
+   {
+    "p_error": 0.00295,
+    "percentile": 8
+   },
+   {
+    "p_error": 0.00301,
+    "percentile": 9
+   },
+   {
+    "p_error": 0.00311,
+    "percentile": 10
+   },
+   {
+    "p_error": 0.00321,
+    "percentile": 11
+   },
+   {
+    "p_error": 0.00328,
+    "percentile": 12
+   },
+   {
+    "p_error": 0.00336,
+    "percentile": 13
+   },
+   {
+    "p_error": 0.00343,
+    "percentile": 14
+   },
+   {
+    "p_error": 0.00351,
+    "percentile": 15
+   },
+   {
+    "p_error": 0.00356,
+    "percentile": 16
+   },
+   {
+    "p_error": 0.00366,
+    "percentile": 17
+   },
+   {
+    "p_error": 0.00378,
+    "percentile": 18
+   },
+   {
+    "p_error": 0.00388,
+    "percentile": 19
+   },
+   {
+    "p_error": 0.00408,
+    "percentile": 20
+   },
+   {
+    "p_error": 0.00419,
+    "percentile": 21
+   },
+   {
+    "p_error": 0.00428,
+    "percentile": 22
+   },
+   {
+    "p_error": 0.00442,
+    "percentile": 23
+   },
+   {
+    "p_error": 0.00453,
+    "percentile": 24
+   },
+   {
+    "p_error": 0.00467,
+    "percentile": 25
+   },
+   {
+    "p_error": 0.00491,
+    "percentile": 26
+   },
+   {
+    "p_error": 0.00504,
+    "percentile": 27
+   },
+   {
+    "p_error": 0.0052,
+    "percentile": 28
+   },
+   {
+    "p_error": 0.00536,
+    "percentile": 29
+   },
+   {
+    "p_error": 0.0055,
+    "percentile": 30
+   },
+   {
+    "p_error": 0.00559,
+    "percentile": 31
+   },
+   {
+    "p_error": 0.00566,
+    "percentile": 32
+   },
+   {
+    "p_error": 0.00579,
+    "percentile": 33
+   },
+   {
+    "p_error": 0.00586,
+    "percentile": 34
+   },
+   {
+    "p_error": 0.00596,
+    "percentile": 35
+   },
+   {
+    "p_error": 0.00605,
+    "percentile": 36
+   },
+   {
+    "p_error": 0.00613,
+    "percentile": 37
+   },
+   {
+    "p_error": 0.00619,
+    "percentile": 38
+   },
+   {
+    "p_error": 0.00625,
+    "percentile": 39
+   },
+   {
+    "p_error": 0.00633,
+    "percentile": 40
+   },
+   {
+    "p_error": 0.00638,
+    "percentile": 41
+   },
+   {
+    "p_error": 0.00646,
+    "percentile": 42
+   },
+   {
+    "p_error": 0.00655,
+    "percentile": 43
+   },
+   {
+    "p_error": 0.00666,
+    "percentile": 44
+   },
+   {
+    "p_error": 0.00709,
+    "percentile": 45
+   },
+   {
+    "p_error": 0.0081,
+    "percentile": 46
+   },
+   {
+    "p_error": 0.00847,
+    "percentile": 47
+   },
+   {
+    "p_error": 0.00864,
+    "percentile": 48
+   },
+   {
+    "p_error": 0.00882,
+    "percentile": 49
+   },
+   {
+    "p_error": 0.00902,
+    "percentile": 50
+   },
+   {
+    "p_error": 0.00921,
+    "percentile": 51
+   },
+   {
+    "p_error": 0.00944,
+    "percentile": 52
+   },
+   {
+    "p_error": 0.00971,
+    "percentile": 53
+   },
+   {
+    "p_error": 0.00992,
+    "percentile": 54
+   },
+   {
+    "p_error": 0.0102,
+    "percentile": 55
+   },
+   {
+    "p_error": 0.01137,
+    "percentile": 56
+   },
+   {
+    "p_error": 0.01199,
+    "percentile": 57
+   },
+   {
+    "p_error": 0.01335,
+    "percentile": 58
+   },
+   {
+    "p_error": 0.01491,
+    "percentile": 59
+   },
+   {
+    "p_error": 0.01918,
+    "percentile": 60
+   },
+   {
+    "p_error": 0.02608,
+    "percentile": 61
+   },
+   {
+    "p_error": 0.02773,
+    "percentile": 62
+   },
+   {
+    "p_error": 0.02871,
+    "percentile": 63
+   },
+   {
+    "p_error": 0.03006,
+    "percentile": 64
+   },
+   {
+    "p_error": 0.03136,
+    "percentile": 65
+   },
+   {
+    "p_error": 0.03243,
+    "percentile": 66
+   },
+   {
+    "p_error": 0.03309,
+    "percentile": 67
+   },
+   {
+    "p_error": 0.03405,
+    "percentile": 68
+   },
+   {
+    "p_error": 0.03484,
+    "percentile": 69
+   },
+   {
+    "p_error": 0.03545,
+    "percentile": 70
+   },
+   {
+    "p_error": 0.03577,
+    "percentile": 71
+   },
+   {
+    "p_error": 0.03637,
+    "percentile": 72
+   },
+   {
+    "p_error": 0.0369,
+    "percentile": 73
+   },
+   {
+    "p_error": 0.03764,
+    "percentile": 74
+   },
+   {
+    "p_error": 0.03793,
+    "percentile": 75
+   },
+   {
+    "p_error": 0.03821,
+    "percentile": 76
+   },
+   {
+    "p_error": 0.03861,
+    "percentile": 77
+   },
+   {
+    "p_error": 0.03896,
+    "percentile": 78
+   },
+   {
+    "p_error": 0.0392,
+    "percentile": 79
+   },
+   {
+    "p_error": 0.0394,
+    "percentile": 80
+   },
+   {
+    "p_error": 0.03953,
+    "percentile": 81
+   },
+   {
+    "p_error": 0.03972,
+    "percentile": 82
+   },
+   {
+    "p_error": 0.03999,
+    "percentile": 83
+   },
+   {
+    "p_error": 0.0402,
+    "percentile": 84
+   },
+   {
+    "p_error": 0.04042,
+    "percentile": 85
+   },
+   {
+    "p_error": 0.04049,
+    "percentile": 86
+   },
+   {
+    "p_error": 0.04059,
+    "percentile": 87
+   },
+   {
+    "p_error": 0.04071,
+    "percentile": 88
+   },
+   {
+    "p_error": 0.04085,
+    "percentile": 89
+   },
+   {
+    "p_error": 0.04091,
+    "percentile": 90
+   },
+   {
+    "p_error": 0.04099,
+    "percentile": 91
+   },
+   {
+    "p_error": 0.04112,
+    "percentile": 92
+   },
+   {
+    "p_error": 0.04124,
+    "percentile": 93
+   },
+   {
+    "p_error": 0.04139,
+    "percentile": 94
+   },
+   {
+    "p_error": 0.04162,
+    "percentile": 95
+   },
+   {
+    "p_error": 0.04195,
+    "percentile": 96
+   },
+   {
+    "p_error": 0.04242,
+    "percentile": 97
+   },
+   {
+    "p_error": 0.06056,
+    "percentile": 98
+   },
+   {
+    "p_error": 0.06339,
+    "percentile": 99
+   },
+   {
+    "p_error": 0.06484,
+    "percentile": 100
+   }
+  ],
+  "calibration_oof": [
+   {
+    "lo": 0,
+    "hi": 0.01,
+    "n": 618,
+    "mean_pred": 0.0043,
+    "observed": 0.0065
+   },
+   {
+    "lo": 0.01,
+    "hi": 0.02,
+    "n": 133,
+    "mean_pred": 0.0139,
+    "observed": 0.0075
+   },
+   {
+    "lo": 0.02,
+    "hi": 0.03,
+    "n": 80,
+    "mean_pred": 0.0261,
+    "observed": 0.0625
+   },
+   {
+    "lo": 0.03,
+    "hi": 0.04,
+    "n": 246,
+    "mean_pred": 0.0354,
+    "observed": 0.0366
+   },
+   {
+    "lo": 0.04,
+    "hi": 0.05,
+    "n": 146,
+    "mean_pred": 0.0445,
+    "observed": 0.0274
+   },
+   {
+    "lo": 0.05,
+    "hi": 0.07,
+    "n": 26,
+    "mean_pred": 0.0576,
+    "observed": 0.0385
+   },
+   {
+    "lo": 0.07,
+    "hi": 0.1,
+    "n": 9,
+    "mean_pred": 0.0761,
+    "observed": 0.0
+   }
+  ],
+  "what_it_is_good_for": "ranking batted balls against each other and flagging the rare top-decile \"this one deserves a second look\" case",
+  "what_it_is_not_good_for": "declaring a call an error, settling a scoring decision, or replacing the official scorer - it never nominates error as the top call and its absolute level is uncalibrated"
+ },
  "multiclass": {
   "cv_logloss": 0.6549,
   "per_class_cv_auc": {

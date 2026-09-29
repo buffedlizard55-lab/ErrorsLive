@@ -1,0 +1,46 @@
+{
+ "what": "Independent re-verification of the 24 archived game feeds against the OFFICIAL MLB Stats API linescore endpoint, performed 2026-09-29 by a reviewer with no access to the original pool.json.",
+ "how": "GET https://statsapi.mlb.com/api/v1/game/{gamePk}/linescore  -> .teams.away/.home (runs, hits, errors)",
+ "compare_to": "data/data_quality.json (final score re-check) and data/TARGETS.json (stratum membership by team errors)",
+ "result": "24/24 final scores MATCH; 24/24 team-error totals MATCH the stratum each game was filed under (A=eT>=3, B=eT==2, C=eT<=1); 24/24 officialDate MATCH docs/data/games.csv",
+ "legend": "rA/rH = away/home runs; eA/eH = away/home errors; eT = eA+eH (the stratifier)",
+ "games": [
+  {"pk": 822722, "date": "2026-06-14", "away": "SEA", "home": "WAS", "rA": 1, "rH": 10, "eA": 1, "eH": 2, "eT": 3, "stratum": "A", "api": "https://statsapi.mlb.com/api/v1/game/822722/linescore"},
+  {"pk": 822794, "date": "2026-06-27", "away": "TOR", "home": "TEX", "rA": 7, "rH": 4, "eA": 1, "eH": 0, "eT": 1, "stratum": "C", "api": "https://statsapi.mlb.com/api/v1/game/822794/linescore"},
+  {"pk": 822801, "date": "2026-06-14", "away": "TOR", "home": "NYY", "rA": 8, "rH": 3, "eA": 1, "eH": 1, "eT": 2, "stratum": "B", "api": "https://statsapi.mlb.com/api/v1/game/822801/linescore"},
+  {"pk": 822885, "date": "2026-06-20", "away": "TEX", "home": "SD",  "rA": 6, "rH": 4, "eA": 1, "eH": 1, "eT": 2, "stratum": "B", "api": "https://statsapi.mlb.com/api/v1/game/822885/linescore"},
+  {"pk": 823038, "date": "2026-06-27", "away": "STL", "home": "MIA", "rA": 5, "rH": 1, "eA": 0, "eH": 0, "eT": 0, "stratum": "C", "api": "https://statsapi.mlb.com/api/v1/game/823038/linescore"},
+  {"pk": 823126, "date": "2026-06-20", "away": "SEA", "home": "BOS", "rA": 5, "rH": 1, "eA": 1, "eH": 1, "eT": 2, "stratum": "B", "api": "https://statsapi.mlb.com/api/v1/game/823126/linescore"},
+  {"pk": 823283, "date": "2026-06-27", "away": "SD",  "home": "LAD", "rA": 15, "rH": 3, "eA": 0, "eH": 1, "eT": 1, "stratum": "C", "api": "https://statsapi.mlb.com/api/v1/game/823283/linescore"},
+  {"pk": 823368, "date": "2026-06-14", "away": "PIT", "home": "MIA", "rA": 4, "rH": 2, "eA": 2, "eH": 0, "eT": 2, "stratum": "B", "api": "https://statsapi.mlb.com/api/v1/game/823368/linescore"},
+  {"pk": 823441, "date": "2026-07-18", "away": "NYM", "home": "PHI", "rA": 1, "rH": 6, "eA": 3, "eH": 1, "eT": 4, "stratum": "A", "api": "https://statsapi.mlb.com/api/v1/game/823441/linescore"},
+  {"pk": 823531, "date": "2026-06-21", "away": "NYY", "home": "CIN", "rA": 4, "rH": 1, "eA": 0, "eH": 2, "eT": 2, "stratum": "B", "api": "https://statsapi.mlb.com/api/v1/game/823531/linescore"},
+  {"pk": 823532, "date": "2026-06-20", "away": "NYY", "home": "CIN", "rA": 10, "rH": 2, "eA": 2, "eH": 1, "eT": 3, "stratum": "A", "api": "https://statsapi.mlb.com/api/v1/game/823532/linescore"},
+  {"pk": 823615, "date": "2026-06-14", "away": "ATL", "home": "NYM", "rA": 1, "rH": 8, "eA": 2, "eH": 1, "eT": 3, "stratum": "A", "api": "https://statsapi.mlb.com/api/v1/game/823615/linescore"},
+  {"pk": 823763, "date": "2026-07-18", "away": "MIA", "home": "MIL", "rA": 6, "rH": 8, "eA": 3, "eH": 0, "eT": 3, "stratum": "A", "api": "https://statsapi.mlb.com/api/v1/game/823763/linescore"},
+  {"pk": 823777, "date": "2026-06-14", "away": "PHI", "home": "MIL", "rA": 0, "rH": 4, "eA": 1, "eH": 1, "eT": 2, "stratum": "B", "api": "https://statsapi.mlb.com/api/v1/game/823777/linescore"},
+  {"pk": 823854, "date": "2026-06-20", "away": "SF",  "home": "MIA", "rA": 3, "rH": 6, "eA": 3, "eH": 0, "eT": 3, "stratum": "A", "api": "https://statsapi.mlb.com/api/v1/game/823854/linescore"},
+  {"pk": 823937, "date": "2026-06-20", "away": "LAD", "home": "BAL", "rA": 3, "rH": 2, "eA": 1, "eH": 0, "eT": 1, "stratum": "C", "api": "https://statsapi.mlb.com/api/v1/game/823937/linescore"},
+  {"pk": 824263, "date": "2026-06-20", "away": "CWS", "home": "DET", "rA": 1, "rH": 4, "eA": 1, "eH": 1, "eT": 2, "stratum": "B", "api": "https://statsapi.mlb.com/api/v1/game/824263/linescore"},
+  {"pk": 824581, "date": "2026-06-27", "away": "CWS", "home": "KC",  "rA": 1, "rH": 2, "eA": 2, "eH": 0, "eT": 2, "stratum": "B", "api": "https://statsapi.mlb.com/api/v1/game/824581/linescore"},
+  {"pk": 824738, "date": "2026-07-18", "away": "TB",  "home": "BOS", "rA": 6, "rH": 7, "eA": 1, "eH": 2, "eT": 3, "stratum": "A", "api": "https://statsapi.mlb.com/api/v1/game/824738/linescore"},
+  {"pk": 824823, "date": "2026-06-14", "away": "BAL", "home": "SD",  "rA": 5, "rH": 2, "eA": 0, "eH": 3, "eT": 3, "stratum": "A", "api": "https://statsapi.mlb.com/api/v1/game/824823/linescore"},
+  {"pk": 824825, "date": "2026-06-27", "away": "BAL", "home": "WAS", "rA": 4, "rH": 3, "eA": 1, "eH": 2, "eT": 3, "stratum": "A", "api": "https://statsapi.mlb.com/api/v1/game/824825/linescore"},
+  {"pk": 824890, "date": "2026-08-01", "away": "WAS", "home": "ATL", "rA": 3, "rH": 8, "eA": 1, "eH": 3, "eT": 4, "stratum": "A", "api": "https://statsapi.mlb.com/api/v1/game/824890/linescore"},
+  {"pk": 824903, "date": "2026-07-04", "away": "NYM", "home": "ATL", "rA": 3, "rH": 14, "eA": 1, "eH": 1, "eT": 2, "stratum": "B", "api": "https://statsapi.mlb.com/api/v1/game/824903/linescore"},
+  {"pk": 824994, "date": "2026-06-14", "away": "ATH", "home": "COL", "rA": 23, "rH": 9, "eA": 1, "eH": 1, "eT": 2, "stratum": "B", "api": "https://statsapi.mlb.com/api/v1/game/824994/linescore"}
+ ],
+ "pool_manifest_recheck": {
+  "endpoint": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=MM/DD/2026&gameType=R&fields=dates,games,gamePk,officialDate",
+  "games_per_date": {"2026-06-13": 15, "2026-06-14": 15, "2026-06-20": 14, "2026-06-21": 15, "2026-06-27": 15,
+                     "2026-07-04": 15, "2026-07-18": 16, "2026-07-25": 15, "2026-08-01": 15, "2026-08-15": 15,
+                     "2026-08-29": 17, "2026-09-05": 15, "2026-09-12": 15, "2026-09-19": 15, "2026-09-26": 13},
+  "sum": 222,
+  "matches_pool_summary_n_games": true,
+  "not_rechecked_here": "pool_summary.json's per-game ERROR column (team_errors_total 247, errors_per_game_dist) would require 222 individual linescore calls; it is retained as published and flagged in docs/roadmap.html as un-re-verified in this pass."
+ },
+ "irregularities_flagged": [
+  "3 games appear on a slate date but carry a different officialDate: 824424 (slate 2026-06-14, officialDate 2026-09-04), 824664 (slate 2026-06-21, officialDate 2026-08-06), 823523 (slate 2026-07-18, officialDate 2026-07-19). None are in the 24-game sample; the pool count of 222 is unaffected.",
+  "game 824581's linescore carries the note 'One out when winning run scored.' (walk-off); its final 1-2 and eT=2 are unaffected."
+ ]
+}

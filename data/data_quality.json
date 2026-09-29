@@ -4,313 +4,385 @@
    "plays": 71,
    "bip": 56,
    "field_error_plays": 0,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 1,
    "healed": false,
    "final": [
     1,
     10
    ],
-   "score_checked": true,
-   "pool_eT": 3
+   "score_checked_against_official": true,
+   "official_eT": 3,
+   "matchup": "SEA @ WAS",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/822722/linescore"
   },
   "822794": {
    "plays": 82,
    "bip": 51,
    "field_error_plays": 0,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 1,
    "healed": false,
    "final": [
     7,
     4
    ],
-   "score_checked": true,
-   "pool_eT": 1
+   "score_checked_against_official": true,
+   "official_eT": 1,
+   "matchup": "TOR @ TEX",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/822794/linescore"
   },
   "822801": {
    "plays": 82,
    "bip": 61,
    "field_error_plays": 0,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 1,
    "healed": true,
    "final": [
     8,
     3
    ],
-   "score_checked": true,
-   "pool_eT": 2
+   "score_checked_against_official": true,
+   "official_eT": 2,
+   "matchup": "TOR @ NYY",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/822801/linescore"
   },
   "822885": {
    "plays": 83,
    "bip": 50,
    "field_error_plays": 0,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     6,
     4
    ],
-   "score_checked": true,
-   "pool_eT": 2
+   "score_checked_against_official": true,
+   "official_eT": 2,
+   "matchup": "TEX @ SD",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/822885/linescore"
   },
   "823038": {
    "plays": 74,
    "bip": 54,
    "field_error_plays": 0,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     5,
     1
    ],
-   "score_checked": true,
-   "pool_eT": 0
+   "score_checked_against_official": true,
+   "official_eT": 0,
+   "matchup": "STL @ MIA",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823038/linescore"
   },
   "823126": {
    "plays": 71,
    "bip": 39,
    "field_error_plays": 1,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     5,
     1
    ],
-   "score_checked": true,
-   "pool_eT": 2
+   "score_checked_against_official": true,
+   "official_eT": 2,
+   "matchup": "SEA @ BOS",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823126/linescore"
   },
   "823283": {
    "plays": 88,
    "bip": 67,
    "field_error_plays": 1,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     15,
     3
    ],
-   "score_checked": true,
-   "pool_eT": 1
+   "score_checked_against_official": true,
+   "official_eT": 1,
+   "matchup": "SD @ LAD",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823283/linescore"
   },
   "823368": {
    "plays": 79,
    "bip": 46,
    "field_error_plays": 2,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     4,
     2
    ],
-   "score_checked": true,
-   "pool_eT": 2
+   "score_checked_against_official": true,
+   "official_eT": 2,
+   "matchup": "PIT @ MIA",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823368/linescore"
   },
   "823441": {
    "plays": 75,
    "bip": 46,
    "field_error_plays": 1,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     1,
     6
    ],
-   "score_checked": true,
-   "pool_eT": 4
+   "score_checked_against_official": true,
+   "official_eT": 4,
+   "matchup": "NYM @ PHI",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823441/linescore"
   },
   "823531": {
    "plays": 72,
    "bip": 49,
    "field_error_plays": 0,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": true,
    "final": [
     4,
     1
    ],
-   "score_checked": true,
-   "pool_eT": 2
+   "score_checked_against_official": true,
+   "official_eT": 2,
+   "matchup": "NYY @ CIN",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823531/linescore"
   },
   "823532": {
    "plays": 86,
    "bip": 60,
    "field_error_plays": 2,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     10,
     2
    ],
-   "score_checked": true,
-   "pool_eT": 3
+   "score_checked_against_official": true,
+   "official_eT": 3,
+   "matchup": "NYY @ CIN",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823532/linescore"
   },
   "823615": {
    "plays": 76,
    "bip": 54,
    "field_error_plays": 1,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     1,
     8
    ],
-   "score_checked": true,
-   "pool_eT": 3
+   "score_checked_against_official": true,
+   "official_eT": 3,
+   "matchup": "ATL @ NYM",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823615/linescore"
   },
   "823763": {
    "plays": 81,
    "bip": 47,
    "field_error_plays": 2,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 1,
    "healed": false,
    "final": [
     6,
     8
    ],
-   "score_checked": true,
-   "pool_eT": 3
+   "score_checked_against_official": true,
+   "official_eT": 3,
+   "matchup": "MIA @ MIL",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823763/linescore"
   },
   "823777": {
    "plays": 64,
    "bip": 52,
    "field_error_plays": 1,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 1,
    "healed": true,
    "final": [
     0,
     4
    ],
-   "score_checked": true,
-   "pool_eT": 2
+   "score_checked_against_official": true,
+   "official_eT": 2,
+   "matchup": "PHI @ MIL",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823777/linescore"
   },
   "823854": {
    "plays": 79,
    "bip": 50,
    "field_error_plays": 2,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     3,
     6
    ],
-   "score_checked": true,
-   "pool_eT": 3
+   "score_checked_against_official": true,
+   "official_eT": 3,
+   "matchup": "SF @ MIA",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823854/linescore"
   },
   "823937": {
    "plays": 72,
    "bip": 45,
    "field_error_plays": 1,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     3,
     2
    ],
-   "score_checked": true,
-   "pool_eT": 1
+   "score_checked_against_official": true,
+   "official_eT": 1,
+   "matchup": "LAD @ BAL",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/823937/linescore"
   },
   "824263": {
    "plays": 72,
    "bip": 48,
    "field_error_plays": 0,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     1,
     4
    ],
-   "score_checked": true,
-   "pool_eT": 2
+   "score_checked_against_official": true,
+   "official_eT": 2,
+   "matchup": "CWS @ DET",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/824263/linescore"
   },
   "824581": {
    "plays": 69,
    "bip": 48,
    "field_error_plays": 2,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 1,
    "healed": false,
    "final": [
     1,
     2
    ],
-   "score_checked": true,
-   "pool_eT": 2
+   "score_checked_against_official": true,
+   "official_eT": 2,
+   "matchup": "CWS @ KC",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/824581/linescore"
   },
   "824738": {
    "plays": 72,
    "bip": 49,
    "field_error_plays": 1,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": true,
    "final": [
     6,
     7
    ],
-   "score_checked": true,
-   "pool_eT": 3
+   "score_checked_against_official": true,
+   "official_eT": 3,
+   "matchup": "TB @ BOS",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/824738/linescore"
   },
   "824823": {
    "plays": 76,
    "bip": 54,
    "field_error_plays": 1,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 1,
    "healed": false,
    "final": [
     5,
     2
    ],
-   "score_checked": true,
-   "pool_eT": 3
+   "score_checked_against_official": true,
+   "official_eT": 3,
+   "matchup": "BAL @ SD",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/824823/linescore"
   },
   "824825": {
    "plays": 86,
    "bip": 54,
    "field_error_plays": 1,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 1,
    "healed": false,
    "final": [
     4,
     3
    ],
-   "score_checked": true,
-   "pool_eT": 3
+   "score_checked_against_official": true,
+   "official_eT": 3,
+   "matchup": "BAL @ WAS",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/824825/linescore"
   },
   "824890": {
    "plays": 75,
    "bip": 54,
    "field_error_plays": 2,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 1,
    "healed": false,
    "final": [
     3,
     8
    ],
-   "score_checked": true,
-   "pool_eT": 4
+   "score_checked_against_official": true,
+   "official_eT": 4,
+   "matchup": "WAS @ ATL",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/824890/linescore"
   },
   "824903": {
    "plays": 85,
    "bip": 58,
    "field_error_plays": 1,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 1,
    "healed": false,
    "final": [
     3,
     14
    ],
-   "score_checked": true,
-   "pool_eT": 2
+   "score_checked_against_official": true,
+   "official_eT": 2,
+   "matchup": "NYM @ ATL",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/824903/linescore"
   },
   "824994": {
    "plays": 98,
    "bip": 79,
    "field_error_plays": 2,
+   "field_error_plays_no_hitdata": 0,
    "fc_plays": 0,
    "healed": false,
    "final": [
     23,
     9
    ],
-   "score_checked": true,
-   "pool_eT": 2
+   "score_checked_against_official": true,
+   "official_eT": 2,
+   "matchup": "ATH @ COL",
+   "official_url": "https://statsapi.mlb.com/api/v1/game/824994/linescore"
   }
  },
  "flags": [],
@@ -319,9 +391,40 @@
   "bip": 1271,
   "bip_numeric": 1259,
   "errors": 24,
+  "errors_without_hitdata": 0,
   "multi_hitdata": 0,
   "missing_numeric": 12,
   "other_class": 1
  },
- "rule": "labels = official play-result eventType; rows never imputed; final scores re-verified vs linescore pool; healed games keep integrity notes"
+ "event_type_counts": {
+  "field_out": 715,
+  "strikeout": 409,
+  "single": 284,
+  "walk": 151,
+  "double": 83,
+  "home_run": 61,
+  "force_out": 48,
+  "hit_by_pitch": 28,
+  "grounded_into_double_play": 27,
+  "field_error": 24,
+  "sac_fly": 7,
+  "triple": 6,
+  "fielders_choice": 5,
+  "fielders_choice_out": 5,
+  "sac_bunt": 3,
+  "strikeout_double_play": 3,
+  "catcher_interf": 3,
+  "double_play": 2,
+  "caught_stealing_home": 1,
+  "pickoff_2b": 1,
+  "intent_walk": 1,
+  "pickoff_caught_stealing_2b": 1
+ },
+ "strata": {
+  "A_eT>=3": 10,
+  "B_eT==2": 10,
+  "C_eT<=1": 4
+ },
+ "rule": "labels = official play-result eventType; rows never imputed; every archived final score re-checked against the official linescore endpoint; seam heals keep integrity notes",
+ "official_source": "data/verified_linescores.json"
 }

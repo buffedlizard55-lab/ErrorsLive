@@ -1,0 +1,1339 @@
+date,game,inning,manager-ump,player-referenced,initial-call,play-type,calling-umpire,crew-chief,result,time-to-ruling,video
+2015-04-6,BAL @ TB,B5,Cash,Loney,Out at home,Collisions at HP,DeMuth,DeMuth,Confirmed,1:41,http://t.co/L5BWj3qvqH
+2015-04-6,BAL @ TB,T8,Showalter,Pearce,Out at home,Tag Play,DeMuth,DeMuth,Overturned,2:32,http://t.co/csSSchgA55
+2015-04-6,SD @ LAD,B8,Black,Puig,Safe at 2nd,Tag Play,DiMuro,Gorman,Overturned,0:57,http://atmlb.com/1FoayzO
+2015-04-6,TEX @ OAK,B5,Melvin,Fuld,Out at 2nd,Force Play,Wolf,Miller,Overturned,1:42,http://atmlb.com/1Cn7E8l
+2015-04-6,SF @ ARI,B8,Hale,D. Peralta,Foul Tip/No HBP,HBP,Cederstrom,Cederstrom,Stands,2:09,http://atmlb.com/1IwTbxC
+2015-04-8,STL @ CHI,B8,Maddon,Szczur,Out at 1st,Force Play,Foster,Winters,Confirmed,0:51,http://atmlb.com/1Cnp3h5
+2015-04-8,BAL @ TB,B1,Showalter,Jennings,Safe at 1st,Force Play,Estabrook,DeMuth,Overturned,1:26,http://t.co/wkexM7tuMm
+2015-04-8,BAL @ TB,B4,Cash,Forsythe,Out at 1st,Force Play,Estabrook,DeMuth,Stands,2:06,http://t.co/b07gi5d1Fz
+2015-04-8,BAL @ TB,B7,UMPIRE,Souza,Out at 2nd,Tag Play,DeMuth,DeMuth,Confirmed,0:56,http://t.co/AOTODLjbZ7
+2015-04-8,ATL @ MIA,T9,Gonzalez,Ozuna,Catch,Catch/no catch,Diaz,Nelson,Confirmed,1:03,http://t.co/wgA18EmSh2
+2015-04-8,SD @ LAD,B2,Mattingly,Rollins,Out at 1st,Force Play,T. Gibson,Gorman,Overturned,1:37,http://t.co/7vLnhrkXtX
+2015-04-8,TEX @ OAK,B3,UMPIRE,Canha,Double,Potential HR,Hamari,Miller,Confirmed,1:32,http://t.co/8oi6KmqlUF
+2015-04-8,TEX @ OAK,B5,Banister,Ladendorf,Safe at 1st,Force Play,Hamari,Miller,Stands,1:45,http://t.co/Z1jLKlkeNB
+2015-04-9,TEX @ OAK,T1,Melvin,Rua,Safe at 2nd,Force Play,Eddings,Miller,Overturned,2:53,http://t.co/swCIjcVxJc
+2015-04-9,CLE @ HOU,B6,Hinch,C. Carter,Out at 1st,Force Play,Conroy,T. Barrett,Stands,3:11,http://t.co/K1OlJeg0po
+2015-04-9,MIN @ DET,B2,Molitor,Gose,Safe at 1st,Tag Play,Reyburn,West,Stands,2:13,http://t.co/pCjNKtAUKv
+2015-04-9,SF @ SD,B3,Black,Despaigne,Out at 1st,Force Play,Gorman,Gorman,Confirmed,2:10,http://t.co/ZHr4co0hOM
+2015-04-9,SF @ SD,T8,UMPIRE,Duffy,Safe at 2nd,Tag Play,Carlson,Gorman,Confirmed,1:25,http://t.co/60VTHxBFuU
+2015-04-10,HOU @ TEX,T9,Banister,Marisnick,Safe at 1st,Force Play,Nelson,Nelson,Confirmed,1:08,http://t.co/jJuokMxxNb
+2015-04-10,DET @ CLE,B8,UMPIRE,C. Santana,Double,Potential HR,Iassogna,Scott,Overturned,2:36,http://atmlb.com/1yk4OV9
+2015-04-10,BOS @ NYY,B8,Girardi,Gardner,Out at 2nd,Tag Play,Winters,Winters,Confirmed,1:14,http://t.co/6oGUt7IZTv
+2015-04-10,SF @ SD,T6,Black,Aoki,Safe at 1st,Tag Play,Vanover,Vanover,Overturned,1:16,http://t.co/pvbz5FoXQY
+2015-04-10,BOS @ NYY,B17,UMPIRE,Gardner,Out at 1st,Tag Play,Muchlinski,Winters,Confirmed,0:50,http://t.co/ezcArsE259
+2015-04-11,STL @ CIN,T8,Price,Grichuk,Safe at 1st,Force Play,Danley,West,Stands,2:13,http://t.co/k6RNyyT0uI
+2015-04-11,MIN @ CWS,T4,Ventura,J. Schafer,Safe at 2nd,Tag Play,B. Welke,Hirschbeck,Overturned,2:09,http://t.co/d8BAevHPwn
+2015-04-11,BOS @ NYY,T8,Farrell,Nava,Out at 1st,Force Play,Winters,Winters,Overturned,2:19,http://t.co/HmwknBlJtA
+2015-04-11,SEA @ OAK,B7,Melvin,Phegley,Out at home,Collisions at HP,Carlson,Gorman,Stands,3:13,http://t.co/SFmj4GEoCu
+2015-04-11,SEA @ OAK,T8,McClendon,A. Jackson,Out at 2nd,Force Play,T. Gibson,Gorman,Overturned,3:33,http://t.co/ih3QMyqNFj
+2015-04-11,WSH @ PHI,T7,Williams,Desmond,Out at 1st,Force Play,Wendelstedt,Layne,Stands,1:57,http://t.co/UxwjTKghOD
+2015-04-11,KC @ LAA,T1,Scioscia,Moustakas,Safe at 2nd,Tag Play,Hamari,Miller,Stands,1:48,http://t.co/wiemMmjuIx
+2015-04-11,LAD @ ARI,T7,Hale,A. Guerrero,Safe at 1st,Force Play,Hernandez,T. Barrett,Overturned,1:01,http://t.co/V4QitHkxXh
+2015-04-12,TOR @ BAL,T1,UMPIRE,Pompey,Double,Potential HR,Timmons,T. Welke,Overturned,2:04,http://t.co/oexsXBDVeL
+2015-04-12,STL @ CIN,T8,Matheny,Molina,No Tag,Tag Play,Danley,West,Overturned,5:50,http://t.co/zaqkTGdF2K
+2015-04-12,WSH @ PHI,T10,Sandberg,Zimmerman,Safe at 1st,Force Play,Davidson,Layne,Overturned,2:13,http://t.co/Q4ZCQh8ANy
+2015-04-12,HOU @ TEX,B14,Banister,Moreland,Not HBP,HBP,Diaz,Nelson,Overturned,2:03,http://t.co/sKlnIfFea4
+2015-04-13,WSH @ BOS,B1,Williams,Betts,Safe at 2nd & 3rd,Tag Play,Schrieber/Fagan,Reynolds,Stands,1:50,http://t.co/PjW9J0K8yv
+2015-04-13,COL @ SF,T7,Bochy,Hundley,Safe at home,Tag Play,T. Gibson,Gorman,Confirmed,1:33,http://t.co/iDWkUZGJKE
+2015-04-13,NYY @ BAL,B2,Showalter,Schoop,Out at 2nd,Tag Play,Barber,Cederstrom,Overturned,1:32,http://t.co/5ou0Fb70RT
+2015-04-13,NYY @ BAL,T4,Girardi,Gardner,Out at 1st,Force Play,Cederstrom,Cederstrom,Stands,1:52,http://t.co/oH8tfJCADm
+2015-04-13,MIA @ ATL,B2,Gonzalez,Yelich,Catch,Catch/no catch,Ripperger,Kellogg,Confirmed,1:25,http://t.co/byPupeDtrp
+2015-04-13,CIN @ CHI,T3,Maddon,Phillips,Safe at 1st,Tag Play,Emmel,Meals,Stands,2:49,http://t.co/ARqE7c0twy
+2015-04-13,LAA @ TEX,T4,Scioscia,Joyce,Out at 3rd,Tag Play,Iassogna,Scott,Stands,3:45,http://t.co/FgJZqblLla
+2015-04-13,OAK @ HOU,B8,Melvin,Altuve,Safe at 1st,Force Play,Tichenor,T. Welke,Stands,1:44,http://t.co/VaY9J3pnFB
+2015-04-14,PHI @ NYM,T3,UMPIRE,Galvis,HBP,Rules Check,Marquez,Hallion,Rules Check,2:04,http://atmlb.com/1OeSahq
+2015-04-14,PHI @ NYM,B5,Sandberg,Duda,Safe at home,Tag Play,Marquez,Hallion,Confirmed,1:30,http://t.co/yBGJS555kG
+2015-04-14,TB @ TOR,T6,Cash,Jennings,Out at 2nd,Tag Play,Diaz,Nelson,Stands,1:45,http://t.co/3by40A2KkZ
+2015-04-14,WSH @ BOS,T9,UMPIRE,Zimmerman,Foul ball,Potential HR,Gonzalez,Reynolds,Confirmed,0:54,http://t.co/qcEKHsnwC9
+2015-04-14,OAK @ HOU,T6,Hinch,Vogt,Safe at 2nd,Tag Play,Everitt,T. Welke,Overturned,1:03,http://t.co/i1DDqL7EYz
+2015-04-14,LAA @ TEX,T8,Scioscia,Cron,Out at 1st,Force Play,Iassogna,Iassogna,Overturned,1:37,http://t.co/frkU2UNgAw
+2015-04-14,SEA @ LAD,B8,McClendon,Pederson,Safe at 2nd,Tag Play,Fairchild,Joyce,Overturned,0:48,http://t.co/P03WGAXOEZ
+2015-04-15,CWS @ CLE,T9,Francona,M. Johnson,Hit by Pitch,HBP,Carapazza,Vanover,Confirmed,1:27,http://atmlb.com/1HcsoEQ
+2015-04-15,LAA @ TEX,T4,Scioscia,Freese,No Hit by Pitch,HBP,Iassogna,Iassogna,Stands,3:13,http://atmlb.com/1DoFD2Q
+2015-04-15,DET @ PIT,B1,Ausmus,McCutchen,Safe at 2nd,Tag Play,Davidson,Layne,Overturned,1:33,http://t.co/QrSFGVtwat
+2015-04-15,TB @ TOR,T2,Cash,Jennings,Out at 2nd,Force Play,Guccione,Nelson,Stands,2:43,http://t.co/oOTLfYNxBc
+2015-04-15,MIL @ STL,B3,Roenicke,Braun,No catch,Catch/no catch,Hirschbeck,Hirschbeck,Overturned,1:14,http://t.co/ixu0Y1h4px
+2015-04-16,MIA @ NYM,T5,Collins,Realmuto,Safe at 1st,Force Play,Barksdale,Cederstrom,Overturned,1:47,http://t.co/ZfG1oTW3sj
+2015-04-16,MIA @ NYM,T7,Redmond,Suzuki,Out at home,Tag Play,Cooper,Cederstrom,Overturned,5:45,http://t.co/xKG9xOpIUj
+2015-04-16,TB @ TOR,B8,Cash,Donaldson,Hit by Pitch,HBP,Diaz,Nelson,Confirmed,1:15,http://t.co/us1PzF4eRj
+2015-04-17,SD @ CHI,B6,Maddon,S. Castro,Out at 1st,Force Play,B. Welke,Hirschbeck,Stands,2:02,http://t.co/WH0LMnVaMH
+2015-04-17,SD @ CHI,B7,UMPIRE,Fowler,Lodged ball; double,Rules Check,Hirschbeck,Hirschbeck,Rules Check,0:45,http://t.co/y0CKgtPld9
+2015-04-17,BAL @ BOS,T5,UMPIRE,Joseph,Home Run,Potential HR,Meals,Meals,Confirmed,0:56,http://t.co/gkSiowMQMN
+2015-04-17,OAK @ KC,T7,Melvin,Lawrie,Out at 2nd,Tag Play,G. Gibson,Joyce,Stands,3:03,http://t.co/yIL8s8gSz3
+2015-04-17,CIN @ STL,T9,Price,Negron,No Hit by Pitch,HBP,Fagan,Reynolds,Overturned,1:25,http://t.co/nAU0BwUVzZ
+2015-04-17,TEX @ SEA,T9,Banister,Chirinos,Out at 1st,Force Play,Hamari,Miller,Overturned,1:07,http://t.co/v7HyWgkTSH
+2015-04-18,PHI @ WSH,T3,Sandberg,Harang,Out at 1st,Force Play,Carapazza,Vanover,Overturned,1:02,http://t.co/KL7oDH7P1O
+2015-04-18,CWS @ DET,T4,Ventura,Eaton,No Hit by Pitch,HBP,Kellogg,Kellogg,Stands,1:35,http://atmlb.com/1zCGSHY
+2015-04-18,ATL @ TOR,B7,Gonzalez,Pompey,Safe at 1st,Force Play,Hallion,West,Stands,2:09,http://t.co/XYQPUN0xVW
+2015-04-18,SD @ CHI,B5,Black,J. Herrera,Safe at 2nd,Tag Play,Hirschbeck,Hirschbeck,Confirmed,1:09,http://t.co/GGjv89ZNwg
+2015-04-18,ATL @ TOR,B9,Gibbons,Goins,Out at 1st,Force Play,Hallion,West,Confirmed,0:55,http://t.co/4CYbd9TMD7
+2015-04-18,CIN @ STL,T8,Matheny,B. Hamilton,Safe at 1st,Force Play,Reynolds,Reynolds,Stands,2:24,http://t.co/oHPyDR39ua
+2015-04-18,CIN @ STL,B8,Price,Kozma,Safe at 1st,Force Play,Reynolds,Reynolds,Stands,3:46,http://t.co/Ymn0KKQlku
+2015-04-18,SD @ CHI,B11,UMPIRE,K. Bryant,Safe at 1st,Force Play,Hoye,Hirschbeck,Confirmed,0:46,http://t.co/ZwLnUQlT4E
+2015-04-18,MIA @ NYM,T1,Collins,D. Gordon,Safe at 1st,Force Play,Barber,Cederstrom,Stands,3:03,http://t.co/PSpyNU7c8G
+2015-04-18,MIA @ NYM,T3,Redmond,D. Gordon,Out at 1st,Force Play,Barber,Cederstrom,Overturned,3:19,http://t.co/hwegSwzGRT
+2015-04-18,NYY @ TB,T7,Cash,Headley,Safe at home,Tag Play,Davidson,Layne,Confirmed,1:07,http://t.co/1KifXLo3ZR
+2015-04-18,OAK @ KC,T8,Melvin,Zobrist,Out at 1st,Force Play,G. Gibson,Joyce,Overturned,1:28,http://t.co/auxsao68wk
+2015-04-18,MIA @ NYM,B8,Redmond,Lagares,Safe at 1st,Force Play,Barber,Cederstrom,Overturned,1:14,http://t.co/CMeRNwjolV
+2015-04-18,TEX @ SEA,B3,Banister,B. Miller,Safe at 2nd,Tag Play,Ad. Johnson,Miller,Overturned,0:50,http://t.co/mClA1zyJBa
+2015-04-18,TEX @ SEA,T5,McClendon,Smolinski,Hit by Pitch,HBP,Hamari,Miller,Stands,2:01,http://t.co/8LzQ40QeIZ
+2015-04-19,MIA @ NYM,T2,Collins,Realmuto,Safe at 1st,Force Play,Cooper,Cederstrom,Stands,0:50,http://t.co/FGhv8mccFy
+2015-04-19,LAA @ HOU,B1,Scioscia,Altuve,Safe at 1st,Force Play,DeMuth,DeMuth,Stands,2:54,http://t.co/xZieXqpjzX
+2015-04-19,NYY @ TB,B6,Cash,Dykstra,Out at 1st,Force Play,Layne,Layne,Confirmed,0:55,http://t.co/mk6blAV7mQ
+2015-04-19,LAA @ HOU,B7,UMPIRE,Springer,Home Run,Potential HR,DeMuth,DeMuth,Overturned,1:44,http://t.co/9y1XYOGPfP
+2015-04-20,CIN @ MIL,T2,Roenicke,B. Pena,Safe at home,Tag Play,Barry,T. Barrett,Overturned,1:10,http://t.co/GonusAQtPQ
+2015-04-20,CLE @ CWS,B3,Francona,Me. Cabrera,Safe at 1st,Force Play,Cooper,Cooper,Overturned,1:21,http://t.co/bznmbClI5B
+2015-04-20,CHI @ PIT,T5,Hurdle,Rizzo,Safe at home,Tag Play,Reyburn,West,Overturned,1:51,http://t.co/3hmOF4UfVJ
+2015-04-20,CHI @ PIT,T5,Maddon,Rizzo,Out at home (after review),Collisions at HP,Reyburn,West,Confirmed,0:56,http://t.co/JnFQwBrrtH
+2015-04-20,MIN @ KC,T6,UMPIRE,Dozier,Foul ball,Potential HR,Nelson,Nelson,Confirmed,1:15,http://t.co/BR6qGeTeFP
+2015-04-20,HOU @ SEA,T1,McClendon,Springer,Safe at 1st,Force Play,Bucknor,Scott,Overturned,0:37,http://t.co/y9B3aeHLiR
+2015-04-21,BAL @ TOR,B2,Showalter,Pompey,Safe at home,Tag Play,Carlson,Gorman,Stands,1:54,http://t.co/cMEQag7rkG
+2015-04-21,ATL @ NYM,T7,UMPIRE,Maybin,Double,Potential HR,Carapazza,Meals,Overturned,0:55,http://t.co/ofnemxFgfU
+2015-04-21,BOS @ TB,B6,Cash,Guyer,Out at 2nd,Force Play,Hoye,Hirschbeck,Stands,2:05,http://t.co/2nGR1EhWRw
+2015-04-21,CHI @ PIT,T7,Maddon,K. Bryant,Out at home,Tag Play,West,West,Stands,2:03,http://t.co/Q7k6zDzb7S
+2015-04-21,OAK @ LAA,B2,Scioscia,Cron,Out at 1st,Force Play,Muchlinski,Winters,Overturned,1:17,http://t.co/qSmQvRgfRL
+2015-04-21,HOU @ SEA,T3,Hinch,Marisnick,Out at home,Tag Play,Bucknor,Scott,Overturned,2:36,http://t.co/kLFIgKcLEa
+2015-04-21,SD @ COL,T9,Black,Cashner,Out at 1st,Tag Play,Joyce,Joyce,Overturned,0:54,http://t.co/k6cHsQlb0c
+2015-04-21,LAD @ SF,T6,Mattingly,H. Kendrick,Out at 1st,Force Play,Fagan,Culbreth,Confirmed,1:14,http://t.co/kt0gSV83MX
+2015-04-22,ATL @ NYM,T2,Collins,Pierzynski,Safe at home,Tag Play,Segal,Meals,Stands,1:54,http://t.co/e3wB5KPoQe
+2015-04-22,BOS @ TB,B8,Cash,R. Rivera/Guyer,Out at 1st/out at 3rd,Force Play/Tag Play,Hoye/Hirschbeck,Hirschbeck,Confirmed,2:13,http://t.co/aAMCL84Q9p
+2015-04-22,OAK @ LAA,T1,Scioscia,Fuld,Safe at 2nd,Tag Play,Wegner,Winters,Stands,2:15,http://t.co/pTIRfTDzkj
+2015-04-22,TEX @ ARI,T9,Banister,Smolinski,Out at 1st,Tag Play,Timmons,T. Welke,Confirmed,1:12,http://t.co/Ub6vfBMaxs
+2015-04-23,ATL @ NYM,T1,Collins,Callaspo,Safe at 1st,Force Play,Fletcher,Meals,Overturned,1:15,http://t.co/5zPcKioQLa
+2015-04-23,ATL @ NYM,T2,Gonzalez,Pierzynski,Out at home,Collisions at HP,Baker,Meals,Overturned,4:44,http://t.co/sYUi1yR8rS
+2015-04-23,ATL @ NYM,B7,Collins,Cuddyer,Out at 1st,Force Play,Fletcher,Meals,Overturned,1:22,http://t.co/3Elmq0JagD
+2015-04-23,STL @ WSH,B5,Williams,Scherzer,Out at 1st,Force Play,Eddings,Eddings,Overturned,2:04,http://t.co/viCmzn82ba
+2015-04-23,LAD @ SF,B10,Mattingly,Pagan,Safe at 2nd,Tag Play,Culbreth,Culbreth,Confirmed,1:21,http://t.co/AkjifWjDFU
+2015-04-23,KC @ CWS,B10,Yost,J. Abreu,Safe at 2nd,Tag Play,T. Welke,T. Welke,Stands,2:02,http://t.co/XpaKbH4VBh
+2015-04-24,STL @ MIL,B1,Roenicke,Jh. Peralta,Out at 2nd,Catch/no catch,Bucknor,Scott,Overturned,1:24,http://t.co/93Z1VmRPW7
+2015-04-24,KC @ CWS,T3,Ventura,A. Escobar,Safe at 2nd,Tag Play,Everitt,T. Welke,Overturned,2:32,http://t.co/TlUJkmbtaV
+2015-04-24,STL @ MIL,B3,Matheny,Garza,Safe at 3rd,Tag Play,L. Barrett,Scott,Overturned,1:05,http://t.co/QVsyYCxbOW
+2015-04-24,BOS @ BAL,T7,Farrell,Pedroia,Out at 2nd,Tag Play,Basner,DeMuth,Stands,1:32,http://atmlb.com/1Gpak6G
+2015-04-24,CLE @ DET,T9,Ausmus,Aviles,Safe at 1st,Force Play,Fairchild,Joyce,Overturned,1:27,http://t.co/xrbrOK0hmM
+2015-04-24,KC @ CWS,B7,Yost,J. Abreu,Safe at 1st,Force Play,T. Welke,T. Welke,Overturned,1:44,http://t.co/2mzhPrc4jq
+2015-04-24,LAD @ SD,T3,Black,A. Gonzalez,Safe at 1st,Force Play,Foster,Winters,Overturned,2:42,http://t.co/eFgWfjoNeW
+2015-04-24,PIT @ ARI,B6,Hurdle,Goldschmidt,Safe at home,Tag Play,Randazzo,Davis,Confirmed,0:52,http://t.co/xX6JIhqoUn
+2015-04-25,WSH @ MIA,B1,Redmond,D. Gordon,Out at 2nd,Tag Play,Danley,West,Stands,1:55,http://t.co/xHX1l75xwm
+2015-04-25,NYM @ NYY,B9,Girardi,McCann,Out at 2nd,Force Play,Hamari,Eddings,Confirmed,1:06,http://t.co/QzgKWGVPtA
+2015-04-25,PIT @ ARI,T1,Hale,Polanco,Safe at 2nd,Tag Play,Cuzzi,Davis,Stands,3:52,http://atmlb.com/1Jv6kYJ
+2015-04-25,TOR @ TB,B8,UMPIRE,Beckham,Double,Potential HR,Fletcher,Meals,Confirmed,0:39,http://t.co/R3rUDGrk67
+2015-04-25,TOR @ TB,T9,Gibbons,Encarnacion,Out at 1st,Force Play,Segal,Meals,Confirmed,0:59,http://t.co/k0YvOOBcDl
+2015-04-25,ATL @ PHI,B7,Sandberg,Ruiz,Out at 2nd,Tag Play,T. Gibson,Gorman,Stands,1:41,http://t.co/ZUnVKUNbRo
+2015-04-25,LAD @ SD,T1,Mattingly,Grandal,Out at home,Tag Play,Foster,Winters,Stands,2:15,http://t.co/0KbdJ9FFPd
+2015-04-25,STL @ MIL,B6,Roenicke,Segura,Out at 1st,Force Play,Bucknor,Scott,Overturned,0:45,http://t.co/q3dbPqfgaO
+2015-04-25,SF @ COL,T6,UMPIRE,Maxwell,Double,Potential HR,B. Welke,Hirschbeck,Overturned,1:39,http://t.co/4mhq8lfhfG
+2015-04-25,STL @ MIL,B9,Roenicke,Segura,Out at 1st,Force Play,Bucknor,Scott,Confirmed,0:32,http://t.co/B7mHVBqrdz
+2015-04-26,CLE @ DET,T2,Francona,Raburn,Out at 3rd,Tag Play,Fairchild,Joyce,Stands,2:20,http://t.co/jKZ7wXcD0b
+2015-04-26,TOR @ TB,T9,Gibbons,Donaldson,Out at 1st,Force Play,Baker,Meals,Confirmed,0:43,http://t.co/y1aHy4UmzR
+2015-04-26,TEX @ LAA,B4,Banister,Cron,Safe at 3rd,Tag Play,Fagan,Reynolds,Overturned,1:26,http://t.co/FVjtnwTZju
+2015-04-26,PIT @ ARI,B2,Hurdle,Pacheco,Safe at 2nd,Tag Play,Randazzo,Davis,Overturned,0:44,http://t.co/EfSZbbbcp4
+2015-04-26,PIT @ ARI,B4,Hale,Tomas,Out at 1st,Force Play,Cuzzi,Davis,Overturned,0:46,http://t.co/YlytnZlqjo
+2015-04-26,TEX @ LAA,T8,Scioscia,Calhoun,Foul ball,Fan Interference,Reynolds,Reynolds,Overturned,2:22,http://t.co/UxldGPJ528
+2015-04-26,HOU @ OAK,T9,Melvin,Marisnick,Safe at 3rd,Tag Play,Barksdale,Cederstrom,Confirmed,1:06,http://t.co/FKQHDO0n6d
+2015-04-26,NYM @ NYY,B5,Girardi,Gardner,Out at 1st,Force Play,Hamari,Eddings,Overturned,0:29,http://t.co/V4dU6Noojh
+2015-04-27,WSH @ ATL,T7,Williams,R. Johnson,Foul ball,HBP,B. Welke,Hirschbeck,Overturned,2:00,http://t.co/vnqxNyqDM5
+2015-04-27,HOU @ SD,B1,Black,Solarte,Out at 1st,Force Play,Reynolds,Reynolds,Overturned,2:41,http://t.co/eio4WWBIKS
+2015-04-27,DET @ MIN,T7,Ausmus,Mi. Cabrera,Out at 3rd,Tag Play,Hallion,Hallion,Stands,1:48,http://atmlb.com/1bAGR1o
+2015-04-27,COL @ ARI,B5,Weiss,Pollock,Safe at 1st,Force Play,Wegner,Winters,Stands,1:00,http://t.co/ESygo0ZpFk
+2015-04-28,KC @ CLE,B5,Yost,J. Ramirez,Safe at 1st,Tag Play,Meals,Meals,Stands,2:08,http://t.co/9YsECGuXtH
+2015-04-28,KC @ CLE,T7,Francona,Moustakas,Safe at 1st,Force Play,Meals,Meals,Stands,1:44,http://t.co/fcmt2mfNBz
+2015-04-28,PIT @ CHI,B2,Maddon,S. Castro,Out at 1st,Force Play,Scott,Scott,Overturned,0:39,http://t.co/NY3w2fS6WK
+2015-04-28,TOR @ BOS,B7,Farrell,Bogaerts,Out at 1st,Force Play,Ad. Johnson,Miller,Confirmed,0:44,http://t.co/1KKCSqONQt
+2015-04-28,COL @ ARI,B1,Weiss,Trumbo,Safe at 3rd,Tag Play,Winters,Winters,Overturned,0:38,http://atmlb.com/1GK05wq
+2015-04-28,PIT @ CHI,T6,Maddon,Hart,Safe at 3rd,Tag Play,L. Barrett,Scott,Overturned,1:07,http://t.co/1Q7aMvMfs6
+2015-04-28,PIT @ CHI,B8,Maddon,S. Castro,Out at 2nd,Tag Play,Bucknor,Scott,Stands,1:25,http://t.co/XKe2fiJF1H
+2015-04-28,HOU @ SD,T5,Black,Valbuena,Hit by Pitch,HBP,Reynolds,Reynolds,Confirmed,0:59,http://t.co/CmkAveisRe
+2015-04-29,DET @ MIN,T5,Molitor,A. Romine,Safe at 3rd,Tag Play,Bellino,Hallion,Overturned,0:52,http://t.co/ruN9Q860qk
+2015-04-29,KC @ CLE,T3,Francona,L. Cain,Safe at 1st,Force Play,Emmel,Meals,Stands,2:19,http://t.co/5uTcrpI1aP
+2015-04-29,TOR @ BOS,B7,Farrell,Bogaerts,Out at home,Collisions at HP,Ad. Johnson,Miller,Confirmed,6:25,http://t.co/VsfUf8yn0Y
+2015-04-29,NYM @ MIA,T8,Collins,Cuddyer,Out at 1st,Force Play,Carapazza,Vanover,Overturned,1:45,http://t.co/GYLY16f4PX
+2015-04-29,PIT @ CHI,T5,Maddon,Marte,Safe at 2nd,Force Play,L. Barrett,Scott,Overturned,1:50,http://t.co/hFSikGEapA
+2015-04-29,PHI @ STL,B5,Sandberg,Bourjos,Safe at home,Tag Play,Nelson,Nelson,Stands,2:31,http://t.co/7qS1QZkBWF
+2015-04-29,SEA @ TEX,B5,Banister,Odor,Out at 1st,Force Play,O'Nora,Kellogg,Confirmed,1:19,http://t.co/HFtL4I2rv6
+2015-04-29,COL @ ARI,T6,Weiss,Dickerson,Out at home,Collisions at HP,Foster,Winters,Confirmed,1:36,http://t.co/Tpb1hcKTwp
+2015-04-30,LAA @ OAK,T4,Scioscia,Freese,Out at 3rd,Tag Play,Barry,T. Barrett,Overturned,3:50,http://atmlb.com/1EWgKQ7
+2015-04-30,CWS @ MIN,T9,Ventura,M. Johnson,Out at 1st,Force Play,G. Gibson,Joyce,Stands,1:20,http://t.co/o39hS4GNdj
+2015-05-1,PHI @ MIA,T4,Sandberg,Howard,Out at home,Collisions at HP,O'Nora,O'Nora,Stands,2:23,http://t.co/FcbYB8gj99
+2015-05-1,TOR @ CLE,B4,Gibbons,Bourn,Safe at home,Tag Play,B. Welke,Hirschbeck,Overturned,2:04,http://t.co/fmoMyqXoeH
+2015-05-1,WSH @ NYM,T6,Collins,Harper,Safe at 2nd,Tag Play,Dreckman,Hallion,Overturned,1:54,http://t.co/EUgPcpyHb6
+2015-05-1,CWS @ MIN,B4,Ventura,E. Escobar,Safe at 1st,Force Play,Hudson,Joyce,Overturned,1:26,http://t.co/Y5GkIR6tde
+2015-05-1,PHI @ MIA,B9,UMPIRE,Stanton,Safe at home,Tag Play,Gonzalez,O'Nora,Stands,1:24,http://t.co/fyNjnnHUyy
+2015-05-1,PIT @ STL,B7,Matheny,Peralta,Out at 2nd,Tag-Ups,Wegner,Winters,Overturned,1:13,http://t.co/iKn96hafyq
+2015-05-1,PIT @ STL,T8,Hurdle,S. Rodriguez,Out at 2nd,Tag Play,Wegner,Winters,Confirmed,1:38,http://t.co/DSQ7smworX
+2015-05-1,OAK @ TEX,T8,Melvin,Canha,Out at 2nd,Tag Play,Fletcher,Meals,Confirmed,1:00,http://t.co/DhO4VjxuUC
+2015-05-1,PIT @ STL,T9,UMPIRE,N. Walker,Out at 1st,Force Play,Winters,Winters,Overturned,1:17,http://t.co/pWcAHPPNrU
+2015-05-1,LAA @ SF,B4,Scioscia,Pagan,Safe at 2nd,Tag Play,Eddings,Miller,Overturned,2:39,http://t.co/fdcI6RnQFn
+2015-05-1,LAA @ SF,T7,Scioscia,Calhoun,Out at 2nd,Force Play,Eddings,Miller,Stands,2:10,http://t.co/YfpZZLFIM1
+2015-05-2,CWS @ MIN,T2,Molitor,M. Johnson,Safe at 1st,Force Play,Fairchild,Joyce,Overturned,0:41,http://t.co/zwFqSKQrck
+2015-05-2,CWS @ MIN,T3,Ventura,A. Garcia,Out at 2nd,Tag Play,Joyce,Joyce,Stands,3:17,http://t.co/pKoopNpb6p
+2015-05-2,PHI @ MIA,B1,Redmond,D. Gordon,Out at home,Collisions at HP,Gonzalez,O'Nora,Confirmed,1:28,http://t.co/vzkqFAMzlE
+2015-05-2,LAA @ SF,B5,Bochy,Maxwell,Out at 2nd,Force Play,Ad. Johnson,Miller,Overturned,1:24,http://t.co/QCSEEnxaw9
+2015-05-2,TOR @ CLE,T9,Francona,Pillar,Safe at 1st,Force Play,Tumpane,Hirschbeck,Overturned,2:32,http://t.co/wuJO0LgkAG
+2015-05-2,WSH @ NYM,T6,Collins,Desmond,Safe at 2nd,Force Play,Hallion,Hallion,Overturned,1:34,http://t.co/qLpMllk6ww
+2015-05-2,DET @ KC,T7,Ausmus,Gose,Out at 2nd (appeal),Touching a base,Bucknor,Scott,Stands,3:22,http://t.co/3IoDPFT8fX
+2015-05-2,OAK @ TEX,B9,Melvin,DeShields,Safe on appeal,Touching a base,Meals,Meals,Confirmed,2:00,http://t.co/j6b9y93MYU
+2015-05-3,WSH @ NYM,T3,Collins,Y. Escobar,Hit by Pitch,HBP,Dreckman,Hallion,Overturned,0:50,http://t.co/IfF2pB3aMu
+2015-05-3,SEA @ HOU,T3,Hinch,B. Miller,Safe at home,Tag Play,Knight,Vanover,Overturned,2:56,http://t.co/zihLPYrLuf
+2015-05-3,TB @ BAL,B6,Cash,Machado,Safe at 2nd,Force Play,Tichenor,T. Welke,Confirmed,0:38,http://t.co/Rmx85SmBZu
+2015-05-3,SEA @ HOU,B4,Hinch,Altuve,Out at 3rd,Tag Play,Kulpa,Vanover,Stands,2:42,http://t.co/cJap8lYFcv
+2015-05-3,TB @ BAL,B8,Showalter,D. Young,Out at 1st,Force Play,Timmons,T. Welke,Confirmed,0:34,http://t.co/HZ0Nh89BrT
+2015-05-3,CWS @ MIN,B6,Molitor,Shuck,Catch,Catch/no catch,G. Gibson,Joyce,Overturned,1:30,http://t.co/etYvg3q4W4
+2015-05-3,OAK @ TEX,B6,Melvin,Fuld,No catch,Catch/no catch,Baker,Meals,Confirmed,0:54,http://t.co/9HedJctSRB
+2015-05-3,COL @ SD,T5,Weiss,Dickerson,Out at 1st,Force Play,T. Barrett,T. Barrett,Overturned,1:33,http://t.co/N4v5dGkQvs
+2015-05-3,NYY @ BOS,B4,Farrell,H. Ramirez,Out at 1st,Force Play,Diaz,Nelson,Overturned,3:12,http://t.co/HfjjicMSZR
+2015-05-4,TB @ BOS,T1,Farrell,H. Ramirez,No catch,Catch/no catch,DiMuro,Gorman,Confirmed,0:57,http://t.co/1a4Q3vpKRD
+2015-05-4,TB @ BOS,T4,Cash,Souza,Out at 2nd,Tag Play,Carlson,Gorman,Stands,1:37,http://t.co/2f1a7Ti6Ai
+2015-05-4,TEX @ HOU,T5,Banister,Rosales,Out at 1st,Force Play,Muchlinski,Winters,Confirmed,1:30,http://t.co/3eHXzwTAsv
+2015-05-4,LAD @ MIL,B8,Mattingly (Wallach),Braun,Safe at 1st,Force Play,Emmel,Meals,Stands,1:42,http://t.co/TRrQbYofu9
+2015-05-4,OAK @ MIN,T8,Molitor,J. Schafer,No catch,Catch/no catch,Tichenor,Everitt,Overturned,0:46,http://atmlb.com/1zPdl3u
+2015-05-5,TB @ BOS,T6,Farrell,Forsythe,Safe at 2nd,Tag Play,DiMuro,Gorman,Confirmed,1:44,http://t.co/miU91HKyNe
+2015-05-5,CHI @ STL,B4,Maddon,Molina,Safe at 1st,Force Play,Reyburn,Hirschbeck,Overturned,1:24,http://t.co/CBHO0gA40d
+2015-05-5,DET @ CWS,B6,Ausmus,Gose,No catch,Catch/no catch,Gonzalez,Culbreth,Overturned,0:50,http://t.co/gZm6dBPRgs
+2015-05-6,CHI @ STL,T1,Maddon,Fowler,Out at 1st,Tag Play,Tumpane,Hirschbeck,Stands,2:14,http://atmlb.com/1bBop8L
+2015-05-6,CHI @ STL,B1,Matheny,Bourjos,Out at 2nd,Tag Play,Hirschbeck,Hirschbeck,Stands,2:18,http://atmlb.com/1P4uZa8
+2015-05-6,PHI @ ATL,T6,Gonzalez,O. Herrera,Safe at 1st,Force Play,Dreckman,Hallion,Stands,1:17,http://t.co/AT2JZkQaFQ
+2015-05-6,TB @ BOS,T6,Farrell,Kiermaier,Safe at 1st,Force Play,DiMuro,Gorman,Overturned,1:36,http://t.co/kJmd8kkZOD
+2015-05-6,BAL @ NYM,B6,UMPIRE,D. Herrera,Double,Potential HR,Kellogg,Kellogg,Overturned,0:38,http://t.co/fyDKyczT1t
+2015-05-6,LAD @ MIL,B5,Mattingly,Maldonado,Safe at 1st,Force Play,Fletcher,Meals,Overturned,2:55,http://t.co/DEeSWDp0Mb
+2015-05-7,OAK @ MIN,T7,Molitor,Burns,Safe at 1st,Tag Play,Timmons,Everitt,Overturned,1:24,http://t.co/m3IsIwj3XE
+2015-05-7,SD @ ARI,B2,Black,Trumbo,Safe at 1st,Force Play,Joyce,Joyce,Overturned,1:15,http://t.co/KUzQJIGm6o
+2015-05-8,MIN @ CLE,T1,Francona,Mauer,Safe at 2nd,Tag Play,Ad. Johnson,Miller,Overturned,2:49,http://t.co/Irzw7eMiX6
+2015-05-8,BOS @ TOR,T3,Gibbons,Bogaerts,Safe at 1st,Force Play,Cederstrom,Cederstrom,Confirmed,1:50,http://t.co/rCfcmCLbw1
+2015-05-8,BOS @ TOR,T7,UMPIRE,Craig,Safe at 1st,Force Play,Cederstrom,Cederstrom,Overturned,1:00,http://t.co/EuS20gRW0T
+2015-05-8,BOS @ TOR,B8,UMPIRE,Bautista,Triple,Potential HR,Barksdale,Cederstrom,Confirmed,1:03,http://t.co/yCBpQYvakv
+2015-05-8,KC @ DET,B8,Yost,R. Davis,Safe at 2nd,Tag Play,Kellogg,Kellogg,Stands,1:31,http://t.co/oo0X7PS499
+2015-05-8,CHI @ MIL,T9,Maddon,K. Bryant,Out at 1st,Force Play,Hallion,Hallion,Overturned,2:10,http://atmlb.com/1KY4Xzs
+2015-05-8,LAD @ COL,B5,Weiss,Blackmon,Out at home,Tag Play,Timmons,Everitt,Stands,3:58,http://t.co/Kp8F7VQlIO
+2015-05-8,SD @ ARI,B7,Hale,Pollock,Out at 1st,Force Play,G. Gibson,Joyce,Overturned,0:58,http://t.co/aMkvlUwGQh
+2015-05-9,BOS @ TOR,T2,Farrell,Sandoval,Out at 1st,Force Play,Barksdale,Cederstrom,Overturned,5:12,http://t.co/mjpnqyyIze
+2015-05-9,BAL @ NYY,B9,Girardi,Gardner,Out at 1st,Force Play,Carlson,Gorman,Confirmed,0:56,http://t.co/5SMIjSy7sO
+2015-05-9,ATL @ WSH,B5,UMPIRE,Zimmerman,Double,Potential HR,Schrieber,Culbreth,Overturned,1:43,http://t.co/QNtf0xmRiY
+2015-05-9,TEX @ TB,B4,Banister,A. Cabrera,Safe at 2nd,Tag Play,DeMuth,DeMuth,Confirmed,3:47,http://t.co/PoaFErRPdS
+2015-05-9,TEX @ TB,T7,Cash,Beltre,Safe at 1st,Force Play,Estabrook,DeMuth,Overturned,1:22,http://t.co/kpWEKXB2om
+2015-05-9,MIA @ SF,T8,Redmond,Hechavarria,Out at 1st,Force Play,Winters,Winters,Overturned,2:34,http://t.co/l8II7WrkNp
+2015-05-10,NYM @ PHI,B1,Collins,Revere,Safe at 1st,Force Play,Hernandez,T. Barrett,Overturned,0:49,http://t.co/zhuaEnrHcO
+2015-05-10,MIN @ CLE,B5,Francona,Kipnis,Out at 2nd,Tag Play,Wolf,Miller,Stands,2:22,http://t.co/dBHaj65zIT
+2015-05-10,CHI @ MIL,B2,Counsell,Maldonado,Out at 1st,Force Play,Bellino,Hallion,Overturned,2:13,http://t.co/H32NL2rJAj
+2015-05-10,CIN @ CWS,T4,Price,Phillips,Out at 1st,Force Play,Tumpane,Hirschbeck,Overturned,1:52,http://t.co/HoO9KyAFsU
+2015-05-10,ATL @ WSH,B5,Gonzalez,Uggla,Safe at 2nd,Tag Play,Schrieber,Culbreth,Overturned,1:38,http://t.co/PblOPSyldS
+2015-05-10,ATL @ WSH,B6,Gonzalez,Zimmerman,Safe at 1st,Force Play,Gonzalez,Culbreth,Overturned,1:39,http://t.co/xwZSvrzWQ2
+2015-05-10,CIN @ CWS,T5,Ventura,Cozart,Safe at 2nd,Tag Play,Hirschbeck,Hirschbeck,Overturned,1:53,http://t.co/obOLUJ3BiJ
+2015-05-10,LAD @ COL,T3,Mattingly,Rollins,Out at 1st,Force Play,Fagan,Everitt,Stands,1:47,http://t.co/TeF23rNDRn
+2015-05-10,MIA @ SF,B5,Redmond,G. Blanco,Safe at 1st,Force Play,Wegner,Winters,Stands,2:32,http://t.co/FlMJXr1bKR
+2015-05-10,LAD @ COL,T6,Weiss,Pederson,Safe at 3rd,Force Play,Timmons,Everitt,Overturned,1:19,http://t.co/eUQjVJaTdS
+2015-05-11,NYY @ TB,B1,Cash,Souza,Out at home,Collisions at HP,Cooper,Cooper,Confirmed,1:45,http://t.co/azV3AQsb5G
+2015-05-11,TOR @ BAL,B4,Gibbons,Pearce,Safe at 1st,Force Play,Dreckman,Hallion,Stands,3:15,http://t.co/IytAzRzVHW
+2015-05-11,CWS @ MIL,T5,Counsell,M. Johnson,Safe at 1st,Force Play,Fagan,Kellogg,Overturned,2:37,http://t.co/0xZ6JRQO9n
+2015-05-11,CWS @ MIL,B5,Ventura,C. Gomez,Safe at home,Tag Play,O'Nora,Kellogg,Stands,2:20,http://t.co/NKjoYYs5mp
+2015-05-11,TOR @ BAL,T7,UMPIRE,Pillar,Out at 1st,Force Play,Dreckman,Hallion,Overturned,0:55,http://t.co/tDqE9OABLF
+2015-05-11,NYM @ CHI,B4,Collins,D. Ross,Safe at 1st,Force Play,Meals,Meals,Overturned,0:34,http://t.co/lJd4RaGkQo
+2015-05-11,ATL @ CIN,T6,Gonzalez,Pierzynski,Out at home,Collisions at HP,Diaz,Nelson,Confirmed,3:00,http://t.co/rOB42HJW3T
+2015-05-11,BOS @ OAK,T6,Farrell,Ortiz,Out at 2nd,Tag Play,Kulpa,Vanover,Stands,1:49,http://t.co/mwC5X3cLso
+2015-05-12,MIN @ DET,B5,Molitor,Gose,Safe at 1st,Force Play,Guccione,B. Welke,Overturned,1:47,http://t.co/yitb2Pfkgo
+2015-05-12,MIN @ DET,B8,Ausmus,Gose,Out at 1st,Force Play,Guccione,B. Welke,Stands,1:36,http://t.co/FKQj8lEhem
+2015-05-12,SF @ HOU,T6,Hinch,Aoki,Safe at 1st,Force Play,Joyce,Joyce,Overturned,1:18,http://t.co/5YyUyZxHiK
+2015-05-12,CWS @ MIL,T9,Counsell,M. Johnson,Safe at 3rd,Tag Play,O'Nora,Kellogg,Overturned,1:07,http://t.co/XojioGaPJ1
+2015-05-12,KC @ TEX,B8,Banister,DeShields,Out at 2nd,Tag Play,Conroy,T. Barrett,Confirmed,0:33,http://t.co/bz7Mkos3jP
+2015-05-12,KC @ TEX,B9,Yost,Beltre,Safe at 1st,Tag Play,T. Barrett,T. Barrett,Overturned,2:41,http://t.co/I5KBkd2Kkh
+2015-05-12,BOS @ OAK,T7,Melvin,Sandoval,Safe at 1st,Force Play,Kulpa,Vanover,Overturned,1:09,http://t.co/BXzi4fXUkr
+2015-05-13,TOR @ BAL,T3,Gibbons,E. Carrera,Foul ball (no HBP),Hit By Pitch,Hallion,Hallion,Overturned,0:57,http://t.co/kGxDzOYYJu
+2015-05-13,TOR @ BAL,T3,Gibbons,E. Carrera,Out at 3rd,Tag Play,Dreckman,Hallion,Confirmed,1:02,http://t.co/BKSBbFF9JL
+2015-05-13,PIT @ PHI,T5,Sandberg,S. Marte,Safe at 1st,Force Play,Scott,Scott,Overturned,0:35,http://t.co/DanuxCVEpf
+2015-05-13,NYY @ TB,T5,Girardi,Teixeira,Out at home,Collisions at HP,Iassogna,Cooper,Confirmed,1:43,http://t.co/rJBsEAFI48
+2015-05-13,MIA @ LAD,B4,Mattingly,G. Stanton,Catch,Catch/no catch,Layne,Layne,Stands,3:32,http://t.co/DfJzi5VB8B
+2015-05-13,SF @ HOU,B4,Bochy,Marisnick,Safe at 1st,Force Play,G. Gibson,Joyce,Overturned,2:40,http://t.co/rER5SFhbOf
+2015-05-13,MIA @ LAD,T7,Redmond,Ozuna,Out at 1st,Force Play,Layne,Layne,Overturned,2:10,http://t.co/q8VdFJSyWg
+2015-05-13,SF @ HOU,T8,Bochy,Belt,Out at 2nd,Tag Play,Hudson,Joyce,Confirmed,1:38,http://t.co/zVCWkNTmtt
+2015-05-13,COL @ LAA,T11,Scioscia,C. Gonzalez,Safe at home,Tag Play,Cuzzi,Davis,Overturned,1:18,http://t.co/63fAhpqhxK
+2015-05-14,STL @ CLE,T4,Francona,Wong,Safe at 2nd,Tag Play,T. Welke,T. Welke,Overturned,1:02,http://t.co/MY3RLwFYRm
+2015-05-14,PIT @ PHI,B8,Sandberg,Francoeur,Out at 1st,Force Play,Bucknor,Scott,Stands,1:20,http://t.co/FMvXYbcyvf
+2015-05-14,MIN @ DET,T7,Molitor,R. Davis,Catch,Catch/no catch,B. Welke,B. Welke,Stands,2:02,http://t.co/PuhEsArdqX
+2015-05-14,SF @ CIN,T8,Bochy,Susac,Out at 1st,Tag Play,Bellino,Hallion,Stands,2:18,http://t.co/CuaS5gQg3Z
+2015-05-14,COL @ LAD,B7,Mattingly,A. Gonzalez,Out at 3rd,Tag Play,Foster,Winters,Confirmed,1:30,5/14/15_COL@LAD_RR#252
+2015-05-15,ATL @ MIA,T2,Redmond,C. Bethancourt,Safe at 3rd,Tag Play,Scott,Scott,Overturned,1:08,5/15/15_ATL@MIA_RR#253
+2015-05-15,ATL @ MIA,B3,Gonzalez,Yelich,Safe at 2nd,Tag Play,Basner,Scott,Stands,1:20,http://t.co/ZW7vDAw7fX
+2015-05-15,ARI @ PHI,B6,Sandberg,Galvis,Ball (no HBP),Hit By Pitch,Tichenor,T. Welke,Overturned,1:25,http://t.co/6qYzHzemfn
+2015-05-15,COL @ LAD,T2,Runnells (Weiss),D. Stubbs,Out at 2nd,Force Play,Foster,Winters,Confirmed,0:42,http://t.co/OpOLoQ2s6m
+2015-05-15,CWS @ OAK,B6,Ventura,J. Reddick,Safe at home,Tag Play,Hernandez,T. Barrett,Stands,2:40,http://t.co/NvMlBbtqQJ
+2015-05-16,TB @ MIN,T4,Molitor,Longoria,Safe at 2nd,Tag Play,Baker,Meals,Stands,2:49,http://t.co/ues6BeehO8
+2015-05-16,ATL @ MIA,T8,Redmond,T. Cunningham,Safe at 3rd,Tag Play,Bucknor,Scott,Overturned,1:13,http://t.co/FBZELTKVH7
+2015-05-16,PIT @ CHI,B3,Maddon,Fowler,Out at 2nd,Tag Play,Joyce,Joyce,Stands,3:02,5/16/15_PIT@CHC_RR#260
+2015-05-16,DET @ STL,B10,Matheny,Cespedes,Catch,Catch/no catch,Knight,Vanover,Overturned,2:04,http://t.co/ckPiJzZS8D
+2015-05-16,CLE @ TEX,T1,Francona,Brantley,Foul ball,Fair/Foul,West,West,Overturned,3:28,http://t.co/dhP4qptOzE
+2015-05-16,NYY @ KC,B5,Girardi,Orlando,Safe at 2nd,Force Play,Hoye,B. Welke,Overturned,1:06,http://t.co/a3t4UnG4Wq
+2015-05-16,WSH @ SD,T2,Williams,M. Taylor,Out at 3rd,Tag Play,Hoberg,Davis,Stands,1:20,http://t.co/qpUDWEfoI2
+2015-05-17,SF @ CIN,T2,Price,Pence,Safe at 2nd,Force Play,Bellino,Hallion,Stands,3:07,5/17/15_SF@CIN_RR#265
+2015-05-17,ATL @ MIA,B3,Gonzalez,H. Alvarez,Safe at 1st,Force Play,Scott,Scott,Overturned,3:11,http://t.co/fpevHqzfgd
+2015-05-17,ARI @ PHI,T3,Sandberg,Pollock,Safe at 1st,Force Play,Barber,T. Welke,Overturned,1:13,http://t.co/xhSto9kERJ
+2015-05-17,TB @ MIN,B1,Cash,Plouffe,Safe at 1st,Force Play,Baker,Meals,Overturned,1:02,http://t.co/QduBKbFlLV
+2015-05-17,TB @ MIN,T5,Molitor,DeJesus,Safe at 1st,Force Play,Baker,Meals,Overturned,0:44,http://t.co/ho2Tr2OIPv
+2015-05-17,CLE @ TEX,B2,UMPIRE,Moreland,In play (no HR),Potential HR,Drake,West,Confirmed,0:45,http://t.co/3AQxtodGou
+2015-05-17,PIT @ CHI,B6,Hurdle,S. Castro,Safe at 2nd,Tag Play,Pattillo,Joyce,Overturned,3:40,http://t.co/SMAr2ykCHU
+2015-05-17,COL @ LAD,B2,Mattingly,J. Turner,Out at 2nd,Tag Play,Winters,Winters,Stands,1:38,http://t.co/7QQRuW6kLH
+2015-05-17,BOS @ SEA,B4,McClendon,R. Weeks,Out at 1st,Force Play,Layne,Layne,Stands,2:29,http://t.co/S6E9BTpgkj
+2015-05-17,CLE @ TEX,B8,Banister,D. Murphy,Catch,Catch/no catch,West,West,Stands,2:14,http://t.co/bd0RyEzkL9
+2015-05-17,BOS @ SEA,T8,UMPIRE,Betts,Foul ball,Potential HR,Davidson,Layne,Stands,2:31,http://t.co/vGYzrXq1O7
+2015-05-17,BOS @ SEA,B8,UMPIRE,Cano,Foul ball (no HBP),Hit By Pitch,Blakney,Layne,Confirmed,0:49,http://t.co/xOnsBThbQo
+2015-05-17,DET @ STL,B5,Matheny,M. Carpenter,Out at home,Tag Play,Vanover,Vanover,Stands,3:02,http://t.co/4UccqLMdgw
+2015-05-18,LAA @ TOR,B5,Gibbons,Pillar,Out at 2nd,Tag Play,Schrieber,Reynolds,Stands,2:08,http://t.co/Ku8N5YulLG
+2015-05-18,PHI @ COL,T1,Sandberg,Galvis,Out at 1st,Force Play,Wendelstedt,Layne,Overturned,1:05,http://t.co/I1Qas8XXlE
+2015-05-18,PHI @ COL,T1,UMPIRE,Revere,Rules Check,Rules Check,N/A,Layne,Rules Check,2:38,http://t.co/I1Qas8XXlE
+2015-05-18,MIL @ DET,B8,Ausmus,V. Martinez,Out at 1st,Force Play,T. Gibson,Gorman,Stands,2:51,http://t.co/F1Ov9KRfxs
+2015-05-18,ARI @ MIA,B13,Hale,Suzuki,Safe at 2nd,Tag Play,Dreckman,Hallion,Overturned,1:21,http://t.co/iIfSODuZPf
+2015-05-18,PHI @ COL,B8,Sandberg,Arenado,Safe at home,Tag Play,Layne,Layne,Stands,2:17,http://t.co/WjWwXg3G95
+2015-05-19,NYY @ WSH,B1,UMPIRE,Harper,Home Run,Potential HR,Segal,Joyce,Confirmed,1:02,http://t.co/S0FMjPg8GT
+2015-05-19,TB @ ATL,T3,Cash,Longoria,Out at 2nd,Force Play,Little,Davis,Stands,2:33,http://t.co/YL6Il9dcXS
+2015-05-19,TEX @ BOS,B5,Banister,H. Ramirez,Safe at 2nd,Tag Play,Wegner,Winters,Stands,3:13,http://t.co/gfxk1yIudA
+2015-05-19,OAK @ HOU,T2,Melvin,Lawrie,Out at home,Tag Play,Fletcher,Meals,Stands,2:35,http://t.co/As8IEwEf4a
+2015-05-19,MIN @ PIT,B6,UMPIRE,Harrison,Home Run,Potential HR,O'Nora,Kellogg,Overturned,1:22,http://t.co/lDQzB02D3A
+2015-05-19,OAK @ HOU,B7,UMPIRE,Altuve,Safe at 2nd,Tag Play,Emmel,Meals,Overturned,0:56,http://t.co/iTvleIoo1e
+2015-05-19,PHI @ COL,T8,Weiss,O. Herrera,Hit by Pitch,HBP,Wendelstedt,Layne,Stands,2:06,http://t.co/IOwrQfkIm8
+2015-05-20,MIL @ DET,B2,Counsell,J. Iglesias,Safe at 1st,Force Play,Carlson,Gorman,Overturned,0:37,http://t.co/RkfEKnIhET
+2015-05-20,STL @ NYM,T4,Collins,Grichuk,Safe at 1st,Tag Play,Ad. Johnson,Miller,Stands,2:32,http://t.co/ioABOmKMNX
+2015-05-20,NYY @ WSH,B5,Girardi,Span,Safe at 1st,Tag Play,Segal,Joyce,Overturned,0:31,http://t.co/fxFrGzixG7
+2015-05-20,NYY @ WSH,T7,Williams,Gregorius,Safe at 1st,Force Play,Segal,Joyce,Overturned,2:10,http://t.co/H5CGGBcPKp
+2015-05-20,TEX @ BOS,T7,Farrell,L. Martin,Safe at 3rd,Tag Play,Winters,Winters,Confirmed,1:10,http://t.co/xQBCo6TMXG
+2015-05-20,SEA @ BAL,B8,Showalter,Paredes,Out at 2nd,Tag Play,Holbrook,Hirschbeck,Confirmed,2:59,http://t.co/styNVuKUat
+2015-05-20,ARI @ MIA,B9,Hale,Stanton,Safe at 1st,Force Play,Hallion,Hallion,Overturned,1:07,http://t.co/6Il82kuazX
+2015-05-20,LAD @ SF,B1,Mattingly,Pagan,Safe at 1st,Force Play,Barry,T. Barrett,Overturned,2:08,http://t.co/f8X0JwBXBw
+2015-05-21,PHI @ COL,B3,Weiss,Tulowitzki,Out at home,Collisions at HP,Blakney,Layne,Confirmed,0:40,http://t.co/qIGCvf6tUo
+2015-05-21,LAD @ SF,B4,Mattingly,Pagan,Safe at home,Tag Play,Barry,T. Barrett,Confirmed,1:38,http://t.co/AmabJyzLJq
+2015-05-21,MIL @ ATL,T4,Counsell,Parra,Out at 2nd,Tag Play,Joyce,Joyce,Stands,3:23,http://t.co/EwpMtkAkBJ
+2015-05-21,OAK @ TB,T9,Cash,Muncy,Safe at 1st,Force Play,Rackley,West,Confirmed,0:55,http://t.co/aJQtHVTOph
+2015-05-22,TEX @ NYY,T2,Banister,Andrus,Out at 2nd,Tag Play,Basner,Vanover,Stands,2:46,http://t.co/0aKwssgUYp
+2015-05-22,LAA @ BOS,T5,Scioscia,Trout,Out at 3rd,Tag Play,Tumpane,Hirschbeck,Overturned,1:53,http://t.co/nNxJSHHe0w
+2015-05-22,SEA @ TOR,B9,McClendon,Pillar,Safe at 1st,Tag Play,Davis,Davis,Overturned,1:14,http://t.co/GhLp1HLocG
+2015-05-22,SF @ COL,T6,Bochy,Pence,Out at 1st,Force Play,DeMuth,DeMuth,Confirmed,1:06,http://t.co/dY91SETtwx
+2015-05-22,LAA @ BOS,B8,Farrell,R. Castillo,Out at 1st,Force Play,Hoye,Hirschbeck,Stands,2:09,5/22/15_LAA@BOS_RR#307
+2015-05-22,SD @ LAD,T7,Mattingly,De. Norris,Safe at home,Tag Play,O'Nora,Kellogg,Stands,2:01,http://t.co/ejtC7ZDhj8
+2015-05-23,SEA @ TOR,T2,Gibbons,N. Cruz,Safe at 1st,Tag Play,Randazzo,Davis,Overturned,0:57,http://t.co/XIO4ovwOzY
+2015-05-23,HOU @ DET,T1,Ausmus,Altuve,Safe at 1st,Force Play,Davidson,Layne,Overturned,1:02,http://t.co/EiRf33ZCHW
+2015-05-23,NYM @ PIT,T6,Hurdle,Duda,No HBP,Hit By Pitch,Muchlinski,Winters,Overturned,1:08,http://t.co/flObQmEdV6
+2015-05-23,NYM @ PIT,T8,UMPIRE,R. Tejada,Home Run,Potential HR,Foster,Winters,Confirmed,0:42,http://t.co/rZH6YjhhJv
+2015-05-23,SF @ COL,T4,Weiss,Pagan,Safe at 1st,Force Play,Pattillo,DeMuth,Overturned,0:44,http://t.co/aFNxqudU3u
+2015-05-23,BAL @ MIA,B3,Showalter,Yelich,Safe at 2nd,Tag Play,Fletcher,Emmel,Overturned,2:46,http://t.co/xIpK0hUXic
+2015-05-23,SF @ COL,B8,Bochy,W. Rosario,Safe at 2nd,Tag Play,Hickox,DeMuth,Overturned,0:43,http://t.co/zL0KdOpJ40
+2015-05-23,BAL @ MIA,B10,Jennings,Hechavarria,Out at home,Tag Play,Baker,Emmel,Confirmed,1:03,http://t.co/HcDddLCl3J
+2015-05-23,CHI @ ARI,T4,Maddon,K. Bryant,Out at 2nd,Tag Play,Barry,T. Barrett,Overturned,0:57,http://t.co/9WqgUeR4UG
+2015-05-23,SF @ COL,T5,Weiss,McGehee,Safe at home,Tag Play,Nauert,Nauert,Overturned,1:11,http://t.co/bPREbJXIhu
+2015-05-24,HOU @ DET,T1,Hinch,M. Gonzalez,Out at 1st,Force Play,Blakney,Layne,Overturned,1:04,http://t.co/vRoe5rkEGb
+2015-05-24,SEA @ TOR,T1,Gibbons,N. Cruz,Safe at 1st,Force Play,Little,Davis,Overturned,2:23,http://t.co/EyJalC0LTF
+2015-05-24,OAK @ TB,T3,Cash,Reddick,Safe at 1st,Tag Play,Morales,West,Overturned,0:57,http://t.co/NSgDsYIlYh
+2015-05-24,LAA @ BOS,T5,Scioscia,Cron,No HBP,Hit By Pitch,Hirschbeck,Hirschbeck,Stands,1:22,http://t.co/SoU4RqUIVd
+2015-05-24,SEA @ TOR,B7,Gibbons,St. Tolleson,Out at 1st,Force Play,Little,Davis,Overturned,1:19,http://t.co/2YBRGzK771
+2015-05-24,SD @ LAD,T9,Mattingly,Venable,Safe at 1st,Force Play,Kellogg,Kellogg,Stands,1:00,http://t.co/dZCC2iSWE7
+2015-05-24,SF @ COL,B3,Weiss,Blackmon,No HBP,Hit By Pitch,Hickox,DeMuth,Overturned,1:21,http://t.co/X5qROfG0OV
+2015-05-24,TEX @ NYY,T1,Girardi,DeShields,Safe at 1st,Force Play,Vanover,Vanover,Overturned,1:26,http://t.co/3mqSmN4GSz
+2015-05-25,SF @ MIL,B1,Counsell,K. Davis,Out (missed HP),Touching a base,Little,Davis,Overturned,3:20,http://t.co/Z1VVosGB8T
+2015-05-25,KC @ NYY,T5,Girardi,Dyson,Safe at 2nd,Tag Play,Muchlinski,Winters,Overturned,1:24,http://t.co/Vn5SlDJx4j
+2015-05-25,WSH @ CHI,B9,Maddon,K. Bryant,Foul ball (no HBP),Hit By Pitch,Blakney,Wendelstedt,Overturned,1:39,http://t.co/mfmcO1o58l
+2015-05-25,SEA @ TB,B2,McClendon,T. Beckham,Safe at 1st,Tag Play,Gorman,Gorman,Stands,2:29,http://t.co/oU1smAKoM2
+2015-05-25,MIA @ PIT,B6,UMPIRE,P. Alvarez,Home Run,Potential HR,Drake,West,Confirmed,1:38,http://t.co/F67HyUakv0
+2015-05-25,SD @ LAA,B5,Black,E. Aybar,Safe at home,Tag Play,Barry,T. Barrett,Confirmed,1:04,http://t.co/UEmEHYfplQ
+2015-05-26,SEA @ TB,T1,Cash,S. Smith,Safe at home,Tag Play,Gorman,Gorman,Stands,3:03,http://t.co/bW5GvuW820
+2015-05-26,HOU @ BAL,B4,Hinch,Paredes,Safe at 3rd,Tag Play,Dreckman,Hallion,Confirmed,1:30,http://t.co/CHWZKVYxdu
+2015-05-26,CWS @ TOR,T6,Gibbons,Me. Cabrera,Safe at 1st,Force Play,Baker,Meals,Confirmed,0:49,http://t.co/aMgyTEIU1P
+2015-05-26,SEA @ TB,B7,UMPIRE,Longoria,Foul ball,Fair/Foul,Layne,Gorman,Overturned,2:23,http://t.co/ra0qv9FJbr
+2015-05-26,CWS @ TOR,T8,Ventura,J. Abreu,Out at 1st,Force Play,Baker,Meals,Overturned,0:50,http://t.co/FNnMnRLHLy
+2015-05-26,BOS @ MIN,B2,Molitor,Hicks,Out at 1st,Force Play,Scott,Scott,Stands,1:07,http://t.co/OyvUHzVyhP
+2015-05-26,SD @ LAA,B9,Black,Calhoun,Safe at 1st,Force Play,Conroy,T. Barrett,Overturned,0:53,http://t.co/vwrTZbHzOr
+2015-05-27,CWS @ TOR,T2,Ventura,Shuck,Out at 2nd,Tag Play,Fletcher,Meals,Overturned,4:36,http://t.co/tNLMXcZtB6
+2015-05-27,CWS @ TOR,T3,Ventura,J. Abreu,Out at 2nd,Tag Play,Fletcher,Meals,Stands,2:28,http://t.co/EdKVW0m8DN
+2015-05-27,SEA @ TB,T5,McClendon,Seager,Out at 1st,Force Play,Carlson,Layne,Stands,1:52,http://t.co/uL6UnsWglY
+2015-05-27,BOS @ MIN,B6,Farrell,E. Escobar,Safe at 2nd,Tag Play,Bucknor,Scott,Overturned,1:25,http://t.co/YZfOBee7ma
+2015-05-27,DET @ OAK,T5,Ausmus,Gose,Out at 2nd,Tag Play,Ripperger,Kellogg,Stands,2:35,http://t.co/Yapk0DMSFj
+2015-05-27,SD @ LAA,T1,Scioscia,Solarte,Safe at 1st,Tag Play,Hernandez,T. Barrett,Overturned,0:50,http://t.co/uPJ80dw17y
+2015-05-27,SD @ LAA,B1,Scioscia,Aybar,Out at 2nd,Tag Play,Barry,T. Barrett,Overturned,2:21,http://t.co/CuG2wc3FtS
+2015-05-27,ATL @ LAD,B5,Gonzalez,Greinke,Safe at 1st,Force Play,Hickox,DeMuth,Confirmed,1:55,http://t.co/p9vWjBGgJX
+2015-05-28,BOS @ TEX,T9,Banister,Betts,Safe at 3rd,Tag Play,T. Welke,Everitt,Stands,2:14,http://t.co/o7BaGy7KQZ
+2015-05-28,NYY @ OAK,T4,Girardi,A. Rodriguez,Out at home,Tag Play,Hickox,DeMuth,Overturned,2:44,http://t.co/2HNO4ur6Ju
+2015-05-29,TB @ BAL,T7,Showalter,A. Cabrera,Hit by Pitch,HBP,Kulpa,Vanover,Confirmed,0:53,http://t.co/vMmNPy09tv
+2015-05-29,ARI @ MIL,T6,Hale,Owings,Out at 3rd,Tag-Ups,Wendelstedt,Layne,Confirmed,2:03,http://t.co/cxYmyVSpCG
+2015-05-29,BOS @ TEX,B7,Farrell,Moreland,Safe at 2nd,Tag Play,T. Welke,Everitt,Overturned,1:20,http://t.co/V51a8S0Lt9
+2015-05-29,CWS @ HOU,B6,Ventura,Valbuena,Safe at 1st,Force Play,Morales,West,Confirmed,1:36,http://t.co/B47YDFuwdd
+2015-05-29,LAD @ STL,B7,Mattingly,Wong,Safe at 2nd,Tag Play,Foster,Winters,Stands,2:32,http://t.co/HIWqJHvTeB
+2015-05-29,PIT @ SD,T3,Hurdle,Polanco,Out at home,Tag Play,Blaser,Nelson,Stands,2:29,http://t.co/c9JBhm4vOv
+2015-05-29,CWS @ HOU,B9,Hinch,Villar,Out at 2nd,Tag Play,Rackley,West,Confirmed,1:38,http://t.co/zCXqqWO0ms
+2015-05-29,ARI @ MIL,B9,Counsell,Braun,Out at 1st,Force Play,Blakney,Layne,Confirmed,0:51,http://t.co/h2ufmAiI9Z
+2015-05-30,TB @ BAL,B1,Cash,Paredes,Safe at 1st,Force Play,Vanover,Vanover,Overturned,0:58,http://t.co/XixJFcwWoL
+2015-05-30,COL @ PHI,B7,UMPIRE,Francoeur,Double,Potential HR,Conroy,T. Barrett,Overturned,2:08,http://t.co/bhaUHOWsGT
+2015-05-30,DET @ LAA,T1,Ausmus,Mi. Cabrera,Out at 2nd,Tag Play,Hamari,Davis,Confirmed,1:30,http://t.co/OvJscgf04s
+2015-05-31,MIA @ NYM,T1,Collins,D. Gordon,Safe at 1st,Tag Play,T. Gibson,Carlson,Stands,2:56,http://t.co/lOe2Tv3nm0
+2015-05-31,TB @ BAL,T3,Cash,DeJesus,Out at 2nd,Tag Play,Kulpa,Vanover,Confirmed,0:49,http://t.co/72f7ubUKUl
+2015-05-31,COL @ PHI,T3,Sandberg,Arenado,Safe at 1st,Force Play,Conroy,T. Barrett,Overturned,0:41,http://t.co/2GfTwbSRni
+2015-05-31,CWS @ HOU,B3,Ventura,Altuve,Safe at 1st,Force Play,Drake,West,Overturned,1:11,http://t.co/fRipX33b7k
+2015-05-31,ARI @ MIL,B4,Counsell,C. Gomez,Out at 2nd,Tag-Ups,Davidson,Wendelstedt,Stands,1:19,http://t.co/5KZl9KkVZh
+2015-05-31,TOR @ MIN,T7,Gibbons,Reyes,Out at 2nd,Tag Play,Barksdale,Cooper,Stands,2:45,http://t.co/H34qmHNP2O
+2015-05-31,TB @ BAL,B9,UMPIRE,Machado,Home Run,Potential HR,Basner,Vanover,Confirmed,0:40,http://t.co/bDUX9rR1MM
+2015-05-31,KC @ CHI,B9,Maddon,D. Ross,Out at 1st,Force Play,Marquez,Hallion,Confirmed,0:55,http://t.co/S9zFKx1wNJ
+2015-05-31,TOR @ MIN,T8,UMPIRE,Kawasaki,Out at 2nd,Tag Play,Guccione,Cooper,Confirmed,0:45,http://t.co/CEd6IK7zhu
+2015-05-31,BOS @ TEX,T7,Banister,Betts,Safe at 2nd,Tag Play,Tichenor,Everitt,Stands,1:45,http://t.co/lFkMoi8bVH
+2015-05-31,KC @ CHI,B11,UMPIRE,Fowler,Out at home,Tag Play,Dreckman,Hallion,Stands,4:06,http://t.co/StgQx7ElpU
+2015-05-31,ATL @ SF,T8,Gonzalez,Maybin,Out at 1st,Force Play,Iassogna,Scott,Overturned,1:12,http://t.co/gt9nInnAyt
+2015-05-31,ATL @ SF,T8,Bochy,Markakis,Safe at 1st,Force Play,Iassogna,Scott,Confirmed,1:18,http://t.co/z3b8daxg9L
+2015-06-1,LAD @ COL,B7,Weiss,B. Barnes,Out at 1st,Force Play,Blaser,Nelson,Overturned,2:02,http://t.co/9466eX5cIx
+2015-06-1,MIL @ STL,B9,Counsell,Heyward,Safe at 2nd,Tag Play,Danley,West,Stands,3:03,http://t.co/xqSipLuYYt
+2015-06-1,LAD @ COL,B8,Weiss,Rosario,Out at 2nd,Tag Play,Guccione,Nelson,Confirmed,1:16,http://t.co/J51e8y1cKr
+2015-06-1,PIT @ SF,B8,Hurdle,Posey,Foul ball; no interference,Fan Interference,Miller,Miller,Overturned,2:19,http://t.co/NUZstpIj13
+2015-06-2,LAD @ COL,T5,Weiss,E. Hernandez,Safe at 1st,Force Play,Tumpane,Nelson,Overturned,2:36,http://t.co/M3er4SanW0
+2015-06-2,LAD @ COL,T9,Weiss,J. Turner,Safe at 2nd,Force Play,Nelson,Nelson,Overturned,1:38,http://t.co/aBOoGih9n7
+2015-06-2,CIN @ PHI,T2,Price,B. Hamilton,Out at 1st,Force Play,Bellino,Hallion,Overturned,0:45,http://t.co/xJcTTOgH63
+2015-06-2,CHI @ MIA,T9,Maddon,Russell,Out at 2nd,Tag Play,Hirschbeck,Hirschbeck,Confirmed,0:44,http://t.co/Dz2UvElWtr
+2015-06-2,CLE @ KC,T8,Yost,J. Ramirez,Safe at 1st,Force Play,Davidson,Wendelstedt,Stands,3:02,http://t.co/LC464n4tfe
+2015-06-2,NYM @ SD,B3,Black,Spangenberg,Out at 3rd,Tag Play,Iassogna,Scott,Overturned,1:07,http://t.co/ux1yblGD8o
+2015-06-2,PIT @ SF,B3,UMPIRE,B. Crawford,Home Run,Potential HR,Ad. Johnson,Miller,Stands,4:33,http://t.co/eDu5tx8zX1
+2015-06-2,NYM @ SD,B5,Black,Alonso,Out at 2nd,Tag Play,Scott,Scott,Confirmed,0:32,http://t.co/mD5ku0DSAH
+2015-06-2,TB @ LAA,T9,Cash,Guyer,Out at 1st,Force Play,Kellogg,Kellogg,Confirmed,0:58,http://t.co/KUPvlT5ymO
+2015-06-3,ATL @ ARI,T1,Gonzalez,Maybin,Out at 1st,Force Play,Schrieber,Culbreth,Overturned,2:49,http://t.co/MdrVsNbpej
+2015-06-3,PIT @ SF,B3,Bochy,Aoki,Out at 3rd,Tag Play,Miller,Miller,Stands,3:31,http://t.co/BRBDTnEymu
+2015-06-3,ATL @ ARI,B7,Gonzalez,Owings,Safe at 2nd,Tag Play,Culbreth,Culbreth,Confirmed,1:50,http://t.co/P3NFiZNTxC
+2015-06-3,TOR @ WSH,B1,Gibbons,Span,Safe at 1st,Force Play,Vanover,Vanover,Overturned,1:42,http://t.co/BzSKotYkl6
+2015-06-3,CHI @ MIA,B2,Jennings,D. Gordon,Out at 1st,Force Play,Hirschbeck,Hirschbeck,Overturned,0:56,http://t.co/MQI6MUDaFW
+2015-06-3,CWS @ TEX,B3,Banister,Andrus,Foul ball,Fair/Foul,Hickox,DeMuth,Confirmed,1:12,http://t.co/sWBR1M7o9h
+2015-06-3,TB @ LAA,T2,Cash,Mahtook,Out at 2nd,Tag Play,Ripperger,Kellogg,Confirmed,0:51,http://t.co/Z9uywKNZgX
+2015-06-3,TB @ LAA,B9,UMPIRE,Featherston,Safe at 1st,Tag Play,Porter,Kellogg,Confirmed,1:20,http://t.co/Qai8FQ7ZLE
+2015-06-4,OAK @ DET,B5,Melvin,J.D. Martinez,Safe at 1st,Tag Play,G. Gibson,Joyce,Overturned,0:47,http://t.co/ngyynBEWqb
+2015-06-4,CIN @ PHI,T5,Price,DeSclafani,Out at home,Collisions at HP,Hallion,Hallion,Overturned,4:39,http://t.co/T27it1gNMh
+2015-06-4,CHI @ WSH,B4,Williams,Espinosa,Out at 2nd,Tag Play,West,West,Confirmed,2:36,http://t.co/KkYrl9beIn
+2015-06-4,STL @ LAD,T1,Matheny,Holliday,Out at 1st,Force Play,Iassogna,Scott,Overturned,1:37,http://t.co/zdGZ5UyTCl
+2015-06-4,TB @ SEA,T4,McClendon,Elmore,Safe at 2nd,Tag Play,Tumpane,Eddings,Overturned,0:42,http://t.co/Ekdwkm0YBL
+2015-06-5,CHI @ WSH,T4,Maddon,K. Bryant,Out at 2nd,Tag Play,Danley,West,Stands,2:07,http://t.co/f0Du1bYtcZ
+2015-06-5,HOU @ TOR,B3,Gibbons,R. Martin,Out at 2nd,Tag Play,Holbrook,Hirschbeck,Stands,4:20,http://t.co/muBX4HZ0Xw
+2015-06-5,TEX @ KC,B1,Banister,Moustakas,Safe at 2nd,Tag Play,Reynolds,Culbreth,Overturned,0:50,http://t.co/y3twHxO7eK
+2015-06-5,OAK @ BOS,T8,Farrell,Sogard,Hit by Pitch,Hit By Pitch,Fagan,Wendelstedt,Stands,1:08,http://t.co/IZ3jnSd6HQ
+2015-06-5,PIT @ ATL,B5,Hurdle,Freeman,Safe at 2nd,Tag Play,Carlson,Gorman,Stands,2:14,http://t.co/cN4gTA6Y8n
+2015-06-5,DET @ CWS,T7,Ventura,R. Davis,Safe at 1st,Force Play,Blaser,Nelson,Stands,1:15,http://t.co/o9MKCZp1Zl
+2015-06-5,TEX @ KC,B7,Banister,Hosmer,Safe at 1st,Force Play,Culbreth,Culbreth,Confirmed,1:23,http://t.co/Q6QUEgA76I
+2015-06-5,TB @ SEA,T4,McClendon,Longoria,Safe at 2nd,Tag Play,Eddings,Eddings,Overturned,0:43,http://t.co/kOdbd049o8
+2015-06-5,STL @ LAD,T5,Mattingly,Heyward,Safe at 1st,Force Play,Bucknor,Scott,Stands,2:32,http://atmlb.com/1e0rEIT
+2015-06-6,CHI @ WSH,T5,UMPIRE,J. Herrera,Safe at 1st,Rules Check,Danley,West,Rules Check,1:12,http://atmlb.com/1e0rLUG
+2015-06-6,HOU @ TOR,B4,Hinch,Reyes,Safe at 2nd,Tag Play,Hoye,Hirschbeck,Confirmed,1:44,http://t.co/NxlP8Z2YCB
+2015-06-6,MIL @ MIN,T4,Molitor,Segura,Hit by Pitch,Hit By Pitch,Basner,Kulpa,Overturned,1:17,http://t.co/VaE2w8yl7F
+2015-06-6,SD @ CIN,T7,UMPIRE,Alonso,Home Run,Potential HR,Estabrook,DeMuth,Confirmed,0:48,http://t.co/AmHcW6sApe
+2015-06-6,LAA @ NYY,B1,Girardi,Gregorius,Out at 2nd,Tag Play,Hallion,Hallion,Overturned,1:22,http://t.co/Ln9tq78Kz5
+2015-06-6,PIT @ ATL,B8,Gonzalez,Markakis,Out at 1st,Tag Play,Carlson,Gorman,Confirmed,1:04,http://t.co/rus0SX0cwC
+2015-06-6,TB @ SEA,T1,Cash,Kiermaier,Out at 3rd,Tag Play,Ad. Johnson,Eddings,Overturned,1:13,http://t.co/U7dMVUxst4
+2015-06-7,SF @ PHI,T3,Bochy,Pagan,Out at 3rd,Tag Play,Winters,Winters,Overturned,3:14,http://t.co/oVaqv5FBHR
+2015-06-7,BAL @ CLE,B4,Showalter,B. Moss,Safe at 2nd,Tag Play,G. Gibson,Joyce,Stands,2:19,http://t.co/QV5e0Bq7pm
+2015-06-7,TB @ SEA,T3,McClendon,Forsythe,Safe at 1st,Force Play,Wolf,Eddings,Overturned,0:50,http://t.co/W9CNCyxFkc
+2015-06-7,MIA @ COL,B7,Jennings,Arenado,Safe at 3rd,Force Play,Randazzo,Cuzzi,Overturned,1:43,http://t.co/H8Ash30kNz
+2015-06-8,MIL @ PIT,T2,Hurdle,Segura,Safe at 1st,Force Play,Schrieber,Culbreth,Overturned,1:22,http://t.co/B2bcO4OkW4
+2015-06-8,HOU @ CWS,T4,Hinch,Correa,Out at 1st,Force Play,Vanover,Vanover,Overturned,0:46,http://t.co/2ksDOSIhlC
+2015-06-9,SF @ NYM,T3,Collins,Pagan,Safe at 1st,Force Play,West,West,Overturned,1:23,http://t.co/u85yQvQO0w
+2015-06-9,CHI @ DET,T5,Ausmus,Lake,Safe at 2nd,Tag Play,Wendelstedt,Wendelstedt,Stands,2:28,http://t.co/UOTGiNrK4t
+2015-06-9,PHI @ CIN,B5,UMPIRE,Votto,Home Run,Potential HR,Carlson,Gorman,Confirmed,1:25,http://t.co/aWiTPGlEHU
+2015-06-9,MIL @ PIT,T8,Hurdle,Lucroy,Safe at 1st,Force Play,Culbreth,Culbreth,Overturned,0:49,http://t.co/VWlXNBb70g
+2015-06-9,BOS @ BAL,B6,Farrell,Reimold,Safe at 1st,Force Play,Blaser,Nelson,Overturned,1:48,http://t.co/kqZIw1Tlfm
+2015-06-9,BOS @ BAL,T7,Showalter,Bogaerts,Safe at 1st,Force Play,Blaser,Nelson,Overturned,1:52,http://t.co/oEugz9aUzB
+2015-06-9,BOS @ BAL,T8,Showalter,Pedroia,Hit by Pitch,Hit By Pitch,Nelson,Nelson,Confirmed,0:39,http://atmlb.com/1Qs2DHD
+2015-06-9,SEA @ CLE,B8,Francona,Brantley,Out at 1st,Force Play,Iassogna,Scott,Stands,3:16,http://t.co/oVGSeYi9S3
+2015-06-9,SD @ ATL,B6,Gonzalez,Uribe,Out at home,Tag Play,Meals,Meals,Overturned,2:08,http://t.co/MuQkbJJbl2
+2015-06-9,SD @ ATL,B6,Black,Simmons,Safe at home,Tag Play,Meals,Meals,Stands,2:45,http://t.co/5oNqcsnIAC
+2015-06-9,SD @ ATL,T8,Gonzalez,M. Upton,Safe at home,Tag Play,Meals,Meals,Overturned,0:48,http://t.co/0Wp0TLBh8m
+2015-06-9,STL @ COL,B8,Weiss,Paulsen,Out at 1st,Tag Play,Tichenor,Everitt,Confirmed,2:15,http://t.co/xNJOe6CFTK
+2015-06-9,TEX @ OAK,B8,Banister,Zobrist,Safe at home,Tag Play,Wolf,Miller,Stands,2:18,http://t.co/JmFsbweNY7
+2015-06-10,PHI @ CIN,B4,Sandberg,Boesch,Safe at 1st,Force Play,Carlson,Gorman,Stands,1:48,http://t.co/DjVkARx9Om
+2015-06-10,WSH @ NYY,B10,Girardi,Gregorius,Out at 2nd,Tag Play,Wolcott,Cederstrom,Stands,3:10,http://t.co/shv3lHL4Ho
+2015-06-10,LAA @ TB,B1,Cash,J. Butler,Out at 2nd,Tag-Ups,Estabrook,DeMuth,Overturned,1:59,http://t.co/KflgATJlQg
+2015-06-10,BOS @ BAL,T2,Showalter,Bogaerts,Safe at 2nd,Tag Play,Nelson,Nelson,Overturned,0:39,http://t.co/OL4tLbUPsi
+2015-06-10,HOU @ CWS,B2,Ventura,A. Garcia,Out at 2nd,Tag Play,Carapazza,Vanover,Stands,2:49,http://t.co/hX0R30f5wO
+2015-06-10,TEX @ OAK,T1,Melvin,DeShields,Safe at 1st,Tag Play,Miller,Miller,Overturned,0:50,http://t.co/RFR9YrgljB
+2015-06-10,KC @ MIN,T7,Yost,S. Perez,Out at 2nd,Force Play,O'Nora,O'Nora,Overturned,1:33,http://t.co/E0y2nuiEJR
+2015-06-10,HOU @ CWS,B8,Hinch,LaRoche,Safe at home,Tag Play,Basner,Vanover,Overturned,1:18,http://t.co/Z0NWPsRIKr
+2015-06-10,TEX @ OAK,B9,Banister,Fuld,Safe at 2nd,Tag Play,Eddings,Miller,Confirmed,1:34,http://t.co/w2n0Pa0YFz
+2015-06-11,SF @ NYM,T1,Collins,Panik,Safe at 1st,Force Play,Danley,West,Stands,2:10,http://t.co/n3OeAzLrFR
+2015-06-11,BOS @ BAL,T9,Farrell,Swihart,Out at 1st,Force Play,Guccione,Nelson,Overturned,0:52,http://t.co/eLFFbfBJIA
+2015-06-12,COL @ MIA,B4,UMPIRE,Ozuna,Home Run,Potential HR,Reynolds,Culbreth,Overturned,1:48,http://t.co/V6mzywg7Ml
+2015-06-12,TOR @ BOS,T5,Farrell,Donaldson,Safe at 1st,Tag-Ups,O'Nora,Kellogg,Stands,2:47,http://t.co/VNFFt2fSkc
+2015-06-12,WSH @ MIL,B3,Williams,Parra,Safe at 2nd,Tag Play,Tichenor,Everitt,Overturned,1:03,http://t.co/9U67TEbstv
+2015-06-12,CWS @ TB,B6,Ventura (Parent),Elmore,Safe at home,Tag Play,Morales,Scott,Confirmed,1:44,http://t.co/ZhBAyC2nlr
+2015-06-12,PHI @ PIT,B3,Sandberg,Mercer,Safe at 2nd,Force Play,Blaser,Nelson,Stands,2:25,http://t.co/ABs4XDudrI
+2015-06-12,TOR @ BOS,T7,UMPIRE,Bautista,Safe at 1st,Tag Play,O'Nora,Kellogg,Confirmed,0:53,http://t.co/FNrqpWdkiD
+2015-06-12,OAK @ LAA,T5,Scioscia,Canha,Safe at 2nd,Tag Play,Hernandez,T. Barrett,Stands,1:54,http://t.co/9h7wuUswcV
+2015-06-13,CWS @ TB,B1,Cash,Longoria,Out at 2nd,Tag Play,Bucknor,Scott,Confirmed,1:15,http://t.co/RLU1qmDXvf
+2015-06-13,CLE @ DET,B4,Francona,Iglesias,Safe at 2nd,Tag Play,Segal,West,Stands,1:55,http://t.co/QE5Ouzd5BH
+2015-06-13,PHI @ PIT,B6,Sandberg,S. Marte,Safe at 2nd,Tag Play,Diaz,Nelson,Overturned,2:41,http://t.co/4y410uT8lT
+2015-06-13,ATL @ NYM,T8,Collins,Maybin,Safe at 3rd,Tag Play,Barksdale,Cederstrom,Stands,2:58,http://t.co/a4SVS0hyR8
+2015-06-13,CWS @ TB,B8,UMPIRE,Souza,Out at 2nd,Tag Play,Bucknor,Scott,Overturned,3:16,http://t.co/eL6rCjfpJU
+2015-06-13,MIN @ TEX,T9,UMPIRE,E. Nunez,In play (double),Potential HR,Fagan,Wendelstedt,Confirmed,2:42,http://t.co/caX8FU2klN
+2015-06-13,CIN @ CHI,B4,Maddon,K. Bryant,Out at home,Tag Play,Bellino,Kulpa,Overturned,3:58,http://atmlb.com/1Bg7S6F
+2015-06-13,CIN @ CHI,B5,Price,Coghlan,Safe at 1st,Force Play,Basner,Kulpa,Overturned,1:57,http://t.co/XVv2jMjuln
+2015-06-13,NYY @ BAL,B7,UMPIRE,Lough,In play (triple),Potential HR,Baker,Meals,Overturned,1:26,http://atmlb.com/1G0nUxQ
+2015-06-13,CIN @ CHI,B8,Maddon,Coghlan,Out at 1st,Force Play,Basner,Kulpa,Overturned,1:09,http://atmlb.com/1FkJUBW
+2015-06-13,LAD @ SD,B8,UMPIRE,J. Upton,Home Run,Potential HR,Miller,Miller,Confirmed,0:35,http://t.co/tMgY9T7lzd
+2015-06-14,TOR @ BOS,T3,Gibbons,Pillar,Out at 2nd,Tag Play,Kellogg,Kellogg,Overturned,2:03,http://t.co/SI1Qbp8RXN
+2015-06-14,WSH @ MIL,T1,Counsell,Espinosa,Safe at 1st,Force Play,T. Welke,Everitt,Overturned,0:53,http://t.co/a0FmJHZ7W3
+2015-06-14,WSH @ MIL,T1,Counsell,Rendon,Safe at 2nd,Force Play,Everitt,Everitt,Overturned,1:01,http://t.co/dEPXcvSC91
+2015-06-14,TOR @ BOS,B4,Farrell,Bogaerts,Not HBP,Hit By Pitch,Porter,Kellogg,Confirmed,1:10,http://t.co/gDrEJhQ7Sl
+2015-06-14,PHI @ PIT,T9,Sandberg,Utley,Foul ball,Fair/Foul,Nelson,Nelson,Confirmed,0:51,http://t.co/AKK8p3j4iI
+2015-06-14,ARI @ SF,T8,Bochy,Pennington,Safe at 1st,Force Play,DiMuro,Gorman,Overturned,1:39,http://t.co/Iv0owsi6sF
+2015-06-14,LAD @ SD,B10,Black,Kemp,Out at 2nd,Force Play,Eddings,Miller,Overturned,2:17,http://t.co/hbeohUk9EI
+2015-06-14,CIN @ CHI,T6,Maddon,Phillips,Safe at home,Tag Play,Basner,Kulpa,Overturned,1:52,http://t.co/Dgzce5SWGy
+2015-06-14,CIN @ CHI,B6,Maddon,Coghlan,Foul ball,Fair/Foul,Kulpa,Kulpa,Overturned,1:36,http://t.co/mSIFev0AZg
+2015-06-14,CIN @ CHI,B7,Price,Rizzo,Hit by Pitch,Hit By Pitch,Basner,Kulpa,Overturned,2:06,http://t.co/qZNBDwnltv
+2015-06-15,KC @ MIL,T1,Yost,A. Escobar,Out at home,Tag Play,Diaz,Nelson,Overturned,2:39,http://t.co/QCj4E3DKBO
+2015-06-15,ATL @ BOS,T7,Gonzalez,Simmons,Not HBP,Hit By Pitch,Kulpa,Vanover,Overturned,1:22,http://t.co/L97lANeFAQ
+2015-06-15,NYY @ MIA,B7,Girardi,Hechavarria,Safe at 1st,Tag Play,Morales,Scott,Overturned,1:08,http://atmlb.com/1INGV9T
+2015-06-15,CWS @ PIT,B7,Ventura,S. Rodriguez,Safe at 1st,Tag Play,Dreckman,Hallion,Stands,2:46,http://t.co/TiR2jmRb7H
+2015-06-15,ARI @ LAA,B4,Scioscia,Pujols,Out at 1st,Force Play,Eddings,Miller,Stands,3:39,http://t.co/X0yr7DkxZo
+2015-06-15,OAK @ SD,B3,Roberts,Venable,Not HBP,Hit By Pitch,DiMuro,Gorman,Stands,2:31,http://t.co/963xwymtou
+2015-06-15,ARI @ LAA,T9,UMPIRE,Ahmed,Safe at home,Tag Play,Miller,Miller,Stands,4:52,http://t.co/qiBI637w33
+2015-06-16,COL @ HOU,T1,UMPIRE,Dickerson,In play (double),Potential HR,Rackley,Layne,Stands,1:53,http://t.co/UNoaOIZ636
+2015-06-16,ATL @ BOS,B1,Farrell,Sandoval,Out at 1st,Force Play,Knight,Vanover,Confirmed,1:20,http://atmlb.com/1SwSRSc
+2015-06-16,SEA @ SF,T5,Bochy,Happ,Safe at 1st,Force Play,B. Welke,Hirschbeck,Overturned,0:43,http://t.co/GnYmWFaBN0
+2015-06-16,COL @ HOU,T7,UMPIRE,C. Gonzalez,Home Run,Potential HR,Davidson,Layne,Overturned,2:11,http://t.co/UXxSp0jSsL
+2015-06-16,OAK @ SD,T9,Melvin,Fuld,Out at 2nd,Tag Play,Hamari,Gorman,Stands,3:28,http://atmlb.com/1Gx3HlP
+2015-06-16,CIN @ DET,B5,Ausmus,Gose,Out at home,Tag Play,Everitt,Everitt,Stands,3:47,http://t.co/UGCtVQPnPY
+2015-06-16,LAD @ TEX,B3,Banister,Andrus,Out at 1st,Force Play,Fairchild,Joyce,Overturned,0:56,http://t.co/VpWNmoaLT3
+2015-06-16,KC @ MIL,T3,Yost,Cain,Out at 1st,Force Play,Fagan,Nelson,Overturned,1:16,http://t.co/7YjcsQyz2S
+2015-06-16,CIN @ DET,T9,Price,B. Hamilton,Out at 2nd,Tag Play,Tichenor,Everitt,Stands,1:54,http://t.co/qIi6sp7eho
+2015-06-17,BOS @ ATL,T1,Farrell,Holt,Out at 2nd,Force Play,Kulpa,Vanover,Stands,1:50,http://t.co/7NquhPxHAH
+2015-06-17,MIA @ NYY,T8,Girardi,Hechavarria,Safe at home,Tag Play,Scott,Scott,Overturned,2:46,http://t.co/9lnU94oHpR
+2015-06-17,HOU @ COL,B3,Hinch,Blackmon,Safe at 2nd,Tag Play,Layne,Layne,Overturned,1:40,http://t.co/nkUjJKYRHE
+2015-06-17,PIT @ CWS,T8,Ventura (Parent),Marte,Safe at 1st,Force Play,Bellino,Hallion,Overturned,1:41,http://t.co/kaWOrJ795A
+2015-06-17,MIL @ KC,B6,Counsell,A. Escobar,Safe at 1st,Force Play,Nelson,Nelson,Overturned,1:27,http://t.co/2CdeAH4ANX
+2015-06-17,STL @ MIN,B8,Molitor,E. Nunez,Out at 1st,Force Play,Nauert,West,Overturned,1:14,http://t.co/tfFxVbbENJ
+2015-06-17,HOU @ COL,T8,Hinch,Gattis,Out at 1st,Force Play,Rackley,Layne,Stands,2:05,http://t.co/pBYh1NU8GS
+2015-06-18,STL @ MIN,B7,Molitor,Rosario,Out at 1st,Force Play,Hickox,West,Overturned,1:55,http://t.co/lzILPOi8Ml
+2015-06-18,TB @ WSH,B1,Williams,Span,Out at 2nd,Tag Play,Gonzalez,Culbreth,Overturned,2:32,http://t.co/75sEr0WL8C
+2015-06-18,TB @ WSH,B2,Cash,M. Taylor,Out at 1st,Force Play,Reynolds,Culbreth,Confirmed,1:19,http://t.co/srsUuCtmXe
+2015-06-18,PIT @ CWS,T1,Ventura,Marte,Safe at 2nd,Tag Play,Dreckman,Hallion,Overturned,4:03,http://t.co/EVXuDX5LFP
+2015-06-18,NYM @ TOR,B6,Collins,Reyes,Fan Int. (double),Fair/Foul,Winters,Winters,Stands,1:43,http://t.co/33wvDTeWdA
+2015-06-18,TEX @ LAD,T7,Mattingly,Andrus,Safe at 3rd,Tag Play,Segal,Joyce,Overturned,2:02,http://t.co/YHqNKW6VrY
+2015-06-19,BOS @ KC,T1,Farrell,Betts,Out at 1st,Force Play,Dreckman,Hallion,Overturned,3:07,http://t.co/IEZ1a9s2yc
+2015-06-19,MIL @ COL,T1,Counsell,Segura,Out at 1st,Force Play,Eddings,Miller,Confirmed,0:42,http://t.co/x9pG7LcDLO
+2015-06-19,TB @ CLE,T7,Cash,Forsythe,Out at 2nd,Tag Play,Basner,Everitt,Stands,3:32,http://t.co/ZvWIHtUQ7F
+2015-06-19,BOS @ KC,T4,Farrell,Swihart,Out at 2nd,Tag Play,Marquez,Hallion,Confirmed,4:49,http://t.co/9zEAwWWuqL
+2015-06-19,HOU @ SEA,B1,McClendon,Morrison,Out at 1st,Tag Play,T. Gibson,Gorman,Overturned,1:53,http://t.co/fqu8GczJ8O
+2015-06-19,CHI @ MIN,T9,Molitor,Fowler,Safe at 1st,Force Play,Gonzalez,Reynolds,Overturned,1:37,http://t.co/Eb2Ts3GSqw
+2015-06-19,SD @ ARI,B3,Murphy,Goldschmidt,Safe at home,Tag Play,Hoye,Hirschbeck,Overturned,1:28,http://t.co/71ObbxaJn7
+2015-06-19,SD @ ARI,B6,Murphy,Pollock,Safe at 2nd,Tag Play,B. Welke,Hirschbeck,Overturned,0:43,http://t.co/GsMmF6x2MM
+2015-06-20,TEX @ CWS,B1,Ventura,Me. Cabrera,Not HBP,Hit By Pitch,Cuzzi,Davis,Overturned,3:40,http://t.co/YooYBsqfXC
+2015-06-20,BAL @ TOR,T6,Gibbons,Machado,Safe at home,Tag Play,Morales,Scott,Confirmed,1:19,http://t.co/YxvsfgJV9q
+2015-06-20,TEX @ CWS,T2,Banister,L. Martin,Out at 1st,Force Play,Davis,Davis,Stands,2:36,http://t.co/yGv0NVKbVf
+2015-06-20,BAL @ TOR,B8,UMPIRE,Navarro,Foul ball,Potential HR,Scott,Scott,Confirmed,0:56,http://t.co/FsoTvRzOOn
+2015-06-20,TEX @ CWS,T7,UMPIRE,L. Martin,Foul ball,Potential HR,Davis,Davis,Stands,3:36,http://t.co/3H4vhN4lcm
+2015-06-20,MIL @ COL,T3,Weiss,Segura,Safe at 2nd,Tag Play,Wolf,Miller,Stands,1:50,http://t.co/77KTQCywwJ
+2015-06-20,CHI @ MIN,B9,Maddon,Mauer,Safe at 2nd,Tag Play,Tichenor,Reynolds,Overturned,1:16,http://t.co/jQostzDw3c
+2015-06-20,LAA @ OAK,B8,Scioscia,Lawrie,Safe at 1st,Force Play,Segal,Joyce,Overturned,2:56,http://t.co/nFJBrxBpiZ
+2015-06-20,SF @ LAD,T2,Bochy,B. Crawford,Not HBP,Hit By Pitch,Guccione,Nelson,Overturned,1:28,http://t.co/HplKmJdR8h
+2015-06-20,NYM @ ATL,B6,Collins,Peterson,Safe at 3rd,Tag Play,Layne,Layne,Overturned,2:14,http://t.co/TjKo8JiceL
+2015-06-20,HOU @ SEA,T6,Hinch,Gattis,Fan Int. (out),Fan Interference,DiMuro,Gorman,Confirmed,1:07,http://t.co/EWpMnxu8fI
+2015-06-21,MIA @ CIN,T5,Jennings,D. Gordon,Out at home,Tag Play,Cederstrom,Cederstrom,Stands,2:25,http://t.co/s3thI6N2Yz
+2015-06-21,BAL @ TOR,T6,Gibbons,Machado,Safe at 1st,Tag Play,L. Barrett,Scott,Stands,1:45,http://t.co/kHjvz4MclD
+2015-06-21,BOS @ KC,B4,Yost,Infante,Out at 1st,Force Play,Bellino,Hallion,Overturned,1:05,http://t.co/QnbAtdEgUt
+2015-06-21,MIA @ CIN,T8,UMPIRE,Ozuna,Out at 1st,Tag Play,Cederstrom,Cederstrom,Confirmed,1:05,http://t.co/12MCOhWRkc
+2015-06-21,BAL @ TOR,T8,UMPIRE,Machado,Safe at 1st,Tag Play,L. Barrett,Scott,Stands,1:38,http://t.co/1NptjgWSYh
+2015-06-21,BAL @ TOR,T8,Showalter,Paredes,Not HBP,Hit By Pitch,Scott,Scott,Stands,1:16,http://t.co/nhBtDMLbvQ
+2015-06-21,LAA @ OAK,B2,Melvin,Lawrie,Out at 3rd,Tag Play,G. Gibson,Joyce,Confirmed,5:16,http://atmlb.com/1dcoTmx
+2015-06-21,SD @ ARI,B2,Murphy,Lamb,Safe at home,Force Play,B. Welke,Hirschbeck,Stands,3:16,http://t.co/19LtWKWFk9
+2015-06-21,SD @ ARI,B2,Hale,Goldschmidt,Out at 2nd,Tag Play,Hoye,Hirschbeck,Overturned,3:10,http://t.co/bjM56yOiWi
+2015-06-21,SF @ LAD,T3,Bochy,Petit,Out at 1st,Force Play,Nelson,Nelson,Overturned,2:08,http://t.co/d5opqoBy4w
+2015-06-22,DET @ CLE,T1,Francona,Cespedes,In play (triple),Boundary Call,Cooper,Cederstrom,Overturned,4:22,http://t.co/lGWpx7kX29
+2015-06-22,DET @ CLE,T2,UMPIRE,Iglesias,Out at 2nd,Rules Check,Barksdale,Cederstrom,Rules Check,1:02,http://atmlb.com/1Kfvqvb
+2015-06-22,DET @ CLE,T4,Ausmus,Iglesias,Out at 1st,Force Play,Cooper,Cederstrom,Overturned,0:52,http://t.co/qg6jq1Bu3f
+2015-06-22,HOU @ LAA,B2,Hinch,Pujols,Safe at 2nd,Tag Play,Hirschbeck,Hirschbeck,Overturned,2:31,http://t.co/S4WOEnncRk
+2015-06-23,CIN @ PIT,T1,Hurdle,Votto,Safe at home,Force Play,Barry,T. Barrett,Overturned,0:54,http://t.co/OIaHOc5pOm
+2015-06-23,TOR @ TB,B1,Gibbons,Forsythe,Safe at 1st,Force Play,May,West,Overturned,0:41,http://t.co/MNiwCggi2C
+2015-06-23,STL @ MIA,B2,Jennings,Urena,Out at 1st,Tag Play,T. Gibson,Gorman,Overturned,2:43,http://t.co/gHY8WVjRe9
+2015-06-23,CIN @ PIT,B3,Price,Polanco,Safe at 2nd,Tag Play,Conroy,T. Barrett,Overturned,0:52,http://t.co/yFjFzBoGew
+2015-06-23,LAD @ CHI,B2,Mattingly,Hammel,Foul ball (no interference),Fan Interference,Meals,Meals,Overturned,1:08,http://t.co/NWztEVM4N8
+2015-06-23,OAK @ TEX,T4,Melvin,B. Butler,Out at 1st,Force Play,Iassogna,Scott,Overturned,0:54,http://t.co/jYqryIJp1c
+2015-06-23,CIN @ PIT,B6,Price,Polanco,Safe at 2nd,Tag Play,Conroy,T. Barrett,Overturned,2:11,http://t.co/MFhVVqY7Jp
+2015-06-23,ARI @ COL,T3,Weiss,Pollock,Safe at 1st,Tag Play,Blaser,Nelson,Stands,2:16,http://t.co/ayoNF0fHa9
+2015-06-23,HOU @ LAA,T3,Scioscia,Gattis,Safe at 1st,Force Play,Hirschbeck,Hirschbeck,Overturned,1:33,http://t.co/55LCBJR35x
+2015-06-23,ARI @ COL,T8,Hale,Hill,Out at 1st,Force Play,Blaser,Nelson,Overturned,0:42,http://t.co/3arsAJwrBm
+2015-06-23,SD @ SF,T8,Murphy (Roberts),Venable,Out at 2nd,Tag Play,Gonzalez,Culbreth,Stands,4:40,http://t.co/3sTYqsi9VY
+2015-06-24,TOR @ TB,B8,Gibbons,Forsythe,Safe at 1st,Force Play,West,West,Confirmed,0:45,http://t.co/yfDzBZ9jVP
+2015-06-24,CWS @ MIN,T5,Ventura,Eaton,Out at 1st,Force Play,Wolf,Miller,Stands,2:07,http://t.co/YKChSaNcS7
+2015-06-24,HOU @ LAA,T9,Hinch,Springer,Out at 1st,Tag Play,B. Welke,Hirschbeck,Confirmed,1:01,http://t.co/WU3exP7yqV
+2015-06-24,HOU @ LAA,T9,UMPIRE,Gattis,Out at 2nd,Tag Play,Tumpane,Hirschbeck,Stands,2:40,http://t.co/RfH6PXECZb
+2015-06-24,HOU @ LAA,T10,UMPIRE,M. Gonzalez,Out at 2nd,Tag Play,Tumpane,Hirschbeck,Confirmed,2:23,http://t.co/zVNsCP1qtd
+2015-06-24,STL @ MIA,T8,Matheny,M. Carpenter,Out at 2nd,Tag Play,Gorman,Gorman,Confirmed,1:58,http://t.co/Cv50GFZREc
+2015-06-24,LAD @ CHI,T5,Mattingly,Coghlan,Catch,Catch/no catch,Baker,Meals,Confirmed,0:58,http://t.co/OYegZxIkvk
+2015-06-24,CIN @ PIT,B7,Price,G. Polanco,Safe at 2nd,Tag Play,Hernandez,T. Barrett,Stands,3:50,http://atmlb.com/1Lu0hUh
+2015-06-24,OAK @ TEX,B5,Banister,Odor,Out at 2nd,Force Play,L. Barrett,Scott,Stands,2:34,http://t.co/U15z6VX9wG
+2015-06-24,ARI @ COL,T3,Hale,Ahmed,Out at 2nd,Force Play,Fagan,Nelson,Confirmed,1:10,http://t.co/hPtQVrF71U
+2015-06-24,ARI @ COL,T3,Hale,Pollock,Out at 1st,Force Play,Guccione,Nelson,Overturned,1:10,http://t.co/hPtQVrF71U
+2015-06-24,LAD @ CHI,B9,Maddon,Denorfia,Out at 2nd,Tag Play,Baker,Meals,Stands,3:45,http://t.co/LvlqXj2dhk
+2015-06-24,ARI @ COL,B7,Weiss,Rosario,Out at 1st,Force Play,Guccione,Nelson,Confirmed,0:38,http://atmlb.com/1BT0Sgn
+2015-06-25,CWS @ DET,T2,Ventura,C. Sanchez,Out at 1st,Force Play,Ripperger,O'Nora,Overturned,0:51,http://t.co/S5MqVlJ6GC
+2015-06-25,NYM @ MIL,T2,Collins,Cuddyer,Out at home,Tag Play,Carapazza,Vanover,Stands,4:24,http://t.co/wM8GCBuHkc
+2015-06-25,NYM @ MIL,B7,UMPIRE,S. Peterson,Fair (double),Fair/Foul,Kulpa,Vanover,Overturned,0:46,http://t.co/jRrUi7lh25
+2015-06-25,LAD @ CHI,T7,UMPIRE,Turner,Home Run,Potential HR,Meals,Meals,Overturned,2:09,http://t.co/1M2KHMesE8
+2015-06-25,ATL @ WSH,B3,Gonzalez,Y. Escobar,Safe at home,Tag Play,Estabrook,DeMuth,Stands,2:47,http://t.co/P1TJD2Nr41
+2015-06-25,CIN @ PIT,T5,Hurdle,B. Pena,Safe at 1st,Force Play,Hernandez,T. Barrett,Stands,2:00,http://t.co/fyCeBaWnBL
+2015-06-25,CIN @ PIT,B10,UMPIRE,Kang,Out at 2nd,Rules Check,Barry,T. Barrett,Rules Check,1:10,http://atmlb.com/1KigQmA
+2015-06-26,TEX @ TOR,B2,Banister,Reyes,Safe at 1st,Force Play,Pattillo,T. Barrett,Overturned,1:42,http://t.co/B43DpsHBBB
+2015-06-26,WSH @ PHI,T3,Mackanin,Uggla,Safe at 2nd,Tag Play,Meals,Meals,Overturned,1:07,http://t.co/TNtgq7BuU5
+2015-06-26,BOS @ TB,B4,Farrell,Forsythe,Safe at 2nd,Tag Play,T. Gibson,Gorman,Overturned,2:13,http://t.co/eijEFdmJp3
+2015-06-26,ATL @ PIT,B5,Hurdle,S. Marte,Out at 1st,Force Play,Tumpane,Hirschbeck,Overturned,1:22,http://t.co/KfP34i3A6z
+2015-06-26,BOS @ TB,B5,Farrell,A. Cabrera,Safe at 1st,Tag Play,Hamari,Gorman,Confirmed,1:31,http://t.co/wAbj3En51Q
+2015-06-26,ATL @ PIT,B8,Hurdle,G. Polanco,Out at 1st,Force Play,Tumpane,Hirschbeck,Stands,3:17,http://t.co/ciAAyxSoPc
+2015-06-26,ATL @ PIT,B9,UMPIRE,Kang,Out at 3rd,Tag Play,Hirschbeck,Hirschbeck,Stands,2:21,http://t.co/m0patoP3F7
+2015-06-26,COL @ SF,T2,Bochy,Barnes,Safe at 1st,Force Play,Holbrook,G. Gibson,Stands,1:41,http://t.co/UdgpUEAfpC
+2015-06-26,SEA @ LAA,T3,McClendon,A. Jackson,Out at 1st,Force Play,Nelson,Nelson,Stands,2:59,http://atmlb.com/1NqSPZf
+2015-06-26,SEA @ LAA,B4,Scioscia,Aybar,Out at 3rd,Tag Play,Guccione,Nelson,Stands,2:04,http://t.co/85Nhz8lanF
+2015-06-26,ARI @ SD,B5,Hale,Spangenberg,Safe at 2nd,Tag Play,Hoberg,Cederstrom,Stands,1:59,http://t.co/NAk45IN128
+2015-06-26,ARI @ SD,B7,Murphy,Spangenberg,Out at 1st,Force Play,Cederstrom,Cederstrom,Overturned,1:34,http://t.co/NISkHuvhCS
+2015-06-26,COL @ SF,T7,UMPIRE,C. Gonzalez,Safe at home,Tag Play,Hudson,G. Gibson,Stands,3:57,http://t.co/3juYP9JewF
+2015-06-26,COL @ SF,B9,UMPIRE,Duffy,Foul ball,Fair/Foul,Holbrook,G. Gibson,Confirmed,0:38,http://t.co/iycygiTgqf
+2015-06-27,MIN @ MIL,T6,Counsell,Plouffe,Safe at 1st,Force Play,L. Barrett,Iassogna,Overturned,2:19,http://t.co/6S5TyhfoPe
+2015-06-27,ATL @ PIT,T1,Gonzalez,Markakis,Out at home,Collisions at HP,Tumpane,Hirschbeck,Stands,3:08,http://t.co/K0U6iOCnZD
+2015-06-27,NYY @ HOU,B1,Hinch,Valbuena,Out at 1st,Force Play,May,West,Overturned,1:16,http://t.co/ALzqW9YyQk
+2015-06-27,COL @ SF,B3,UMPIRE,Posey,In play (double),Fan Interference,G. Gibson,G. Gibson,Overturned,1:37,http://t.co/otQdIbnlDP
+2015-06-27,NYY @ HOU,T8,Hinch,Gardner,Safe at 2nd,Force Play,West,West,Stands,4:43,http://t.co/Dbs6rdG5Fw
+2015-06-28,MIN @ MIL,T3,Molitor,E. Escobar,Out at 1st,Tag Play,Morales,Iassogna,Stands,3:24,http://t.co/iy6E5oSZaM
+2015-06-28,LAD @ MIA,T7,Jennings,Greinke,Safe at 1st,Force Play,T. Welke,Everitt,Overturned,0:55,http://t.co/dqChGEVp7k
+2015-06-28,BOS @ TB,T9,Cash,De Aza,Safe at 2nd,Tag Play,Gorman,Gorman,Overturned,1:44,http://t.co/OYq6KPrje4
+2015-06-28,WSH @ PHI,T9,Williams,Uggla,Out at 2nd,Force Play,Fletcher,Emmel,Stands,3:05,http://t.co/74VOokLUIr
+2015-06-28,CIN @ NYM,T1,UMPIRE,Phillips,Single,Potential HR,DeMuth,DeMuth,Overturned,0:58,http://t.co/k9mhtd8o1E
+2015-06-28,WSH @ PHI,T1,UMPIRE,C. Robinson,Foul ball,Potential HR,Fletcher,Meals,Confirmed,2:27,http://t.co/eK0s3qxibg
+2015-06-28,COL @ SF,B7,Bochy,Duffy,Foul ball,Fair/Foul,Segal,G. Gibson,Stands,4:31,http://t.co/yTQeExzCgC
+2015-06-28,KC @ OAK,B8,Melvin,A. Gordon,Catch,Catch/no catch,Culbreth,Culbreth,Confirmed,0:56,http://t.co/YSzaebirzZ
+2015-06-29,TEX @ BAL,T1,Showalter,Odor,Safe at 1st,Tag Play,B. Welke,Hirschbeck,Overturned,2:29,http://t.co/j0XqpPgOmL
+2015-06-29,TEX @ BAL,T2,UMPIRE,Moreland,In play; out at 2nd,Potential HR,B. Welke,Hirschbeck,Overturned,1:35,http://t.co/BeTKRrqPnj
+2015-06-29,BOS @ TOR,B2,Farrell,R. Martin,Hit by Pitch,Hit By Pitch,Randazzo,Davis,Confirmed,0:58,http://t.co/KIVvYZH5At
+2015-06-29,MIL @ PHI,B3,Mackanin,D. Brown,Out at home,Collisions at HP,Carlson,Carlson,Confirmed,1:19,http://t.co/NbuPBEwYRn
+2015-06-29,MIN @ CIN,T5,Molitor,Rosario,Out at 2nd,Tag Play,Wendelstedt,Layne,Overturned,4:16,http://t.co/KLCybXy1VK
+2015-06-29,CLE @ TB,B9,Cash,R. Rivera,Out at 2nd,Tag-Ups,Ad. Johnson,Miller,Confirmed,0:40,http://t.co/JYx2tpz69o
+2015-06-29,NYY @ LAA,T1,Scioscia,Gardner,Safe at 3rd,Tag Play,Reynolds,Culbreth,Overturned,0:47,http://t.co/sLAZoJWECL
+2015-06-29,LAD @ ARI,B6,UMPIRE,Tomas,Home Run,Potential HR,Foster,Winters,Stands,3:31,http://t.co/14VReLSCOb
+2015-06-29,LAD @ ARI,B8,Mattingly,W. Castillo,Safe at 2nd (touched 1st),Touching a base,Winters,Winters,Confirmed,1:11,http://atmlb.com/1JNLMv8
+2015-06-30,PIT @ DET,T1,Hurdle,J. McCann,Out at 2nd,Tag Play,Holbrook,G. Gibson,Stands,2:04,http://t.co/Cdyg4usAnA
+2015-06-30,BOS @ TOR,T4,Gibbons,Betts,Safe at 2nd,Tag Play,Davis,Davis,Overturned,2:25,http://t.co/EH0wtdsmvD
+2015-06-30,PIT @ DET,B5,UMPIRE,J. McCann,Double,Fan Interference,Hudson,G. Gibson,Overturned,4:32,http://t.co/P3c0Htv4i1
+2015-06-30,LAD @ ARI,B3,Hale,R. De La Rosa,Out at 1st,Force Play,Muchlinski,Winters,Overturned,1:10,http://t.co/CxP4f8TJOv
+2015-06-30,NYY @ LAA,B3,Scioscia,Trout,Out at 2nd,Tag Play,Reynolds,Culbreth,Stands,2:47,http://t.co/rwsLEIU0ov
+2015-06-30,SEA @ SD,B5,Murphy,Gyorko,Out at 1st,Force Play,Everitt,Everitt,Overturned,1:08,http://t.co/Qzq5JBodoa
+2015-06-30,NYY @ LAA,B7,UMPIRE,Giavotella,Out at 1st,Force Play,Culbreth,Culbreth,Confirmed,1:40,http://t.co/nDz2GMDTVQ
+2015-07-1,BOS @ TOR,B1,Farrell,Pillar,Safe at 2nd,Tag Play,Randazzo,Davis,Overturned,1:29,http://t.co/fNxGETmgXn
+2015-07-1,TEX @ BAL,T4,UMPIRE,Rua,Home Run,Potential HR,Hirschbeck,Hirschbeck,Confirmed,1:30,http://t.co/UQHB288SYQ
+2015-07-1,CHI @ NYM,T9,Collins,Rizzo,Safe at 3rd,Tag Play,Guccione,Diaz,Confirmed,1:01,http://t.co/CI1bV4I182
+2015-07-1,KC @ HOU,B7,Yost,Altuve,Safe at home,Tag Play,Emmel,Meals,Stands,4:31,http://t.co/vt61XsI2wv
+2015-07-2,CHI @ NYM,B1,Maddon,Da. Murphy,Safe at 1st,Tag Play,Blaser,Diaz,Overturned,1:07,http://t.co/KwthGk26rz
+2015-07-2,PIT @ DET,B8,UMPIRE,J.D. Martinez,Home Run,Potential HR,G. Gibson,G. Gibson,Confirmed,0:40,http://t.co/KhrdFGplFV
+2015-07-2,TEX @ BAL,T6,Showalter,Fielder,Safe at 1st,Force Play,Hirschbeck,Hirschbeck,Overturned,1:15,http://t.co/0jUeyJZQoc
+2015-07-2,BOS @ TOR,B5,Farrell,R. Martin,Safe at 1st,Force Play,Randazzo,Davis,Overturned,1:21,http://t.co/VqJir6LYEL
+2015-07-2,BOS @ TOR,B5,Gibbons,Valencia,Out at home,Tag Play,Davis,Davis,Stands,3:14,http://t.co/6lM6n2SZew
+2015-07-2,SD @ STL,T11,Murphy,Barmes,Foul ball,Fair/Foul,Rackley,Wendelstedt,Overturned,1:34,http://t.co/5ymvOXqPOX
+2015-07-3,SF @ WSH,T1,Bochy,Duffy,Out at 1st,Force Play,Little,Hirschbeck,Overturned,0:36,http://t.co/ZTLODuW1jN
+2015-07-3,SF @ WSH,B3,UMPIRE,G. Gonzalez,Foul ball,Potential HR,Davis,Hirschbeck,Confirmed,1:39,http://t.co/8dH24A2ikS
+2015-07-3,MIL @ CIN,T1,Price,Braun,Safe at 3rd,Tag Play,Hoye,B. Welke,Overturned,1:49,http://t.co/nTHHdq3cLd
+2015-07-3,BAL @ CWS,B1,Showalter,Eaton,Safe at 1st,Force Play,Conroy,T. Barrett,Overturned,1:49,http://t.co/mf5b1s1Q5o
+2015-07-3,CLE @ PIT,B6,Hurdle,N. Walker,Out at 1st,Force Play,Hamari,Carlson,Confirmed,0:54,http://t.co/YL5m8q2guw
+2015-07-3,PHI @ ATL,T7,Gonzalez,Rupp,Safe at 2nd,Tag Play,Ad. Johnson,Miller,Overturned,2:30,http://t.co/rmEhSbGuDW
+2015-07-3,TB @ NYY,T9,Cash,A. Cabrera,Out at 2nd,Tag Play,Bucknor,Iassogna,Stands,3:02,http://t.co/iuEHrB62vx
+2015-07-3,MIN @ KC,T7,Yost,E. Escobar,Safe at 1st,Force Play,Barksdale,Cederstrom,Overturned,1:36,http://t.co/XC1gcNVCBT
+2015-07-3,TB @ NYY,T11,Girardi,Longoria,Safe at 2nd,Tag Play,Bucknor,Iassogna,Overturned,2:24,http://t.co/4z98ZwxRj8
+2015-07-3,COL @ ARI,B5,Weiss,Pollock,Safe at 2nd,Tag Play,Culbreth,Culbreth,Overturned,3:27,http://t.co/r6TLOtgqt8
+2015-07-3,MIN @ KC,B10,Molitor,L. Cain,Safe at home,Tag Play,Cooper,Cederstrom,Confirmed,1:41,http://t.co/nzVAnU2Q71
+2015-07-4,SD @ STL,T3,Matheny,M. Upton,Safe at 1st,Force Play,Kulpa,Wendelstedt,Stands,3:21,http://t.co/bVVy2IA7MS
+2015-07-4,HOU @ BOS,B8,Hinch,De Aza,Safe at 1st,Force Play,Fagan,Diaz,Confirmed,0:37,http://atmlb.com/1CZGDsi
+2015-07-4,SEA @ OAK,B1,Melvin,Reddick,Out at 1st,Force Play,Muchlinski,Winters,Overturned,1:14,http://atmlb.com/1G6i8cM
+2015-07-4,MIA @ CHI,T1,Jennings,D. Gordon,Out at 2nd,Tag Play,Holbrook,G. Gibson,Overturned,1:15,http://t.co/FhaHIW4f2K
+2015-07-4,MIL @ CIN,T5,Price,Braun,Safe at 3rd,Tag Play,Randazzo,B. Welke,Stands,4:11,http://t.co/fTKSj8cVJV
+2015-07-4,LAA @ TEX,T6,Banister,Pujols,Safe at 2nd,Tag Play,T. Welke,Timmons,Stands,2:29,http://t.co/BNU5t4rOT3
+2015-07-5,CLE @ PIT,B5,Hurdle,Stewart,Out at 1st,Force Play,T. Gibson,Carlson,Overturned,1:20,http://t.co/TblYxRfDvm
+2015-07-5,HOU @ BOS,B4,Hinch,Victorino,Safe at 1st,Force Play,Diaz,Diaz,Overturned,1:20,http://t.co/sqinRPUudK
+2015-07-5,HOU @ BOS,T5,Hinch,Correa,Out at 2nd,Tag Play,Blaser,Diaz,Overturned,1:38,http://atmlb.com/1NRdzcG
+2015-07-5,CLE @ PIT,B7,Francona,Harrison,Safe at 1st,Force Play,T. Gibson,Carlson,Stands,2:13,http://atmlb.com/1HLMBnX
+2015-07-5,HOU @ BOS,T6,Farrell,Carter,Safe at 2nd,Tag Play,Blaser,Diaz,Overturned,1:16,http://t.co/XJR9ShEpDZ
+2015-07-5,SEA @ OAK,B5,Melvin,Canha,Out at 1st,Force Play,Foster,Winters,Overturned,2:04,http://t.co/KqvZA3WsEY
+2015-07-5,NYM @ LAD,B9,Mattingly,Puig,Foul ball,Fair/Foul,Everitt,Everitt,Stands,1:40,http://t.co/ANEV3cryek
+2015-07-5,LAA @ TEX,T1,Banister,Freese,Safe at 1st,Force Play,T. Welke,Timmons,Overturned,2:01,http://atmlb.com/1CoCALk
+2015-07-6,TOR @ CWS,T4,Gibbons,Donaldson,No HBP,Hit By Pitch,Holbrook,G. Gibson,Overturned,1:54,http://atmlb.com/1fiPy2N
+2015-07-6,TOR @ CWS,B4,Gibbons,A. Garcia,Safe at 1st,Tag Play,G. Gibson,G. Gibson,Overturned,1:28,http://atmlb.com/1LP2o52
+2015-07-6,CIN @ WSH,T6,UMPIRE,M. Byrd,Home Run,Potential HR,Vanover,Vanover,Overturned,2:47,atmlb.com/1LP2aen
+2015-07-7,TB @ KC,T7,Yost,Kiermaier,Safe at 1st,Force Play,Pattillo,T. Welke,Stands,2:57,atmlb.com/1dKvSDp
+2015-07-7,TB @ KC,T9,UMPIRE,Kiermaier,Safe at 3rd,Tag Play,Segal,T. Welke,Stands,4:31,atmlb.com/1Codhcj
+2015-07-7,HOU @ CLE,T6,Francona,Correa,Safe at 1st,Force Play,Nauert,DeMuth,Overturned,1:03,atmlb.com/1CZtqQf
+2015-07-7,BAL @ MIN,B4,Molitor,A. Hicks,Out at home,Tag Play,Blaser,Nelson,Confirmed,0:57,atmlb.com/1CorSEz
+2015-07-7,BAL @ MIN,T8,UMPIRE,A. Jones,Safe at 2nd (In Play),Potential HR,Diaz,Nelson,Confirmed,0:32,atmlb.com/1CmSh5m
+2015-07-7,PHI @ LAD,B5,Mattingly,Rollins,Out at 1st,Force Play,Schrieber,Reynolds,Confirmed,0:48,atmlb.com/1CZE4X2
+2015-07-8,ATL @ MIL,T4,Gonzalez,E. Perez,Out at 1st,Force Play,Wolcott,Cederstrom,Stands,2:51,atmlb.com/1CpQGMw
+2015-07-8,NYM @ SF,B3,Bochy,Maxwell,Out at 1st,Tag Play,Baker,Miller,Overturned,0:54,atmlb.com/1LSY8lf
+2015-07-8,ATL @ MIL,T9,UMPIRE,Ciriaco,Out at 2nd,Tag Play,Cederstrom,Cederstrom,Confirmed,2:53,atmlb.com/1LSYjNh
+2015-07-8,DET @ SEA,T6,McClendon (Jewett),Iglesias,Safe at 2nd,Tag Play,West,West,Overturned,0:52,atmlb.com/1HOZaNs
+2015-07-8,ARI @ TEX,B4,Banister,Andrus,Out at 2nd,Force Play,Kellogg,Kellogg,Overturned,1:58,atmlb.com/1HP9uVC
+2015-07-8,STL @ CHI,B8,Maddon,S. Castro,Foul Ball,Fair / Foul,Hernandez,T. Barrett,Confirmed,1:01,atmlb.com/1dNjxOX
+2015-07-8,TOR @ CWS,B8,Ventura,C. Sanchez,Out at 2nd,Force Play,Holbrook,G. Gibson,Confirmed,1:21,atmlb.com/1CquLEX
+2015-07-8,TOR @ CWS,T11,UMPIRE,Goins,Safe at 2nd,Tag Play,Holbrook,G. Gibson,Overturned,1:02,http://atmlb.com/1HPst2t
+2015-07-8,LAA @ COL,B8,Weiss,Descalso,Out at 1st,Force Play,Winters,Winters,Overturned,0:47,http://atmlb.com/1LXMJ4A
+2015-07-9,LAA @ SEA,T2,McClendon,Joyce,Safe at 3rd,Tag Play,Baker,Miller,Overturned,2:29,http://atmlb.com/1dPwdoi
+2015-07-9,DET @ MIN,T8,UMPIRE,Kinsler,Safe at 2nd (In Play),Potential HR,Foster,Winters,Confirmed,1:05,atmlb.com/1dPtY4j
+2015-07-9,ATL @ COL,T3,Weiss,Brigham,Safe at 1st,Force Play,Kellogg,Kellogg,Overturned,0:41,atmlb.com/1dPxcVz
+2015-07-9,LAA @ SEA,T9,Scioscia,Freese,Out at 1st,Force Play,Miller,Miller,Overturned,1:26,atmlb.com/1CsZjWs
+2015-07-10,CWS @ CHI,B3,Maddon,A. Garcia,Catch,Catch/no catch,Marquez,Hallion,Confirmed,1:39,atmlb.com/1ULjJQt
+2015-07-10,OAK @ CLE,T1,Melvin,Burns,Out at 2nd,Force Play,Segal,Nelson,Overturned,2:19,atmlb.com/1Hju2lk
+2015-07-10,STL @ PIT,T4,Hurdle,Molina,HBP,Hit By Pitch,O'Nora,Vanover,Overturned,1:02,atmlb.com/1dRsrLk
+2015-07-10,HOU @ TB,T6,Cash,P. Tucker,Safe at 2nd,Force Play,Basner,G. Gibson,Overturned,1:32,atmlb.com/1HldN9y
+2015-07-10,WSH @ BAL,T7,Showalter,M. Taylor,Safe at 2nd,Tag Play,Hickox,T. Welke,Overturned,1:23,atmlb.com/1RpiY0e
+2015-07-10,ARI @ NYM,T9,Hale,Tomas,Out at 3rd,Tag Play,B. Welke,Hirschbeck,Overturned,2:48,atmlb.com/1CuGimy
+2015-07-10,SD @ TEX,B6,Murphy,Odor,Safe at 1st,Force Play,Schrieber,Culbreth,Confirmed,1:27,atmlb.com/1UMbPWS
+2015-07-10,ATL @ COL,T7,Weiss,Gomes,Safe at 2nd,Tag Play,Blaser,Kellogg,Overturned,1:34,atmlb.com/1CuJazY
+2015-07-10,DET @ MIN,T7,Ausmus,J.D. Martinez,Out at 1st,Force Play,Foster,Winters,Overturned,1:23,atmlb.com/1HjQJ9f
+2015-07-10,MIL @ LAD,T3,Mattingly,Braun,Safe at 1st,Force Play,West,West,Overturned,0:41,atmlb.com/1dRAlUQ
+2015-07-10,PHI @ SF,B3,Bochy,Pence,No HBP,Hit By Pitch,Timmons,DeMuth,Stands,2:54,atmlb.com/1dRAMyw
+2015-07-10,DET @ MIN,B9,Molitor,E. Rosario,Out at 2nd,Tag Play,Wegner,Winters,Overturned,1:45,atmlb.com/1HjW0NO
+2015-07-10,TOR @ KC,B6,Gibbons,Dyson,Safe at 1st,Force Play,Kulpa,Meals,Overturned,1:25,atmlb.com/1UMx5vE
+2015-07-11,ARI @ NYM,B5,UMPIRE,M. Harvey,Home Run,Potential HR,Tumpane,Hirschbeck,Confirmed,1:49,atmlb.com/1CxKiCI
+2015-07-11,HOU @ TB,B6,Cash,Forsythe,Out at 2nd,Force Play,Fairchild,G. Gibson,Confirmed,1:03,atmlb.com/1RqyTeA
+2015-07-11,DET @ MIN,B6,Ausmus,D. Santana,Safe at 1st,Force Play,Wegner,Winters,Overturned,2:15,atmlb.com/1HnsSaT
+2015-07-11,CWS @ CHI,T8,Maddon,Saladino,Safe at 1st,Force Play,Everitt,Hallion,Overturned,1:01,atmlb.com/1K19D7V
+2015-07-11,ATL @ COL,T8,Gonzalez,C. Johnson,Out at 2nd,Tag Play,Ripperger,Kellogg,Stands,2:21,atmlb.com/1K1bnOA
+2015-07-11,ATL @ COL,T8,Weiss,Markakis,Safe at 3rd,Tag Play,Kellogg,Kellogg,Stands,1:43,atmlb.com/1JbudzB
+2015-07-11,STL @ PIT,T5,Hurdle (Jauss),Wong,Touched 2nd,Touching a Base,Vanover,Vanover,Stands,2:28,atmlb.com/1JbNWze
+2015-07-11,SD @ TEX,T1,Banister,Solarte,Safe at 3rd,Tag Play,Gonzalez,Culbreth,Stands,4:21,atmlb.com/1CxW2VR
+2015-07-11,STL @ PIT,T7,UMPIRE,Wong,Safe at 2nd,Tag Play,Vanover,Vanover,Confirmed,2:19,http://atmlb.com/1JbO69R
+2015-07-11,MIL @ LAD,T3,UMPIRE,Braun,Ground-Rule 2B,Potential HR,Reyburn,West,Confirmed,1:46,http://atmlb.com/1JbNHUJ
+2015-07-11,LAA @ SEA,B3,Scioscia,F. Gutierrez,Safe at 2nd,Tag Play,Baker,Miller,Overturned,1:49,atmlb.com/1JbOt47
+2015-07-11,PHI @ SF,T6,UMPIRE,R. Howard,Home Run,Potential HR,DeMuth,DeMuth,Confirmed,1:31,atmlb.com/1JbNyka
+2015-07-11,SD @ TEX,T9,Murphy,Cashner,Out at 3rd,Tag Play,Gonzalez,Culbreth,Confirmed,1:26,atmlb.com/1JbOipo
+2015-07-12,OAK @ CLE,T1,UMPIRE,Vogt,Catch (No Home Run),Potential HR,Nelson,Nelson,Confirmed,1:02,atmlb.com/1RrNmHo
+2015-07-12,ARI @ NYM,B2,UMPIRE,Nieuwenhuis,Home Run,Potential HR,Hirschbeck,Hirschbeck,Confirmed,0:55,atmlb.com/1fAkUlP
+2015-07-12,DET @ MIN,B1,Molitor,Dozier,Out at 1st,Force Play,Winters,Winters,Stands,1:57,atmlb.com/1RrUaEI
+2015-07-12,TOR @ KC,T2,Gibbons,Pillar,Out at 3rd,Tag Play,Kulpa,Meals,Confirmed,1:33,atmlb.com/1RrY8gx
+2015-07-12,CWS @ CHI,B8,Maddon,Fowler,Out at 3rd,Tag Play,Marquez,Hallion,Stands,3:01,http://atmlb.com/1MrKtzA
+2015-07-12,TOR @ KC,T7,UMPIRE,R. Martin,Out at 3rd,Tag Play,Kulpa,Meals,Stands,2:12,atmlb.com/1gvTxth
+2015-07-12,LAA @ SEA,T3,Scioscia,E. Aybar,Out at home,Tag Play,Fletcher,Miller,Confirmed,0:33,atmlb.com/1RstyDN
+2015-07-12,SD @ TEX,T7,Murphy,Gyorko,Out at 2nd,Tag Play,Gonzalez,Culbreth,Stands,3:09,http://atmlb.com/1HIduCU
+2015-07-12,SD @ TEX,B7,UMPIRE,Beltre,Safe at 2nd,Tag Play,Gonzalez,Culbreth,Stands,2:02,atmlb.com/1RscAp2
+2015-07-17,KC @ CWS,B2,Ventura,A. Garcia,Out at 2nd,Tag Play,Meals,Meals,Stands,3:16,http://t.co/SeCMO9nQhX
+2015-07-17,TB @ TOR,T2,Gibbons,Forsythe,Safe at 1st,Tag Play,Guccione,Nelson,Stands,2:01,http://t.co/vAjKSUEfTo
+2015-07-17,CHI @ ATL,B5,Maddon,Gomes,Safe at 1st,Force Play,Basner,Timmons,Overturned,1:11,http://t.co/b2cDyspw6F
+2015-07-17,MIA @ PHI,B8,Mackanin,Galvis,Out at 2nd,Tag Play,Tumpane,Hirschbeck,Confirmed,1:21,http://t.co/KJkAQZgdFv
+2015-07-17,CHI @ ATL,B7,Gonzalez,Peterson,Out at 1st,Tag Play,Basner,Timmons,Stands,2:40,http://t.co/PUgdPQpIit
+2015-07-17,NYM @ STL,T8,Matheny,Granderson,Safe at 1st,Force Play,Holbrook,G. Gibson,Stands,3:18,http://t.co/aMJHabm7Ze
+2015-07-17,KC @ CWS,B7,Ventura,Saladino,Out at 1st,Force Play,Meals,Meals,Confirmed,0:56,http://t.co/Wu36oo6kh0
+2015-07-17,BOS @ LAA,B8,Farrell,Featherston,Safe at 1st,Tag-Ups,Rackley,Wendelstedt,Confirmed,0:58,http://t.co/mFa9Czu7q8
+2015-07-17,COL @ SD,T7,Murphy,Blackmon,Safe at 1st,Tag Play,Reyburn,West,Confirmed,1:52,http://t.co/xUb5qnGG1u
+2015-07-18,SEA @ NYY,T1,McClendon,N. Cruz,Out at 1st,Force Play,Cooper,Cederstrom,Overturned,1:03,http://t.co/IjKrZlnB3l
+2015-07-18,TB @ TOR,T3,Cash,Beckham,Out at 1st,Tag Play,May,Nelson,Overturned,0:45,http://t.co/oYgsPeK1Ij
+2015-07-18,TB @ TOR,T5,Cash,Beckham,Out at home,Tag Play,Guccione,Nelson,Confirmed,0:57,http://t.co/8LMecJ0AzB
+2015-07-18,LAD @ WSH,T9,Mattingly,Ethier,Out at 1st,Force Play,Miller,Miller,Overturned,0:54,http://t.co/lski7IRK3p
+2015-07-18,TEX @ HOU,B8,Banister,M. Gonzalez,Safe at home,Tag Play,Little,Davis,Stands,4:41,http://t.co/IYaF91iV4G
+2015-07-18,BAL @ DET,T9,Showalter,Machado,Ground-Rule 2B,Boundary Call,Gonzalez,Culbreth,Confirmed,2:19,http://t.co/WKYNeMA2rM
+2015-07-19,BAL @ DET,B3,Ausmus,Krauss,Out at 1st,Tag Play,Schrieber,Culbreth,Confirmed,1:07,http://t.co/QcDDo253zC
+2015-07-19,PIT @ MIL,B3,Counsell,Segura,Out at 1st,Force Play,Bucknor,Scott,Overturned,0:46,http://t.co/FxFM5yYM8U
+2015-07-19,KC @ CWS,B6,Yost,Saladino,Safe at 1st,Force Play,Baker,Meals,Overturned,1:11,http://t.co/OCxsSr5Uvy
+2015-07-19,NYM @ STL,B7,Collins,Pham,Safe at 1st,Tag Play,Fagan,G. Gibson,Overturned,1:01,http://t.co/8lwMkqxJOH
+2015-07-19,MIA @ PHI,T9,Mackanin,Hechavarria,Safe at 1st,Force Play,Hirschbeck,Hirschbeck,Overturned,1:01,http://t.co/IaprDHK401
+2015-07-19,SF @ ARI,B2,Hale,Corbin,Out at 1st,Force Play,Hickox,Reynolds,Overturned,1:11,http://t.co/yXYA8m51eO
+2015-07-19,COL @ SD,T4,Weiss,Hundley,Out at 1st,Force Play,Danley,West,Stands,2:39,http://t.co/ZX82j5c2a9
+2015-07-19,NYM @ STL,T18,Matheny,Campbell,Safe at 1st,Force Play,Fagan,G. Gibson,Overturned,2:16,http://t.co/u1FUhooD3Q
+2015-07-20,PIT @ KC,T2,UMPIRE,Ishikawa,Double,Potential HR,Little,Davis,Stands,1:37,http://t.co/nviTbrU8Ar
+2015-07-20,TB @ PHI,B5,Mackanin,Francoeur,Out at home,Collisions at HP,Barry,T. Barrett,Confirmed,0:59,http://t.co/UGRKLHtbPl
+2015-07-20,SEA @ DET,T6,Ausmus,A. Jackson,Safe at 2nd,Force Play,Guccione,Nelson,Stands,3:02,http://t.co/Sz8O9ppNSu
+2015-07-20,MIA @ ARI,T1,Hale,Suzuki,Hit by Pitch,Hit By Pitch,Vanover,Vanover,Overturned,1:36,http://t.co/mHJZSAwjBT
+2015-07-20,TEX @ COL,T9,Weiss,DeShields,Safe at 1st,Force Play,Hallion,Hallion,Overturned,1:25,http://atmlb.com/1Iju6pb
+2015-07-21,BAL @ NYY,T1,Girardi,Machado,Safe at 1st,Tag Play,T. Welke,Everitt,Overturned,1:00,http://t.co/lCMQJK3NSb
+2015-07-21,CHI @ CIN,B2,Price,Byrd,Out at 1st,Force Play,Reynolds,Culbreth,Overturned,0:46,http://t.co/G3PthkXT6K
+2015-07-21,PIT @ KC,T2,UMPIRE,S. Marte,Home Run,Potential HR,Cuzzi,Davis,Overturned,3:24,http://t.co/wak8N7MVLz
+2015-07-21,STL @ CWS,B2,Matheny,A. Garcia,Safe at 1st,Force Play,Ripperger,O'Nora,Overturned,1:52,http://t.co/uNP4aofF9f
+2015-07-21,LAD @ ATL,B5,Mattingly,Markakis,Safe at 2nd,Tag Play,Tumpane,Hirschbeck,Stands,1:32,http://t.co/MhXYgvzU1W
+2015-07-21,CHI @ CIN,T6,UMPIRE,Coghlan,Triple/Fan Int.,Potential HR,Schrieber,Culbreth,Overturned,3:45,http://t.co/J5hf6GrLxz
+2015-07-21,TEX @ COL,T2,Weiss,DeShields,Safe at 2nd,Tag Play,Segal,Hallion,Overturned,1:08,http://t.co/UyoMugHXqi
+2015-07-21,PIT @ KC,T5,Hurdle,S. Rodriguez,Out at 1st,Force Play,Randazzo,Davis,Overturned,1:01,http://t.co/ts5zOxP8iO
+2015-07-21,BOS @ HOU,T7,Farrell,Holt,Out at 1st,Force Play,Emmel,Meals,Confirmed,1:03,http://t.co/b5pZSKutqw
+2015-07-21,MIN @ LAA,B2,Molitor,Cron,Safe at 3rd,Tag Play,Reyburn,West,Overturned,1:40,http://t.co/Mhpc7WELON
+2015-07-21,SEA @ DET,T9,McClendon,Zunino,Foul ball,Hit By Pitch,Nelson,Nelson,Overturned,2:23,http://t.co/duehOaVXsc
+2015-07-21,STL @ CWS,B9,Ventura,Saladino,Out at 1st,Force Play,Ripperger,O'Nora,Overturned,1:51,http://t.co/k8cAbCFLou
+2015-07-22,LAD @ ATL,T2,Gonzalez,Grandal,Safe at 2nd,Tag Play,Hirschbeck,Hirschbeck,Overturned,1:05,http://t.co/BMdXtvnkD4
+2015-07-22,TB @ PHI,T3,Cash,Guyer,Foul ball,Fair/Foul,Morales,T. Barrett,Overturned,2:30,http://t.co/2otWrxicIT
+2015-07-22,NYM @ WSH,T5,Williams,Lagares,Safe at 3rd,Tag Play,Muchlinski,Winters,Stands,3:58,http://t.co/eMFEfGrDAg
+2015-07-22,SF @ SD,T2,Bochy,Belt,Out at 2nd,Tag Play,Fagan,G. Gibson,Overturned,1:52,http://atmlb.com/1OrvS7S
+2015-07-22,TB @ PHI,B8,Cash,Asche,Safe at home,Tag Play,Conroy,T. Barrett,Overturned,3:42,http://t.co/bmDWO2YhdJ
+2015-07-22,CHI @ CIN,T6,UMPIRE,K. Bryant,Out at 2nd,Rules Check,Culbreth,Culbreth,Rules Check,1:15,http://t.co/D0DhnoegNX
+2015-07-22,SEA @ DET,B5,McClendon,R. Davis,Safe at 1st,Tag Play,Blaser,Nelson,Overturned,1:03,http://t.co/3MDPVaXIi4
+2015-07-22,CHI @ CIN,T9,Maddon,Fowler,Out at home,Collisions at HP,Gonzalez,Culbreth,Confirmed,1:32,http://t.co/6Ws5d32Frm
+2015-07-22,PIT @ KC,B7,Hurdle,Infante,Safe at home,Tag Play,Randazzo,Davis,Confirmed,2:13,http://t.co/cLzZJeWo63
+2015-07-22,BOS @ HOU,B7,Hinch,Tucker,Out at 1st,Force Play,Meals,Meals,Overturned,0:48,http://atmlb.com/1MslWO4
+2015-07-22,MIA @ ARI,T7,Jennings,Yelich,Out at 2nd,Tag Play,Vanover,Vanover,Stands,3:02,http://atmlb.com/1HYNa8G
+2015-07-22,MIN @ LAA,B6,Molitor,Featherston,Safe at 2nd,Tag Play,Reyburn,West,Overturned,1:05,http://t.co/lOAav4PcuW
+2015-07-22,MIN @ LAA,B7,Molitor,Calhoun,Safe at home,Tag Play,Danley,West,Overturned,1:00,http://t.co/vpiyN0TouW
+2015-07-22,TOR @ OAK,B10,Gibbons,I. Davis,Safe at 1st,Force Play,Hudson,Wendelstedt,Stands,3:01,http://t.co/ggCvAnqv6u
+2015-07-23,TOR @ OAK,B2,Gibbons,Lawrie,Safe at 1st,Force Play,Hoberg,Wendelstedt,Overturned,1:14,http://t.co/hWoxipJgBp
+2015-07-23,MIN @ LAA,T9,Scioscia,Rosario,Safe at 2nd,Tag Play,West,West,Overturned,2:09,http://t.co/yaBtQXqtKY
+2015-07-23,KC @ STL,T3,Yost,L. Cain,Out at 1st,Force Play,Cuzzi,Davis,Overturned,1:17,http://t.co/1rcXnB4AKP
+2015-07-23,LAD @ NYM,T6,Mattingly,Pederson,No HBP,Hit By Pitch,May,Culbreth,Overturned,2:17,http://t.co/uw2M4IMqlH
+2015-07-23,KC @ STL,B4,Matheny,Grichuk,Out at 3rd,Tag Play,Torres,Davis,Confirmed,2:17,http://t.co/nYkCkmCcAT
+2015-07-23,BOS @ HOU,B7,Hinch,M. Gonzalez,Out at 3rd,Tag Play,Emmel,Meals,Confirmed,2:31,http://t.co/bU8ceLQd4k
+2015-07-23,BOS @ HOU,T8,UMPIRE,H. Ramirez,Safe at 2nd,Tag Play,Baker,Meals,Stands,4:27,http://t.co/52EqebP7CO
+2015-07-23,BOS @ HOU,B9,UMPIRE,Altuve,Home Run,Potential HR,Emmel,Meals,Confirmed,2:10,http://t.co/7NVoNm4vAo
+2015-07-24,CWS @ CLE,T8,Francona,LaRoche,Safe at 1st,Force Play,Muchlinski,Miller,Overturned,1:13,http://t.co/DMZNiwJ64J
+2015-07-24,HOU @ KC,T6,Yost,Marisnick,Safe at 1st,Tag Play,T. Gibson,Carlson,Overturned,1:13,http://t.co/1hTg9xtDNw
+2015-07-24,ATL @ STL,B6,Gonzalez,M. Reynolds,Safe at 1st,Tag Play,Baker,Meals,Overturned,1:59,http://t.co/zzEVcL4EiL
+2015-07-24,MIA @ SD,T1,Jennings,Suzuki,Out at 2nd,Tag Play,Bellino,Hallion,Overturned,1:22,http://atmlb.com/1LPQ2eu
+2015-07-24,ATL @ STL,B7,Gonzalez,Piscotty,Safe at 1st,Force Play,Baker,Meals,Stands,2:36,http://t.co/HC81ew3FRA
+2015-07-24,DET @ BOS,B11,Ausmus,Betts,Safe at home,Tag Play,Timmons,T. Welke,Stands,3:27,http://t.co/oEMeAkdMgg
+2015-07-24,CIN @ COL,B9,Weiss,Blackmon,Out at 2nd,Tag Play,Wendelstedt,Wendelstedt,Overturned,2:08,http://t.co/becATVN4EJ
+2015-07-24,TEX @ LAA,T7,Scioscia,Choo,Safe at 1st,Force Play,Vanover,Vanover,Stands,2:33,http://t.co/emFVqGFY3a
+2015-07-24,OAK @ SF,B6,Bochy,Pence,Out at 1st,Force Play,West,West,Overturned,1:22,http://t.co/X1zobfFQbk
+2015-07-25,OAK @ SF,B5,Melvin,B. Crawford,Safe at 2nd,Tag Play,Drake,West,Overturned,0:53,http://t.co/2z4Hs14sk8
+2015-07-25,DET @ BOS,T6,Farrell,J. McCann,Safe at 2nd,Force Play,Basner,T. Welke,Overturned,0:53,http://t.co/j3zV4ogp4l
+2015-07-25,NYY @ MIN,T2,Molitor,Beltran,Safe at 1st,Force Play,Woodring,Nelson,Overturned,1:00,http://t.co/xOoA35QLJx
+2015-07-25,CIN @ COL,T3,Price,B. Hamilton,Out at 1st,Force Play,Wendelstedt,Wendelstedt,Overturned,1:04,http://t.co/zuYWmDeDjp
+2015-07-25,CWS @ CLE,T7,Ventura,Eaton,Out at 1st,Force Play,Miller,Miller,Overturned,0:49,http://t.co/OLbE8rgqeW
+2015-07-25,CIN @ COL,T4,Price,B. Hamilton,Out at home,Tag Play,Davidson,Wendelstedt,Overturned,1:01,http://atmlb.com/1MvVcw5
+2015-07-25,NYY @ MIN,T9,Girardi,Beltran,Out at 1st,Force Play,Woodring,Nelson,Overturned,0:56,http://t.co/hoZZ2vdSE4
+2015-07-25,HOU @ KC,T10,Hinch,P. Tucker,Out at 1st,Tag-Ups,Guccione,Carlson,Stands,2:14,http://t.co/mqpLAJ9yoR
+2015-07-26,ATL @ STL,B4,Matheny,Heyward,Out at home,Collisions at HP,Torres,Meals,Overturned,5:15,http://t.co/9NAT1J77fQ
+2015-07-26,PHI @ CHI,B4,Mackanin,Rizzo,No HBP,Hit By Pitch,Davis,Davis,Overturned,0:39,http://t.co/cEJdB7SCbG
+2015-07-26,TEX @ LAA,T2,Banister,Fielder,Out at 1st,Force Play,Carapazza,Vanover,Confirmed,1:25,http://t.co/nMoZfZ7shG
+2015-07-26,OAK @ SF,T4,UMPIRE,I. Davis,Fan Interference/Double,Fan Interference,Drake,West,Confirmed,0:41,http://t.co/PethowIaQn
+2015-07-26,MIA @ SD,B6,Murphy,Kemp,Out at 1st,Force Play,Segal,Hallion,Confirmed,1:09,http://t.co/ijiM4RXUpV
+2015-07-26,DET @ BOS,B2,Farrell,Swihart,Out at 1st,Force Play,Basner,T. Welke,Confirmed,1:22,http://t.co/4tDgk5LeH0
+2015-07-27,KC @ CLE,T5,Yost,A. Escobar,Out at 2nd,Tag Play,Woodring,Cederstrom,Overturned,2:07,http://t.co/3FXbMi7dsq
+2015-07-27,COL @ CHI,T4,Maddon,Blackmon,Safe at 3rd,Tag Play,Gorman,Gorman,Overturned,0:47,http://t.co/eTbhdDYyNv
+2015-07-27,CWS @ BOS,B6,Farrell,Betts,Out at 1st,Force Play,Eddings,Miller,Stands,1:51,http://t.co/iThXQKvX8g
+2015-07-27,MIL @ SF,B8,Bochy,Duffy,Out at 2nd,Tag Play,Cuzzi,Davis,Overturned,1:28,http://t.co/5wtqr4POJC
+2015-07-27,MIL @ SF,T9,Bochy,C. Gomez,Safe at 2nd,Tag Play,Cuzzi,Davis,Overturned,1:17,http://t.co/PiR7XxBNa5
+2015-07-28,ATL @ BAL,T1,UMPIRE,Freeman,Triple,Potential HR,Hernandez,Hernandez,Overturned,2:47,http://t.co/FhML6wsdvq
+2015-07-28,DET @ TB,T2,UMPIRE,J.D. Martinez,Triple,Potential HR,Nauert,Nauert,Stands,2:50,http://t.co/s58QrjxDYW
+2015-07-28,ATL @ BAL,B1,Showalter,Snider,No HBP,Hit By Pitch,Barry,Hernandez,Overturned,0:53,http://t.co/veGEn185Bh
+2015-07-28,KC @ CLE,T4,Francona,Moss,No catch,Catch/no catch,Cooper,Cederstrom,Confirmed,1:14,http://t.co/x52DkSqlIR
+2015-07-28,LAA @ HOU,T1,Hinch,Aybar,Safe at 1st,Force Play,G. Gibson,G. Gibson,Stands,3:36,http://t.co/NcTNwgI5SD
+2015-07-28,CWS @ BOS,T6,Farrell,Eaton,Safe at 1st,Tag Play,Ad. Johnson,Miller,Stands,2:38,http://t.co/p6Nh6EBQrM
+2015-07-28,CWS @ BOS,T6,Ventura,Betts,Catch,Catch/no catch,Ad. Johnson,Miller,Overturned,3:18,http://t.co/0cE3G7mLNz
+2015-07-28,WSH @ MIA,B7,Williams,D. Gordon,Safe at 1st,Force Play,May,Kellogg,Overturned,1:51,http://t.co/RJwSiGiB6e
+2015-07-28,PIT @ MIN,T5,Molitor,Ishikawa,Safe at home,Tag Play,Hudson,Wendelstedt,Stands,1:58,http://t.co/a0hK51QtaS
+2015-07-28,WSH @ MIA,B8,Williams,Hechavarria,Safe at 2nd,Tag Play,Porter,Kellogg,Overturned,1:07,http://t.co/8tDNvu32cf
+2015-07-28,OAK @ LAD,T6,Mattingly,Semien,Safe at 3rd,Tag Play,Kulpa,Vanover,Overturned,1:06,http://atmlb.com/1hbDD7B
+2015-07-29,KC @ CLE,B2,Francona,Kipnis,Out at 1st,Tag Play,Cooper,Cederstrom,Stands,1:50,http://t.co/xpJqYbaR9i
+2015-07-29,ARI @ SEA,T2,Hale,Owings,Out at 2nd,Tag Play,Segal,Hallion,Stands,3:07,http://t.co/lxwwLzukXe
+2015-07-29,PHI @ TOR,B3,Gibbons,Donaldson,Out at 2nd,Force Play,Danley,West,Overturned,0:48,http://t.co/pYent9Olrb
+2015-07-29,PHI @ TOR,T7,Mackanin,D. Brown,Out at 1st,Force Play,West,West,Overturned,0:39,http://t.co/2YYQ7b61w3
+2015-07-29,ATL @ BAL,T8,Gonzalez,Simmons,Out at 1st,Force Play,Conroy,Hernandez,Stands,2:44,http://t.co/xdMW5pYa8H
+2015-07-29,CWS @ BOS,T8,Farrell,J. Abreu,Safe at 2nd,Force Play,Barber,Miller,Stands,3:44,http://t.co/HnSNyptJ6U
+2015-07-29,NYY @ TEX,B6,Girardi,Choo,Safe at 2nd,Tag Play,Meals,Meals,Overturned,1:13,http://t.co/XQHQ7tzpuM
+2015-07-29,OAK @ LAD,B7,Melvin,Puig,Safe at 2nd,Tag Play,Kulpa,Vanover,Overturned,2:40,http://t.co/nukIT0mhc8
+2015-07-30,WSH @ MIA,B7,Williams,Rojas,Safe at 2nd,Tag Play,Kellogg,Kellogg,Stands,2:59,http://atmlb.com/1IuXULq
+2015-07-30,ATL @ PHI,B4,Gonzalez,D. Brown,Safe at 2nd,Tag Play,Morales,Gorman,Overturned,1:20,http://atmlb.com/1gvEnV2
+2015-07-30,CWS @ BOS,B3,Farrell,Bogaerts,Out at 2nd,Tag Play,Eddings,Miller,Stands,2:49,http://atmlb.com/1VSjCmG
+2015-07-30,COL @ STL,T7,Matheny,Stubbs,Safe at 1st,Force Play,Hickox,Nauert,Confirmed,2:09,http://atmlb.com/1OU5TXN
+2015-07-30,LAA @ HOU,B8,Hinch,Marisnick,Out at 1st,Force Play,Fairchild,G. Gibson,Overturned,1:48,http://atmlb.com/1eImmB2
+2015-07-30,SEA @ MIN,B7,McClendon,A. Jackson,No catch,Catch/no catch,Foster,Wegner,Confirmed,1:48,http://atmlb.com/1MA5Wsr
+2015-07-31,PIT @ CIN,T1,Hurdle,S. Marte,In Play/No HBP,Hit By Pitch,Danley,West,Overturned,1:01,http://t.co/Abd0OJd2j1
+2015-07-31,KC @ TOR,T1,Gibbons,Zobrist,Safe at 2nd,Tag Play,Wolf,Hernandez,Overturned,2:06,http://t.co/BoLNWSErVf
+2015-07-31,KC @ TOR,B3,Yost,E. Carrera,Safe at 1st,Force Play,Barry,Hernandez,Stands,3:12,http://atmlb.com/1gFpNuh
+2015-07-31,DET @ BAL,T4,Ausmus,R. Davis,Out at 2nd,Tag Play,Woodring,Cederstrom,Stands,2:59,http://t.co/0bOJoYqEjF
+2015-07-31,COL @ STL,B2,UMPIRE,M. Carpenter,Double,Potential HR,Estabrook,Nauert,Confirmed,1:58,http://t.co/k5XF3o80ck
+2015-07-31,ATL @ PHI,B5,Gonzalez,D. Brown,Safe at 1st,Tag Play,Morales,Gorman,Overturned,1:13,http://t.co/27fKGOmC9n
+2015-07-31,WSH @ NYM,T8,Collins,C. Robinson,Hit by Pitch,Hit By Pitch,Meals,Meals,Stands,1:57,http://t.co/RK13C18fJD
+2015-07-31,DET @ BAL,T7,UMPIRE,Iglesias,Out at home,Collisions at HP,Barksdale,Cederstrom,Confirmed,2:06,http://t.co/QZEOCpgDjW
+2015-07-31,PIT @ CIN,B9,Price,Phillips,Out at home,Collisions at HP,Danley,West,Confirmed,1:30,http://t.co/VTQFMTfL7V
+2015-07-31,CLE @ OAK,T4,Melvin,Lindor,Safe at 1st,Tag Play,Scheurwater,Davis,Overturned,1:48,http://t.co/kCvw4ol0SX
+2015-08-1,TB @ BOS,T6,Cash,Kiermaier,Out at 3rd,Tag Play,Conroy,G. Gibson,Stands,2:23,http://t.co/4uxr8v36Mo
+2015-08-1,COL @ STL,T1,UMPIRE,Blackmon,Triple,Potential HR,Nauert,Nauert,Confirmed,1:35,http://atmlb.com/1IfmuD0
+2015-08-1,ATL @ PHI,B5,Gonzalez,R. Howard,Safe at home,Tag Play,Morales,Gorman,Confirmed,1:12,http://t.co/DxgeeyFpyR
+2015-08-1,WSH @ NYM,T7,Williams,M. Taylor,Out at 1st,Force Play,Fletcher,Meals,Confirmed,0:42,http://atmlb.com/1IkWl3u
+2015-08-1,ARI @ HOU,B8,Hinch,Conger,Out at home,Tag Play,Bucknor,Scott,Stands,3:31,http://t.co/X3Lb45fVYK
+2015-08-1,SF @ TEX,B7,Banister,Choo,Out at 1st,Force Play,May,Kellogg,Overturned,0:39,http://t.co/VgNyO6HGm3
+2015-08-1,CLE @ OAK,B8,Francona,Fuld,Safe at 2nd,Tag Play,Davis,Davis,Confirmed,1:30,http://t.co/HHWmhlfxoY
+2015-08-2,PIT @ CIN,T4,UMPIRE,N. Walker,Triple,Potential HR,Danley,West,Overturned,1:21,http://t.co/pkWPBtW1jd
+2015-08-2,DET @ BAL,T5,Showalter,Gose,Safe at 2nd,Tag Play,Barksdale,Cederstrom,Confirmed,2:00,http://t.co/tc9JCHjtxp
+2015-08-2,SD @ MIA,B6,Jennings,Yelich,Out at home,Tag Play,Ad. Johnson,Miller,Stands,2:23,http://t.co/Uma2wPUuuR
+2015-08-2,CHI @ MIL,B3,Maddon,Lind,Safe at 1st,Force Play,Rackley,Wendelstedt,Confirmed,1:21,http://t.co/NeU3k3u4ov
+2015-08-2,CHI @ MIL,T5,Counsell,K. Bryant,Safe at 2nd,Tag Play,Wendelstedt,Wendelstedt,Stands,2:37,http://t.co/Aalcewf6zy
+2015-08-2,SEA @ MIN,T11,Molitor,K. Marte,Safe at 2nd,Tag Play,Foster,Wegner,Confirmed,0:56,http://t.co/OlsRXRES0l
+2015-08-2,WSH @ NYM,T1,UMPIRE,Rendon,Double,Potential HR,Meals,Meals,Overturned,0:56,http://t.co/J0LHqBsXZ7
+2015-08-2,WSH @ NYM,T7,Collins,Lobaton,Safe at 1st,Force Play,Emmel,Meals,Overturned,2:03,http://t.co/8l1Ij2V2IZ
+2015-08-3,SF @ ATL,B2,Gonzalez,J. Peterson,Foul ball,Fair/Foul,L. Barrett,Scott,Overturned,0:28,http://t.co/Ne6Wdzpcox
+2015-08-3,ARI @ WSH,B5,Williams,M. Taylor,Out at 2nd,Force Play,Morales,Gorman,Overturned,1:01,http://t.co/X4MXBPLtlI
+2015-08-3,ARI @ WSH,B5,Williams,Fister,Out at 1st,Force Play,Carlson,Gorman,Stands,1:01,http://t.co/X4MXBPLtlI
+2015-08-3,TB @ CWS,B6,UMPIRE,J. Abreu,Home Run,Potential HR,Wendelstedt,Wendelstedt,Confirmed,1:11,http://t.co/4TngRNpZIm
+2015-08-3,SF @ ATL,T11,Bochy,Adrianza,Out at 2nd,Tag Play,Bucknor,Scott,Confirmed,0:42,http://t.co/ywVTKalyYn
+2015-08-4,MIN @ TOR,B7,Gibbons,Tulowitzki,Foul ball,Fair/Foul,Timmons,T. Welke,Stands,1:20,http://t.co/lasNSwZJvr
+2015-08-4,CHI @ PIT,B8,Hurdle,Ishikawa,Out at 1st,Force Play,Randazzo,Nauert,Confirmed,1:41,http://atmlb.com/1MWoggr
+2015-08-4,SD @ MIL,B7,Murphy,Lind,Safe at home,Tag Play,Vanover,Vanover,Stands,2:50,http://t.co/BGJpXsMC9L
+2015-08-4,SEA @ COL,T8,Weiss,B. Miller,Safe at 2nd,Tag Play,Cuzzi,Davis,Stands,2:43,http://t.co/yuNUnSxNmJ
+2015-08-4,BAL @ OAK,B6,Showalter,B. Burns,Safe at 2nd,Tag Play,Segal,Diaz,Overturned,2:57,http://t.co/pJX7rPDB0n
+2015-08-5,TB @ CWS,T7,Cash,A. Cabrera,Out at 1st,Tag Play,Davidson,Wendelstedt,Stands,1:51,http://t.co/L176JGE5hk
+2015-08-5,BAL @ OAK,B3,Showalter,B. Burns,Safe at 2nd,Tag Play,Diaz,Diaz,Confirmed,1:40,http://t.co/D5YdGzY4NL
+2015-08-5,SEA @ COL,T7,Weiss,N. Cruz,Safe at 2nd,Tag Play,Davis,Davis,Stands,2:42,http://t.co/ADn2OAP5WO
+2015-08-5,SEA @ COL,T7,UMPIRE,A. Jackson,Safe at 2nd,Tag Play,Davis,Davis,Overturned,0:51,http://t.co/BUJofVkmto
+2015-08-5,NYM @ MIA,B1,Jennings,Yelich,Out at 1st,Force Play,Tumpane,Hirschbeck,Stands,1:50,http://t.co/a66UrOxRcz
+2015-08-5,LAD @ PHI,T2,Mackanin,A.J. Ellis,Safe at 2nd,Force Play,Kellogg,Kellogg,Overturned,2:12,http://t.co/E2RWmgZW8M
+2015-08-5,ARI @ WSH,T3,Williams,Inciarte,Safe at 1st,Force Play,T. Gibson,Gorman,Stands,3:36,http://t.co/ynMgCBi4nC
+2015-08-5,STL @ CIN,T6,UMPIRE,Grichuk,In play (double),Potential HR,T. Barrett,T. Barrett,Stands,4:02,http://t.co/KCY7E1POLJ
+2015-08-5,NYM @ MIA,B6,Collins,D. Gordon,Safe at 1st,Force Play,Tumpane,Hirschbeck,Overturned,1:08,http://t.co/I39YR9ap6q
+2015-08-5,NYM @ MIA,B8,Collins,Hechavarria,Safe at 1st,Force Play,Tumpane,Hirschbeck,Stands,2:35,http://t.co/q9DoaDOFXC
+2015-08-5,SF @ ATL,B8,Gonzalez,E. Perez,Out at 1st,Force Play,Basner,Scott,Overturned,1:26,http://t.co/V8rj3qpOkV
+2015-08-5,BOS @ NYY,B9,Girardi,R. Castillo,Catch,Catch/no catch,Drake,Everitt,Overturned,0:40,http://t.co/TnDp5H3s6y
+2015-08-5,STL @ CIN,T13,Price,Heyward,Safe at 1st,Force Play,Barry,T. Barrett,Overturned,1:09,http://t.co/YFANYMkowS
+2015-08-6,STL @ CIN,T5,UMPIRE,Piscotty,Out at 2nd,Force Play,T. Barrett,T. Barrett,Rules Check,2:13,http://atmlb.com/1IXEXFQ
+2015-08-6,ARI @ WSH,B3,Hale,Werth,Safe at 1st,Force Play,Gorman,Gorman,Overturned,0:38,http://t.co/TNQsDnB9V5
+2015-08-6,ARI @ WSH,B4,Williams,W. Ramos,Out at 2nd,Force Play,Carlson,Gorman,Confirmed,2:22,http://atmlb.com/1Pf8g7I
+2015-08-6,ARI @ WSH,B7,UMPIRE,M. Taylor,Foul ball,Hit By Pitch,Gorman,T. Gibson,Overturned,1:01,http://t.co/Y35l4doP3m
+2015-08-6,ARI @ WSH,B7,Hale,M. Taylor,Safe at 2nd,Tag Play,Carlson,Gorman,Stands,2:28,http://t.co/OgmhI85qTy
+2015-08-6,BOS @ NYY,B1,Farrell,C. Young,Safe at 1st,Force Play,Reyburn,Everitt,Overturned,1:17,http://t.co/6TFlpzaue3
+2015-08-6,HOU @ OAK,B9,Hinch,B. Burns,Safe at 1st,Force Play,Blaser,Nelson,Stands,1:56,http://t.co/WHS7eTD8Ri
+2015-08-7,SF @ CHI,T7,Bochy,Pence,Out at 2nd,Force Play,Reynolds,Reynolds,Stands,2:38,http://t.co/5173KmzU8l
+2015-08-7,SF @ CHI,T8,Maddon,Tomlinson,Safe at 1st,Force Play,Culbreth,Reynolds,Overturned,1:20,http://t.co/RQ0CwIFLNf
+2015-08-7,TOR @ NYY,B2,UMPIRE,Teixeira,In play (double),Potential HR,Winters,G. Gibson,Overturned,3:57,http://t.co/2ZchYmL0QU
+2015-08-7,MIN @ CLE,T3,UMPIRE,E. Escobar,Count Check,Record Keeping,Reyburn,Everitt,Record Keeping,1:44,http://t.co/fX112x8dzb
+2015-08-7,BOS @ DET,B4,Farrell,T. Collins,Safe at 1st,Tag Play,T. Barrett,T. Barrett,Overturned,2:01,http://t.co/q0in5j797T
+2015-08-7,STL @ MIL,B2,Matheny,Cravy,Safe at 1st,Force Play,Hirschbeck,Hirschbeck,Overturned,1:34,http://t.co/dD1x8JEPWu
+2015-08-7,MIA @ ATL,B7,Gonzalez,Cunningham,Out at home,Force Play,Rackley,Wendelstedt,Overturned,2:28,http://t.co/6GVXaX9Cgo
+2015-08-7,MIA @ ATL,B7,Gonzalez,D. Castro,Out at 3rd,Tag Play,Davidson,Wendelstedt,Overturned,1:40,http://t.co/saKQ7cs2rS
+2015-08-7,STL @ MIL,T7,UMPIRE,M. Carpenter,In play (double),Potential HR,Hernandez,Hirschbeck,Confirmed,1:08,http://t.co/CF4BD7didv
+2015-08-7,CWS @ KC,B7,Yost,A. Escobar,Out at 1st,Force Play,Diaz,Diaz,Overturned,1:20,http://t.co/JK4qMFinXx
+2015-08-7,CIN @ ARI,T5,Price,R. Iglesias,Out at 2nd,Tag Play,Carapazza,Vanover,Stands,3:54,http://t.co/1y3MCXY0Um
+2015-08-7,TEX @ SEA,T4,UMPIRE,J. Hamilton,Out at 2nd,Rules Check,L. Barrett,Scott,Rules Check,3:45,http://atmlb.com/1Ei2j3i
+2015-08-7,PHI @ SD,B7,Murphy,Solarte,Out at home,Collisions at HP,Estabrook,Nauert,Confirmed,2:31,http://t.co/5Ooyk35ll0
+2015-08-8,LAD @ PIT,T1,Hurdle,Rollins,Safe at 2nd,Force Play,T. Gibson,Wegner,Overturned,3:56,http://t.co/8JO4oUnEZW
+2015-08-8,LAD @ PIT,T1,Hurdle,Kendrick,Safe at 1st,Force Play,Wegner,Wegner,Stands,3:56,http://t.co/8JO4oUnEZW
+2015-08-8,SF @ CHI,T2,Maddon,B. Crawford,Safe at 1st,Force Play,Reynolds,Culbreth,Overturned,0:42,http://t.co/BaXg0GVxpA
+2015-08-8,TEX @ SEA,T2,McClendon,Beltre,Safe at 1st,Tag Play,L. Barrett,Scott,Overturned,3:18,http://t.co/shLci4bj5M
+2015-08-8,TEX @ SEA,T3,McClendon,C. Gimenez,Safe at home,Collisions at HP,Iassogna,Scott,Overturned,2:31,http://t.co/eK425OnKPa
+2015-08-8,LAD @ PIT,T3,Mattingly,A. Guerrero,Out at 2nd,Force Play,T. Gibson,Wegner,Stands,1:59,http://t.co/XzunzuYQS0
+2015-08-8,LAD @ PIT,T5,Hurdle,A. Guerrero,Safe at 1st,Force Play,Wegner,Wegner,Overturned,1:29,http://t.co/icC0L6VOZT
+2015-08-8,SF @ CHI,B6,Maddon,Schwarber,Out at 2nd,Tag Play,Gonzalez,Culbreth,Stands,2:44,http://t.co/WMULWdol6u
+2015-08-8,TEX @ SEA,B7,Banister,B. Miller,Safe at 1st,Tag Play,L. Barrett,Scott,Stands,1:54,http://t.co/BRoV6nYltl
+2015-08-8,LAD @ PIT,T9,Hurdle,Puig,Safe at 1st,Force Play,Wegner,Wegner,Overturned,3:05,http://t.co/S5mso0apGR
+2015-08-8,BOS @ DET,T5,Farrell,R. Davis,Catch,Catch/no catch,Hoye,T. Barrett,Stands,3:16,http://t.co/TniFdcPvmj
+2015-08-8,BAL @ LAA,T2,Scioscia,Schoop,Safe at home,Tag Play,Davis,Davis,Overturned,3:00,http://t.co/x4cdG6mLib
+2015-08-8,BOS @ DET,T8,UMPIRE,Swihart,Out at 1st,Force Play,May,T. Barrett,Overturned,0:56,http://t.co/mNTmRFEMg0
+2015-08-8,BAL @ LAA,B9,Showalter,Trout,Safe at home,Tag Play,Davis,Davis,Overturned,1:40,http://atmlb.com/1TbdV4o
+2015-08-9,STL @ MIL,B3,Counsell,Segura,Out at 2nd,Tag Play,Tumpane,Hirschbeck,Confirmed,2:04,http://t.co/p7CRFarLCn
+2015-08-9,NYM @ TB,T7,Collins,Granderson,Out at 1st,Force Play,Tichenor,T. Welke,Overturned,0:46,http://t.co/HztFntExFm
+2015-08-9,NYM @ TB,T9,Cash,Lagares,Hit By Pitch,Hit By Pitch,Woodring,T. Welke,Confirmed,0:43,http://t.co/xsGi8cQyqT
+2015-08-9,SF @ CHI,B4,Maddon,M. Montero,Out at 1st,Force Play,Gonzalez,Culbreth,Overturned,1:15,http://t.co/nsjp3hSxaO
+2015-08-9,BAL @ LAA,B1,UMPIRE,Calhoun,In play (double),Potential HR,Cuzzi,Davis,Overturned,1:14,http://t.co/AcbGVWBV8e
+2015-08-9,COL @ WSH,B7,Williams,Rendon,Out at home,Collisions at HP,Porter,Kellogg,Confirmed,1:47,http://t.co/VjSytuOkEa
+2015-08-9,COL @ WSH,T8,Weiss,McKenry,Foul ball,Hit By Pitch,Porter,Kellogg,Overturned,1:18,http://t.co/yfGJikeIHQ
+2015-08-9,BAL @ LAA,B3,UMPIRE,Dav. Murphy,Home Run,Potential HR,Randazzo,Davis,Confirmed,0:43,http://t.co/PkGhBKulx7
+2015-08-9,TEX @ SEA,T4,Banister,Odor,Strike,Hit By Pitch,L. Barrett,Scott,Overturned,1:10,http://t.co/Kwc6xCVDOm
+2015-08-9,HOU @ OAK,B3,Hinch,B. Burns,Safe at 1st,Tag Play,Guccione,Nelson,Overturned,2:23,http://atmlb.com/1L2GOeF
+2015-08-9,HOU @ OAK,B4,Melvin,Vogt,Out at 2nd,Tag Play,Blaser,Nelson,Confirmed,0:55,http://atmlb.com/1L2GRal
+2015-08-9,MIA @ ATL,T3,Jennings,Gillaspie,Out at 2nd,Tag Play,Rackley,Wendelstedt,Overturned,1:26,http://t.co/u6gJ3nDheK
+2015-08-9,TEX @ SEA,T9,McClendon,Odor,Safe at 1st,Force Play,Scott,Scott,Stands,3:32,http://t.co/vD5xQuLyNI
+2015-08-9,LAD @ PIT,B6,UMPIRE,N. Walker,In play (triple),Potential HR,Carlson,Wegner,Stands,2:26,http://t.co/F0dOFAWCW3
+2015-08-10,COL @ NYM,T4,Weiss,K. Parker,Out at 1st,Force Play,Holbrook,G. Gibson,Overturned,0:50,http://t.co/ktqtL1qMX0
+2015-08-10,LAA @ CWS,T8,Ventura,Calhoun,Hit By Pitch,Hit By Pitch,Gonzalez,Culbreth,Confirmed,1:24,http://t.co/FPEiHzxUs4
+2015-08-11,OAK @ TOR,T1,Melvin,Reddick,Out at 1st,Force Play,Kellogg,Kellogg,Overturned,1:50,http://t.co/N1OMbBg4Bw
+2015-08-11,ATL @ TB,B1,UMPIRE,Jaso,Foul ball,Potential HR,Wolcott,Cederstrom,Stands,1:33,http://t.co/SM0TXdLgzD
+2015-08-11,OAK @ TOR,B2,Gibbons,Smoak,Out at 2nd,Tag Play,Kellogg,Kellogg,Overturned,3:12,http://atmlb.com/1fclAwt
+2015-08-11,COL @ NYM,T4,Weiss,Arenado,Out at 1st,Force Play,May,G. Gibson,Overturned,0:38,http://t.co/JhuItTVHO9
+2015-08-11,PIT @ STL,B1,Matheny,Heyward,Out at 1st,Force Play,Kulpa,Vanover,Overturned,1:12,http://t.co/p5h3jpDF0x
+2015-08-11,MIL @ CHI,B3,Maddon,Coghlan,Out at 2nd,Tag Play,Carlson,Carlson,Overturned,1:52,http://t.co/dyJTu7IxhV
+2015-08-11,DET @ KC,T7,Yost,J. Marte,Safe at 2nd,Tag Play,Danley,West,Confirmed,3:08,http://t.co/qT1h0xhaBw
+2015-08-11,DET @ KC,B8,Ausmus,Cain,Safe at 2nd,Tag Play,Danley,West,Overturned,1:54,http://t.co/AtheimFL4L
+2015-08-11,WSH @ LAD,B4,Mattingly,Ethier,Out at 3rd,Tag Play,Bucknor,Scott,Overturned,2:12,http://atmlb.com/1hD3Yvw
+2015-08-12,PHI @ ARI,B5,Hale,Pollock,Out at 1st,Force Play,Ad. Johnson,Miller,Stands,3:38,http://t.co/zqbOLhmRPQ
+2015-08-12,PHI @ ARI,B5,Mackanin,A. Hill,Safe at 2nd,Tag Play,Miller,Miller,Overturned,1:26,http://t.co/uwzjpOEBfE
+2015-08-12,PHI @ ARI,B8,UMPIRE,Owings,Out at home,Tag Play,Wolf,Miller,Stands,4:11,http://t.co/uGnvqy73sX
+2015-08-12,NYY @ CLE,B2,Girardi,Urshela,Safe at 1st,Force Play,Hirschbeck,Hirschbeck,Overturned,0:57,http://t.co/GbF8cc3lGq
+2015-08-12,OAK @ TOR,B2,Gibbons,Tulowitzki,Out at home,Tag Play,Kellogg,Kellogg,Confirmed,1:13,http://t.co/jDTnX22yOs
+2015-08-12,LAA @ CWS,B1,Scioscia,Saladino,Safe at 1st,Force Play,Reynolds,Culbreth,Overturned,0:47,http://atmlb.com/1DR9wN7
+2015-08-12,ATL @ TB,B6,Cash,Kiermaier,Out at 2nd,Force Play,Tumpane,Cederstrom,Stands,2:05,http://t.co/jmslmwgVaR
+2015-08-12,PIT @ STL,B3,Hurdle,J. Peralta,Safe at 1st,Force Play,Vanover,Vanover,Confirmed,1:52,http://t.co/nlvAKPVt3o
+2015-08-12,ATL @ TB,B7,Gonzalez,T. Beckham,Safe at 3rd,Tag Play,Barksdale,Cederstrom,Confirmed,1:32,http://t.co/0G1XfQB7Ye
+2015-08-12,PIT @ STL,B8,Matheny,Molina,Out at 3rd,Tag Play,Hamari,Vanover,Overturned,2:45,http://t.co/iha4666cEt
+2015-08-12,LAA @ CWS,T9,Scioscia,E. Aybar,Out on Tag,Tag Play,Culbreth,Culbreth,Stands,4:02,http://atmlb.com/1IRByEM
+2015-08-13,OAK @ TOR,T1,Gibbons,B. Burns,Fair ball,Fair/Foul,Kellogg,Kellogg,Overturned,2:13,http://t.co/33xYLXemDH
+2015-08-13,MIL @ CHI,B5,UMPIRE,Fowler,In play (double),Potential HR,Morales,Carlson,Overturned,2:55,http://t.co/bSoMjnftWg
+2015-08-13,PIT @ STL,T9,Hurdle,Kang,Out at 1st,Force Play,Carapazza,Vanover,Confirmed,0:51,http://t.co/bOAdoHYAt5
+2015-08-13,CIN @ LAD,T5,Mattingly,B. Hamilton,Safe at 2nd,Tag Play,DeMuth,DeMuth,Stands,3:05,http://t.co/N3F0d6x7C4
+2015-08-14,SEA @ BOS,B1,McClendon,Betts,Safe at 1st,Force Play,Blakney,O'Nora,Overturned,1:52,http://t.co/sn29Fc46K5
+2015-08-14,NYY @ TOR,T3,Gibbons,B. Ryan,Safe at 1st,Force Play,Baker,Emmel,Stands,1:59,http://t.co/OedkegQBPV
+2015-08-14,CLE @ MIN,T2,Molitor,Chisenhall,Safe at home,Tag Play,Fairchild,G. Gibson,Overturned,1:10,http://t.co/WecXp6FI2D
+2015-08-14,TB @ TEX,T3,Cash,Guyer,Out at 1st,Force Play,Cooper,Carlson,Overturned,1:37,http://t.co/InIdXzBjKc
+2015-08-14,LAA @ KC,B3,Yost,A. Escobar,Out at 2nd,Tag Play,Wolcott,Cederstrom,Overturned,2:01,http://t.co/HWWArwnqII
+2015-08-14,DET @ HOU,B3,Hinch,Altuve,Out at 1st,Force Play,Miller,Miller,Overturned,1:12,http://t.co/QhyjVfPw1r
+2015-08-14,TB @ TEX,T5,Banister,Guyer,Safe at 2nd,Tag Play,T. Gibson,Carlson,Overturned,1:10,http://atmlb.com/1TQue71
+2015-08-14,PIT @ NYM,B9,Hurdle,Flores,Safe at 1st,Tag Play,Davidson,Kellogg,Overturned,1:23,http://t.co/aRFU8IDLYo
+2015-08-14,LAA @ KC,T7,Yost,Featherston,Safe at 2nd,Tag Play,Wolcott,Cederstrom,Overturned,0:44,http://t.co/DrWnjgn9SV
+2015-08-14,TB @ TEX,T7,Banister,Casali,Safe at 3rd,Tag Play,Carlson,Carlson,Overturned,3:49,http://t.co/HTmz32cUN7
+2015-08-14,CIN @ LAD,B7,Mattingly,C. Crawford,Out at 2nd,Tag Play,Estabrook,DeMuth,Stands,3:12,http://atmlb.com/1NBEtVw
+2015-08-14,WSH @ SF,B7,Bochy,Pence,Out at 1st,Force Play,Blaser,Nelson,Overturned,1:13,http://atmlb.com/1Jnglsa
+2015-08-15,NYY @ TOR,T6,UMPIRE,G. Bird,Foul ball,Potential HR,Emmel,Emmel,Confirmed,1:25,http://t.co/gXrpMiOQ5p
+2015-08-15,SEA @ BOS,T4,Lovullo,A. Jackson,Safe at 1st,Force Play,Ripperger,O'Nora,Overturned,0:53,http://t.co/s2LY62p0qk
+2015-08-15,LAA @ KC,T1,Yost,Giavotella,Safe at 1st,Tag Play,Wolcott,Cederstrom,Overturned,2:47,http://t.co/zxWPdLa9Nl
+2015-08-15,LAA @ KC,B3,Scioscia,Dyson,Safe at 2nd,Tag-Ups,Cederstrom,Cederstrom,Confirmed,0:50,http://t.co/EBOEcPQa8X
+2015-08-15,DET @ HOU,T5,Ausmus,P. Tucker,Catch,Catch/no catch,Ad. Johnson,Miller,Overturned,1:30,http://t.co/DTb6RLI8dL
+2015-08-15,PHI @ MIL,T7,Mackanin,Utley,Out at 2nd,Tag Play,Culbreth,Culbreth,Overturned,2:05,http://t.co/01Ddxmc4Z6
+2015-08-15,CHI @ CWS,T7,Maddon,Fowler,Out at 1st,Force Play,Reyburn,West,Overturned,1:19,http://t.co/hVFHO1soui
+2015-08-15,CIN @ LAD,T4,Mattingly,I. DeJesus,Safe at 2nd,Catch/no catch,Hickox,DeMuth,Overturned,1:48,http://t.co/puoS4Whdc6
+2015-08-15,SD @ COL,T9,Murphy,Spangenberg,Out at 1st,Force Play,Bucknor,Scott,Overturned,0:38,http://t.co/sglj7LRltg
+2015-08-16,DET @ HOU,T1,Hinch,Iglesias,Hit By Pitch,Hit By Pitch,Eddings,Miller,Overturned,2:39,http://atmlb.com/1MuBK1t
+2015-08-16,PHI @ MIL,B1,Mackanin,Braun,Safe at 1st,Force Play,Culbreth,Culbreth,Overturned,1:14,http://t.co/wwIUhnrS8O
+2015-08-16,SEA @ BOS,B3,McClendon,Betts,Safe at 1st,Tag Play,O'Nora,O'Nora,Overturned,0:54,http://t.co/sn9q9eWzIa
+2015-08-16,PIT @ NYM,B5,Hurdle,Cespedes,Safe at 1st,Force Play,Kellogg,Kellogg,Overturned,0:36,http://t.co/JYGH6PpVkS
+2015-08-16,SEA @ BOS,B5,McClendon,R. Castillo,Safe at 1st,Force Play,O'Nora,O'Nora,Overturned,1:53,http://t.co/VHHkXdMVo1
+2015-08-16,MIA @ STL,T5,Jennings,Hechavarria,Out at home,Tag Play,Cuzzi,Davis,Overturned,2:55,http://t.co/EKDhbX4NxM
+2015-08-16,SEA @ BOS,B7,Lovullo,Bogaerts,Out at 1st,Force Play,O'Nora,O'Nora,Confirmed,0:39,http://t.co/zRlcgyuuX3
+2015-08-16,MIA @ STL,T7,Matheny,Dietrich,Safe at 2nd,Tag Play,Little,Davis,Overturned,2:29,http://t.co/kUiGnJUleM
+2015-08-16,PIT @ NYM,T8,Collins,Polanco,Safe at 1st,Force Play,Kellogg,Kellogg,Overturned,1:05,http://t.co/uwVFXJdYSB
+2015-08-16,CLE @ MIN,B8,UMPIRE,Rosario,In play (triple),Potential HR,Fairchild,G. Gibson,Confirmed,0:51,http://t.co/FhEhsTrLCL
+2015-08-16,CHI @ CWS,T9,Maddon,A. Russell,Out at 1st,Force Play,Fagan,West,Overturned,0:53,http://t.co/IOxhwKUli0
+2015-08-16,WSH @ SF,B4,UMPIRE,B. Crawford,In play (double),Potential HR,Diaz,Nelson,Confirmed,0:37,http://t.co/h8oR0eFkn3
+2015-08-16,SD @ COL,B7,Murphy,LeMahieu,Safe at home,Tag Play,Bucknor,Iassogna,Stands,3:40,http://t.co/qIIuULpFc1
+2015-08-17,ARI @ PIT,T4,UMPIRE,Lamb,Home Run,Potential HR,Gonzalez,Culbreth,Confirmed,2:02,http://t.co/h2ofwUhpOs
+2015-08-17,MIN @ NYY,B3,Molitor,Rosario,No catch,Catch/no catch,Hernandez,T. Barrett,Overturned,1:50,http://t.co/n7EqUfM9vR
+2015-08-17,ARI @ PIT,T6,Hurdle,D. Peralta,Safe at 2nd,Tag Play,Gonzalez,Culbreth,Overturned,1:57,http://atmlb.com/1J8vCaI
+2015-08-17,MIN @ NYY,T6,UMPIRE,Dozier,Foul Ball,Potential HR,Hernandez,T. Barrett,Confirmed,0:57,http://t.co/YBdcIJuMz9
+2015-08-17,MIN @ NYY,T7,Girardi,E. Nunez,Safe at 2nd,Tag Play,T. Barrett,T. Barrett,Overturned,1:22,http://t.co/ars3G2emIR
+2015-08-17,SEA @ TEX,B9,McClendon,DeShields,Safe at 1st,Force Play,Hoye,Hirschbeck,Stands,3:32,http://t.co/qLC746SPDI
+2015-08-17,MIA @ MIL,B9,Counsell,Lucroy,Out at 1st,Force Play,Miller,Miller,Stands,1:31,http://t.co/tGGJeqlLQW
+2015-08-18,CLE @ BOS,B1,UMPIRE,Ortiz,In play (double),Potential HR,Wegner,Winters,Confirmed,2:34,http://t.co/PlhIK36FpQ
+2015-08-18,DET @ CHI,T1,UMPIRE,Mi. Cabrera,Home Run,Potential HR,Basner,Davis,Overturned,2:33,http://t.co/YVYcU6cyEO
+2015-08-18,TB @ HOU,B3,Hinch,Altuve,Out at 1st,Force Play,Drake,West,Overturned,1:30,http://t.co/Qn7CjgBx7A
+2015-08-18,KC @ CIN,T9,Price,Cain,Safe at home,Tag Play,Carlson,Carlson,Overturned,3:31,http://t.co/91CWrTrTH2
+2015-08-18,ARI @ PIT,B9,Hale,McCutchen,Safe at 2nd,Tag Play,Blakney,Culbreth,Overturned,2:49,http://t.co/81zfUpUNUM
+2015-08-18,KC @ CIN,T11,Yost,A. Escobar,Out at 2nd,Tag Play,Cooper,Carlson,Stands,2:45,http://t.co/zbUkukSFyf
+2015-08-18,ATL @ SD,B2,UMPIRE,Shields,-,Record Keeping,Guccione,Nelson,Record Keeping,3:17,http://t.co/Zk8FuDOoE1
+2015-08-19,MIA @ MIL,T5,Jennings,Realmuto,Out at 1st,Force Play,Eddings,Miller,Overturned,0:50,http://t.co/1QHCSFCAQa
+2015-08-19,LAD @ OAK,B1,Melvin,Valencia,Out at 1st,Force Play,T. Welke,T. Welke,Overturned,1:19,http://t.co/1LNJ4EDI5D
+2015-08-19,MIA @ MIL,T6,Jennings,D. Gordon,Out at 2nd,Tag Play,Ad. Johnson,Miller,Overturned,3:24,http://atmlb.com/1E85Dnd
+2015-08-19,TB @ HOU,T1,Hinch,D. Jennings,Safe at 2nd,Force Play,West,West,Overturned,1:35,http://t.co/RIZjIv9rmq
+2015-08-19,TB @ HOU,B6,Hinch,P. Tucker,Out at 1st,Force Play,Reyburn,West,Overturned,3:33,http://t.co/TSH6nQWXqz
+2015-08-19,KC @ CIN,B5,Price,Votto,Catch,Catch/no catch,Carlson,Carlson,Confirmed,1:46,http://t.co/s3E71AHWXn
+2015-08-19,TB @ HOU,T13,Hinch,Sizemore,Safe at 1st,Force Play,Reyburn,West,Overturned,1:08,http://t.co/PXXUNgP1s8
+2015-08-19,CWS @ LAA,T9,Scioscia,LaRoche,Safe at 1st,Force Play,Estabrook,DeMuth,Overturned,3:33,http://t.co/FI0l7NK9iK
+2015-08-20,ARI @ CIN,B2,Price,E. Suarez,Out at home,Tag Play,Foster,Winters,Stands,3:28,http://t.co/X7KQpGKOHl
+2015-08-20,SF @ PIT,B6,Bochy,Alvarez,Safe at 1st,Force Play,Cuzzi,Davis,Overturned,3:00,http://t.co/KvvpPTYE0a
+2015-08-20,TEX @ DET,T6,Banister,Choo,Out at 2nd,Force Play,Carapazza,Kulpa,Confirmed,2:08,http://t.co/uwiTXYb9nZ
+2015-08-20,ARI @ CIN,B8,Hale,I. DeJesus,Safe at 1st,Tag Play,Winters,Winters,Overturned,1:25,http://t.co/MzjRiDV5pX
+2015-08-20,WSH @ COL,B7,Williams,Reyes,Safe at 1st,Tag Play,Wolcott,Cederstrom,Stands,2:02,http://t.co/fTT9CacV6Y
+2015-08-20,CWS @ LAA,T5,Ventura,J. Abreu,Foul ball,Fair/Foul,DeMuth,DeMuth,Overturned,2:29,http://atmlb.com/1JcS6JV
+2015-08-21,ATL @ CHI,T4,Gonzalez,Ciriaco,Out at 2nd,Force Play,May,Miller,Overturned,1:57,http://t.co/27sSGBLdj9
+2015-08-21,PHI @ MIA,B2,Mackanin,Gillespie,Safe at 1st,Force Play,Hoberg,T. Barrett,Overturned,1:05,http://t.co/QOLZct2ihy
+2015-08-21,TEX @ DET,B4,Banister,Mi. Cabrera,Safe at home,Tag Play,Knight,Kulpa,Overturned,2:06,http://t.co/KIAfEmeln7
+2015-08-21,NYM @ COL,B1,Collins,Blackmon,Safe at 1st,Tag Play,Schrieber,Culbreth,Overturned,1:03,http://t.co/fsloKAu1I8
+2015-08-21,TEX @ DET,B6,Ausmus,Mi. Cabrera,Out at 2nd,Tag-Ups,Hamari,Kulpa,Stands,5:16,http://t.co/quePqoEnFx
+2015-08-21,MIL @ WSH,B7,Williams,T. Turner,Out at 1st,Force Play,Fagan,West,Stands,2:01,http://t.co/ewULbAi9mf
+2015-08-21,LAD @ HOU,B6,Hinch,Lowrie,Out at 1st,Force Play,B. Welke,Hirschbeck,Confirmed,1:00,http://t.co/NVBgUpNpj7
+2015-08-21,CWS @ SEA,T1,McClendon,Eaton,Safe at 2nd,Tag Play,Wolf,Cederstrom,Overturned,2:02,http://t.co/rHMOnC3Y3g
+2015-08-21,NYM @ COL,B5,Weiss,Hundley,Out at home,Tag Play,Blakney,Culbreth,Confirmed,2:47,http://t.co/LUshk9wVQT
+2015-08-21,NYM @ COL,T7,UMPIRE,Granderson,Safe at 2nd,Tag Play,Culbreth,Culbreth,Stands,2:13,http://t.co/vdbS1NUFPo
+2015-08-21,TB @ OAK,T5,Melvin,Kiermaier,Safe at 1st,Force Play,Nauert,DeMuth,Stands,3:04,http://t.co/rz7FLeCPG0
+2015-08-22,ATL @ CHI,B6,UMPIRE,A. Russell,Home Run,Potential HR,Eddings,Miller,Stands,3:33,http://t.co/HMPNJh6bri
+2015-08-22,LAD @ HOU,T4,Mattingly,Rollins,Out at 2nd,Tag Play,Hirschbeck,Hirschbeck,Confirmed,1:34,http://t.co/oqVpfi9Cgv
+2015-08-22,MIN @ BAL,T6,Molitor,Buxton,Out at 1st,Force Play,Conroy,Carlson,Stands,1:59,http://t.co/UALuWVkogG
+2015-08-22,LAD @ HOU,T5,Hinch,Utley,In play (triple),Ground-Rule 2B,Hoye,Hirschbeck,Overturned,1:11,http://t.co/NE7xdqvlo2
+2015-08-22,ARI @ CIN,B5,Price,Frazier,Out at 2nd,Force Play,Foster,Winters,Overturned,2:49,http://t.co/YEut8irrmz
+2015-08-22,ARI @ CIN,T8,Hale,Lamb,Out at 1st,Force Play,Wegner,Winters,Overturned,1:25,http://t.co/O7vJlUPcfy
+2015-08-22,CWS @ SEA,T5,McClendon,Eaton,Hit By Pitch,Hit By Pitch,Cederstrom,Cederstrom,Stands,2:16,http://t.co/oqMjeMfD9x
+2015-08-23,ARI @ CIN,T4,UMPIRE,W. Castillo,In play (double),Potential HR,Winters,Winters,Overturned,0:47,http://t.co/dDYpl6x3NG
+2015-08-23,LAD @ HOU,B6,Hinch,C. Gomez,Out at home,Tag Play,Hoye,Hirschbeck,Confirmed,2:32,http://t.co/in56t3MlQN
+2015-08-23,KC @ BOS,T9,Yost,Infante,Out at home,Collisions at HP,Everitt,Wendelstedt,Confirmed,1:47,http://t.co/mhQOb3VKT8
+2015-08-23,TOR @ LAA,B5,Gibbons,Dav. Murphy,Safe at 2nd,Tag Play,Nelson,Nelson,Overturned,1:41,http://t.co/IhtfGqikNS
+2015-08-23,LAD @ HOU,B10,UMPIRE,J. Castro,Home Run,Potential HR,B. Welke,Hirschbeck,Confirmed,1:38,http://t.co/zjxUun6Mph
+2015-08-23,STL @ SD,B9,Matheny,Spangenberg,Hit By Pitch,Hit By Pitch,Tichenor,T. Welke,Stands,2:45,http://atmlb.com/1LwwHz8
+2015-08-23,SF @ PIT,T6,Bochy,Duffy,Out at 1st,Force Play,Basner,Davis,Stands,2:14,http://t.co/lppGrAxMqy
+2015-08-23,SF @ PIT,B7,UMPIRE,Kang,Safe at 1st,Force Play,Basner,Davis,Overturned,2:10,http://t.co/SsqmYBKWma
+2015-08-24,CLE @ CHI,B3,UMPIRE,D. Ross,Home Run,Potential HR,L. Barrett,Iassogna,Overturned,1:10,http://t.co/0WFLd0KTcX
+2015-08-24,BAL @ KC,T1,Showalter,L. Cain,Catch,Catch/no catch,West,West,Overturned,2:38,http://t.co/demD2TkGyi
+2015-08-24,HOU @ NYY,T5,Girardi,Conger,Safe at 1st,Force Play,Cooper,Cooper,Overturned,1:39,http://t.co/FpMXLOMpeP
+2015-08-24,COL @ ATL,T8,Weiss,Blackmon,Out at home,Tag Play,Vanover,Vanover,Confirmed,1:07,http://t.co/bhMSC3pVLU
+2015-08-24,BOS @ CWS,B5,Ventura,Al. Ramirez,Out at 2nd,Tag Play,Miller,Miller,Overturned,2:42,http://atmlb.com/1Kr8qc4
+2015-08-24,PIT @ MIA,T8,Hurdle,Mercer,Out at 1st,Force Play,O'Nora,O'Nora,Stands,2:06,http://t.co/MM5vzRYxFS
+2015-08-24,DET @ CIN,T9,Price,Mi. Cabrera,Safe at 1st,Force Play,Fletcher,Meals,Overturned,2:31,http://t.co/GLoKrISiim
+2015-08-24,OAK @ SEA,B1,Melvin,Cano,Safe at 2nd,Tag Play,Schrieber,Culbreth,Overturned,2:47,http://t.co/caHpWp0m9U
+2015-08-24,PIT @ MIA,B9,Jennings,Realmuto,Out at 1st,Force Play,O'Nora,O'Nora,Overturned,1:08,http://atmlb.com/1Kgq5oi
+2015-08-24,PIT @ MIA,B9,Jennings,Hechavarria,Out at 1st,Force Play,O'Nora,O'Nora,Confirmed,0:35,http://atmlb.com/1UirIBu
+2015-08-25,COL @ ATL,B2,Gonzalez,Peterson,Out at 1st,Force Play,Carapazza,Vanover,Overturned,1:22,http://t.co/GfKms0gMH6
+2015-08-25,BOS @ CWS,B2,Lovullo,T. Thompson,Safe at 3rd,Tag Play,Ripperger,Miller,Stands,3:46,http://t.co/8NBZg7mEHQ
+2015-08-25,BOS @ CWS,B8,Ventura,Ca. Sanchez,Out at 3rd,Tag Play,Eddings,Miller,Stands,1:36,http://t.co/m3Axd5GpmZ
+Wed. Aug. 26,MIN @ TB,B3,Cash,Kiermaier,Out at 3rd,Tag Play,Fletcher,Meals,Stands,2:24,http://t.co/IKC6Onr1O9
+Wed. Aug. 26,BOS @ CWS,T1,Lovullo,Holt,Out at 1st,Force Play,May,Miller,Confirmed,1:02,http://t.co/NHop9hOFTm
+Wed. Aug. 26,BOS @ CWS,T2,Ventura,Shaw,Safe at 1st,Force Play,May,Miller,Overturned,1:00,http://t.co/FzW4SKtYRT
+Wed. Aug. 26,MIN @ TB,B7,Molitor,Jaso,Safe at 2nd,Tag Play,Meals,Meals,Overturned,2:55,http://t.co/qtg1z9yjtu
+Wed. Aug. 26,MIL @ CLE,T8,Francona,Lucroy,Safe at 2nd,Tag Play,Everitt,T. Welke,Stands,2:56,http://t.co/NEb6zXIbWY
+Wed. Aug. 26,TOR @ TEX,T9,Banister,Donaldson,Safe at 1st,Force Play,Nauert,DeMuth,Overturned,1:28,http://t.co/842wDB1oyF
+2015-08-27,TOR @ TEX,B3,Gibbons,DeShields,Safe at 2nd,Tag Play,Estabrook,DeMuth,Overturned,1:41,http://t.co/sadTRWxiu3
+2015-08-27,TOR @ TEX,B7,Gibbons,DeShields,Touched 3rd,Touching a Base,Hickox,DeMuth,Confirmed,1:42,http://t.co/EBxsYB6ZuK
+2015-08-27,TOR @ TEX,B8,UMPIRE,B. Wilson,Hit By Pitch,Hit By Pitch,Nauert,DeMuth,Overturned,1:28,http://t.co/6JJkaKvIEg
+2015-08-27,NYM @ PHI,T8,Mackanin,Granderson,Safe at 2nd,Tag Play,Bellino,Hallion,Stands,2:02,http://t.co/nloUi3QdY2
+2015-08-27,STL @ ARI,T2,Hale,G. Garcia,Safe at 2nd,Force Play,Fairchild,G. Gibson,Stands,5:10,http://atmlb.com/1PDIYQd
+2015-08-27,STL @ ARI,B2,Matheny,A. Hill,Safe at 1st,Force Play,G. Gibson,G. Gibson,Confirmed,1:27,http://t.co/QWARLwKu2I
+2015-08-28,KC @ TB,T1,Yost,Zobrist,Out at 1st,Force Play,O'Nora,O'Nora,Overturned,0:54,http://t.co/FT81AsF2dt
+2015-08-28,KC @ TB,B1,Cash,Nava,Out at 2nd,Tag Play,Fagan,O'Nora,Confirmed,1:18,http://t.co/eukFtLbhhJ
+2015-08-28,KC @ TB,T3,UMPIRE,K. Morales,Home Run,Potential HR,Fagan,O'Nora,Confirmed,3:44,http://t.co/tMa4AHSkpy
+2015-08-28,SEA @ CWS,T7,McClendon,Morrison,Out at 2nd,Force Play,T. Welke,T. Welke,Overturned,2:29,http://t.co/rIXQwRSdvS
+2015-08-28,HOU @ MIN,B7,UMPIRE,K. Suzuki,Foul Ball,Potential HR,Miller,Miller,Confirmed,0:35,http://t.co/RVNOXwXV4X
+2015-08-29,DET @ TOR,B7,Gibbons,Donaldson,Ground-Rule 2B,Boundary Call,Hudson,Wendelstedt,Confirmed,1:02,http://t.co/sfz3AeWe5i
+2015-08-29,HOU @ MIN,T3,Hinch,Gattis,Out at 2nd,Tag Play,Ripperger,Miller,Confirmed,2:58,http://t.co/4UPPlE4wso
+2015-08-29,SEA @ CWS,T3,Ventura,Seager,Safe at home,Tag Play,Timmons,T. Welke,Overturned,2:06,http://t.co/Ym3AiTvyCH
+2015-08-29,HOU @ MIN,B6,Molitor,Dozier,Out at 2nd,Tag Play,Miller,Miller,Overturned,1:29,http://atmlb.com/1IAeWY2
+2015-08-29,SD @ PHI,T8,Murphy,Alonso,Out at 1st,Force Play,Baker,Meals,Overturned,0:51,http://atmlb.com/1hszkF1
+2015-08-29,SEA @ CWS,T9,McClendon,Morrison,Out at 1st,Force Play,T. Welke,T. Welke,Overturned,1:36,http://t.co/gizllecvXj
+2015-08-30,KC @ TB,T3,Cash,Butera,Safe at 3rd,Tag Play,O'Nora,O'Nora,Confirmed,0:39,http://t.co/MOgXCDkLlA
+2015-08-30,BAL @ TEX,T5,Banister,Schoop,Safe at 1st,Force Play,Schrieber,Reynolds,Stands,3:36,http://t.co/U7BYXCmx2m
+2015-08-31,NYY @ BOS,B1,Girardi,Bogaerts,Safe at 1st,Force Play,Kulpa,Vanover,Stands,3:19,http://t.co/9qc6TbrenP
+2015-08-31,ARI @ COL,B1,Weiss,Blackmon,Out at 2nd,Tag Play,Tichenor,Everitt,Overturned,3:20,http://t.co/9U9o7oO5Wp
+2015-08-31,PHI @ NYM,B7,Mackanin,Conforto,Safe at 2nd,Tag Play,Cuzzi,Davis,Overturned,3:02,http://t.co/X0ufBOHtlv
+2015-08-31,SEA @ HOU,T5,McClendon,B. Miller,Out at 2nd,Tag Play,T. Barrett,T. Barrett,Overturned,1:34,http://t.co/SkeDUlFVdg
+2015-08-31,WSH @ STL,B8,Williams,Bourjos,Safe at 1st,Force Play,Hirschbeck,Hirschbeck,Overturned,1:42,http://t.co/cvNySKpc2A
+2015-08-31,ARI @ COL,B8,Hale,Hundley,Safe at 1st,Tag Play,Timmons,Everitt,Overturned,1:56,http://t.co/feXT0c0b86
+2015-08-31,ARI @ COL,B9,UMPIRE,Arenado,In play (single),Potential HR,Everitt,Everitt,Confirmed,0:29,http://t.co/jALby1uoR6
+2015-08-31,TEX @ SD,B6,Banister,Spangenberg,Safe at home,Tag Play,Holbrook,Carlson,Confirmed,1:40,http://t.co/aBLpeBPTxl
+2015-08-31,SF @ LAD,B9,Bochy,Peraza,Safe at 3rd,Tag Play,Wegner,Winters,Stands,1:59,http://t.co/F2hZskIs1K
+2015-09-1,ARI @ COL,T1,Hale,Inciarte,Out at 1st,Force Play,Pattillo,Everitt,Overturned,1:42,http://t.co/1RSMk1WzKj
+2015-09-1,ARI @ COL,T2,UMPIRE,Saltalamacchia,Foul ball,Potential HR,Segal,Everitt,Overturned,1:54,http://t.co/C39jaold3w
+2015-09-1,PHI @ NYM,B2,Mackanin,Wright,Safe at 1st,Tag Play,Cuzzi,Davis,Overturned,0:48,http://t.co/QsULC7LenQ
+2015-09-1,MIA @ ATL,T3,Gonzalez,Gillespie,Safe at 1st,Tag Play,Drake,West,Stands,1:23,http://t.co/n4wfy1C7zr
+2015-09-1,CWS @ MIN,T2,Molitor,Me. Cabrera,Safe at 1st,Force Play,L. Barrett,Scott,Overturned,1:13,http://t.co/UfNtp5H64X
+2015-09-1,CLE @ TOR,T8,Gibbons,Lindor,Safe at 2nd,Tag Play,Fagan,Meals,Confirmed,1:45,http://t.co/8OizREeqrA
+2015-09-1,NYY @ BOS,B8,Lovullo,Betts,Out at 3rd,Tag Play,Carapazza,Vanover,Confirmed,1:37,http://t.co/6CfPaHsaW8
+2015-09-1,LAA @ OAK,B2,UMPIRE,Smolinski,Foul ball,Potential HR,Joyce,Joyce,Confirmed,1:05,http://t.co/hNFXP1jrnL
+2015-09-1,CWS @ MIN,T9,Ventura,Eaton,Foul ball (no HBP),Hit By Pitch,Bucknor,Scott,Stands,1:28,http://t.co/ZwM4aAx22D
+2015-09-1,WSH @ STL,T9,Matheny,Zimmerman,Safe at 1st,Force Play,Tumpane,Hirschbeck,Overturned,0:55,http://t.co/rGHiG2LPAP
+2015-09-1,SF @ LAD,T7,Bochy,Byrd,Out at 1st,Force Play,Muchlinski,Winters,Stands,2:23,http://t.co/0BcWcghEc6
+2015-09-1,TEX @ SD,T7,Banister,Choo,Out at 1st,Force Play,T. Gibson,Carlson,Confirmed,1:15,http://t.co/FRKmaepcfO
+2015-09-2,MIA @ ATL,B3,Gonzalez,Maybin,Out at 2nd,Tag Play,Reyburn,West,Overturned,1:22,http://t.co/NciePvpxJ5
+2015-09-2,CLE @ TOR,B1,Francona,Smoak,Safe at 1st,Force Play,Fagan,Meals,Stands,2:21,http://t.co/g01NYtcklc
+2015-09-2,TB @ BAL,T3,UMPIRE,Arencibia,Home Run,Potential HR,Guccione,Nelson,Stands,3:54,http://t.co/TFLseo584W
+2015-09-2,PHI @ NYM,B3,Collins,K. Johnson,Out at 1st,Force Play,Davis,Davis,Overturned,1:39,http://t.co/19qhQkOfdT
+2015-09-2,ARI @ COL,T2,Weiss,C. Anderson,Safe at 1st,Force Play,Segal,Everitt,Overturned,1:28,http://t.co/yVeYKBaBBO
+2015-09-2,SF @ LAD,T2,Mattingly,Posey,Safe at 1st,Tag Play,Wegner,Winters,Overturned,2:06,http://t.co/bNTOe44CHS
+2015-09-2,SEA @ HOU,T7,Hinch,K. Seager,Safe at 3rd,Tag Play,Conroy,T. Barrett,Stands,2:56,http://t.co/YS7gFHZIET
+2015-09-2,ARI @ COL,T6,Weiss,Lamb,Safe at 2nd,Tag Play,Timmons,Everitt,Stands,2:29,http://t.co/G156AGubyq
+2015-09-2,SF @ LAD,T6,Bochy,Tomlinson,Out at 1st,Tag Play,Wegner,Winters,Overturned,1:41,http://atmlb.com/1imDjDG
+2015-09-2,TEX @ SD,T10,Murphy,Stubbs,Safe at 1st,Force Play,Morales,Carlson,Overturned,1:06,http://t.co/9awYinKKZG
+2015-09-3,PIT @ MIL,B6,UMPIRE,E. Herrera,Home Run,Potential HR,Randazzo,Miller,Overturned,2:25,http://t.co/GWgxDfoK7E
+2015-09-3,DET @ KC,T6,Ausmus,J.D. Martinez,Out at 1st,Force Play,Cooper,Cederstrom,Stands,1:55,http://t.co/0bK64NxvtX
+2015-09-3,LAD @ SD,B6,Mattingly,J. Upton,Safe at 2nd,Force Play,Conroy,T. Barrett,Confirmed,1:52,http://t.co/NeYA8oyoq2
+2015-09-4,ARI @ CHI,T8,Hale,Tomas,Out at 1st,Force Play,B. Welke,Hirschbeck,Confirmed,1:23,http://t.co/hxzknkTtYC
+2015-09-4,MIN @ HOU,T1,Molitor,Mauer,Out at home,Collisions at HP,Reynolds,Culbreth,Confirmed,0:59,http://t.co/2ANAYkfFlY
+2015-09-4,SF @ COL,B1,UMPIRE,C. Gonzalez,Foul ball,Potential HR,Danley,Joyce,Stands,1:21,http://t.co/YORnWqGec1
+2015-09-4,SF @ COL,T4,Bochy,Pagan,Out at 1st,Tag-Ups,Danley,Joyce,Confirmed,1:00,http://t.co/efGdIu9bX7
+2015-09-4,LAD @ SD,B3,UMPIRE,Gyorko,In play (double),Potential HR,T. Barrett,T. Barrett,Overturned,1:47,http://t.co/3pGGsJdRu0
+2015-09-4,SF @ COL,T9,Weiss,Byrd,Safe at 1st,Force Play,Danley,Joyce,Confirmed,0:36,http://t.co/EUCY4pm7zW
+2015-09-4,TEX @ LAA,T6,Scioscia,Fielder,Run Scores,Timing Play,Wegner,Winters,Stands,3:39,http://atmlb.com/1QmWY1B
+2015-09-4,SEA @ OAK,B6,McClendon,B. Burns,Safe at 2nd,Tag Play,Carlson,Carlson,Overturned,2:17,http://atmlb.com/1UFfPpk
+2015-09-5,TB @ NYY,T8,Cash,Kiermaier,Out at 1st,Force Play,May,West,Overturned,1:25,http://atmlb.com/1g893KY
+2015-09-5,ARI @ CHI,T7,Maddon,Lamb,Safe at 1st,Force Play,Hirschbeck,Hirschbeck,Overturned,1:08,http://t.co/PzGcsdjHN3
+2015-09-5,PIT @ STL,T7,Matheny,S. Rodriguez,Safe at 3rd,Tag Play,Cooper,Cederstrom,Confirmed,1:35,http://atmlb.com/1QmX1dP
+2015-09-5,SF @ COL,T1,Bochy,C. Gonzalez,Catch,Catch/no catch,Fairchild,Joyce,Stands,3:00,http://t.co/V5kR9kaE0z
+2015-09-5,SF @ COL,T1,Bochy,Pagan,Out at 2nd,Tag-Ups,Hoberg,Joyce,Confirmed,3:02,http://t.co/V5kR9kaE0z
+2015-09-5,SEA @ OAK,T2,McClendon,O'Malley,Out at 3rd,Tag Play,Morales,Carlson,Stands,1:31,http://t.co/qKSSbNTFNN
+2015-09-5,LAD @ SD,B4,Murphy,J. Upton,Out at 2nd,Force Play,Hamari,T. Barrett,Confirmed,2:03,http://t.co/FUWP51gdFd
+2015-09-5,LAD @ SD,B6,Mattingly,Kemp,Safe at 1st,Tag Play,T. Barrett,T. Barrett,Overturned,1:49,http://t.co/8toSoubWsb
+2015-09-6,MIL @ CIN,B1,Counsell,Bruce,Safe at 1st,Force Play,Basner,Davis,Stands,3:00,http://t.co/6pUZglU1gZ
+2015-09-6,CLE @ DET,T6,Francona,Kipnis,Out at 1st,Force Play,Eddings,Wendelstedt,Overturned,1:30,http://t.co/jb9mxuYcnL
+2015-09-6,TEX @ LAA,B1,UMPIRE,Trout,Home Run,Potential HR,Muchlinski,Winters,Confirmed,0:31,http://t.co/LKhsJY0G4G
+2015-09-6,CWS @ KC,B6,Ventura,A. Gordon,Safe at 1st,Force Play,Vanover,Vanover,Overturned,1:31,http://t.co/PMnaUqJTuu
+2015-09-6,SF @ COL,B4,Weiss,Rosario,Out at 1st,Force Play,Hoberg,Joyce,Confirmed,0:38,http://t.co/Cs3yNhomOP
+2015-09-6,LAD @ SD,T7,Mattingly,A. Gonzalez,Ball (no HBP),Hit By Pitch,T. Barrett,T. Barrett,Stands,2:50,http://t.co/JI0bONSvuY
+2015-09-6,LAD @ SD,T7,Murphy,Rollins,Safe at 3rd,Tag Play,Conroy,T. Barrett,Stands,1:35,http://atmlb.com/1XIienq
+2015-09-7,NYM @ WSH,T4,UMPIRE,Cespedes,Home Run,Potential HR,Hickox,DeMuth,Confirmed,0:47,http://t.co/c5FEVw8EyN
+2015-09-7,TOR @ BOS,B4,UMPIRE,R. Castillo,Foul Ball,Potential HR,Reynolds,Culbreth,Stands,3:01,http://t.co/IEamg5FC31
+2015-09-7,CHI @ STL,B4,Matheny,Heyward,Foul Ball,Fair/Foul,Knight,Vanover,Overturned,3:27,http://t.co/fRwbdN8lo1
+2015-09-7,PIT @ CIN,T9,Hurdle,S. Rodriguez,Out at 1st,Tag Play,Hoye,B. Welke,Confirmed,1:04,http://t.co/ZsQPCpgjMh
+2015-09-7,TB @ DET,T9,Cash,Longoria,Out at 2nd,Force Play,Timmons,Timmons,Confirmed,0:49,http://t.co/1O9ETWDhxJ
+2015-09-7,TEX @ SEA,T7,Banister,DeShields,Out at 3rd,Tag Play,Dreckman,Hallion,Stands,3:29,http://t.co/cF6mToCXHU
+2015-09-7,LAD @ LAA,B5,UMPIRE,Calhoun,Home Run,Potential HR,Morales,Carlson,Confirmed,1:05,http://t.co/Bo4SZXWA5u
+2015-09-8,TOR @ BOS,T3,UMPIRE,Donaldson,Foul Ball,Potential HR,Gonzalez,Culbreth,Confirmed,1:33,http://t.co/1I3wqHdJvq
+2015-09-8,BAL @ NYY,T6,Girardi,C. Davis,Safe at 1st,Force Play,Emmel,Meals,Overturned,1:05,http://t.co/FyndML6TzA
+2015-09-8,SF @ ARI,T1,UMPIRE,Panik,Count Check,Record Keeping,Hernandez,T. Barrett,Record Keeping,1:30,http://t.co/wkvlmSxNi8
+2015-09-8,TB @ DET,T8,Cash,R. Davis,Catch,Catch/no catch,Tichenor,T. Welke,Stands,1:37,http://t.co/0Ox7xAK9Od
+2015-09-8,BAL @ NYY,T9,Showalter,Paredes,Out at 3rd,Tag Play,Fagan,Meals,Confirmed,1:48,http://t.co/UDuzAfv8Hc
+2015-09-8,TOR @ BOS,B9,Lovullo,Shaw,Out at 1st,Force Play,Schrieber,Culbreth,Confirmed,1:02,http://t.co/dy0xwrmE37
+2015-09-8,TOR @ BOS,T10,UMPIRE,Donaldson,In play (triple),Potential HR,Gonzalez,Culbreth,Confirmed,1:51,http://t.co/uG8w2Wufav
+2015-09-8,TOR @ BOS,T10,UMPIRE,Donaldson,Safe at 3rd,Tag Play,Reynolds,Culbreth,Confirmed,2:33,http://t.co/2cvxgP39Cf
+2015-09-8,TB @ DET,T9,Ausmus,N. Franklin,Safe at 3rd,Tag Play,T. Welke,T. Welke,Stands,3:00,http://t.co/wHXeABA2KS
+2015-09-8,MIL @ MIA,B8,Counsell,D. Solano,Safe at 1st,Force Play,Davidson,Wendelstedt,Stands,3:05,http://t.co/xtRmkTtfSI
+2015-09-8,MIN @ KC,T9,Molitor,Mauer,Out at 1st,Force Play,G. Gibson,G. Gibson,Confirmed,1:15,http://t.co/JAXM3S7EhV
+2015-09-8,CLE @ CWS,B6,Francona,C. Sanchez,Safe at 2nd,Tag Play,Wolcott,Cooper,Overturned,1:22,http://t.co/Ui8lJRt0o2
+2015-09-8,TB @ DET,B11,UMPIRE,R. Davis,Out at 1st,Force Play,Timmons,T. Welke,Overturned,0:45,http://t.co/9vO74w6cTQ
+2015-09-8,TB @ DET,B11,UMPIRE,R. Davis,Safe at 1st,Tag Play,Timmons,T. Welke,Stands,2:23,http://t.co/j6acoLksVX
+2015-09-8,LAD @ LAA,B9,Scioscia,DeJesus,Out at 1st,Force Play,Holbrook,Carlson,Confirmed,1:04,http://t.co/u7X8SDwBQw
+2015-09-9,CHI @ STL,B1,Maddon,Heyward,Safe at 2nd,Tag Play,Vanover,Vanover,Confirmed,1:33,http://t.co/SHRuZgWQ65
+2015-09-9,MIL @ MIA,T3,Counsell,Braun,Out at 1st,Force Play,Wendelstedt,Wendelstedt,Overturned,0:52,http://t.co/TTpOccqjwu
+2015-09-9,TOR @ BOS,B3,UMPIRE,Betts,In play (double),Potential HR,Gonzalez,Culbreth,Overturned,0:53,http://t.co/gq1hWomGei
+2015-09-9,MIL @ MIA,B4,Jennings,Dietrich,Out at home,Collisions at HP,Davidson,Wendelstedt,Confirmed,0:42,http://t.co/ct3HIFuge2
+2015-09-9,TEX @ SEA,T5,McClendon,Chirinos,Hit By Pitch,Hit By Pitch,Bellino,Hallion,Stands,3:03,http://t.co/cdQ0sxmk6M
+2015-09-9,LAD @ LAA,T5,Scioscia,C. Seager,Safe at 1st,Tag Play,Carlson,Carlson,Overturned,3:01,http://t.co/kBWCraf6t4
+2015-09-9,MIN @ KC,B10,Yost,Dyson,Out at home,Collisions at HP,G. Gibson,G. Gibson,Confirmed,1:12,http://atmlb.com/1M2KF9a
+2015-09-9,COL @ SD,B6,Weiss,Kemp,Safe at 1st,Force Play,Winters,Winters,Stands,2:23,http://t.co/2x04mVg1TB
+2015-09-10,TEX @ SEA,T5,Banister,Andrus,Out at 2nd,Tag Play,Hallion,Hallion,Confirmed,2:19,http://t.co/skapNElatq
+2015-09-10,DET @ CLE,T2,Francona,Romine,Safe at home,Tag Play,Hickox,DeMuth,Overturned,2:46,http://t.co/5t2ZrBc7u1
+2015-09-10,DET @ CLE,T7,Francona,Gose,Safe at home,Tag Play,Hickox,DeMuth,Overturned,1:54,http://t.co/x0l6Vtbd6e
+2015-09-10,MIL @ PIT,T11,Hurdle,Braun,Safe at 2nd,Tag Play,Reynolds,Culbreth,Overturned,0:41,http://t.co/YDxliYkkRI
+2015-09-11,CHI @ PHI,B4,Mackanin,Howard,Out at 1st,Force Play,May,Cooper,Overturned,1:06,http://t.co/V18ha1jjic
+2015-09-11,MIL @ PIT,T3,Hurdle,Gennett,Safe at 2nd,Tag Play,Schrieber,Culbreth,Overturned,1:01,http://t.co/ObO3AT3MO6
+2015-09-11,KC @ BAL,B6,Yost,Schoop,Safe at 2nd,Force Play,Morales,Carlson,Overturned,3:27,http://t.co/ExdUmAujEp
+2015-09-11,MIL @ PIT,T7,Hurdle,L. Schafer,Safe at 1st,Tag Play,Reynolds,Culbreth,Overturned,0:52,http://t.co/QOFDapS1Q5
+2015-09-11,HOU @ LAA,B2,Hinch,Featherston,Safe at home,Tag Play,Marquez,Hallion,Stands,3:25,http://t.co/4bgLYLwrTa
+2015-09-11,LAD @ ARI,B8,Hale,Drury,Out at 1st,Force Play,O'Nora,O'Nora,Overturned,1:27,http://t.co/GnJHMFyW6G
+2015-09-12,KC @ BAL,T2,Yost,Hosmer,Out at 2nd,Force Play,Holbrook,Carlson,Overturned,2:54,http://t.co/NIl6T8VBlA
+2015-09-12,WSH @ MIA,B5,Williams,Telis,Safe at 3rd,Tag Play,Kulpa,Vanover,Overturned,2:19,http://t.co/k7HBqUHJbY
+2015-09-12,NYM @ ATL,B5,Gonzalez,Peterson,Out at 2nd,Tag Play,T. Welke,T. Welke,Stands,1:32,http://t.co/7H3VctgF8i
+2015-09-12,CHI @ PHI,B4,Maddon,O. Herrera,Safe at 2nd,Tag Play,Wolcott,Cooper,Overturned,0:53,http://t.co/gj2PtLpCRU
+2015-09-12,HOU @ LAA,T1,Scioscia,Altuve,Safe at 2nd,Tag Play,Dreckman,Hallion,Overturned,1:06,http://t.co/4JEoj3ciw4
+2015-09-12,NYM @ ATL,T9,Collins,Lagares,Out at 1st,Force Play,Timmons,T. Welke,Confirmed,0:55,http://t.co/YfMEHV5jKU
+2015-09-12,MIL @ PIT,T9,Counsell,D. Santana,Out at 1st,Force Play,Schrieber,Culbreth,Stands,1:54,http://atmlb.com/1Mqhhg9
+2015-09-12,CHI @ PHI,T8,Maddon,K. Bryant,Out at home,Collisions at HP,Blakney,Cooper,Confirmed,2:29,http://t.co/v4BSINzv2J
+2015-09-13,STL @ CIN,T1,Price,Molina,Safe at 1st,Force Play,Fairchild,G. Gibson,Overturned,1:09,http://t.co/bgd6sUaGv0
+2015-09-13,TOR @ NYY,T2,Girardi,Pillar,Safe at 2nd,Tag Play,Scott,Scott,Overturned,1:10,http://t.co/IMgubiKDXx
+2015-09-13,STL @ CIN,T4,Matheny,Piscotty,Foul ball,Fair/Foul,Joyce,G. Gibson,Stands,1:46,http://t.co/H0PGRT3Lb2
+2015-09-13,NYM @ ATL,B3,Collins,Markakis,Safe at 1st,Force Play,T. Welke,T. Welke,Stands,1:47,http://t.co/wlclYdlfkA
+2015-09-13,CHI @ PHI,T3,UMPIRE,Coghlan,In play (triple),Potential HR,Barksdale,Cooper,Stands,6:15,http://t.co/spByPFSZmH
+2015-09-13,BOS @ TB,B5,Cash,Shaffer,Foul ball (no HBP),Hit By Pitch,Hernandez,T. Barrett,Overturned,1:47,http://t.co/3eC8ggb58N
+2015-09-13,MIN @ CWS,B6,Molitor,M. Johnson,Safe at home,Tag Play,Foster,Winters,Overturned,1:23,http://t.co/nhv8Vv2Ygb
+2015-09-13,NYM @ ATL,T10,Gonzalez,R. Tejada,Safe at 2nd,Force Play,Tichenor,T. Welke,Confirmed,1:27,http://t.co/CrHnoO2EHc
+2015-09-13,DET @ CLE,T4,Francona,Raburn,No catch (foul ball),Catch/no catch,Estabrook,DeMuth,Overturned,3:35,http://atmlb.com/1iNlyh1
+2015-09-14,WSH @ PHI,T8,Williams,T. Turner,Out at 2nd,Tag Play,Segal,T. Welke,Confirmed,1:41,http://t.co/kaiaiEWf4B
+2015-09-14,KC @ CLE,B8,UMPIRE,Lindor,In play (triple),Potential HR,Blaser,Nelson,Confirmed,0:49,http://atmlb.com/1Mqhyjj
+2015-09-14,SD @ ARI,T4,Murphy,Jankowski,Out at 2nd,Tag Play,Hallion,Hallion,Confirmed,3:08,http://t.co/zDComQIbsv
+2015-09-14,SD @ ARI,T4,Hale,Shields,Safe at 1st,Force Play,Marquez,Hallion,Overturned,1:24,http://t.co/J6VSzeYaj4
+2015-09-14,LAA @ SEA,T3,McClendon,Trout,Safe at 1st,Tag Play,Porter,O'Nora,Overturned,2:20,http://atmlb.com/1QE7Jgl
+2015-09-15,NYY @ TB,B1,Cash,A. Cabrera,Out at 1st,Force Play,Vanover,Vanover,Stands,1:02,http://t.co/SAiUJzWk9C
+2015-09-15,"CHI @ PIT, G2",T5,Hurdle,D. Ross,Safe at 3rd,Tag Play,Basner,Joyce,Confirmed,1:22,http://t.co/pSJekE6SPz
+2015-09-15,BOS @ BAL,T5,Showalter,Sandoval,Safe at 2nd,Tag Play,Ad. Johnson,Miller,Overturned,1:23,http://t.co/elQ38aWbbD
+2015-09-15,HOU @ TEX,T4,Hinch,Conger,Foul Ball,Fair / Foul,Davis,Davis,Stands,2:04,http://t.co/yZtARc2etd
+2015-09-15,SD @ ARI,B1,Hale,Pollock,Out at 2nd,Tag Play,Bellino,Hallion,Overturned,2:46,http://atmlb.com/1NzBONT
+2015-09-15,SD @ ARI,B7,Murphy,Inciarte,Safe at 2nd,Tag Play,Bellino,Hallion,Stands,2:00,http://t.co/WX6Mq8z77Q
+2015-09-15,CIN @ SF,T7,Bochy,Schumaker,Safe at home,Tag Play,Fletcher,Emmel,Overturned,2:05,http://t.co/T042Qfgjcv
+2015-09-15,CIN @ SF,T7,Price,Osich,No Fan Interference,Fan Interference,Fagan,Emmel,Stands,2:05,http://t.co/T042Qfgjcv
+2015-09-15,COL @ LAD,T11,Weiss,LeMahieu,Out at 1st,Tag Play,Tumpane,Hirschbeck,Confirmed,1:20,http://t.co/qoy2Pkip4y
+2015-09-16,WSH @ PHI,T2,Mackanin,Desmond,Safe at 2nd,Tag Play,T. Welke,T. Welke,Overturned,1:20,http://t.co/ep6RB1tv8a
+2015-09-16,WSH @ PHI,T5,Williams,Y. Escobar,Out at home,Tag Play,Segal,T. Welke,Stands,1:47,http://t.co/R0IqPYvW0J
+2015-09-16,NYY @ TB,B6,UMPIRE,Souza,In play (double),Potential HR,Kulpa,Vanover,Stands,2:44,http://t.co/IoQsapSbu8
+2015-09-16,BOS @ BAL,T8,Lovullo,Holt,Out at 1st,Force Play,Knight,Miller,Stands,2:14,http://t.co/oL2MXDVRlz
+2015-09-16,CHI @ PIT,B8,Hurdle,Florimon,Out at home/No Violation,Collisions at HP,Joyce,Joyce,Confirmed,1:10,http://t.co/zgUpVdDFne
+2015-09-16,DET @ MIN,B6,Ausmus,A. Hicks,Runner Placed at 2nd,Boundary Call,Hamari,T. Barrett,Confirmed,2:26,http://t.co/PmKCGfSmHp
+2015-09-16,DET @ MIN,T9,Molitor,T. Collins,Safe at 2nd,Tag Play,Conroy,T. Barrett,Confirmed,1:18,http://t.co/0P7T74sHwi
+2015-09-16,DET @ MIN,B9,UMPIRE,S. Robinson,Out at home,Tag Play,Hamari,T. Barrett,Confirmed,0:38,http://t.co/LHL17M94Bf
+2015-09-16,LAA @ SEA,B8,Scioscia,K. Marte,Safe at 2nd,Tag Play,Danley,O'Nora,Overturned,0:35,http://t.co/gYiGvBT5Mk
+2015-09-16,CIN @ SF,T9,Price,B. Hamilton,Out at 2nd,Tag Play,Emmel,Emmel,Overturned,1:45,http://t.co/1thRgsJDMV
+2015-09-17,CHI @ PIT,T6,Hurdle,Rizzo,Safe at home,Tag Play,G. Gibson,Joyce,Overturned,2:07,http://t.co/fVjpnuQUIb
+2015-09-17,MIA @ WSH,T1,UMPIRE,Prado,Home Run,Potential HR,Hamari,T. Barrett,Confirmed,1:37,http://t.co/U4hHQuhKL5
+2015-09-17,MIA @ WSH,B6,Williams,B. Harper,Out at 3rd,Tag Play,Hamari,T. Barrett,Overturned,4:06,http://t.co/xNz1VKVjVN
+2015-09-18,BAL @ TB,T3,Cash,Machado,Safe at 2nd,Tag Play,Bucknor,Scott,Overturned,1:24,http://t.co/X9ORKNl7U6
+2015-09-18,PHI @ ATL,B1,Mackanin,Ad. Garcia,Safe at 2nd,Tag Play,Joyce,G. Gibson,Overturned,1:38,http://t.co/NdxcRbi4ds
+2015-09-18,BOS @ TOR,T5,Lovullo,Rutledge,Out at 1st,Force Play,Iassogna,O'Nora,Overturned,1:09,http://t.co/Ndf89GTOcZ
+2015-09-18,PHI @ ATL,T7,Mackanin,C. d'Arnaud,Out at 1st,Force Play,Hoberg,G. Gibson,Overturned,0:35,http://t.co/wjFT4Gq6dR
+2015-09-18,PHI @ ATL,T7,Mackanin,C. d'Arnaud,Out at home,Collisions at HP,Fairchild,G. Gibson,Confirmed,1:33,http://t.co/cN404EBM2k
+2015-09-18,SEA @ TEX,B8,McClendon,Beltre,Safe at 3rd,Tag Play,Guccione,Nelson,Overturned,3:39,http://t.co/qlnjCJFh9S
+2015-09-19,ARI @ SF,T4,Hale,Inciarte,Out at 1st,Force Play,Kulpa,Vanover,Overturned,1:19,http://t.co/tfiFQuyYsr
+2015-09-19,BOS @ TOR,B7,Gibbons,Revere,Out at 2nd,Tag Play,O'Nora,O'Nora,Stands,2:43,http://t.co/lQ0fJaPaVf
+2015-09-19,CWS @ CLE,T5,Ventura,M. Johnson,Out at 2nd,Force Play,Segal,T. Welke,Stands,2:44,http://t.co/GCn9RX0co8
+2015-09-19,CIN @ MIL,B6,Price,M. Maldonado,Safe at 2nd,Tag Play,Reyburn,West,Overturned,0:50,http://t.co/YDCXUvU4GO
+2015-09-19,KC @ DET,B9,Yost,Mi. Cabrera,Hit By Pitch,Hit By Pitch,Cederstrom,Cederstrom,Stands,2:20,http://t.co/dxUSoYY0Yj
+2015-09-19,OAK @ HOU,T8,Melvin,Burns,Out at 3rd,Tag Play,Winters,Winters,Confirmed,1:11,http://t.co/bcXhYc1Dsf
+2015-09-19,KC @ DET,B9,UMPIRE,Kinsler,Safe at home,Tag Play,Cederstrom,Cederstrom,Overturned,2:21,http://t.co/6rdeE8KbIJ
+2015-09-20,KC @ DET,B2,Ausmus,Castellanos,Out at 1st,Force Play,Barksdale,Cederstrom,Overturned,0:50,http://t.co/Wi17XWHRUa
+2015-09-20,CIN @ MIL,B1,Price,J. Rogers,Safe at 1st,Force Play,Reyburn,West,Overturned,1:17,http://t.co/lZzNGyW7Mf
+2015-09-20,STL @ CHI,B7,Maddon,S. Castro,Ball (no HBP),Hit By Pitch,Marquez,Hallion,Overturned,2:26,http://t.co/rN8DnegqEy
+2015-09-20,STL @ CHI,T9,Maddon,J. Peralta,Safe at 1st,Force Play,Hallion,Hallion,Stands,3:00,http://t.co/g9SvWklPvP
+2015-09-20,NYY @ NYM,B9,Girardi,Lagares,Safe at 1st,Force Play,Tumpane,Hirschbeck,Overturned,1:17,http://atmlb.com/1Fq8pEC
+2015-09-21,CWS @ DET,T3,Ventura,Ca. Sanchez,Out at home,Tag Play,Carlson,Carlson,Overturned,2:47,http://t.co/r1PmP7Xc02
+2015-09-21,TB @ BOS,T1,Lovullo,Mahtook,Safe at home,Tag Play,Tumpane,Hirschbeck,Confirmed,2:44,http://t.co/oeGUvVi0A6
+2015-09-21,TB @ BOS,T1,Cash,A. Cabrera,Out at 1st,Force Play,Hoye,Hirschbeck,Overturned,1:10,http://atmlb.com/1Mv5dax
+2015-09-21,MIL @ CHI,B2,Maddon,Fowler,Out at 2nd,Tag Play,Nauert,DeMuth,Overturned,2:36,http://t.co/TohzBtXws9
+2015-09-21,TB @ BOS,T7,UMPIRE,Guyer,Safe at 2nd,Tag Play,B. Welke,Hirschbeck,Overturned,2:50,http://t.co/vZikihYa54
+2015-09-21,MIL @ CHI,T7,Counsell,Gennett,Out at 3rd,Tag Play,DeMuth,DeMuth,Stands,2:38,http://t.co/kRxW5fDwtQ
+2015-09-21,PIT @ COL,T6,UMPIRE,S. Marte,In play (double),Potential HR,Knight,Vanover,Confirmed,0:35,http://t.co/VSIXZHN31K
+2015-09-21,TB @ BOS,B8,Cash,Marrero,Safe at 3rd,Tag Play,Hirschbeck,Hirschbeck,Confirmed,2:36,http://t.co/1478SivgKN
+2015-09-21,LAA @ HOU,T9,Hinch,Dav. Murphy,Safe at home,Tag Play,Hernandez,T. Barrett,Confirmed,2:58,http://atmlb.com/1PCZWP5
+2015-09-22,BAL @ WSH,B4,Showalter,G. Gonzalez,Safe at 1st,Force Play,Ripperger,O'Nora,Overturned,1:10,http://t.co/i30JNighMu
+2015-09-22,TOR @ NYY,T7,Gibbons,Ackley,Safe at 3rd,Tag Play,G. Gibson,G. Gibson,Overturned,1:45,http://t.co/FjViJShDie
+2015-09-22,CWS @ DET,T8,Ausmus,Al. Ramirez,Safe at 1st,Tag Play,Woodring,Gorman,Overturned,0:48,http://t.co/gPlOmeZrNv
+2015-09-22,PIT @ COL,T7,Hurdle,K. Broxton,Out at 2nd,Tag Play,Kulpa,Vanover,Confirmed,1:10,http://t.co/nF49ZQg3Oh
+2015-09-22,SF @ SD,B4,Murphy,J. Upton,Out at 2nd,Tag Play,West,West,Stands,3:23,http://t.co/tw5H89c3Ee
+2015-09-22,ARI @ LAD,T7,Mattingly,Owings,Safe at 1st,Force Play,Hudson,Wendelstedt,Overturned,0:58,http://t.co/HOif94xuJu
+2015-09-22,SF @ SD,T8,Bochy,B. Crawford,Ball (no HBP),Hit By Pitch,Reyburn,West,Stands,1:56,http://t.co/nNSJfj2BGP
+2015-09-23,LAA @ HOU,B2,UMPIRE,P. Tucker,Count Check,Record Keeping,T. Barrett,T. Barrett,Record Keeping,1:45,http://t.co/Fo4rAkCfkG
+2015-09-23,LAA @ HOU,B5,Hinch,Correa,Out at 2nd,Tag Play,Hernandez,T. Barrett,Stands,2:57,http://t.co/SPkFR6C2kF
+2015-09-23,BAL @ WSH,T1,Williams,Wieters,Foul ball (no interference),Fan Interference,O'Nora,O'Nora,Overturned,1:04,http://t.co/uRImjBCu8N
+2015-09-23,MIL @ CHI,B2,Maddon,Baez,Out at 1st,Force Play,DeMuth,DeMuth,Overturned,0:26,http://t.co/Q8aqblxu7h
+2015-09-23,PHI @ MIA,T8,Mackanin,Kratz,Out at home,Tag Play,Torres,Winters,Overturned,1:36,http://t.co/hFXMlANi0f
+2015-09-23,CIN @ STL,B6,Matheny,Grichuk,Foul ball (no HBP),Hit By Pitch,Cuzzi,Davis,Stands,2:38,http://t.co/jxK6czvceZ
+2015-09-23,PHI @ MIA,B10,Jennings,Solano,Out at 2nd,Force Play,Muchlinski,Winters,Stands,2:51,http://atmlb.com/1KE1HXU
+2015-09-23,MIL @ CHI,B9,Maddon,K. Bryant,Out at 1st,Force Play,DeMuth,DeMuth,Confirmed,0:48,http://t.co/ZtICDdK0PQ
+2015-09-23,SF @ SD,T3,Murphy,De Aza,Safe at 1st,Tag Play,West,West,Overturned,1:15,http://t.co/sMSvvZlpHF
+2015-09-24,PIT @ COL,T3,Weiss,Decker,Safe at 1st,Force Play,Vanover,Vanover,Overturned,1:05,http://t.co/gS1TOjbPll
+2015-09-24,PIT @ COL,T5,Hurdle,S. Marte,Out at 2nd,Tag Play,Knight,Vanover,Stands,1:46,http://t.co/09hNzxRths
+2015-09-24,BAL @ WSH,B7,Williams,Rendon,Out at home,Tag Play,Hickox,O'Nora,Confirmed,0:39,http://t.co/5mmkWq8Zmy
+2015-09-24,PHI @ MIA,B4,Jennings,Yelich,Out at 1st,Force Play,Muchlinski,Winters,Overturned,0:32,http://t.co/Oy7TLUCj5n
+2015-09-24,TB @ BOS,T9,Lovullo,Kiermaier,Safe at 2nd,Tag Play,Hoye,Hirschbeck,Overturned,0:42,http://t.co/J5ekmL76HZ
+2015-09-24,SF @ SD,T9,Bochy,Pagan,Out at 2nd,Tag Play,Reyburn,West,Overturned,1:07,http://t.co/Pg76OXLjU4
+2015-09-25,PIT @ CHI,B8,Hurdle,Baez,Safe at 1st,Force Play,Davis,Davis,Overturned,1:08,http://t.co/eGyv0jLy3T
+2015-09-25,MIN @ DET,T5,UMPIRE,Rosario,In play (triple),Potential HR,Reynolds,Winters,Overturned,2:14,http://t.co/JGU50BPYnU
+2015-09-25,TB @ TOR,B4,UMPIRE,Donaldson,Foul ball,Potential HR,Schrieber,Culbreth,Confirmed,0:45,http://t.co/BwatukO3g3
+2015-09-25,NYM @ CIN,T7,Collins,Wright,Foul ball (no HBP),Hit By Pitch,Hernandez,T. Barrett,Stands,2:07,http://t.co/dlz5hWL69H
+2015-09-25,MIL @ STL,B3,Matheny,T. Cruz,Out at 2nd,Tag Play,May,Gorman,Overturned,1:19,http://t.co/ZJ5Rf6XySh
+2015-09-25,LAD @ COL,B5,Mattingly,T. Murphy,Safe at 1st,Tag Play,Reyburn,West,Overturned,1:26,http://t.co/Yx201Tvfme
+2015-09-25,MIN @ DET,B8,Molitor,Gose,Safe at 2nd,Tag Play,Fagan,Winters,Overturned,2:19,http://atmlb.com/1KXz3VY
+2015-09-25,MIL @ STL,B8,Matheny,Bourjos,Out at 3rd,Tag Play,Carlson,Gorman,Stands,1:24,http://t.co/NkJ9N8WIcF
+2015-09-25,TEX @ HOU,T7,Hinch,Altuve,No catch,Catch/no catch,Carapazza,Vanover,Confirmed,1:23,http://atmlb.com/1PH2TOp
+2015-09-26,TEX @ HOU,B4,Banister,Marisnick,Hit By Pitch,Hit By Pitch,Knight,Vanover,Stands,2:44,http://atmlb.com/1VmSqta
+2015-09-26,SF @ OAK,B4,Bochy,Lawrie,Safe at 1st,Force Play,Wolf,Miller,Overturned,0:52,http://t.co/G0eeUJPhp7
+2015-09-26,MIN @ DET,B8,Molitor,Kinsler,Safe at 2nd,Tag Play,Winters,Winters,Stands,2:22,http://t.co/GIdBpwEbvv
+2015-09-26,ARI @ SD,B6,Hale,Spangenberg,Safe at home,Tag Play,Meals,Meals,Stands,3:12,http://t.co/N1cIiKMlPX
+2015-09-26,SEA @ LAA,B6,McClendon,Iannetta,Safe at 1st,Tag Play,Hudson,Wendelstedt,Overturned,1:53,http://t.co/4EECZz5AaD
+2015-09-27,ATL @ MIA,B1,UMPIRE,Bour,Home Run,Potential HR,Dreckman,Hallion,Confirmed,1:29,http://t.co/e1x5YKBhgB
+2015-09-27,CLE @ KC,T4,Francona,Brantley,Out at 2nd,Tag Play,DeMuth,DeMuth,Overturned,1:54,http://t.co/yYxvZZFG9d
+2015-09-27,TB @ TOR,T8,Gibbons,Mahtook,Safe at 3rd,Tag Play,Gonzalez,Culbreth,Stands,3:46,http://t.co/lqNjqiqnIv
+2015-09-27,MIL @ STL,B5,Matheny,Carpenter,Out at 3rd,Tag Play,T. Gibson,Gorman,Confirmed,0:43,http://t.co/YdRdtxq8Mx
+2015-09-27,ARI @ SD,T1,Hale,Inciarte,Out at 2nd,Tag Play,Fletcher,Meals,Overturned,2:37,http://t.co/u6vYLxKKqN
+2015-09-27,CLE @ KC,T7,Yost,Lindor,Safe at home,Tag Play,Nauert,DeMuth,Confirmed,1:19,http://t.co/BeHMwkddFf
+2015-09-27,CLE @ KC,T7,UMPIRE,Lindor,Rules Check,Rules Check,DeMuth,DeMuth,Rules Check,1:31,http://t.co/BeHMwkddFf
+2015-09-27,SEA @ LAA,T5,Scioscia,Morrison,Safe at 2nd,Tag Play,Davidson,Wendelstedt,Overturned,0:54,http://t.co/TicXqpcVRO
+2015-09-27,TEX @ HOU,B8,Banister,C. Gomez,Safe at home,Tag Play,Carapazza,Vanover,Confirmed,1:19,http://t.co/TiEfVpz72t
+2015-09-27,PIT @ CHI,B6,Hurdle,Montero,Safe at 2nd,Tag Play,Randazzo,Davis,Overturned,0:44,http://t.co/13HrrzIAwP
+2015-09-27,PIT @ CHI,B7,UMPIRE,A. Jackson,Count Check,Record Keeping,Drake,Davis,Record Keeping,2:23,http://t.co/E5W7vRt11w
+2015-09-27,PIT @ CHI,B7,UMPIRE,S. Castro,Home Run,Potential HR,Davis,Davis,Overturned,2:37,http://t.co/FVIS2Y9N2y
+2015-09-28,BOS @ NYY,T1,Girardi,Bogaerts,Safe at 2nd,Tag Play,T. Welke,T. Welke,Overturned,0:55,http://t.co/nhvE5bulLx
+2015-09-28,MIN @ CLE,T2,Francona,Hunter,Safe at 2nd,Tag Play,Kellogg,O'Nora,Overturned,0:44,http://t.co/8k4JqgtbGd
+2015-09-28,TOR @ BAL,T9,Gibbons,Pillar,Out at home,Tag Play,West,West,Confirmed,2:31,http://t.co/7mYWfwBzb3
+2015-09-28,KC @ CHI,B7,Maddon,K. Bryant,Out at 1st,Force Play,Randazzo,Davis,Overturned,0:51,http://t.co/6xOvvBxhBM
+2015-09-28,LAD @ SF,B6,Mattingly,J. Parker,Safe at 1st,Tag Play,DeMuth,DeMuth,Overturned,2:30,http://atmlb.com/1OMDZ2J
+2015-09-29,BOS @ NYY,T1,Girardi,Bogaerts,Safe at home,Tag Play,Everitt,T. Welke,Stands,2:02,http://t.co/bWSCeRpOLA
+2015-09-29,MIA @ TB,B8,Cash,Souza,Out at 1st,Force Play,Davis,Davis,Confirmed,0:59,http://t.co/I1EQ0HpdWH
+2015-09-29,KC @ CWS,B5,Yost,J. Abreu,Safe at 1st,Force Play,Hernandez,T. Barrett,Overturned,0:48,http://t.co/1ZKzedzPYb
+2015-09-29,COL @ ARI,B7,Weiss,Brito,Safe at 2nd,Tag Play,Scott,Scott,Stands,1:59,http://t.co/mlT5VbAwO0
+2015-09-29,TOR @ BAL,T1,Showalter,Revere,Safe at 1st,Force Play,Scheurwater,West,Overturned,1:18,http://t.co/2x63CcwLfM
+2015-09-30,STL @ PIT,T1,Matheny,Jay,Ball (no HBP),Hit By Pitch,Cederstrom,Cederstrom,Overturned,1:10,http://t.co/q52PUU8VwI
+2015-09-30,NYM @ PHI,T3,Collins,Cespedes,Foul ball (no HBP),Hit By Pitch,Davidson,Wendelstedt,Overturned,1:51,http://t.co/Hrl0yaQXaL
+2015-09-30,MIN @ CLE,B2,Molitor,Lindor,Safe at 1st,Force Play,O'Nora,O'Nora,Stands,4:24,http://t.co/QX3160VLPC
+2015-09-30,MIA @ TB,B5,Cash,Souza,Out at 2nd,Force Play,Cuzzi,Davis,Overturned,1:19,http://atmlb.com/1N9tHcP
+2015-09-30,WSH @ ATL,B6,Gonzalez,Peterson,Out at 1st,Force Play,Holbrook,Foster,Overturned,0:46,http://atmlb.com/1j5IvMQ
+2015-09-30,NYM @ PHI,T6,Mackanin,Young Jr.,Safe at 2nd,Tag Play,Hudson,Wendelstedt,Stands,2:12,http://t.co/eMD3bla5mr
+2015-09-30,KC @ CWS,T7,Ventura,Rios,Safe at 1st,Force Play,Conroy,T. Barrett,Overturned,1:45,http://t.co/lw12Wx8ih3
+2015-09-30,MIL @ SD,T1,UMPIRE,L. Schafer,Home Run,Potential HR,Torres,Nelson,Overturned,2:04,http://t.co/o4b0IcRwf8
+2015-09-30,MIL @ SD,T4,Murphy,Segura,Safe at 1st,Force Play,Torres,Nelson,Overturned,1:32,http://atmlb.com/1P9L24B
+2015-09-30,DET @ TEX,T9,Banister,Castellanos,Safe at 3rd,Touching a Base,Bellino,Hallion,Confirmed,2:00,http://t.co/UypOGAt1qr
+2015-09-30,HOU @ SEA,T5,McClendon,C. Carter,Safe at 3rd,Tag Play,Fletcher,Meals,Overturned,2:32,http://t.co/c0Tpx3z1sL
+2015-09-30,LAD @ SF,B5,Mattingly,Tomlinson,Safe at 2nd,Tag Play,Nauert,DeMuth,Overturned,1:59,http://t.co/mPI3lw9Ag1
+2015-09-30,HOU @ SF,B5,UMPIRE,Cruz,Home Run,Potential HR,Baker,Meals,Confirmed,1:05,http://t.co/aXBtWTt2S5
+2015-10-1,BOS @ NYY,B1,Lovullo,Gardner,Safe at 1st,Force Play,Timmons,T. Welke,Overturned,0:43,http://t.co/Pq3YTEmXBP
+2015-10-1,WSH @ ATL,T5,Gonzalez,M. Taylor,Safe at 1st,Tag Play,Foster,Foster,Overturned,1:15,http://t.co/UCbc70X2Z1
+2015-10-1,MIL @ SD,B5,Counsell,M. Upton,Safe at 2nd,Tag Play,Nelson,Nelson,Overturned,1:26,http://t.co/I088xn5xoV
+2015-10-1,KC @ CWS,B2,Ventura,Ca. Sanchez,Out at 1st,Tag Play,T. Barrett,T. Barrett,Stands,1:51,http://t.co/QA29YKveOq
+2015-10-1,MIL @ SD,B6,Murphy,Jankowski,Out at 1st,Force Play,Diaz,Nelson,Stands,3:58,http://t.co/Z9XE3wBoGE
+2015-10-1,MIA @ TB,B7,Jennings,Loney,Safe at 3rd,Tag Play,Davis,Davis,Stands,2:22,http://atmlb.com/1KWMamZ
+2015-10-1,COL @ ARI,B4,Weiss,Owings,Safe at 2nd,Force Play,L. Barrett,Scott,Overturned,0:56,http://atmlb.com/1MPyXPI
+2015-10-1,KC @ CWS,B8,UMPIRE,Al. Ramirez,Out at home,Tag Play,Conroy,T. Barrett,Confirmed,1:03,http://t.co/LvQ9uiUS7B
+2015-10-2,LAA @ TEX,B1,Scioscia,DeShields,Safe at 3rd,Tag Play,Wolcott,Cederstrom,Overturned,1:26,http://t.co/6h1kJ2RSAx
+2015-10-2,KC @ MIN,T2,UMPIRE,A. Gordon,In Play (Double),Potential HR,Knight,Vanover,Confirmed,0:45,http://t.co/2Otv9O36HH
+2015-10-2,LAA @ TEX,B2,Scioscia,Andrus,Safe at 1st,Force Play,Cooper,Cederstrom,Overturned,1:05,http://t.co/XSEpvJNKAR
+2015-10-2,KC @ MIN,T3,Molitor,A. Escobar,Safe at 1st,Tag Play,Vanover,Vanover,Overturned,0:57,http://t.co/M3jdfMRWl2
+2015-10-2,TOR @ TB,T7,UMPIRE,Colabello,In Play (Triple),Potential HR,Hallion,Hallion,Stands,2:53,http://t.co/DAwVzqBAb9
+2015-10-2,SD @ LAD,T2,Murphy,Amarista,Out at 1st,Tag Play,L. Barrett,Scott,Confirmed,1:19,http://t.co/YxYWWmY413
+2015-10-2,KC @ MIN,T9,Yost,J. Dyson,Out at 1st,Tag Play,Vanover,Vanover,Overturned,0:44,http://t.co/TrTZ1A6f6i
+2015-10-2,HOU @ ARI,B5,Hale,S. Brito,Out at 1st,Force Play,Nelson,Nelson,Stands,1:47,http://atmlb.com/1FPYt89
+2015-10-2,HOU @ ARI,B6,Hinch,A. Hill,Safe at 1st,Force Play,Nelson,Nelson,Stands,2:14,http://t.co/IKzNe4FHhO
+2015-10-3,"NYY @ BAL, G1",B7,Girardi,C. Davis,Strike (No HBP),Hit By Pitch,Foster,Wegner,Overturned,2:37,http://atmlb.com/1FPYyIT
+2015-10-3,LAA @ TEX,B9,Banister,Andrus,Out at 2nd,Tag Play,Wolcott,Cederstrom,Confirmed,0:55,http://t.co/IKUv77QSpn
+2015-10-3,COL @ SF,T5,Bochy,T. Murphy,Safe at 2nd,Tag Play,Fletcher,Meals,Overturned,1:05,http://t.co/mKs2Rsjng8
+2015-10-3,CHI @ MIL,T2,Counsell,A. Russell,Safe at 1st,Tag Play,Hernandez,T. Barrett,Stands,2:47,http://t.co/6XycZzQbhg
+2015-10-3,"WSH @ NYM, G2",T3,Williams,Difo,Out at 1st,Force Play,Wolf,Davis,Overturned,1:17,http://t.co/ULEwkj0jjw
+2015-10-3,TOR @ TB,T8,UMPIRE,Navarro,Foul Ball,Potential HR,Bellino,Hallion,Stands,2:01,http://t.co/yvUfnxyxoi
+2015-10-3,"NYY @ BAL, G2",B6,Showalter,C. Davis,Out at 2nd,Tag Play,Holbrook,Wegner,Confirmed,1:21,http://t.co/f9YtOd7z4e
+2015-10-3,CIN @ PIT,T8,Price,B. Phillips,Out at 1st,Tag Play,T. Welke,T. Welke,Confirmed,1:26,http://t.co/4vfIPA9S5q
+2015-10-3,HOU @ ARI,T8,Hale,Altuve,HBP,Hit By Pitch,Nelson,Nelson,Stands,2:01,http://atmlb.com/1Lc238a
+2015-10-4,"STL @ ATL, G1",T5,Gonzalez,Grichuk,HBP,Hit By Pitch,Porter,O'Nora,Confirmed,1:03,http://t.co/bJ5xUa19J3
+2015-10-4,KC @ MIN,B3,Molitor,Rios,Catch,Catch/no catch,Carapazza,Vanover,Overturned,2:01,http://t.co/7CVL6XxFVk
+2015-10-4,NYY @ BAL,B4,Showalter,Parra,Out at 2nd,Tag Play,Foster,Wegner,Stands,2:13,http://t.co/pvUvJg2MJ4
+2015-10-4,"STL @ ATL, G2",B4,Gonzalez,T. Cunningham,Out at 1st,Force Play,O'Nora,Kellogg,Stands,3:00,http://t.co/2ZPEB8g3NQ
+2015-10-4,CIN @ PIT,T6,Price,B. Phillips,Out at 2nd,Tag Play,Timmons,T. Welke,Confirmed,0:53,http://t.co/OHc4aKzlaD
+2015-10-4,COL @ SF,B8,Weiss,M. Williamson,Safe at 1st,Force Play,Fletcher,Meals,Overturned,0:53,http://t.co/B8v90DuEpD
+2015-10-4,WSH @ NYM,T9,Collins,B. Harper,Safe at 2nd,Tag Play,Cuzzi,Davis,Stands,2:37,http://t.co/FQjA41UVKl
+2015-10-4,HOU @ ARI,B7,Hinch,Lamb,Safe at 1st,Force Play,Guccione,Nelson,Overturned,2:44,http://t.co/VWBlBBk0JE
+2015-10-4,COL @ SF,T9,Bochy,Ynoa,Safe at 1st,Force Play,Fletcher,Meals,Overturned,0:34,http://t.co/FxFbzv73db

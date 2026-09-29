@@ -1,0 +1,32 @@
+date,game,series-game,inning,manager-ump,player-referenced,initial-call,play-type,calling-umpire,crew-chief,result,time-to-ruling,video
+2017-10-5,BOS @ HOU, G1,T2,Farrell,M. Moreland,Did not score,Timing Play,Bellino,T. Barrett,Overturned,2:12,http://atmlb.com/2zbHlby
+2017-10-5,BOS @ HOU, G1,B4,Hinch,J. Bradley,Catch,Catch/No Catch,Everitt,T. Barrett,Overturned,1:38,http://atmlb.com/2zuTv2v
+2017-10-6,NYY @ CLE, G2,B1,Girardi,E. Encarnacion,Safe at 2nd,Force Play,O'Nora,DeMuth,Overturned,0:39,http://atmlb.com/2AhGUgg
+2017-10-6,CHI @ WSH, G1,T6,Baker,K. Bryant,Safe at 2nd,Tag Play,Culbreth,Layne,Stands,1:52,http://atmlb.com/2hzBpSi
+2017-10-6,NYY @ CLE, G2,B10,Girardi,A. Chapman,Dead Ball,Stadium Boundary,Carapazza,DeMuth,Confirmed,2:25,http://atmlb.com/2lMuvxr
+2017-10-6,NYY @ CLE, G2,T11,Francona,R. Torreyes,Safe at 2nd,Tag Play,O'Nora,DeMuth,Overturned,0:57,http://atmlb.com/2zaUK6v
+2017-10-7,CHI @ WSH, G2,T4,UMPIRE,A. Rizzo,HR; No Interference,Potential HR,Blaser,Layne,Confirmed,2:19,http://atmlb.com/2zbi6GC
+2017-10-8,HOU @ BOS, G3,B5,Farrell,R. Devers,Out at 1st,Force Play,Wegner,T. Barrett,Stands,1:22,http://atmlb.com/2AiIwqb
+2017-10-9,LAD @ ARI, G3,B6,Lovullo,C. Walker,Foul ball; No HBP,HBP,Davis,Davis,Stands,1:19,http://atmlb.com/2hbD3N9
+2017-10-11,WSH @ CHI, G4,T8,Maddon,R. Zimmerman,Safe at 1st,Tag Play,Layne,Layne,Overturned,1:04,http://atmlb.com/2zd9AJm
+2017-10-12,CHI @ WSH, G5,T11,Baker,J. Jay,Safe at 2nd,Tag Play,Blaser,Layne,Stands,1:13,http://atmlb.com/2zc0EE5
+2017-10-12,CHI @ WSH, G5,T7,Baker,J. Jay,No violation,Slide Rule,Blaser,Layne,Confirmed,1:43,http://atmlb.com/2A3FIw6
+2017-10-12,CHI @ WSH, G5,B8,Maddon,J. Lobaton,Safe at 1st,Tag Play,Little,Layne,Overturned,2:12,http://atmlb.com/2h8NX6a
+2017-10-13,NYY @ HOU, G1,T5,Girardi,G. Bird,Out at home,Tag Play,Fairchild,Cederstrom,Confirmed,1:21,http://atmlb.com/2h9Ncd6
+2017-10-14,NYY @ HOU, G2,T3,Hinch,B. Gardner,Safe at 3rd,Tag Play,Meals,Cederstrom,Overturned,1:10,http://atmlb.com/2yr1gqa
+2017-10-14,NYY @ HOU, G2,B4,UMPIRE,C. Correa,HR; No Interference,Potential HR,Fairchild,Cederstrom,Confirmed,1:23,http://atmlb.com/2Aj8Gce
+2017-10-14,CHI @ LAD, G1,B6,Maddon,C. Bellinger,Safe at 2nd,Tag Play,Winters,Winters,Stands,1:56,http://atmlb.com/2zazLxZ
+2017-10-14,CHI @ LAD, G1,B7,Roberts,W. Contreras,No violation,Collision Rule,Barksdale,Winters,Overturned,2:42,http://atmlb.com/2zbeN27
+2017-10-16,HOU @ NYY, G3,B2,Girardi,C. Headley,Ball; No HBP,HBP,Cederstrom,Cederstrom,Stands,1:23,http://atmlb.com/2zb5U8E
+2017-10-16,HOU @ NYY, G3,B2,UMPIRE,C. Headley,Count Check,Count Check,Cederstrom,Cederstrom,Record Keeping,1:22,http://atmlb.com/2hzD626
+2017-10-16,HOU @ NYY, G3,B3,Hinch,D. Gregorius,Safe at 1st,Force Play,Guccione,Cederstrom,Overturned,1:51,http://atmlb.com/2iW8wTL
+2017-10-17,HOU @ NYY, G4,B4,Girardi,A. Judge,Out at 1st,Force Play,Meals,Cederstrom,Overturned,1:30,http://atmlb.com/2zaAoHR
+2017-10-17,HOU @ NYY, G4,B8,Hinch,C. Headley,Safe at 2nd,Tag Play,Reynolds,Cederstrom,Confirmed,1:16,http://atmlb.com/2zcrEB4
+2017-10-17,LAD @ CHI, G3,B9,Roberts,A. Almora,Double; Dead Ball,Stadium Boundary,Cooper,Winters,Confirmed,0:56,http://atmlb.com/2lM8qzc
+2017-10-18,LAD @ CHI, G4,T5,Roberts,A. Wood,Out at 1st,Force Play,Welke,Winters,Confirmed,0:37,http://atmlb.com/2Ai05Gu
+2017-10-20,NYY @ HOU, G6,T7,Girardi,S. Castro,No HBP,HBP,Reynolds,Cederstrom,Overturned,1:02,http://atmlb.com/2AgEfn5
+2017-10-21,NYY @ HOU, G7,T3,Girardi,C. Headley,Out at 1st,Force Play,Wendelstedt,Cederstrom,Confirmed,1:26,http://atmlb.com/2Ai0I2O
+2017-10-28,LAD @ HOU, G4,B1,Hinch,G. Springer,Ball; No HBP,HBP,Diaz,Davis,Stands,0:59,http://atmlb.com/2lNDuhQ
+2017-10-29,LAD @ HOU, G5,T11,Hinch,L. Forsythe,Safe at 2nd,Tag Play,Wegner,Davis,Stands,1:31,http://atmlb.com/2h9n81x
+2017-10-29,LAD @ HOU, G5,B4,Roberts,C. Correa,Safe at 2nd,Tag Play,Wegner,Davis,Confirmed,1:25,http://atmlb.com/2zbW2vr
+2017-10-31,HOU @ LAD, G6,T7,Roberts,J. Reddick,No violation,Slide Rule,Nauert,Davis,Confirmed,0:48,http://atmlb.com/2h23JfD
