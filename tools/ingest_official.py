@@ -401,6 +401,31 @@ def ingest_game(meta, want_videos=False):
     return bip, reps, ledger, vids, flags
 
 
+def savant_video(play_id, timeout=30):
+    """Resolve one playId on Baseball Savant: the page is the click-to-watch link and its HTML
+    carries the direct .mp4 for download. Verified against real plays on 2026-09-29 (probe report):
+    a known playId returns 200 with one `sporty-clips.mlb.com/...mp4`; an unknown playId says
+    "No Video Found" and yields no mp4, which the caller records as `no_video_found` rather than
+    substituting another play's clip."""
+    url = f'{SAVANT}/sporty-videos?playId={play_id}'
+    try:
+        req = Request(url, headers=UA)
+        with urlopen(req, timeout=timeout) as resp:
+            html = resp.read().decode('utf-8', 'replace')
+            status = resp.status
+    except HTTPError as e:
+        return {'watch_url': url, 'mp4': '', 'mp4_source': '', 'video_status': e.code,
+                'no_video_found': 1}
+    except Exception as e:                                            # noqa: BLE001
+        return {'watch_url': url, 'mp4': '', 'mp4_source': '', 'video_status': '',
+                'no_video_found': 1, 'video_error': f'{type(e).__name__}: {e}'[:120]}
+    mp4 = re.findall(r'https?://[^"\'\s]+?\.mp4[^"\'\s]*', html)
+    no_video = 'No Video Found' in html
+    return {'watch_url': url, 'mp4': (mp4[0] if mp4 else ''), 'mp4_source': ('savant' if mp4 else ''),
+            'video_status': status, 'no_video_found': int(not mp4 or no_video),
+            'video_html_bytes': len(html)}
+
+
 def fetch_videos(pk, reps):
     """Attach a downloadable mp4 to each run-affected review, when the league's content API has one.
 
@@ -434,13 +459,25 @@ def fetch_videos(pk, reps):
                 if p.get('url'):
                     pb.append({'name': p.get('name'), 'url': p.get('url'),
                                'width': p.get('width'), 'height': p.get('height')})
+        mp4 = (sorted(pb, key=lambda p: int(p.get('height') or 0))[-1]['url'] if pb else '')
+        source = 'content_api' if mp4 else ''
+        extra = {}
+        if not mp4:
+            # the content API only carries recent games; Savant's own page embeds the clip
+            extra = savant_video(r['play_id'])
+            mp4 = extra.get('mp4', '')
+            source = extra.get('mp4_source', '') or source
         out.append({
             'game_pk': pk, 'play_id': r['play_id'], 'at_bat': r['at_bat'],
             'title': (items[0].get('title') if items else ''),
             'highlight_count': len(items),
-            'mp4': (sorted(pb, key=lambda p: int(p.get('height') or 0))[-1]['url'] if pb else ''),
+            'mp4': mp4,
+            'mp4_source': source,
             'playback_count': len(pb),
-            'no_mp4_found': int(not pb),
+            'video_status': extra.get('video_status', ''),
+            'no_video_found': int(not mp4),
+            'no_mp4_found': int(not mp4),
+            'watch_url': extra.get('watch_url', r.get('savant_url', '')),
             'savant_url': r['savant_url'],
         })
     return out
