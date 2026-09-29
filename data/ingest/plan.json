@@ -1,9 +1,20 @@
 {
-  "_comment": "Scope for tools/ingest_official.py. The CI job (.github/workflows/ingest.yml) runs it and commits only the derived CSVs/JSON - never the raw feeds.",
+  "_comment": "Scope for tools/ingest_official.py. The CI job (.github/workflows/ingest.yml) runs it and commits only the derived CSVs/JSON - never the raw feeds. link_sample bounds the NYDN short-link resolution so a single run cannot run away; set skip_links to skip it.",
   "windows": [
-    {"start": "2026-09-25", "end": "2026-09-28", "game_types": ["R", "F", "D", "L", "W"]}
+    {
+      "start": "2026-09-21",
+      "end": "2026-09-28",
+      "game_types": [
+        "R",
+        "F",
+        "D",
+        "L",
+        "W"
+      ]
+    }
   ],
-  "max_games": 80,
-  "workers": 12,
-  "videos": true
+  "max_games": 120,
+  "workers": 16,
+  "videos": true,
+  "link_sample": 400
 }

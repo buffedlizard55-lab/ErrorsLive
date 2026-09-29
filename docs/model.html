@@ -2,134 +2,131 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Model & Validation — LiveScoringErrors</title>
+<title>Model &amp; validation — LiveScoringErrors</title>
 <link rel="stylesheet" href="site.css">
+<meta name="description" content="How the scoring-prediction model was fitted and validated: grouped cross-validation by game, calibration, correlations, and the honest limits of predicting an official scorer's judgment.">
 </head>
 <body>
 <header class="nav"><div class="nav-inner"></div></header>
 <main>
-  <h1>Model &amp; validation — the honest numbers</h1>
-  <p class="lede">Two regularized logistic models over <b>exit velocity, launch angle, distance, trajectory,
-  contact hardness</b>: (1) <b>P(ruled ERROR)</b> — the headline /100 score; (2) <b>multinomial
-  P{hit, error, fielder's choice, out}</b>. Everything below is computed by <code>tools/train_model.py</code>
-  from <code>docs/data/bip.csv</code> and published in <code>docs/data/model.json</code>; nothing here is
-  hand-typed, and <code>tests/test_pipeline.py</code> fails the build if any of it stops reconciling.</p>
+  <h1>The model, and the evidence for it</h1>
+  <p class="lede">Everything on this page is recomputed from <code>docs/data/model.json</code>, which is itself built
+  by <code>tools/train_model.py</code> from the committed batted-ball CSV. The audit suite
+  (<code>tests/test_pipeline.py</code>) re-derives the headline numbers from the same CSV on every push, so a page
+  that drifts from the data fails CI instead of quietly misleading you.</p>
 
-  <div class="truth gold" id="headlineTruth"></div>
-  <div class="grid cols3" id="top"></div>
+  <div id="headline"><div class="card">Loading model.json…</div></div>
 
-  <h2>Can it name the right ruling? (out-of-fold, per class)</h2>
-  <p class="muted">Accuracy of the 4-class model’s single most likely ruling, on held-out folds — plus the
-  hard number that matters: on the 24 real errors it got <b>none</b> right, and it never even proposed
-  “error” as the top choice. That is the honest ceiling of a 5-feature model against a 1.9% base rate.</p>
-  <div class="grid cols2"><div class="card" id="recall"></div><div class="card" id="calib"></div></div>
-
-  <h2>P(error) as a function of exit velocity (model curves)</h2>
-  <p class="muted">Per trajectory, at that trajectory's median launch angle/distance. Note the y-axis: it
-  auto-scales to the model's actual range (single digits), not to 0–100 — the honest scale for this
-  probability. Read the <i>shape</i>, not the absolute height.</p>
-  <div class="svgbox"><svg id="curve" width="100%" height="330" viewBox="0 0 640 330" preserveAspectRatio="none"></svg></div>
-
-  <h2>Model-free surface (the same story without any model)</h2>
-  <p class="muted">Observed error rate per (trajectory × EV band) with Wilson 95% intervals.
-  Buckets with n&lt;10 hidden. This is the table a skeptical reader can recompute in one line from
-  <code>bip.csv</code> — and if it disagrees with the model curve, the surface wins.</p>
-  <div class="scroll"><table id="surface"></table></div>
-
-  <h2>Coefficients (standardized) — what leans a play toward “error”</h2>
+  <h2>How it is validated</h2>
   <div class="grid cols2">
-    <div class="card"><h3>Binary: P(error)</h3><table id="coef1"></table></div>
-    <div class="card"><h3>Point-biserial correlation with ruled-error</h3><table id="corr"></table></div>
+    <div class="card"><h3>Grouped cross-validation (the headline)</h3><p class="muted">
+      Folds are split by <b>game</b>, not by play. Plays inside one game share a park, a pitching mix, a weather
+      night and a scorer; random folds let the model memorise those and inflate the score. The grouped number is
+      what this site quotes, and the random-fold number is shown beside it as the optimistic bound, with the gap
+      published (<span id="gap">–</span>).</p></div>
+    <div class="card"><h3>Uncertainty</h3><p class="muted">
+      Intervals come from a 1,000-draw <b>group bootstrap</b> (whole games resampled with replacement), so the
+      interval reflects how much the estimate would move with a different set of games — the honest source of
+      variance here, not the number of plays.</p></div>
+  </div>
+  <div class="grid cols2" style="margin-top:12px">
+    <div class="card"><h3>Calibration — is the number trustworthy where it is large?</h3>
+      <div class="scroll"><table class="compact" id="cal"></table></div>
+      <p class="muted" style="margin-bottom:0">If the observed rate in a bin is far from the predicted mean, the
+      number is miscalibrated and must not be read as a probability. Isotonic re-calibration is fitted out-of-fold
+      and its Brier score published next to the raw one.</p></div>
+    <div class="card"><h3>Does nonlinearity help?</h3>
+      <p class="muted">A gradient-boosted tree model is trained on the same grouped folds purely as a check. If it
+      cannot beat the logistic model, the extra machinery is not buying anything and the simpler, interpretable,
+      calibratable model stays — <span id="gbm">–</span></p>
+      <p class="muted" style="margin-bottom:0">The model-free empirical surface below (error rate per trajectory ×
+      exit-velocity band, with Wilson intervals) is the check that does not depend on any model being right.</p></div>
   </div>
 
-  <h2>Multinomial model — per-class discrimination</h2>
-  <div class="grid cols2"><div class="card" id="multi"></div>
-  <div class="card"><h3>Multiclass coefficients (error column)</h3><table id="coef2"></table></div></div>
+  <h2>The published coefficients</h2>
+  <p class="lede" style="font-size:.95rem">Standardized coefficients (per standard deviation), with 95% group-bootstrap
+  intervals. The intercept is the log-odds for an average batted ball.</p>
+  <div class="scroll"><table class="compact" id="coef"></table></div>
 
-  <h2>Design decisions that guard the numbers</h2>
-  <p class="lede" style="font-size:.95rem">
-  · <b>The sample is error-ENRICHED and is NOT self-weighting.</b> The 24 games were drawn from a 222-game
-  June–September 2026 pool at three different rates by stratum (A ≥3 team errors 10/20 = 0.500;
-  B = 2 → 10/51 = 0.196; C ≤ 1 → 4/151 = 0.026). Any pool-representative rate therefore requires the
-  raking weights <b>A 2.0 · B 5.1 · C 37.75</b>, which reconstruct the pool's 1.113 team-errors/game as
-  1.258. The <b>1.91% error rate quoted on this site is the sample rate, not the pool rate</b>, and the
-  fitted objects model P(class | batted-ball features) <i>within</i> a play, which is far less distorted
-  than the game-level rate. Full table on <a href="methods.html">Methods</a>.<br>
-  · <b>Calibration checked out-of-fold</b>: 5-fold stratified CV, log-loss &amp; Brier on held-out folds;
-  isotonic recalibration improvement reported separately rather than smuggled into the headline metrics.<br>
-  · <b>Uncertainty</b>: 1,000× bootstrap over rows for the OOF AUC (95% CI shown) and for the EV coefficient.<br>
-  · <b>Labels</b> are the official play-result eventType, and nothing is imputed. Errors charged <i>inside</i>
-  other eventTypes (a throwing error on a play scored a single) are not labelled “error”, so the observed
-  error rate is a <b>lower bound</b> — see <code>data/data_quality.json</code> and
-  <a href="methods.html">Methods</a>.
-  </p>
-  <div class="warn" id="caveats"></div>
+  <h2>Correlations and mutual information</h2>
+  <p class="lede" style="font-size:.95rem">A coefficient can be large because a feature is rare or because it is
+  genuinely informative. These are the raw, model-free associations with the error label: point-biserial r for
+  0/1 features, Spearman rho for continuous ones, plus mutual information in bits.</p>
+  <div class="scroll"><table class="compact" id="corr"></table></div>
+
+  <h2>Model-free surface: error rate by trajectory and exit velocity</h2>
+  <p class="lede" style="font-size:.95rem">Buckets with at least 10 batted balls. <b>n</b> = batted balls,
+  <b>k</b> = ruled errors, and the interval is a 95% Wilson interval — this is the table to look at if you distrust
+  the model entirely.</p>
+  <div class="scroll"><table class="compact" id="surface"></table></div>
+
+  <h2>Score distribution and context</h2>
+  <div class="grid cols2">
+    <div class="card"><h3>Error rate by base/out state</h3><div class="scroll"><table class="compact" id="ctx"></table></div>
+      <p class="muted" style="margin-bottom:0">Context is in the model, so the site can show where an error is more
+      likely given the same contact quality.</p></div>
+    <div class="card"><h3>Where the /100 score actually lives</h3><div class="scroll"><table class="compact" id="grid"></table></div>
+      <p class="muted" style="margin-bottom:0">The out-of-fold score distribution, by percentile. If the 99th
+      percentile is a small number, the dial cannot be honest at 90/100 — and the site says so.</p></div>
+  </div>
+
+  <div class="truth" id="honesty"></div>
 </main>
-<footer><div class="inner"><span>Generated from docs/data/model.json</span>
-<span>Confidence is earned by verification, not by font size · Own the Outcome</span></div></footer>
+<footer><div class="inner">
+  <span>Model: <code>tools/train_model.py</code> → <code>docs/data/model.json</code></span>
+  <span>Not affiliated with MLB</span>
+</div></footer>
 <script src="site.js"></script>
 <script>
-const COLORS = {ground_ball:'#f5b301',line_drive:'#37d67a',fly_ball:'#4cc2ff',popup:'#c58bff',bunt_grounder:'#ff8f66'};
+const $ = id => document.getElementById(id);
 (async function () {
-  const M = await loadJSON('data/model.json'); const m = M.meta, p = M.primary, mc = M.multiclass, h = M.honesty;
-  document.getElementById('headlineTruth').innerHTML = '<b>Read this before trusting the /100 dial.</b> ' + h.headline;
-  document.getElementById('top').innerHTML = `
-    <div class="card" id="mAuc"><div class="kpi">${p.cv_auc.toFixed(2)}<small>OOF AUC for P(error) · 95% CI ${p.cv_auc_ci95.join(' – ')}</small></div></div>
-    <div class="card"><div class="kpi">${p.cv_logloss}<small>OOF log-loss · Brier ${p.cv_brier_raw} (isotonic-OOF ${p.oof_brier_isotonic})</small></div></div>
-    <div class="card" id="mN"><div class="kpi">${m.n_error}/${m.n_model}<small>error labels / modelling rows · ${m.n_games} games ·
-      class mix ${Object.entries(m.class_counts).map(([k,v])=>k+':'+v).join(' · ')}</small></div></div>`;
-
-  // honesty tables
-  document.getElementById('recall').innerHTML = '<h3>Out-of-fold: does it name the right ruling?</h3>' +
-    '<table><tr><th>official call</th><th class="right">n</th><th class="right">named correctly</th><th class="right">recall</th></tr>' +
-    Object.entries(h.oof_top1_recall_by_class).map(([k,v]) =>
-      `<tr><td>${k.replace('_',' ')}</td><td class="right">${v.n}</td><td class="right">${v.correct}</td>
-       <td class="right"><b class="${v.recall === 0 ? 'no' : v.recall < 0.6 ? 'mid' : 'ok'}">${(100*v.recall).toFixed(1)}%</b></td></tr>`).join('') +
-    `<tr><td><b>overall top-1</b></td><td class="right"><b>${m.n_model}</b></td><td class="right"><b>${Math.round(h.oof_top1_accuracy*m.n_model)}</b></td>
-     <td class="right"><b>${(100*h.oof_top1_accuracy).toFixed(1)}%</b></td></tr></table>
-     <p class="legend" style="margin-top:8px">“error” recall is <b>0%</b> and “fielder’s choice” recall is
-     <b>0%</b> (n=10). Overall accuracy is carried almost entirely by “out”.</p>`;
-
-  document.getElementById('calib').innerHTML = '<h3>Out-of-fold calibration of P(error)</h3>' +
-    '<table><tr><th>predicted band</th><th class="right">n</th><th class="right">mean predicted</th><th class="right">actually errors</th></tr>' +
-    h.calibration_oof.map(b => `<tr><td>${(100*b.lo).toFixed(0)}–${(100*b.hi).toFixed(0)}%</td>
-      <td class="right">${b.n}</td><td class="right">${(100*b.mean_pred).toFixed(1)}%</td>
-      <td class="right"><b class="${Math.abs(b.mean_pred-b.observed) > 0.015 ? 'mid' : 'ok'}">${(100*b.observed).toFixed(1)}%</b></td></tr>`).join('') +
-    '</table><p class="legend" style="margin-top:8px">Reasonably calibrated in the crowded low bands, '
-    + 'noisy where it matters most (the top bands hold only 35 balls between them). A probability that '
-    + 'cannot be trusted at the top of its range is exactly why this site does not present it as a 0–100 dial.</p>';
-
-  // curve
-  const W=640,H=330,pad=42; const evs=M.curve.ground_ball.ev;
-  let maxP=Math.max(...Object.values(M.curve).flatMap(c=>c.p_err_x100),10); maxP=Math.ceil(maxP/5)*5;
-  const x=e=>pad+(e-50)/(120-50)*(W-2*pad); const y=v=>H-pad-(v/maxP)*(H-2*pad);
-  let svg=''; for(let g=0;g<=maxP;g+=5){svg+=`<line x1="${pad}" y1="${y(g)}" x2="${W-pad}" y2="${y(g)}" stroke="#24304d"/><text x="6" y="${y(g)+4}" fill="#9fb0cf" font-size="10">${g}%</text>`;}
-  for(let e=50;e<=120;e+=10){svg+=`<text x="${x(e)-8}" y="${H-pad+18}" fill="#9fb0cf" font-size="10">${e}</text>`;}
-  svg+=`<text x="6" y="14" fill="#9fb0cf" font-size="10">P(error) — note the axis tops out at ${maxP}%, not 100%</text><text x="${W/2-30}" y="${H-6}" fill="#9fb0cf" font-size="10">exit velocity (mph)</text>`;
-  for(const t of Object.keys(M.curve)){
-    const c=M.curve[t]; const pts=c.ev.map((e,i)=>`${x(e)},${y(c.p_err_x100[i])}`).join(' ');
-    svg+=`<polyline points="${pts}" fill="none" stroke="${COLORS[t]}" stroke-width="2.5"/>`;
-    svg+=`<text x="${W-pad+4}" y="${y(c.p_err_x100[c.p_err_x100.length-1])+4}" fill="${COLORS[t]}" font-size="10">${t.replace('_',' ')}</text>`;
-  }
-  document.getElementById('curve').innerHTML=svg;
-
-  // surface
-  const bands=[[0,70],[70,80],[80,90],[90,95],[95,100],[100,105],[105,200]];
-  const trajs=['ground_ball','line_drive','fly_ball','popup','bunt_grounder'];
-  let hh='<tr><th>trajectory</th>'+bands.map(b=>`<th>${b[0]}-${b[1]} mph</th>`).join('')+'</tr>';
-  for(const t of trajs){hh+=`<tr><th style="color:${COLORS[t]}">${t.replace('_',' ')}</th>`+bands.map(b=>{
-    const s=M.surface[`${t}|${b[0]}-${b[1]}`];
-    return s?`<td><b>${(100*s.p).toFixed(1)}%</b><br><span class="muted">${(100*s.lo).toFixed(1)}–${(100*s.hi).toFixed(1)} · n=${s.n}, e=${s.k}</span></td>`:'<td class="muted">—</td>';
-  }).join('')+'</tr>';}
-  document.getElementById('surface').innerHTML=hh;
-
-  const ent=Object.entries(p.coef).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]));
-  document.getElementById('coef1').innerHTML='<tr><th>feature</th><th>coef</th><th>reads</th></tr>'+ent.map(([k,v])=>`<tr><td>${k}</td><td><b style="color:${v>0?'var(--bad)':'var(--good)'}">${v>0?'+':''}${v}</b></td><td class="muted">${v>0?'raises':'lowers'} P(error)</td></tr>`).join('');
-  document.getElementById('corr').innerHTML='<tr><th>feature</th><th>r</th><th>p</th></tr>'+Object.entries(M.correlations_pointbiserial).sort((a,b)=>Math.abs(b[1].r)-Math.abs(a[1].r)).map(([k,v])=>`<tr><td>${k}</td><td>${v.r}</td><td class="muted">${v.p??'—'}</td></tr>`).join('');
-  document.getElementById('multi').innerHTML='<h3>Per-class OOF AUC</h3>'+Object.entries(mc.per_class_cv_auc).map(([k,v])=>`<p>${k}: <b>${v}</b></p>`).join('')+`<p class="muted">multiclass OOF log-loss ${mc.cv_logloss}</p>`;
-  document.getElementById('coef2').innerHTML='<tr><th>feature</th><th>coef</th></tr>'+Object.entries(mc.coef.error).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
-  document.getElementById('caveats').innerHTML='<b>Read first — known weaknesses:</b><ul style="margin:6px 0 0">'+M.caveats.map(c=>`<li>${c}</li>`).join('')+`</ul>
-    <p style="margin:8px 0 0"><b>Good for:</b> ${h.what_it_is_good_for}. <b>Not good for:</b> ${h.what_it_is_not_good_for}.</p>`;
+  const M = await loadJSON('data/model.json');
+  const m = M.meta, p = M.primary, h = M.honesty, mc = M.multiclass;
+  $('headline').innerHTML = `<div class="grid cols3">
+    ${kpiCard(p.cv_auc, `out-of-fold AUC — <b>GroupKFold by game</b> (${p.n_splits} folds)`) +
+      kpiCard(p.cv_auc_random_kfold, 'the same model under random folds — the optimistic bound') +
+      kpiCard(h.oof_top1_accuracy, 'out-of-fold top-1 accuracy over the four calls') +
+      kpiCard(h.oof_error_nominated_top1, 'times the model named “error” as its top pick (out of ' + m.n_model.toLocaleString() + ')') +
+      kpiCard(m.n_model.toLocaleString(), `batted balls modelled from ${m.games} games (${m.error_rate_pct}% ruled errors)`) +
+      kpiCard(p.cv_auc_gradient_boosting_grouped, 'gradient-boosted trees on the same grouped folds')}
+    </div>
+    <p class="legend" style="margin-top:10px">Dataset: <code>${esc(m.dataset)}</code> — ${esc(m.dataset_note)}</p>`;
+  $('gap').innerHTML = `<b>${M.honesty.grouped_vs_random_auc_gap}</b> AUC points (random minus grouped).`;
+  $('gbm').innerHTML = `grouped AUC <b>${p.cv_auc_gradient_boosting_grouped}</b> for trees vs
+    <b>${p.cv_auc}</b> for logistic regression.`;
+  $('cal').innerHTML = `<tr><th>predicted P(error)</th><th class="right">n</th><th class="right">mean predicted</th><th class="right">observed rate</th></tr>` +
+    h.calibration_oof.map(b => `<tr><td>${b.lo} – ${b.hi}</td><td class="right">${b.n.toLocaleString()}</td>
+      <td class="right">${(100 * b.mean_p).toFixed(3)}%</td><td class="right">${(100 * b.obs).toFixed(3)}%</td></tr>`).join('');
+  $('coef').innerHTML = `<tr><th>feature</th><th class="right">coef (standardized)</th><th class="right">95% CI</th>
+      <th class="right">correlation</th><th class="right">MI (bits)</th><th>kind</th></tr>` +
+    p.feature_names.map(n => {
+      const c = M.correlations[n] || {}, ci = p.coef_ci95[n] || [];
+      const cls = Math.abs(p.coef[n]) > 0.15 ? 'mid' : 'muted';
+      return `<tr><td><b class="${cls}">${esc(n)}</b></td><td class="right">${num(p.coef[n], 4)}</td>
+        <td class="right muted">[${num(ci[0], 3)}, ${num(ci[1], 3)}]</td>
+        <td class="right">${num(c.r, 4)}</td><td class="right">${num(c.mi, 5)}</td><td class="muted">${esc(c.type || '')}</td></tr>`;
+    }).join('');
+  const corr = Object.entries(M.correlations).sort((a, b) => Math.abs(b[1].r) - Math.abs(a[1].r));
+  $('corr').innerHTML = `<tr><th>feature</th><th>association</th><th class="right">value</th><th class="right">mutual information (bits)</th></tr>` +
+    corr.map(([n, c]) => `<tr><td>${esc(n)}</td><td class="muted">${esc(c.type)}</td>
+      <td class="right">${num(c.r, 4)}</td><td class="right">${num(c.mi, 5)}</td></tr>`).join('');
+  const surf = Object.entries(M.surface).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+  $('surface').innerHTML = `<tr><th>bucket (trajectory | EV band, mph)</th><th class="right">n</th><th class="right">k (errors)</th>
+      <th class="right">rate</th><th class="right">95% Wilson</th></tr>` +
+    surf.map(([k, v]) => `<tr><td>${esc(k)}</td><td class="right">${v.n}</td><td class="right">${v.k}</td>
+      <td class="right"><b>${(100 * v.p).toFixed(2)}%</b></td><td class="right muted">[${(100 * v.lo).toFixed(2)}%, ${(100 * v.hi).toFixed(2)}%]</td></tr>`).join('');
+  $('ctx').innerHTML = `<tr><th>state</th><th class="right">n</th><th class="right">errors</th><th class="right">rate</th></tr>` +
+    Object.entries(M.context_stats || {}).map(([k, v]) => `<tr><td>${esc(k)}</td><td class="right">${v.n.toLocaleString()}</td>
+      <td class="right">${v.k}</td><td class="right">${v.p === null ? '–' : (100 * v.p).toFixed(2) + '%'}</td></tr>`).join('');
+  $('grid').innerHTML = `<tr><th>percentile of fitted balls</th><th class="right">P(error) ×100</th></tr>` +
+    h.p_error_percentile_grid.filter(g => g.percentile % 10 === 0).map(g =>
+      `<tr><td>${g.percentile}th</td><td class="right">${(100 * g.p_error).toFixed(2)}</td></tr>`).join('');
+  $('honesty').innerHTML = `<b>Honest summary.</b> ${esc(h.what_this_is)}
+    Out of fold, the model's top pick is right ${(100 * h.oof_top1_accuracy).toFixed(1)}% of the time, it names
+    “error” <b>${h.oof_error_nominated_top1}</b> times, and its error recall is <b>${h.oof_error_recall}</b> — i.e. it
+    does not find errors, it rules them out. The per-class out-of-fold recall is
+    ${Object.entries(mc.per_class).map(([c, v]) => `${esc(c)} ${v.recall}`).join(', ')}.
+    ${esc(h.note)}`;
 })();
 </script>
 </body>

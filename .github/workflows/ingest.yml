@@ -54,7 +54,19 @@ jobs:
           git add -A data/ingest docs/data
           if git diff --cached --quiet; then echo "no data changes to commit"; exit 0; fi
           git commit -m "[ci-data] official ingest $(date -u +%FT%TZ) from $GITHUB_SHA"
-          git push origin HEAD:${{ github.ref_name }}
+          # The agent's sandbox also pushes to this branch, so re-apply this commit on top of
+          # whatever landed while we were fetching, then push. Data files are disjoint from the
+          # source files edited by hand, so this normally rebases cleanly.
+          BRANCH="${{ github.ref_name }}"
+          for i in 1 2 3; do
+            if git fetch origin "$BRANCH" && git rebase "origin/$BRANCH"; then
+              git push origin HEAD:"$BRANCH" && exit 0
+            fi
+            git rebase --abort || true
+            sleep 10
+          done
+          echo "::warning::could not push the ingested data after 3 attempts"
+          exit 0
       - uses: actions/upload-artifact@v4
         if: always()
         with:

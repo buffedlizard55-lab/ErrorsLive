@@ -239,7 +239,8 @@ def points_of_interest(play):
         'pitch_hand': ((play.get('matchup') or {}).get('pitchHand') or {}).get('code', ''),
         'event_type': et, 'macro_class': macro_class(et),
         'description': desc, 'rbi_official': res.get('rbi', 0),
-        'review_type': rd.get('reviewType', ''), 'review_overturned': rd.get('isOverturned', ''),
+        'review_type': rd.get('reviewType', ''),
+        'review_overturned': (int(bool(rd['isOverturned'])) if 'isOverturned' in rd else ''),
         'challenge_team_id': rd.get('challengeTeamId', ''),
         'has_review': int(bool(rd)),
         'bases_before': ','.join(bases) or '-', 'risp': int(bool(RISP & set(bases))),
@@ -255,7 +256,6 @@ def points_of_interest(play):
         'multi_hitdata': multi,
         'play_id': pid, 'play_ids': ' '.join(all_ids),
         'savant_url': f'{SAVANT}/sporty-videos?playId={pid}' if pid else '',
-        'boxscore_url': f'{STATS}/api/v1/game/{play.get("_pk")}/boxscore' if False else '',
     }
     # the final ruling text (for overturned plays) is what a human needs next to the video
     final_text, overturned = final_call_text(desc)
@@ -293,6 +293,9 @@ def bip_row(play, pk):
 
 
 # ------------------------------------------------------------------ one game
+log_video_schema = {'done': False, 'schema': None, 'game_pk': None}
+
+
 def ingest_game(meta, want_videos=False):
     """Fetch + verify one game. Returns (bip_rows, replay_rows, ledger_row, video_rows, flags)."""
     pk = meta['pk']
@@ -358,12 +361,17 @@ def ingest_game(meta, want_videos=False):
         'feed_bytes': fmeta['bytes'], 'linescore_bytes': lmeta['bytes'],
     }
     vids = []
+    fetch_videos.last_schema = None
     if want_videos and any(int(r['run_removed_heuristic'] or 0) or int(r['run_removed_hard'] or 0)
                            for r in reps):
         try:
             vids = fetch_videos(pk, reps)
         except Exception as e:                                            # noqa: BLE001
             flags.append(f'{pk}: video lookup failed ({type(e).__name__}: {e})')
+        if fetch_videos.last_schema is not None and not log_video_schema['done']:
+            log_video_schema['done'] = True
+            log_video_schema['schema'] = fetch_videos.last_schema
+            log_video_schema['game_pk'] = pk
     return bip, reps, ledger, vids, flags
 
 
@@ -378,6 +386,12 @@ def fetch_videos(pk, reps):
     obj, _ = get_json(f'{STATS}/api/v1/game/{pk}/content', timeout=60)
     hl = (((obj.get('highlights') or {}).get('highlights') or {}).get('items')
           or (obj.get('highlights') or {}).get('items') or [])
+    schema = []
+    for it in hl[:2]:
+        schema.append({'keys': sorted(it.keys())[:20],
+                       'keyword_types': sorted({str(k.get('type')) for k in (it.get('keywordsAll') or [])}),
+                       'playback_keys': sorted({k for p in (it.get('playbacks') or []) for k in p})})
+    fetch_videos.last_schema = schema
     by_play = defaultdict(list)
     for it in hl:
         for kw in it.get('keywordsAll', []) or []:
@@ -550,9 +564,11 @@ def main(argv=None):
     write_csv(ROOT / 'docs' / 'data' / 'replay_videos.csv', vid_all)
 
     link_rows = []
-    if not a.skip_links and (ROOT / 'docs' / 'data' / 'overturned_calls.csv').exists():
+    skip_links = a.skip_links or bool(plan.get('skip_links'))
+    link_sample = a.link_sample or int(plan.get('link_sample') or 0)
+    if not skip_links and (ROOT / 'docs' / 'data' / 'overturned_calls.csv').exists():
         print('resolving archived NYDN video short-links', flush=True)
-        link_rows = resolve_links(sample=a.link_sample, workers=workers)
+        link_rows = resolve_links(sample=link_sample, workers=workers)
         write_csv(ROOT / 'docs' / 'data' / 'nydn_links.csv', link_rows)
 
     n_bip = len(bip_all)
@@ -576,6 +592,7 @@ def main(argv=None):
         'link_status': dict(Counter(str(r['status']) for r in link_rows)),
         'elapsed_s': round(time.time() - t_start, 1),
     }
+    log['content_api_schema_probe'] = log_video_schema
     log['summary'] = summary
     (out_dir / 'ingest_report.json').write_text(json.dumps(log, indent=1))
     print(json.dumps(summary, indent=1))

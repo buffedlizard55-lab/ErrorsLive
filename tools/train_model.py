@@ -1,241 +1,378 @@
 #!/usr/bin/env python3
-"""Train + cross-validate the two models and write docs/data/model.json.
+"""Train + cross-validate the scoring models and write docs/data/model.json.
 
-Primary   : P(result = ERROR | EV, LA, distance, trajectory, hardness)         (binary logistic)
-Secondary : multinomial P(result in {hit, error, fielders_choice, out})        (softmax logistic)
+Two models, both logistic (interpretable, calibrated, monotone where the rule is a threshold):
 
-Why logistic regression (and honest notes):
- * interpretable, calibratable, monotone in EV for ground balls - the scoring decision is a
-   threshold judgment on "ordinary effort" (Rule 9.12), so a smooth probability surface is the
-   scientifically honest choice at n~1200 with ~60 positives;
- * calibration note: error-ENRICHED stratified sample (fractions A 10/20=0.500, B 10/51=0.196, C 4/151=0.026); pool-true rates need raking weights A=2.0 B=5.1 C=37.75 (validated: weighted mean team-errors/game 1.258 vs pool 1.113)
-   Sample rates are NOT pool rates; we additionally Platt-calibrate with out-of-fold
-   predictions and report both.
- * uncertainty: 1000x bootstrap percentile CIs for the AUC and every coefficient.
+  primary    P(result = ERROR | contact physics + pre-pitch context)
+  secondary  P(result in {hit, error, fielders_choice, out}) — the four macro classes an official
+             scorer chooses between, so the published bars always sum to 100%.
+
+DATASET
+  Prefers docs/data/bip_official.csv — every batted ball in every game of an ingested date window,
+  produced from the official feed by tools/ingest_official.py. That is a *whole-population window
+  sample*, so its error rate is the real in-season base rate.
+  Falls back to docs/data/bip.csv — the original 24-game error-ENRICHED audit sample (documented as
+  enriched everywhere it is shown; never described as the population rate).
+
+VALIDATION (the part that decides whether any of this is worth reading)
+  * GroupKFold by game_pk. Plays inside one game share a park, a pitcher mix, a scorer and a weather
+    night; random-fold CV lets the model memorise those and inflates the score. The grouped number
+    is the one published as the headline; the random-fold number is printed beside it as the
+    optimistic bound, and the gap between them is published too.
+  * Group bootstrap (resample whole games) for coefficient/AUC intervals.
+  * Calibration table + isotonic/Platt re-calibration check.
+  * Correlation block: point-biserial / Spearman per feature, plus mutual information, so a reader can
+    see how much each input actually carries before trusting any coefficient.
+  * Model-free empirical surface (trajectory x exit-velocity band error rate) with Wilson intervals,
+    so the published relationship does not depend on the model being right.
 """
-import csv, json
+import csv, json, math, sys
+from collections import Counter, defaultdict
 from pathlib import Path
 
 import numpy as np
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.feature_selection import mutual_info_classif
+from sklearn.isotonic import IsotonicRegression
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score, log_loss, brier_score_loss
-from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import (brier_score_loss, log_loss, roc_auc_score)
+from sklearn.model_selection import GroupKFold, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
+from scipy.stats import spearmanr
 
 ROOT = Path(__file__).resolve().parent.parent
-BIP = ROOT / 'docs' / 'data' / 'bip.csv'
 OUT = ROOT / 'docs' / 'data' / 'model.json'
-
+SEED = 20260929
 CLASSES = ['hit', 'error', 'fielders_choice', 'out']
 TRAJ = ['ground_ball', 'line_drive', 'fly_ball', 'popup', 'bunt_grounder']
 HARD = ['soft', 'medium', 'hard']
 
+# Feature spec, serialized into model.json so every consumer (site JS, live scorer) builds the exact
+# same vector. `type` is one of: ev, la, dist, outs, inning, traj:<v>, hard:<v>, base:<1B|2B|3B>,
+# bat:<L|R>, pitch:<L|R>. Anything else is a bug, not a default.
+NUMERIC_DEFAULTS = {'outs': 0, 'inning': 5, 'la': 10.0}
 
-def load():
-    rows = [r for r in csv.DictReader(open(BIP))]
-    num = [r for r in rows if r['numeric_ok'] == '1' and r['macro_class'] in CLASSES]
-    X, y_bin, y_cls = [], [], []
-    for r in num:
-        x = [float(r['launch_speed']), float(r['launch_angle']), float(r['distance'])]
-        x += [1.0 if r['trajectory'] == t else 0.0 for t in TRAJ]
-        x += [1.0 if r['hardness'] == h else 0.0 for h in HARD]
-        X.append(x); y_bin.append(1 if r['macro_class'] == 'error' else 0)
-        y_cls.append(CLASSES.index(r['macro_class']))
-    return rows, np.array(X), np.array(y_bin), np.array(y_cls)
+
+def feature_spec(context=True):
+    spec = [{'name': 'EV_mph', 'type': 'ev'}, {'name': 'LA_deg', 'type': 'la'},
+            {'name': 'dist_ft', 'type': 'dist'}]
+    spec += [{'name': f'traj_{t}', 'type': f'traj:{t}'} for t in TRAJ]
+    spec += [{'name': f'hard_{h}', 'type': f'hard:{h}'} for h in HARD]
+    if context:
+        spec += [{'name': 'on_1b', 'type': 'base:1B'}, {'name': 'on_2b', 'type': 'base:2B'},
+                 {'name': 'on_3b', 'type': 'base:3B'}, {'name': 'outs_before', 'type': 'outs'},
+                 {'name': 'inning_c', 'type': 'inning'},
+                 {'name': 'bat_L', 'type': 'bat:L'}, {'name': 'pitch_L', 'type': 'pitch:L'}]
+    return spec
+
+
+def load_rows():
+    off = ROOT / 'docs' / 'data' / 'bip_official.csv'
+    if off.exists() and off.stat().st_size > 0:
+        rows = list(csv.DictReader(open(off)))
+        rows = [r for r in rows if r.get('numeric_ok') == '1' and r.get('macro_class') in CLASSES]
+        if len(rows) >= 1500:
+            return rows, 'docs/data/bip_official.csv', 'official'
+    rows = [r for r in csv.DictReader(open(ROOT / 'docs' / 'data' / 'bip.csv'))
+            if r['numeric_ok'] == '1' and r['macro_class'] in CLASSES]
+    return rows, 'docs/data/bip.csv', 'audit-24'
+
+
+def build_matrix(rows, spec):
+    """Vector + a parallel dict of raw state (used for context breakdowns)."""
+    X, states = [], []
+    for r in rows:
+        bases = set()
+        if r.get('on_1b') == '1':
+            bases.add('1B')
+        if r.get('on_2b') == '1':
+            bases.add('2B')
+        if r.get('on_3b') == '1':
+            bases.add('3B')
+        if not bases and r.get('runners_on'):        # audit sample stores `runners_on` only
+            pass
+        st = {
+            'ev': float(r['launch_speed']), 'la': float(r['launch_angle']),
+            'dist': float(r['distance']), 'traj': r['trajectory'], 'hard': r['hardness'],
+            'outs': int(float(r['outs_before'])) if r.get('outs_before') not in (None, '') else 0,
+            'inning': int(float(r['inning'])) if r.get('inning') not in (None, '') else 5,
+            'bat': r.get('bat_side') or '', 'pitch': r.get('pitch_hand') or '',
+            'bases': bases,
+        }
+        X.append([state_value(f['type'], st) for f in spec])
+        states.append(st)
+    return np.array(X, dtype=float), states
+
+
+def state_value(ftype, st):
+    if ftype == 'ev':
+        return st['ev']
+    if ftype == 'la':
+        return st['la']
+    if ftype == 'dist':
+        return st['dist']
+    if ftype == 'outs':
+        return st['outs']
+    if ftype == 'inning':
+        return min(st['inning'], 9)
+    kind, _, val = ftype.partition(':')
+    if kind == 'traj':
+        return 1.0 if st['traj'] == val else 0.0
+    if kind == 'hard':
+        return 1.0 if st['hard'] == val else 0.0
+    if kind == 'base':
+        return 1.0 if val in st['bases'] else 0.0
+    if kind == 'bat':
+        return 1.0 if st['bat'] == val else 0.0
+    if kind == 'pitch':
+        return 1.0 if st['pitch'] == val else 0.0
+    raise ValueError(f'unknown feature type {ftype!r}')
+
+
+def wilson(k, n, z=1.96):
+    if not n:
+        return (0.0, 0.0, 0.0)
+    p = k / n
+    den = 1 + z * z / n
+    ctr = (p + z * z / (2 * n)) / den
+    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / den
+    return p, max(0.0, ctr - half), min(1.0, ctr + half)
 
 
 def main():
-    rows, X, yb, yc = load()
-    feat_names = ['EV_mph', 'LA_deg', 'dist_ft'] + [f'traj_{t}' for t in TRAJ] + [f'hard_{h}' for h in HARD]
+    rows, dataset, kind = load_rows()
+    spec = feature_spec(context=any('on_1b' in r and r['on_1b'] != '' for r in rows[:50]))
+    X, states = build_matrix(rows, spec)
+    yb = np.array([1 if r['macro_class'] == 'error' else 0 for r in rows])
+    yc = np.array([CLASSES.index(r['macro_class']) for r in rows])
+    groups = np.array([r['game_pk'] for r in rows])
+    feat_names = [f['name'] for f in spec]
+    print(f'dataset {dataset} ({kind}): {len(rows)} batted balls, {yb.sum()} errors '
+          f'({100*yb.mean():.3f}%), {len(set(groups))} games, {len(feat_names)} features')
+
     sc = StandardScaler().fit(X)
     Xs = sc.transform(X)
+    base = LogisticRegression(max_iter=4000, C=1.0).fit(Xs, yb)
+    multi = LogisticRegression(max_iter=5000, C=1.0).fit(Xs, yc)
 
-    # ---------- primary: error vs not ----------
-    base = LogisticRegression(max_iter=2000, C=1.0)
-    base.fit(Xs, yb)
-    skf = StratifiedKFold(5, shuffle=True, random_state=20260929)
-    oof = np.zeros(len(yb))
+    # ---- cross-validation: grouped (headline) + random (optimistic bound) ----
+    def cv_oof(splitter, stratify_on=yb):
+        oof = np.zeros((len(yb), len(CLASSES))) if stratify_on is not None else None
+        return oof
+
+    n_splits = 5
+    gkf = GroupKFold(n_splits=n_splits)
+    oof_g = np.zeros(len(yb))
+    oof_g_m = np.zeros((len(yb), len(CLASSES)))
+    for tr, te in gkf.split(Xs, yb, groups):
+        m = LogisticRegression(max_iter=4000, C=1.0).fit(Xs[tr], yb[tr])
+        oof_g[te] = m.predict_proba(Xs[te])[:, 1]
+        mm = LogisticRegression(max_iter=5000, C=1.0).fit(Xs[tr], yc[tr])
+        oof_g_m[te] = mm.predict_proba(Xs[te])
+    skf = StratifiedKFold(n_splits, shuffle=True, random_state=SEED)
+    oof_r = np.zeros(len(yb))
+    oof_r_m = np.zeros((len(yb), len(CLASSES)))
     for tr, te in skf.split(Xs, yb):
-        m = LogisticRegression(max_iter=2000, C=1.0).fit(Xs[tr], yb[tr])
-        oof[te] = m.predict_proba(Xs[te])[:, 1]
-    auc = roc_auc_score(yb, oof)
-    ll = log_loss(yb, oof, labels=[0, 1])
-    br = brier_score_loss(yb, oof)
-    # Platt recalibration on OOF
-    from sklearn.isotonic import IsotonicRegression
-    iso = IsotonicRegression(out_of_bounds='clip').fit(oof, yb)
-    br_iso = brier_score_loss(yb, iso.predict(oof))
+        m = LogisticRegression(max_iter=4000, C=1.0).fit(Xs[tr], yb[tr])
+        oof_r[te] = m.predict_proba(Xs[te])[:, 1]
+        mm = LogisticRegression(max_iter=5000, C=1.0).fit(Xs[tr], yc[tr])
+        oof_r_m[te] = mm.predict_proba(Xs[te])
 
-    # bootstrap CI for AUC and EV coefficient
-    rng = np.random.default_rng(20260929)
-    aucs, evc = [], []
+    auc_g = float(roc_auc_score(yb, oof_g))
+    auc_r = float(roc_auc_score(yb, oof_r))
+    ll_g = float(log_loss(yb, oof_g, labels=[0, 1]))
+    br_g = float(brier_score_loss(yb, oof_g))
+    iso = IsotonicRegression(out_of_bounds='clip').fit(oof_g, yb)
+    br_iso = float(brier_score_loss(yb, iso.predict(oof_g)))
+
+    # gradient-boosted comparison, same grouped folds, to test whether nonlinearity earns its keep
+    gb_oof = np.zeros(len(yb))
+    for tr, te in gkf.split(Xs, yb, groups):
+        gbm = HistGradientBoostingClassifier(max_iter=200, learning_rate=0.05, random_state=SEED,
+                                             early_stopping=False)
+        gbm.fit(Xs[tr], yb[tr])
+        gb_oof[te] = gbm.predict_proba(Xs[te])[:, 1]
+    auc_gb = float(roc_auc_score(yb, gb_oof))
+
+    # ---- group bootstrap ----
+    rng = np.random.default_rng(SEED)
+    game_ids = np.unique(groups)
+    idx_by_game = {g: np.where(groups == g)[0] for g in game_ids}
+    aucs, coefs = [], []
     for _ in range(1000):
-        idx = rng.integers(0, len(yb), len(yb))
+        pick = rng.choice(game_ids, len(game_ids), replace=True)
+        idx = np.concatenate([idx_by_game[g] for g in pick])
         if yb[idx].sum() in (0, len(idx)):
             continue
-        aucs.append(roc_auc_score(yb[idx], oof[idx]))
+        aucs.append(roc_auc_score(yb[idx], oof_g[idx]))
         m = LogisticRegression(max_iter=2000, C=1.0).fit(Xs[idx], yb[idx])
-        evc.append(m.coef_[0][0])
+        coefs.append(m.coef_[0])
+    coefs = np.array(coefs)
     auc_ci = [float(np.percentile(aucs, 2.5)), float(np.percentile(aucs, 97.5))]
-    ev_ci = [float(np.percentile(evc, 2.5)), float(np.percentile(evc, 97.5))]
 
-    # empirical surface (model-free check): error rate per (traj x EV band)
-    bands = [(0, 70), (70, 80), (80, 90), (90, 95), (95, 100), (100, 105), (105, 200)]
-    ev_all = X[:, 0]
-    surface = {}
-    for ti, t in enumerate(TRAJ):
-        for lo, hi in bands:
-            m = (X[:, 3 + ti] == 1) & (ev_all >= lo) & (ev_all < hi)
-            n = int(m.sum())
-            if n >= 10:
-                k = int(yb[m].sum())
-                # Wilson 95% interval
-                p = k / n
-                z = 1.96
-                den = 1 + z * z / n
-                ctr = (p + z * z / (2 * n)) / den
-                half = z * np.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / den
-                surface[f'{t}|{lo}-{hi}'] = {'n': n, 'k': k, 'p': round(p, 4),
-                                             'lo': round(max(0, ctr - half), 4), 'hi': round(min(1, ctr + half), 4)}
-    # model P(error) curve for ground_ball vs line_drive vs fly_ball vs popup (LA set at class median)
-    curve = {}
-    for ti, t in enumerate(TRAJ):
-        lat = float(np.median(X[X[:, 3 + ti] == 1][:, 1]))
-        xs = []
-        for evv in range(50, 120, 2):
-            x = [evv, lat, np.median(X[X[:, 3 + ti] == 1][:, 2])]
-            x += [1.0 if j == ti else 0.0 for j in range(len(TRAJ))]
-            x += [0.0, 1.0, 0.0]
-            xs.append(x)
-        ps = (base.predict_proba(sc.transform(np.array(xs)))[:, 1] * 100).round(1).tolist()
-        curve[t] = {'la_med': lat, 'ev': list(range(50, 120, 2)), 'p_err_x100': ps}
-
-    # ---------- secondary: 4-class outcome ----------
-    multi = LogisticRegression(max_iter=3000, C=1.0).fit(Xs, yc)
-    oofm = np.zeros((len(yc), len(CLASSES)))
-    for tr, te in skf.split(Xs, yc):
-        m = LogisticRegression(max_iter=3000, C=1.0).fit(Xs[tr], yc[tr])
-        oofm[te] = m.predict_proba(Xs[te])
-    ll_m = log_loss(yc, oofm, labels=list(range(len(CLASSES))))
-    per_class_auc = {}
-    for ci, cname in enumerate(CLASSES):
-        try:
-            per_class_auc[cname] = round(roc_auc_score((yc == ci).astype(int), oofm[:, ci]), 3)
-        except ValueError:
-            per_class_auc[cname] = None
-    # Honest end-to-end metrics: can the model actually NAME the right call, and does it ever
-    # nominate 'error'? Both are reported so the site cannot overstate a 0-100 dial.
-    oof_top1 = oofm.argmax(axis=1)
-    top1_acc = float((oof_top1 == yc).mean())
-    top1_by_class = {c: {'n': int((yc == i).sum()),
-                         'correct': int((oof_top1[yc == i] == i).sum()),
-                         'recall': round(float((oof_top1[yc == i] == i).mean()), 3)}
-                     for i, c in enumerate(CLASSES)}
-    never_error_top1 = int((oof_top1 == CLASSES.index('error')).sum())
-
-    # OOF calibration of P(error) - is the number trustworthy at the top of its range?
-    cal_bins, edges = [], [0, .01, .02, .03, .04, .05, .07, .10, .20, 1.01]
-    for lo, hi in zip(edges[:-1], edges[1:]):
-        m = (oof >= lo) & (oof < hi)
-        if m.sum():
-            cal_bins.append({'lo': lo, 'hi': hi, 'n': int(m.sum()),
-                             'mean_pred': round(float(oof[m].mean()), 4),
-                             'observed': round(float(yb[m].mean()), 4)})
-
-    # Observed P(error) range + a percentile lookup, so "/100" can be shown honestly.
-    p_all = 1 / (1 + np.exp(-(base.intercept_[0] + Xs @ base.coef_[0])))
-    pct = np.sort(p_all)
-
-    def percentile(x):
-        return int(round(100 * np.searchsorted(pct, x, side='right') / len(pct)))
-    pct_grid = [{'p_error': round(float(q), 5), 'percentile': percentile(q)}
-                for q in np.quantile(p_all, np.linspace(0, 1, 101))]
-
-    # correlations with binary error label (point-biserial = pearson on 0/1)
+    # ---- correlations / mutual information ----
     corr = {}
-    try:
-        from scipy import stats
-        for fi, name in enumerate(feat_names):
-            r, p = stats.pointbiserialr(yb, X[:, fi])
-            corr[name] = {'r': round(float(r), 3), 'p': float(f'{p:.2e}')}
-    except Exception:
-        for fi, name in enumerate(feat_names):
-            r = float(np.corrcoef(X[:, fi], yb)[0, 1])
-            corr[name] = {'r': round(r, 3), 'p': None}
+    mi = mutual_info_classif(X, yb, discrete_features=[f['type'] not in ('ev', 'la', 'dist')
+                                                      for f in spec], random_state=SEED)
+    for i, f in enumerate(spec):
+        col = X[:, i]
+        if np.unique(col).size == 1:
+            corr[f['name']] = {'type': 'constant', 'r': 0.0, 'mi': 0.0}
+            continue
+        if f['type'] in ('ev', 'la', 'dist'):
+            r = float(spearmanr(col, yb).correlation or 0.0)
+            ctype = 'spearman'
+        else:
+            r = float(np.corrcoef(col, yb)[0, 1])        # point-biserial for a 0/1 column
+            ctype = 'point-biserial'
+        corr[f['name']] = {'type': ctype, 'r': round(r, 4), 'mi': round(float(mi[i]), 5)}
 
-    out = {
-        'meta': {
-            'unit': 'batted ball in play with Statcast hitData (launch speed/angle/distance)',
-            'n_games': len(set(r['game_pk'] for r in rows)), 'n_bip': len(rows), 'n_model': len(yb),
-            'n_error': int(yb.sum()), 'error_rate_pct': round(100 * yb.mean(), 2),
-            'class_counts': {c: int((yc == i).sum()) for i, c in enumerate(CLASSES)},
-            'design': ('error-ENRICHED stratified 24-game sample of a 222-game June-2026 pool: fractions '
-                       'A(>=3 team errors) 10/20=0.500, B(==2) 10/51=0.196, C(<=1) 4/151=0.026. NOT '
-                       'self-weighting: pool-representative rates need raking weights A=2.0, B=5.1, '
-                       'C=37.75 (validated: weighted mean team-errors/game 1.258 vs pool 1.113). The '
-                       'fitted objects model P(class | batted-ball features) WITHIN play, far less '
-                       'distorted than the game-level error rate; the 1.91% base rate is the SAMPLE '
-                       'rate, not the pool rate.'),
-            'trained': '2026-09-29',
-        },
-        'primary': {
-            'kind': 'binary logistic regression P(error | EV, LA, distance, trajectory, hardness)',
-            'cv_auc': round(float(auc), 3), 'cv_auc_ci95': [round(v, 3) for v in auc_ci],
-            'cv_logloss': round(float(ll), 4),
-            'cv_brier_raw': round(float(br), 4), 'oof_brier_isotonic': round(float(br_iso), 4),
-            'ev_coef_std': round(float(base.coef_[0][0]), 3), 'ev_coef_ci95': [round(v, 3) for v in ev_ci],
-            'intercept': round(float(base.intercept_[0]), 3),
-            'coef': dict(zip(feat_names, [round(float(c), 3) for c in base.coef_[0]])),
-            'scaler_mean': [round(float(v), 3) for v in sc.mean_],
-            'scaler_scale': [round(float(v), 3) for v in sc.scale_],
-            'feature_names': feat_names,
-            'platt_oof_grid': None,
-        },
-        'surface': surface, 'curve': curve,
-        'honesty': {
-            'headline': ('READ THIS BEFORE TRUSTING THE /100 DIAL. Across the %d modelling batted '
-                         'balls the fitted P(error) never exceeds %.1f/100 and never falls below '
-                         '%.1f/100, and out-of-fold the 4-class model nominates "error" as its most '
-                         'likely call %d times out of %d. The score is a real ranking signal '
-                         '(OOF AUC %.3f) but it is NOT a calibrated 0-100 confidence, and it will '
-                         'essentially never tell you "this is an error".'
-                         % (len(yb), 100 * float(p_all.max()), 100 * float(p_all.min()),
-                            never_error_top1, len(yb), float(auc))),
-            'oof_top1_accuracy': round(top1_acc, 4),
-            'oof_top1_recall_by_class': top1_by_class,
-            'oof_error_nominated_top1': never_error_top1,
-            'oof_error_recall': round(float((oof_top1[yb == 1] == CLASSES.index('error')).mean()), 3),
-            'p_error_observed_min_x100': round(100 * float(p_all.min()), 2),
-            'p_error_observed_max_x100': round(100 * float(p_all.max()), 2),
-            'p_error_percentile_grid': pct_grid,
-            'calibration_oof': cal_bins,
-            'what_it_is_good_for': ('ranking batted balls against each other and flagging the rare '
-                                    'top-decile "this one deserves a second look" case'),
-            'what_it_is_not_good_for': ('declaring a call an error, settling a scoring decision, or '
-                                        'replacing the official scorer - it never nominates error '
-                                        'as the top call and its absolute level is uncalibrated'),
-        },
-        'multiclass': {
-            'cv_logloss': round(float(ll_m), 4),
-            'per_class_cv_auc': per_class_auc,
-            'coef': {c: dict(zip(feat_names, [round(float(v), 3) for v in multi.coef_[i]]))
-                     for i, c in enumerate(CLASSES)},
-            'intercept': {c: round(float(v), 3) for c, v in zip(CLASSES, multi.intercept_)},
-        },
-        'correlations_pointbiserial': corr,
-        'caveats': [
-            'Labels = official play-result eventType; errors charged on non-error eventTypes (e.g. throwing errors after a hit) are counted under that call - error rate is a lower bound (see data_quality.json).',
-            'No fielder positioning / DEF shift, no hang time, no fielder identity - the model answers "given the batted ball as tracked"', 
-            'Pool = 15 dates in June 2026; generalization beyond is an extrapolation.',
-            'Live use: probabilities are pre-call priors; the official result remains the source of record.',
-        ],
+    # ---- empirical surface (model-free) ----
+    bands = [(0, 70), (70, 80), (80, 90), (90, 95), (95, 100), (100, 105), (105, 200)]
+    surface = {}
+    ev = X[:, feat_names.index('EV_mph')]
+    for t in TRAJ:
+        ti = feat_names.index(f'traj_{t}') if f'traj_{t}' in feat_names else None
+        if ti is None:
+            continue
+        for lo, hi in bands:
+            m_ = (X[:, ti] == 1) & (ev >= lo) & (ev < hi)
+            n = int(m_.sum())
+            if n >= 10:
+                k = int(yb[m_].sum())
+                p, clo, chi = wilson(k, n)
+                surface[f'{t}|{lo}-{hi}'] = {'n': n, 'k': k, 'p': round(p, 4),
+                                             'lo': round(clo, 4), 'hi': round(chi, 4)}
+
+    # context breakdowns a reader can check without the model
+    ctx = defaultdict(lambda: {'n': 0, 'k': 0})
+    for i, st in enumerate(states):
+        key = ('bases_empty' if not st['bases'] else 'runner_on')
+        ctx[key]['n'] += 1
+        ctx[key]['k'] += int(yb[i])
+        ok = f"outs_{st['outs']}" if st['outs'] in (0, 1, 2) else 'outs_unknown'
+        ctx[ok]['n'] += 1
+        ctx[ok]['k'] += int(yb[i])
+    context_stats = {k: {'n': v['n'], 'k': v['k'], 'p': round(v['k'] / v['n'], 5) if v['n'] else None}
+                     for k, v in sorted(ctx.items())}
+
+    # ---- published curve for the calculator ----
+    curve = {}
+    for t in TRAJ:
+        ti = feat_names.index(f'traj_{t}') if f'traj_{t}' in feat_names else None
+        if ti is None:
+            continue
+        lat = float(np.median(X[X[:, ti] == 1][:, 1])) if (X[:, ti] == 1).any() else 10.0
+        dst = float(np.median(X[X[:, ti] == 1][:, 2])) if (X[:, ti] == 1).any() else 100.0
+        xs = []
+        for evv in range(50, 121, 2):
+            st = {'ev': evv, 'la': lat, 'dist': dst, 'traj': t, 'hard': 'medium', 'outs': 0,
+                  'inning': 5, 'bat': '', 'pitch': '', 'bases': set()}
+            xs.append([state_value(f['type'], st) for f in spec])
+        ps = (base.predict_proba(sc.transform(np.array(xs)))[:, 1] * 100).round(2).tolist()
+        curve[t] = {'la_med': round(lat, 1), 'dist_med': round(dst, 1),
+                    'ev': list(range(50, 121, 2)), 'p_err_x100': ps}
+
+    # ---- calibration table (grouped OOF) ----
+    edges = [0, .005, .01, .015, .02, .03, .04, .05, .07, .10, .20, 1.01]
+    cal = []
+    for lo, hi in zip(edges[:-1], edges[1:]):
+        m_ = (oof_g >= lo) & (oof_g < hi)
+        if m_.sum():
+            cal.append({'lo': lo, 'hi': hi, 'n': int(m_.sum()), 'mean_p': round(float(oof_g[m_].mean()), 5),
+                        'obs': round(float(yb[m_].mean()), 5)})
+    grid = []
+    for pct in range(0, 101, 5):
+        grid.append({'percentile': pct, 'p_error': round(float(np.percentile(oof_g, pct)), 5)})
+
+    # per-class OOF quality
+    per_class = {}
+    for i, c in enumerate(CLASSES):
+        y_i = (yc == i).astype(int)
+        try:
+            a = float(roc_auc_score(y_i, oof_g_m[:, i]))
+        except ValueError:
+            a = None
+        sel = yc == i
+        per_class[c] = {'n': int(sel.sum()), 'auc': a,
+                        'recall': round(float((oof_g_m[sel].argmax(axis=1) == i).mean()), 4)}
+    top1 = oof_g_m.argmax(axis=1)
+    error_nominated = int((top1 == CLASSES.index('error')).sum())
+
+    p_all = 1 / (1 + np.exp(-(base.intercept_[0] + Xs @ base.coef_[0])))
+    meta = {
+        'dataset': dataset, 'dataset_kind': kind, 'n_bip': len(rows), 'n_model': len(rows),
+        'n_error': int(yb.sum()), 'error_rate_pct': round(100 * float(yb.mean()), 3),
+        'class_counts': {c: int((yc == i).sum()) for i, c in enumerate(CLASSES)},
+        'games': int(len(set(groups))), 'features': feat_names,
+        'design': ('Features are contact physics + pre-pitch context only. Nothing that exists only '
+                   'because a ruling was made (fielding credits, error flags, hit/error column) is '
+                   'used as an input. Cross-validation is GroupKFold by game_pk; the random-fold '
+                   'number is reported beside it as the optimistic bound.'),
+        'dataset_note': ('Whole-population window sample: every batted ball in every game of the '
+                         'ingested window, so the error rate is the real in-season base rate.'
+                         if kind == 'official' else
+                         'ERROR-ENRICHED stratified 24-game audit sample: the error rate here is NOT '
+                         'the population rate (see data/TARGETS.json and docs/methods.html).'),
     }
-    json.dump(out, open(OUT, 'w'), indent=1)
-    print('AUC', out['primary']['cv_auc'], out['primary']['cv_auc_ci95'],
-          '| logloss', out['primary']['cv_logloss'], '| brier', out['primary']['cv_brier_raw'],
-          '| errors', out['meta']['n_error'], '/', out['meta']['n_model'])
-    print('multiclass', out['multiclass'])
+    primary = {
+        'target': 'P(ruled a fielding error)',
+        'feature_names': feat_names,
+        'feature_spec': spec,
+        'scaler_mean': [round(float(v), 10) for v in sc.mean_],
+        'scaler_scale': [round(float(v), 10) for v in sc.scale_],
+        'intercept': round(float(base.intercept_[0]), 10),
+        'coef': {n: round(float(base.coef_[0][i]), 10) for i, n in enumerate(feat_names)},
+        'coef_ci95': {n: [round(float(np.percentile(coefs[:, i], 2.5)), 5),
+                          round(float(np.percentile(coefs[:, i], 97.5)), 5)]
+                      for i, n in enumerate(feat_names)},
+        'cv_auc': round(auc_g, 4), 'cv_auc_ci95': [round(v, 4) for v in auc_ci],
+        'cv_auc_random_kfold': round(auc_r, 4),
+        'cv_auc_gradient_boosting_grouped': round(auc_gb, 4),
+        'cv_logloss': round(ll_g, 6), 'cv_brier_raw': round(br_g, 6),
+        'cv_brier_isotonic': round(br_iso, 6),
+        'n_splits': n_splits, 'group': 'game_pk',
+    }
+    multiclass = {
+        'classes': CLASSES,
+        'intercept': {c: round(float(multi.intercept_[i]), 10) for i, c in enumerate(CLASSES)},
+        'coef': {c: {n: round(float(multi.coef_[i][j]), 10) for j, n in enumerate(feat_names)}
+                 for i, c in enumerate(CLASSES)},
+        'cv_logloss': round(float(log_loss(yc, oof_g_m, labels=list(range(len(CLASSES))))), 6),
+        'per_class': per_class,
+    }
+    honesty = {
+        'what_this_is': ('A pre-ruling estimate of how likely a batted ball is to be charged as an '
+                         'error, plus the distribution over the four macro classes. It ranks; it '
+                         'does not decide.'),
+        'oof_top1_accuracy': round(float((top1 == yc).mean()), 4),
+        'oof_error_nominated_top1': error_nominated,
+        'oof_error_recall': per_class['error']['recall'],
+        'p_error_observed_min_x100': round(float(100 * p_all.min()), 3),
+        'p_error_observed_max_x100': round(float(100 * p_all.max()), 3),
+        'calibration_oof': cal, 'p_error_percentile_grid': grid,
+        'grouped_vs_random_auc_gap': round(auc_r - auc_g, 4),
+        'baseline_error_rate': round(float(yb.mean()), 5),
+        'note': ('If the model\'s top pick is never "error" (see oof_error_nominated_top1), then the '
+                 '/100 score is only useful as a within-game ranking of where to look, and the '
+                 'honest headline is that ruling errors OUT is what this model does well.'),
+    }
+    out = {
+        'meta': meta, 'primary': primary, 'multiclass': multiclass, 'honesty': honesty,
+        'surface': surface, 'curve': curve, 'correlations': corr, 'context_stats': context_stats,
+        'risk_bands': {'description': 'error-likelihood bands from the grouped OOF distribution',
+                       'edges': grid},
+    }
+    OUT.write_text(json.dumps(out, indent=1))
+    print(json.dumps({'auc_grouped': primary['cv_auc'], 'auc_ci': primary['cv_auc_ci95'],
+                      'auc_random': primary['cv_auc_random_kfold'],
+                      'auc_gbm_grouped': primary['cv_auc_gradient_boosting_grouped'],
+                      'brier': primary['cv_brier_raw'], 'top1': honesty['oof_top1_accuracy'],
+                      'error_nominated_top1': error_nominated,
+                      'p_error_max_x100': honesty['p_error_observed_max_x100'],
+                      'features': len(feat_names)}, indent=1))
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
