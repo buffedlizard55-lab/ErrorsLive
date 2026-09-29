@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-29T22:08:50Z",
+ "generated_utc": "2026-09-29T22:10:51Z",
  "note": "Observed official-endpoint behaviour; committed by .github/workflows/probe.yml. Re-run: gh workflow run probe.yml",
  "records": [
   {
@@ -240,6 +240,15 @@
    "url": "https://www.mlb.com/video/?q=overturned+call",
    "status": 200,
    "bytes": 411172
+  },
+  {
+   "probe": "cors_statsapi",
+   "url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=2026-09-27",
+   "status": 200,
+   "bytes": 19838,
+   "origin_sent": "https://buffedlizard55-lab.github.io",
+   "access_control_allow_origin": "*",
+   "browser_bundle_cannot_read": false
   }
  ]
 }
