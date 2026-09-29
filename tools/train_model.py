@@ -26,6 +26,15 @@ VALIDATION (the part that decides whether any of this is worth reading)
   * Model-free empirical surface (trajectory x exit-velocity band error rate) with Wilson intervals,
     so the published relationship does not depend on the model being right.
 """
+# Determinism first: the published artifact must be byte-identical on a 2-core CI runner and on a
+# many-core workstation. numpy's BLAS and scikit-learn's OpenMP paths are thread-count sensitive, so the
+# process pins itself to one thread before importing them. This is a reproducibility fix, not a speed knob.
+import os
+for _v in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS', 'NUMEXPR_NUM_THREADS',
+           'VECLIB_MAXIMUM_THREADS'):
+    os.environ.setdefault(_v, '1')
+os.environ.setdefault('PYTHONHASHSEED', '0')
+
 import csv, json, math, sys
 from collections import Counter, defaultdict
 from pathlib import Path

@@ -15,10 +15,21 @@ jobs:
           python-version: '3.11'
       - run: pip install -r requirements.txt
       - name: Rebuild every published artifact from source
+        # If the rebuild is not byte-identical, say *what* changed in a form that survives a broken
+        # log download: GitHub annotations are readable through the REST API, so the changed files and
+        # the first diff lines are emitted as error annotations instead of only to stdout.
         run: |
           python3 tools/run_all.py
-          git diff --exit-code -- docs/data data/data_quality.json data/nydn_quality.json \
-            || (echo "::error::committed artifacts are not reproducible from source" && exit 1)
+          git diff --name-only -- docs/data data/data_quality.json data/nydn_quality.json > /tmp/changed.txt
+          if [ -s /tmp/changed.txt ]; then
+            echo "::error title=artifacts not reproducible::$(tr '\n' ' ' < /tmp/changed.txt)"
+            git diff -- docs/data data/data_quality.json data/nydn_quality.json \
+              | grep -E '^[+-][^+-]' | head -12 \
+              | sed 's/%/%25/g; s/\r//g' | cut -c1-220 \
+              | while IFS= read -r line; do echo "::error title=repro diff::$line"; done
+            exit 1
+          fi
+          echo "rebuild is byte-identical to the committed artifacts"
       - name: Audit suite (numbers vs pages, site vs tool, official ledger)
         run: python3 tests/test_pipeline.py
       - name: Live scorer runs against the committed official feed capture
