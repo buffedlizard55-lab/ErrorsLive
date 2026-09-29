@@ -1,201 +1,245 @@
 {
- "generated_utc": "2026-09-29T21:48:55Z",
- "probes": [
+ "generated_utc": "2026-09-29T22:08:50Z",
+ "note": "Observed official-endpoint behaviour; committed by .github/workflows/probe.yml. Re-run: gh workflow run probe.yml",
+ "records": [
   {
-   "probe": "schedule_2014_04_01",
+   "probe": "schedule_2014",
+   "url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2014-04-01&endDate=2014-04-01",
    "status": 200,
    "bytes": 12128,
-   "url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2014-04-01&endDate=2014-04-01",
    "games": 9,
+   "gameTypes": [
+    "R"
+   ],
    "first_pk": 380557,
-   "last_pk": 380555,
-   "postseason": [
-    "R"
-   ]
-  },
-  {
-   "probe": "schedule_2017_06_01",
-   "status": 200,
-   "bytes": 10777,
-   "url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2017-06-01&endDate=2017-06-01",
-   "games": 8,
-   "first_pk": 490911,
-   "last_pk": 490909,
-   "postseason": [
-    "R"
-   ]
-  },
-  {
-   "probe": "schedule_2026_06_01",
-   "status": 200,
-   "bytes": 12086,
-   "url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-06-01&endDate=2026-06-01",
-   "games": 9,
-   "first_pk": 822974,
-   "last_pk": 823131,
-   "postseason": [
-    "R"
+   "first_teams": [
+    "Los Angeles Dodgers",
+    "San Diego Padres"
    ]
   },
   {
    "probe": "feed_2014",
+   "url": "https://statsapi.mlb.com/api/v1.1/game/380557/feed/live?fields=gameData,datetime,officialDate,teams,away,home,name,abbreviation,liveData,plays,allPlays,result,event,eventType,rbi,description,about,inning,halfInning,isComplete,reviewDetails,isOverturned,reviewType,playEvents,playId,hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness",
    "status": 200,
    "bytes": 35981,
-   "url": "https://statsapi.mlb.com/api/v1.1/game/380557/feed/live?fields=gameData,datetime,officialDate,teams,away,home,name,abbreviation,liveData,plays,allPlays,result,event,eventType,rbi,description,about,inning,halfInning,isComplete,reviewDetails,isOverturned,reviewType,playEvents,playId,hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness",
    "game_pk": 380557,
-   "plays": 73,
-   "reviewed": 0,
-   "hitdata": 0,
    "date": "2014-04-01",
    "teams": [
     "LAD",
     "SD"
    ],
-   "reviews": []
+   "plays": 73,
+   "reviewed": 0,
+   "reviewTypes": [],
+   "playIds": 334,
+   "hitData_events": 51,
+   "hitData_keys": [
+    "hardness",
+    "trajectory"
+   ],
+   "hitData_coord_keys": []
+  },
+  {
+   "probe": "schedule_2017",
+   "url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2017-06-01&endDate=2017-06-01",
+   "status": 200,
+   "bytes": 10777,
+   "games": 8,
+   "gameTypes": [
+    "R"
+   ],
+   "first_pk": 490911,
+   "first_teams": [
+    "Oakland Athletics",
+    "Cleveland Indians"
+   ]
   },
   {
    "probe": "feed_2017",
+   "url": "https://statsapi.mlb.com/api/v1.1/game/490911/feed/live?fields=gameData,datetime,officialDate,teams,away,home,name,abbreviation,liveData,plays,allPlays,result,event,eventType,rbi,description,about,inning,halfInning,isComplete,reviewDetails,isOverturned,reviewType,playEvents,playId,hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness",
    "status": 200,
    "bytes": 33694,
-   "url": "https://statsapi.mlb.com/api/v1.1/game/490911/feed/live?fields=gameData,datetime,officialDate,teams,away,home,name,abbreviation,liveData,plays,allPlays,result,event,eventType,rbi,description,about,inning,halfInning,isComplete,reviewDetails,isOverturned,reviewType,playEvents,playId,hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness",
    "game_pk": 490911,
-   "plays": 68,
-   "reviewed": 1,
-   "hitdata": 36,
    "date": "2017-06-01",
    "teams": [
     "OAK",
     "CLE"
    ],
-   "reviews": [
-    {
-     "play_id": "7970bcd9-596a-46cd-8cb9-590d817e35ab",
-     "event": "force_out",
-     "overturned": false,
-     "review_type": "MF",
-     "desc": "Athletics challenged (play at 1st), call on the field was upheld: Indians challenged (tag "
-    }
+   "plays": 68,
+   "reviewed": 1,
+   "reviewTypes": [
+    "MF"
+   ],
+   "playIds": 268,
+   "hitData_events": 39,
+   "hitData_keys": [
+    "hardness",
+    "launchAngle",
+    "launchSpeed",
+    "totalDistance",
+    "trajectory"
+   ],
+   "hitData_coord_keys": []
+  },
+  {
+   "probe": "schedule_2026",
+   "url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-06-01&endDate=2026-06-01",
+   "status": 200,
+   "bytes": 12086,
+   "games": 9,
+   "gameTypes": [
+    "R"
+   ],
+   "first_pk": 822974,
+   "first_teams": [
+    "Detroit Tigers",
+    "Tampa Bay Rays"
    ]
   },
   {
    "probe": "feed_2026",
+   "url": "https://statsapi.mlb.com/api/v1.1/game/822974/feed/live?fields=gameData,datetime,officialDate,teams,away,home,name,abbreviation,liveData,plays,allPlays,result,event,eventType,rbi,description,about,inning,halfInning,isComplete,reviewDetails,isOverturned,reviewType,playEvents,playId,hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness",
    "status": 200,
    "bytes": 44366,
-   "url": "https://statsapi.mlb.com/api/v1.1/game/822974/feed/live?fields=gameData,datetime,officialDate,teams,away,home,name,abbreviation,liveData,plays,allPlays,result,event,eventType,rbi,description,about,inning,halfInning,isComplete,reviewDetails,isOverturned,reviewType,playEvents,playId,hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness",
    "game_pk": 822974,
-   "plays": 87,
-   "reviewed": 1,
-   "hitdata": 58,
    "date": "2026-06-01",
    "teams": [
     "DET",
     "TB"
    ],
-   "reviews": [
-    {
-     "play_id": "c23407bb-ffdf-35a9-bde7-611f4043d2ee",
-     "event": "walk",
-     "overturned": true,
-     "review_type": "MJ",
-     "desc": "Junior Caminero challenged (pitch result), call on the field was overturned: Junior Camine"
-    }
-   ]
+   "plays": 87,
+   "reviewed": 1,
+   "reviewTypes": [
+    "MJ"
+   ],
+   "playIds": 346,
+   "hitData_events": 58,
+   "hitData_keys": [
+    "hardness",
+    "launchAngle",
+    "launchSpeed",
+    "totalDistance",
+    "trajectory"
+   ],
+   "hitData_coord_keys": []
+  },
+  {
+   "probe": "content_2017",
+   "url": "https://statsapi.mlb.com/api/v1/game/490911/content",
+   "status": 200,
+   "bytes": 564,
+   "game_pk": 490911,
+   "play_id": "7970bcd9-596a-46cd-8cb9-590d817e35ab",
+   "top_keys": [
+    "copyright",
+    "editorial",
+    "gameNotes",
+    "highlights",
+    "link",
+    "media",
+    "summary"
+   ],
+   "parse_error": "'NoneType' object has no attribute 'get'"
   },
   {
    "probe": "sporty_videos_2017",
+   "url": "https://baseballsavant.mlb.com/sporty-videos?playId=7970bcd9-596a-46cd-8cb9-590d817e35ab",
    "status": 200,
    "bytes": 88322,
-   "url": "https://baseballsavant.mlb.com/sporty-videos?playId=7970bcd9-596a-46cd-8cb9-590d817e35ab",
+   "play_id": "7970bcd9-596a-46cd-8cb9-590d817e35ab",
    "no_video_found": false,
-   "broadcast_links": 0,
+   "mlb_video_links": 0,
+   "savant_gamefeed": true,
    "mp4_hits": [
     "https://sporty-clips.mlb.com/TTdSYVlfWGw0TUFRPT1fQVFoV1ZBWlhBZ3NBRFZzRUJ3QUFCMVVDQUZsV0FWZ0FCMXdGVkFzRUJsWldCVk1F.mp4"
    ],
-   "mp4_hits_n": 1,
-   "ctype": "text/html; charset=utf-8"
+   "mp4_hits_n": 1
   },
   {
-   "probe": "content_2017",
+   "probe": "content_2026",
+   "url": "https://statsapi.mlb.com/api/v1/game/822974/content",
    "status": 200,
-   "bytes": 564,
-   "url": "https://statsapi.mlb.com/api/v1/game/490911/content?fields=media,playbacks,url,name,title,duration,guid,id",
-   "game_pk": 490911,
-   "playbacks": 0,
-   "names": [],
-   "mp4_n": 0,
-   "mp4_urls": []
-  },
-  {
-   "probe": "content_2017",
-   "status": 200,
-   "bytes": 564,
-   "url": "https://statsapi.mlb.com/api/v1/game/490911/content?fields=media,playbacks,url",
-   "game_pk": 490911,
-   "playbacks": 0,
-   "names": [],
-   "mp4_n": 0,
-   "mp4_urls": []
+   "bytes": 628934,
+   "game_pk": 822974,
+   "play_id": "c23407bb-ffdf-35a9-bde7-611f4043d2ee",
+   "top_keys": [
+    "copyright",
+    "editorial",
+    "gameNotes",
+    "highlights",
+    "link",
+    "media",
+    "summary"
+   ],
+   "highlight_items": 41,
+   "item_keys": [
+    "blurb",
+    "cclocationVtt",
+    "date",
+    "description",
+    "duration",
+    "headline",
+    "id",
+    "image",
+    "keywordsAll",
+    "keywordsDisplay",
+    "kicker",
+    "mediaPlaybackId",
+    "mediaPlaybackUrl",
+    "noIndex",
+    "playbacks",
+    "seoTitle",
+    "slug",
+    "state",
+    "title",
+    "type"
+   ],
+   "playback_keys": [
+    "height",
+    "name",
+    "url",
+    "width"
+   ],
+   "keyword_types": [
+    "game",
+    "game_pk",
+    "mlbtax",
+    "player",
+    "player_id",
+    "season",
+    "subject",
+    "taxonomy",
+    "team",
+    "team_id"
+   ],
+   "items_with_play_id": 0,
+   "mp4_in_body": 74,
+   "mp4_hits": [
+    "https://bdata-producedclips.mlb.com/1560589b-fbe6-492e-b468-4bbce6e9cdbb.mp4",
+    "https://bdata-producedclips.mlb.com/364587cb-71eb-4bb4-a399-d2b67c367054.mp4",
+    "https://bdata-producedclips.mlb.com/434511c2-e32d-4025-8052-c91126ee1aa3.mp4"
+   ],
+   "mp4_hits_n": 68
   },
   {
    "probe": "sporty_videos_2026",
+   "url": "https://baseballsavant.mlb.com/sporty-videos?playId=c23407bb-ffdf-35a9-bde7-611f4043d2ee",
    "status": 200,
    "bytes": 88482,
-   "url": "https://baseballsavant.mlb.com/sporty-videos?playId=c23407bb-ffdf-35a9-bde7-611f4043d2ee",
+   "play_id": "c23407bb-ffdf-35a9-bde7-611f4043d2ee",
    "no_video_found": false,
-   "broadcast_links": 0,
+   "mlb_video_links": 0,
+   "savant_gamefeed": true,
    "mp4_hits": [
     "https://sporty-clips.mlb.com/ZzZ3cllfWGw0TUFRPT1fVlFOU1VGUURCRkFBWGdSV0FBQUhCRmRmQUFOUkJsWUFCRlFFVmdjRkJRQUJBbGNE.mp4"
    ],
-   "mp4_hits_n": 1,
-   "ctype": "text/html; charset=utf-8"
-  },
-  {
-   "probe": "content_2026",
-   "status": 200,
-   "bytes": 628934,
-   "url": "https://statsapi.mlb.com/api/v1/game/822974/content?fields=media,playbacks,url,name,title,duration,guid,id",
-   "game_pk": 822974,
-   "playbacks": 0,
-   "names": [],
-   "mp4_n": 0,
-   "mp4_urls": [],
-   "mp4_hits": [
-    "https://bdata-producedclips.mlb.com/1560589b-fbe6-492e-b468-4bbce6e9cdbb.mp4",
-    "https://bdata-producedclips.mlb.com/364587cb-71eb-4bb4-a399-d2b67c367054.mp4",
-    "https://bdata-producedclips.mlb.com/434511c2-e32d-4025-8052-c91126ee1aa3.mp4",
-    "https://bdata-producedclips.mlb.com/52c1c229-62fa-4e1b-b90c-1b2f6619b8f9.mp4"
-   ],
-   "mp4_hits_n": 68
-  },
-  {
-   "probe": "content_2026",
-   "status": 200,
-   "bytes": 628934,
-   "url": "https://statsapi.mlb.com/api/v1/game/822974/content?fields=media,playbacks,url",
-   "game_pk": 822974,
-   "playbacks": 0,
-   "names": [],
-   "mp4_n": 0,
-   "mp4_urls": [],
-   "mp4_hits": [
-    "https://bdata-producedclips.mlb.com/1560589b-fbe6-492e-b468-4bbce6e9cdbb.mp4",
-    "https://bdata-producedclips.mlb.com/364587cb-71eb-4bb4-a399-d2b67c367054.mp4",
-    "https://bdata-producedclips.mlb.com/434511c2-e32d-4025-8052-c91126ee1aa3.mp4",
-    "https://bdata-producedclips.mlb.com/52c1c229-62fa-4e1b-b90c-1b2f6619b8f9.mp4"
-   ],
-   "mp4_hits_n": 68
+   "mp4_hits_n": 1
   },
   {
    "probe": "film_room_search",
+   "url": "https://www.mlb.com/video/?q=overturned+call",
    "status": 200,
-   "bytes": 411172,
-   "url": "https://www.mlb.com/video/?q=overturned%20call",
-   "ctype": ""
-  },
-  {
-   "probe": "SUMMARY",
-   "probes": 13,
-   "reachable": 13
+   "bytes": 411172
   }
  ]
 }
