@@ -1,9 +1,10 @@
 name: probe
 
-# Sandbox-side builds are offline by design, so anything that has to touch MLB endpoints is done
-# here, in CI, and the *derived* tables are what gets committed. This workflow is the discovery
-# step: it prints what each official endpoint actually returns so the ingest can be written against
-# observed reality instead of a guess.
+# Sandbox-side builds are offline by design, so anything that has to touch MLB endpoints runs here,
+# in CI, and the *derived* table is what gets committed. This workflow is the discovery step: it
+# records what each official endpoint actually returns (status, bytes, extracted fragments) into
+# data/ingest/probe_report.json and commits it back, so the ingest can be written against observed
+# reality instead of a guess -- and so a reviewer can read the evidence in the repository.
 on:
   push:
     branches: ['arena/**', 'main', 'ingest/**']
@@ -11,23 +12,33 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: probe-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - name: Reachability probe against official endpoints
         run: python3 tools/probe_ci.py
-      - name: Upload probe log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: probe-log
-          path: probe.log
-          if-no-files-found: ignore
+      - name: Commit findings back to the branch
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/ingest/probe_report.json
+          if git diff --cached --quiet; then echo 'no probe change'; exit 0; fi
+          git commit -m "[ci-probe] official endpoint report $(date -u +%Y-%m-%dT%H:%M:%SZ) from ${GITHUB_SHA::7}"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break
+            echo "push attempt $i failed; retrying"; sleep 8
+          done
