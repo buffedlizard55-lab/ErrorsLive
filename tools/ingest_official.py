@@ -65,9 +65,21 @@ CLASSES = ['hit', 'error', 'fielders_choice', 'out']
 
 # Reviews whose subject is a run on the scoreboard. MLB's reviewType vocabulary (as returned by the
 # feed); anything not listed is treated as "not a scoring review" rather than assumed.
-SCORING_REVIEW_TYPES = {'home run', 'scoring play', 'tag play at home plate', 'tag play', 'timing play',
-                        'force play at home plate', 'hp collision', 'collisions at home plate',
-                        'slide interference', 'home plate collision'}
+# The feed states the challenged subject in the play text itself, in parentheses:
+#   "Marlins challenged (tag play), call on the field was overturned: ..."
+# Those strings are the official wording; the two-letter reviewType codes (MJ, MA, MF, ...) are MLB's
+# internal vocabulary and are stored verbatim but never translated by guesswork.
+SUBJECT_RE = re.compile(r'challenged \((.+?)\)')
+# Subjects whose outcome decides whether a run is on the board.
+SCORING_SUBJECTS = {'home run', 'scoring play', 'tag play at home plate', 'tag play',
+                    'force play at home plate', 'force play', 'timing play', 'fan interference',
+                    'stadium boundary call', 'fair or foul in outfield', 'catcher interference'}
+PITCH_SUBJECT = 'pitch result'
+
+
+def review_subject(desc):
+    m = SUBJECT_RE.search(desc or '')
+    return m.group(1).strip().lower() if m else ''
 
 
 def macro_class(et):
@@ -180,24 +192,29 @@ def final_call_text(desc):
     return desc.strip(), None
 
 
-def run_removal_evidence(play, et, cls, desc, rd, runs_by_movement, score_delta):
-    """Two independent flags. Neither is allowed to be presented as a certain 'run removed' claim."""
+def run_removal_evidence(play, et, cls, desc, rd, runs_by_movement, score_delta, subject):
+    """Two independent flags, each carrying the reason it fired.
+
+    HARD   #runners whose movement ends at "score" > runs added to the scoreboard. This is a
+           consistency test on the feed, not a detector of reviews: the feed publishes the CORRECTED
+           outcome, so it is expected to be consistent (and the report says how often it is not).
+    HEURISTIC  an overturned review whose own subject and final text mean a run left the board:
+           a home-run review overturned into a non-home-run (the batter's run is gone), or a
+           scoring/tag/force review whose corrected text puts a runner out at home.
+    """
     hard = max(0, runs_by_movement - score_delta)
     final_text, overturned = final_call_text(desc)
-    rtype = (rd or {}).get('reviewType') or ''
     reasons = []
     if hard:
         reasons.append(f'{runs_by_movement} runner(s) recorded at the plate vs {score_delta} run(s) '
                        f'on the scoreboard')
-    if overturned and 'out at home' in final_text.lower():
-        reasons.append('overturned ruling puts a runner out at home')
-    if overturned and rtype.lower() == 'home run' and et != 'home_run':
-        reasons.append(f"home-run review overturned and the final event is {et!r}, not a home run")
-    if overturned and rtype.lower() in SCORING_REVIEW_TYPES and rtype.lower() != 'home run' \
-            and runs_by_movement:
-        reasons.append(f'scoring review ({rtype}) on a play where {runs_by_movement} runner(s) reached '
-                       f'the plate; final event {et!r}')
-    return hard, bool(reasons) and (overturned is True or hard > 0), '; '.join(reasons)
+    subj = (subject or '').lower()
+    ft = final_text.lower()
+    if overturned is True and subj == 'home run' and et != 'home_run':
+        reasons.append(f'home-run review overturned and the corrected call is {et!r}, not a home run')
+    if overturned is True and subj in SCORING_SUBJECTS and 'out at home' in ft:
+        reasons.append(f'{subj} review overturned with the runner put out at home')
+    return hard, bool(reasons), '; '.join(reasons)
 
 
 def rbi_if_ruled(cls, run_scored, official_et):
@@ -240,6 +257,8 @@ def points_of_interest(play):
         'event_type': et, 'macro_class': macro_class(et),
         'description': desc, 'rbi_official': res.get('rbi', 0),
         'review_type': rd.get('reviewType', ''),
+        'review_subject': review_subject(desc),
+        'is_pitch_challenge': int(review_subject(desc) == PITCH_SUBJECT),
         'review_overturned': (int(bool(rd['isOverturned'])) if 'isOverturned' in rd else ''),
         'challenge_team_id': rd.get('challengeTeamId', ''),
         'has_review': int(bool(rd)),
@@ -305,6 +324,14 @@ def ingest_game(meta, want_videos=False):
     ls, lmeta = get_json(ls_url)
     plays = feed['liveData']['plays']['allPlays']
     flags = []
+    if not plays:
+        flags.append(f'{pk}: feed contains no plays')
+        return [], [], {'game_pk': pk, 'date': meta['date'], 'gameType': meta['gameType'],
+                        'away': meta['away'], 'home': meta['home'], 'rA': '', 'rH': '',
+                        'feed_final': '', 'verified': 0, 'plays': 0, 'bip': 0, 'errors': 0,
+                        'fc': 0, 'reviews': 0, 'overturned': 0, 'run_removed_hard': 0,
+                        'run_removed_heuristic': 0, 'linescore_url': ls_url, 'feed_url': feed_url,
+                        'feed_bytes': fmeta['bytes'], 'linescore_bytes': lmeta['bytes']}, [], flags
     fa, fh = plays[-1]['result']['awayScore'], plays[-1]['result']['homeScore']
     ra, rh = ls['teams']['away']['runs'], ls['teams']['home']['runs']
     verified = (fa, fh) == (ra, rh)
@@ -334,7 +361,7 @@ def ingest_game(meta, want_videos=False):
                                                    len([r for r in pl.get('runners', [])
                                                         if isinstance(r.get('movement'), dict)
                                                         and r['movement'].get('end') == 'score']),
-                                                   da + dh)
+                                                   da + dh, row['review_subject'])
             row['run_removed_hard'] = hard
             row['run_removed_heuristic'] = int(heur)
             row['run_removed_rule'] = why
@@ -421,13 +448,27 @@ def fetch_videos(pk, reps):
 
 
 # ------------------------------------------------------------------ NYDN link resolution
-def resolve_links(sample=0, timeout=25, workers=16):
-    """Resolve the archived video short-links to their final destination. Facts, not guesses."""
+def _link_key(r):
+    return '|'.join((r.get('date', ''), r.get('game', ''), r.get('player', ''), r.get('video', '')))
+
+
+def resolve_links(sample=0, timeout=25, workers=16, resume=True):
+    """Resolve the archived video short-links to their final destination. Facts, not guesses.
+
+    Resumable: work already committed to docs/data/nydn_links.csv is kept and skipped, so a long
+    resolution can be spread over several CI runs instead of timing out inside one.
+    """
     src = ROOT / 'docs' / 'data' / 'overturned_calls.csv'
     rows = [r for r in csv.DictReader(open(src)) if r['video']]
+    done = {}
+    dest = ROOT / 'docs' / 'data' / 'nydn_links.csv'
+    if resume and dest.exists() and dest.stat().st_size:
+        for r in csv.DictReader(open(dest)):
+            done[_link_key(r)] = r
+    todo = [r for r in rows if _link_key(r) not in done]
     if sample:
-        rows = rows[:sample]
-    cache, out = {}, []
+        todo = todo[:sample]
+    cache, out = {}, list(done.values())
 
     def one(r):
         url = r['video']
@@ -449,10 +490,10 @@ def resolve_links(sample=0, timeout=25, workers=16):
         return {**r, **res}
 
     with ThreadPoolExecutor(max_workers=workers) as ex:
-        for i, row in enumerate(ex.map(one, rows)):
+        for i, row in enumerate(ex.map(one, todo)):
             out.append(row)
             if (i + 1) % 250 == 0:
-                print(f'  resolved {i+1}/{len(rows)}', flush=True)
+                print(f'  resolved {i+1}/{len(todo)} (total stored {len(out)})', flush=True)
     return out
 
 
@@ -555,12 +596,25 @@ def main(argv=None):
             w = csv.DictWriter(f, fieldnames=keys)
             w.writeheader(); w.writerows(rows)
 
+    # Published windows: the ledger and replay files can cover a longer span than the modelling CSV
+    # (which stays a bounded, honestly-described window so the repo does not balloon).
+    def in_window(day, key):
+        w = plan.get(key) or {}
+        if not w:
+            return True
+        return (not w.get('start') or day >= w['start']) and (not w.get('end') or day <= w['end'])
+
+    date_of = {l['game_pk']: l['date'] for l in ledger_all}
+    bip_pub = [r for r in bip_all if in_window(date_of.get(r['game_pk'], ''), 'bip_window')]
+    rep_pub = [r for r in rep_all if in_window(r['date'], 'replays_window')]
     ledger_all.sort(key=lambda r: (r['date'], r['game_pk']))
     bip_all.sort(key=lambda r: (r['game_pk'], r['at_bat']))
     rep_all.sort(key=lambda r: (r['date'], r['game_pk'], r['at_bat']))
+    print(f'publishing {len(bip_pub)} of {len(bip_all)} batted balls, '
+          f'{len(rep_pub)} of {len(rep_all)} reviewed plays', flush=True)
     write_csv(out_dir / 'games.csv', ledger_all)
-    write_csv(ROOT / 'docs' / 'data' / 'bip_official.csv', bip_all)
-    write_csv(ROOT / 'docs' / 'data' / 'replays.csv', rep_all)
+    write_csv(ROOT / 'docs' / 'data' / 'bip_official.csv', bip_pub)
+    write_csv(ROOT / 'docs' / 'data' / 'replays.csv', rep_pub)
     write_csv(ROOT / 'docs' / 'data' / 'replay_videos.csv', vid_all)
 
     link_rows = []
@@ -578,7 +632,7 @@ def main(argv=None):
         'errors': errs, 'fc': sum(1 for r in bip_all if r['macro_class'] == 'fielders_choice'),
         'numeric_ok': sum(r['numeric_ok'] for r in bip_all),
         'class_counts': dict(Counter(r['macro_class'] for r in bip_all)),
-        'reviews': len(rep_all), 'overturned': sum(1 for r in rep_all if r['review_overturned'] is True),
+        'reviews': len(rep_all), 'overturned': sum(1 for r in rep_all if r['review_overturned'] == 1),
         'run_removed_hard_rows': sum(int(r['run_removed_hard'] or 0) for r in rep_all),
         'run_removed_heuristic_rows': sum(int(r['run_removed_heuristic'] or 0) for r in rep_all),
         'games_verified_vs_linescore': sum(r['verified'] for r in ledger_all),
