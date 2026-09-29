@@ -145,8 +145,23 @@ python3 tests/test_pipeline.py    # the audit suite
 
 Network collection runs in CI (`.github/workflows/ingest.yml`, `probe.yml`) because a sandboxed checkout has no
 outbound route to `statsapi.mlb.com`; the collectors write the derived tables and CI commits them back. The site build
-itself never needs the network, and `/.github/workflows/audit.yml` re-runs `tools/run_all.py` on every push and fails
-if a single byte of a published artifact changed, so a hand-edited number cannot survive.
+itself never needs the network.
+
+`/.github/workflows/audit.yml` re-runs `tools/run_all.py` on every push and then runs
+`tools/check_repro.py`, which enforces the reproducibility policy in the open:
+
+- **Every derived table must be byte-identical** after the rebuild — `docs/data/*.csv`, the page JSON, the NYDN
+  artifacts, the verification ledger. A hand-edited number, a changed rule or a non-deterministic sort fails the build,
+  and the failure is reported as a GitHub annotation (readable through the API) because job-log download is unreliable
+  for some clients.
+- **`docs/data/model.json` is compared numerically**, with a stated 1e-6 tolerance and an exact comparison of every
+  structural field. A logistic solver's last digits follow the BLAS build it is linked against — scikit-learn's
+  multiclass fit ended 3e-9 apart on the dev machine and the CI runner with identical inputs and pinned package
+  versions, which a byte-equality gate would report as a defect. Six orders of magnitude of headroom above that noise,
+  and any material change (a coefficient, a CV number, a missing feature) still fails.
+
+`tools/train_model.py` also pins itself to a single BLAS/OMP thread before importing numpy, so the numbers a reviewer
+sees locally are the numbers CI produces.
 
 Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://localhost:8080/>.
 

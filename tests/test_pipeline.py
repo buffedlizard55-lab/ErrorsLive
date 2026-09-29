@@ -639,6 +639,12 @@ check('ruling_changes.json is published with a real (possibly empty) record',
        or rc['changes'] > 200)(load_json(ROOT / 'docs/data/ruling_changes.json')))
 check('roadmap lists an ordered backlog and its limitations',
       'Next-session backlog' in rdm or 'backlog' in rdm.lower())
+rd_early = (ROOT / 'README.md').read_text()
+audit_wf = (ROOT / '.github/workflows/audit.yml').read_text()
+check('the reproducibility gate is wired to tools/check_repro.py',
+      'tools/check_repro.py' in audit_wf and (ROOT / 'tools/check_repro.py').exists())
+check('the reproducibility policy is stated in the README (byte-exact tables, tolerated model digits)',
+      'byte-identical' in rd_early and '1e-6' in rd_early and 'BLAS' in rd_early)
 rd = (ROOT / 'README.md').read_text()
 check('README restates the brief before any results (Section 0 rule)',
       'Section 0' in rd and 'VERBATIM' in rd)
