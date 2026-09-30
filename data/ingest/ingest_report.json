@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-29T22:48:51+00:00",
+ "generated_utc": "2026-09-29T23:40:03+00:00",
  "endpoints": {
   "feed": "https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live?fields=liveData,plays,allPlays,about,atBatIndex...",
   "linescore": "https://statsapi.mlb.com/api/v1/game/{pk}/linescore",
@@ -122,14 +122,14 @@
   ],
   "videos_attached": 17,
   "video_rows": 17,
-  "link_rows": 3700,
+  "link_rows": 4887,
   "link_status": {
-   "520": 2427,
+   "520": 2426,
    "403": 25,
-   "200": 233,
-   "": 1012,
-   "404": 3
+   "200": 631,
+   "": 1798,
+   "404": 7
   },
-  "elapsed_s": 2254.7
+  "elapsed_s": 1825.6
  }
 }

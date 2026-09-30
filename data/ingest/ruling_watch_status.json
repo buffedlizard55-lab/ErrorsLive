@@ -1,0 +1,13 @@
+{
+ "ok": false,
+ "error": "KeyError: 'abbreviation'",
+ "detected_utc": "2026-09-30T00:10:29Z",
+ "ruling_snapshot.csv": {
+  "rows": null,
+  "bytes": 0
+ },
+ "ruling_changes.csv": {
+  "rows": null,
+  "bytes": 0
+ }
+}
