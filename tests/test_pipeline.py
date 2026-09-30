@@ -1238,18 +1238,33 @@ print('== N. the change-ledger cleaning record and the duplicate-row attribution
 import collections as _collections
 _clean = load_json(ROOT / 'data' / 'ingest' / 'ruling_changes_cleaning.json')
 _ledger = load_csv(ROOT / 'data' / 'ingest' / 'ruling_changes.csv')
-check('cleaning record: the arithmetic closes against the committed ledger',
-      _clean['rows_before'] - _clean['rows_dropped'] == _clean['rows_after'] == len(_ledger)
+# The record describes the ledger as it stood when the cleaning ran. The scheduled watcher keeps
+# appending observations, so the record is checked against that slice and later rows are checked as
+# new observations. Comparing against the whole ledger made the suite fail the first time the live
+# watcher appended one legitimate row — which is exactly what a live feed is supposed to do.
+_at_clean = [r for r in _ledger if r['detected_utc'] <= _clean['cleaned_utc']]
+_since = [r for r in _ledger if r['detected_utc'] > _clean['cleaned_utc']]
+check('cleaning record: the arithmetic closes against the ledger as it stood at cleaning time',
+      _clean['rows_before'] - _clean['rows_dropped'] == _clean['rows_after'] == len(_at_clean)
       and sum(_clean['dropped_rows_by_transition'].values()) == _clean['rows_dropped'],
-      f"before {_clean['rows_before']} - dropped {_clean['rows_dropped']} != ledger {len(_ledger)}")
-check('cleaning record: kept rows by field and by transition match the ledger it describes',
-      _clean['kept_rows_by_field'] == dict(_collections.Counter(r['field'] for r in _ledger))
+      f"before {_clean['rows_before']} - dropped {_clean['rows_dropped']} != "
+      f"ledger-at-clean {len(_at_clean)} (ledger now {len(_ledger)}, {len(_since)} observed since)")
+check('cleaning record: kept rows by field and by transition match the ledger at cleaning time',
+      _clean['kept_rows_by_field'] == dict(_collections.Counter(r['field'] for r in _at_clean))
       and _clean['kept_rows_by_transition']
-      == dict(_collections.Counter(f"{r['field']}: {r['from']} -> {r['to']}" for r in _ledger)),
+      == dict(_collections.Counter(f"{r['field']}: {r['from']} -> {r['to']}" for r in _at_clean)),
       f"json {_clean['kept_rows_by_transition']}")
-check('cleaning record: the distinct-play count matches the ledger',
-      _clean['kept_distinct_plays'] == len({(r['game_pk'], r['at_bat']) for r in _ledger})
-      and _clean['kept_detected_utc'] == min(r['detected_utc'] for r in _ledger))
+check('cleaning record: the distinct-play count matches the ledger at cleaning time',
+      _clean['kept_distinct_plays'] == len({(r['game_pk'], r['at_bat']) for r in _at_clean})
+      and _clean['kept_detected_utc'] == min(r['detected_utc'] for r in _at_clean))
+check('the cleaned artifact has not come back: no post-clean row repeats the dropped transition',
+      not [r for r in _since if r['field'] == 'status' and r['from'] == '']
+      and all(re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z', r['detected_utc'])
+              for r in _since),
+      f"{len(_since)} row(s) recorded after the cleaning")
+check('the ledger is still live: post-clean rows carry their own official evidence',
+      all(r.get('feed_url', '').startswith('https://statsapi.mlb.com/') and r.get('play_id')
+          and r.get('feed_url') for r in _since))
 check('cleaning record: the timestamp is a real ISO-8601 instant, not a placeholder',
       re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z', _clean['cleaned_utc']) is not None
       and _clean.get('cleaned_utc_basis'), _clean['cleaned_utc'])

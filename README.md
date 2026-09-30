@@ -201,7 +201,11 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
   removal documented in `data/ingest/ruling_changes_cleaning.json`. What remains in the ledger is its first real
   content: **1,107** observed field differences between two captures of the official feed (`reviewed 0→1` ×426,
   `review_type` appearing ×426, `overturned 0→1` ×255), each carrying the official feed URL. These are the rows
-  behind `docs/data/alerts.json` and the alert console's CI ledger.
+  behind `docs/data/alerts.json` and the alert console's CI ledger. The ledger is live and keeps growing: the
+  next scheduled capture already appended one further `description` difference (game 849843, at-bat 4,
+  2026-09-30T05:28:01Z), so the cleaning record is scoped to its own `cleaned_utc` and section N of the suite
+  re-checks it against the ledger as it stood at that instant — a new observation can no longer fail the audit
+  (it did, once, and that is the fix).
 
 ### 2026-09-30 session (2) — measured RBI stake, review profile, and the stale-claim sweep
 

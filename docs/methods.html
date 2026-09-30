@@ -180,7 +180,10 @@
   same window reports
   <b>0</b> changes, and the ledger holds its first real observations: <b>1,107</b> field differences between two
   captures of the official feed (<code>reviewed 0→1</code> ×426, <code>review_type</code> appearing ×426,
-  <code>overturned 0→1</code> ×255). A difference is evidence that the captured field changed between two
+  <code>overturned 0→1</code> ×255), the count the cleaning record was written against. The ledger keeps
+  growing — the next scheduled capture added one <code>description</code> difference (game 849843, at-bat 4,
+  2026-09-30T05:28:01Z) — so that count is a floor, and the audit checks the record against the ledger as it
+  stood at its own <code>cleaned_utc</code> rather than against the live total. A difference is evidence that the captured field changed between two
   observations — the feed can also backfill metadata — so every published row carries its official feed URL for
   verification.</div>
 
