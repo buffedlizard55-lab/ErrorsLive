@@ -6,6 +6,7 @@
 const NAV = [
   ['index.html', 'Score a batted ball'],
   ['live.html', 'Live board'],
+  ['alerts.html', 'Live alerts'],
   ['replays.html', 'Replays & runs'],
   ['model.html', 'Model & validation'],
   ['overturned.html', 'Archive 2014–18'],

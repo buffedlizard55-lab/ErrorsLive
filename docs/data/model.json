@@ -276,6 +276,10 @@
   ],
   "cv_auc_random_kfold": 0.7774,
   "cv_average_precision_grouped": 0.02652,
+  "cv_average_precision_ci95": [
+   0.02004,
+   0.03754
+  ],
   "cv_average_precision_random_kfold": 0.02652,
   "cv_auc_gradient_boosting_grouped": 0.7757,
   "cv_logloss": 0.042093,
@@ -439,6 +443,10 @@
    }
   ],
   "cv_average_precision_grouped": 0.02652,
+  "cv_average_precision_ci95": [
+   0.02004,
+   0.03754
+  ],
   "cv_average_precision_random_kfold": 0.02652,
   "calibration_oof": [
    {
@@ -598,6 +606,81 @@
     "p_error": 0.10532
    }
   ],
+  "review_queue_oof": [
+   {
+    "top_percent": 0.5,
+    "plays_to_review": 152,
+    "errors_found": 11,
+    "precision": 0.07237,
+    "recall": 0.04564,
+    "lift_over_base_rate": 9.07,
+    "plays_per_error_found": 13.8
+   },
+   {
+    "top_percent": 1,
+    "plays_to_review": 303,
+    "errors_found": 18,
+    "precision": 0.05941,
+    "recall": 0.07469,
+    "lift_over_base_rate": 7.446,
+    "plays_per_error_found": 16.8
+   },
+   {
+    "top_percent": 2,
+    "plays_to_review": 605,
+    "errors_found": 25,
+    "precision": 0.04132,
+    "recall": 0.10373,
+    "lift_over_base_rate": 5.179,
+    "plays_per_error_found": 24.2
+   },
+   {
+    "top_percent": 3,
+    "plays_to_review": 907,
+    "errors_found": 31,
+    "precision": 0.03418,
+    "recall": 0.12863,
+    "lift_over_base_rate": 4.284,
+    "plays_per_error_found": 29.3
+   },
+   {
+    "top_percent": 5,
+    "plays_to_review": 1511,
+    "errors_found": 47,
+    "precision": 0.03111,
+    "recall": 0.19502,
+    "lift_over_base_rate": 3.899,
+    "plays_per_error_found": 32.1
+   },
+   {
+    "top_percent": 10,
+    "plays_to_review": 3021,
+    "errors_found": 77,
+    "precision": 0.02549,
+    "recall": 0.3195,
+    "lift_over_base_rate": 3.195,
+    "plays_per_error_found": 39.2
+   },
+   {
+    "top_percent": 20,
+    "plays_to_review": 6042,
+    "errors_found": 134,
+    "precision": 0.02218,
+    "recall": 0.55602,
+    "lift_over_base_rate": 2.78,
+    "plays_per_error_found": 45.1
+   },
+   {
+    "top_percent": 30,
+    "plays_to_review": 9062,
+    "errors_found": 181,
+    "precision": 0.01997,
+    "recall": 0.75104,
+    "lift_over_base_rate": 2.503,
+    "plays_per_error_found": 50.1
+   }
+  ],
+  "review_queue_note": "Grouped out-of-fold ranking within the collected window. \"Plays to review\" is the cost side; \"errors found\" is the benefit. Reading it as a promise about a future season would be a mistake: the window is narrow and the CI is wide.",
   "grouped_vs_random_auc_gap": -0.0034,
   "baseline_error_rate": 0.00798,
   "note": "If the model's top pick is never \"error\" (see oof_error_nominated_top1), then the /100 score is only useful as a within-game ranking of where to look, and the honest headline is that ruling errors OUT is what this model does well."
@@ -1400,6 +1483,189 @@
    {
     "percentile": 100,
     "p_error": 0.10532
+   }
+  ]
+ },
+ "experiments": {
+  "regularisation_grid": [
+   {
+    "C": 0.01,
+    "cv_auc": 0.7831,
+    "cv_average_precision": 0.02637
+   },
+   {
+    "C": 0.03,
+    "cv_auc": 0.783,
+    "cv_average_precision": 0.02698
+   },
+   {
+    "C": 0.1,
+    "cv_auc": 0.7818,
+    "cv_average_precision": 0.02666
+   },
+   {
+    "C": 0.3,
+    "cv_auc": 0.7813,
+    "cv_average_precision": 0.02657
+   },
+   {
+    "C": 1.0,
+    "cv_auc": 0.7808,
+    "cv_average_precision": 0.02652
+   },
+   {
+    "C": 3.0,
+    "cv_auc": 0.7807,
+    "cv_average_precision": 0.02648
+   }
+  ],
+  "notes": [
+   "Regularisation: the grid's best average precision came at C=0.03 (0.02698 vs 0.02652 at the shipped C=1.0, AUC 0.7830 vs 0.7808). The shipped model keeps C=1.0: the difference is within the grouped-bootstrap interval and changing it would move every published coefficient for no measurable gain in the ranking the site uses."
+  ],
+  "best_C_by_average_precision": 0.03,
+  "class_weight_balanced": {
+   "cv_auc": 0.7769,
+   "cv_average_precision": 0.0249,
+   "top10pct_errors_found": 79,
+   "shipped_top10pct_errors_found": 77,
+   "note": "Class weighting trades ranking for volume: it finds 79 of 241 held-out errors in the top 10% against 77 for the shipped model, while lowering AUC and average precision. The site keeps the unweighted ranking and states the recall it buys."
+  },
+  "extended_features": {
+   "n_features": 33,
+   "cv_auc": 0.7788,
+   "cv_average_precision": 0.02608,
+   "note": "Interactions and coarse bins on the same information (hard-hit flag, exit-velocity and launch-angle bands, exit-velocity x angle, ground-ball x hardness) did not improve grouped AUC (0.7788 vs 0.7808) or average precision (0.02608 vs 0.02652). They are reported and not shipped."
+  }
+ },
+ "blend_comparator": {
+  "method": "rank-average of the shipped logistic OOF ranking and the grouped gradient-boosting OOF ranking: w x logistic + (1 - w) x gbm",
+  "grid": [
+   {
+    "weight_logistic": 0.0,
+    "cv_auc": 0.7757,
+    "cv_average_precision": 0.02467
+   },
+   {
+    "weight_logistic": 0.25,
+    "cv_auc": 0.7833,
+    "cv_average_precision": 0.02567
+   },
+   {
+    "weight_logistic": 0.5,
+    "cv_auc": 0.7881,
+    "cv_average_precision": 0.0275
+   },
+   {
+    "weight_logistic": 0.75,
+    "cv_auc": 0.787,
+    "cv_average_precision": 0.02799
+   },
+   {
+    "weight_logistic": 1.0,
+    "cv_auc": 0.7808,
+    "cv_average_precision": 0.02652
+   }
+  ],
+  "best_by_auc": {
+   "weight_logistic": 0.5,
+   "cv_auc": 0.7881,
+   "cv_average_precision": 0.0275
+  },
+  "shipped": false,
+  "why_not_shipped": "A comparator only. The live scorer must be evaluable in the browser and in tools/live_score.py to 1e-9, which a boosted ensemble is not; the published probabilities would also stop being the calibrated object the site explains."
+ },
+ "permutation_importance": {
+  "method": "each feature shuffled across whole games (group structure preserved) and scored with the full-fit model; mean and max grouped-OOF AUC drop over 3 shuffles. It measures the fitted model's reliance on a column, not a cause.",
+  "rows": [
+   {
+    "feature": "traj_ground_ball",
+    "auc_drop_mean": 0.07121,
+    "auc_drop_max": 0.08084
+   },
+   {
+    "feature": "EV_mph",
+    "auc_drop_mean": -0.00444,
+    "auc_drop_max": -0.00389
+   },
+   {
+    "feature": "on_1b",
+    "auc_drop_mean": -0.00718,
+    "auc_drop_max": -0.0061
+   },
+   {
+    "feature": "traj_fly_ball",
+    "auc_drop_mean": -0.00802,
+    "auc_drop_max": -0.00546
+   },
+   {
+    "feature": "dist_ft",
+    "auc_drop_mean": -0.00933,
+    "auc_drop_max": -0.00249
+   },
+   {
+    "feature": "bat_L",
+    "auc_drop_mean": -0.01086,
+    "auc_drop_max": -0.00735
+   },
+   {
+    "feature": "on_2b",
+    "auc_drop_mean": -0.01235,
+    "auc_drop_max": -0.00859
+   },
+   {
+    "feature": "traj_line_drive",
+    "auc_drop_mean": -0.01296,
+    "auc_drop_max": -0.01232
+   },
+   {
+    "feature": "outs_before",
+    "auc_drop_mean": -0.01502,
+    "auc_drop_max": -0.01381
+   },
+   {
+    "feature": "on_3b",
+    "auc_drop_mean": -0.01574,
+    "auc_drop_max": -0.01482
+   },
+   {
+    "feature": "LA_deg",
+    "auc_drop_mean": -0.01624,
+    "auc_drop_max": -0.01537
+   },
+   {
+    "feature": "traj_popup",
+    "auc_drop_mean": -0.01624,
+    "auc_drop_max": -0.01609
+   },
+   {
+    "feature": "pitch_L",
+    "auc_drop_mean": -0.01685,
+    "auc_drop_max": -0.01565
+   },
+   {
+    "feature": "traj_bunt_grounder",
+    "auc_drop_mean": -0.0171,
+    "auc_drop_max": -0.01674
+   },
+   {
+    "feature": "hard_hard",
+    "auc_drop_mean": -0.01719,
+    "auc_drop_max": -0.0167
+   },
+   {
+    "feature": "hard_medium",
+    "auc_drop_mean": -0.01738,
+    "auc_drop_max": -0.01725
+   },
+   {
+    "feature": "inning_c",
+    "auc_drop_mean": -0.01759,
+    "auc_drop_max": -0.01563
+   },
+   {
+    "feature": "hard_soft",
+    "auc_drop_mean": -0.01764,
+    "auc_drop_max": -0.01754
    }
   ]
  }

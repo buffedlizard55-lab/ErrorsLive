@@ -925,6 +925,185 @@ check('site_kpis.json: every KPI the model page reads is present and non-null',
       and kpis['model']['average_precision_grouped'] == pp['cv_average_precision_grouped']
       and kpis['model']['top_error_risk_bands_oof'] == hn['top_error_risk_bands_oof'])
 
+# ---------------------------------------------------------------- I. alerts (watcher + browser)
+print('== I. live alerts: the watcher diff and the browser engine ==')
+sys.path.insert(0, str(ROOT / 'tools'))
+import watch_rulings as WR                                                # noqa: E402
+
+# The regression that broke the scheduled watcher in production: the snapshot CSV stores every value
+# as text, the API returns ints for rbi/reviewed/overturned, and the first version compared the two
+# directly and then sliced the integer. This must never come back.
+stored = {('824872', '0'): {'game_pk': '824872', 'at_bat': '0', 'event_type': '',
+                            'status': 'no_event_type_yet', 'rbi': '0', 'description': 'x',
+                            'reviewed': '0', 'overturned': '0', 'review_type': '',
+                            'first_seen_utc': 'T0', 'last_changed_utc': 'T0', 'play_id': 'p1',
+                            'bases_before': '2B', 'launch_speed': '98.1', 'launch_angle': '4',
+                            'distance': '112'}}
+fresh = [{'game_pk': '824872', 'at_bat': '0', 'event_type': '', 'status': 'no_event_type_yet',
+          'rbi': 0, 'description': 'x', 'reviewed': 0, 'overturned': 0, 'review_type': '',
+          'date': '2026-09-10', 'matchup': 'TB @ ATL', 'inning': 1, 'half': 'top', 'play_id': 'p1',
+          'batter': 'A', 'bases_before': '2B', 'launch_speed': 98.1, 'launch_angle': 4,
+          'distance': 112}]
+check('watcher: an unchanged play whose API values are ints and stored values are text is not a change',
+      WR.detect_changes(stored, fresh, set(), 'T1') == [])
+settled = WR.detect_changes(stored, [dict(fresh[0], event_type='field_error')], set(), 'T1')
+check('watcher: a feed row that gains an eventType is recorded once with its first state',
+      len(settled) == 1 and settled[0]['field'] == 'event_type'
+      and settled[0]['from'] == '' and settled[0]['to'] == 'field_error'
+      and settled[0]['was_unresolved_in_feed'] == 1,
+      json.dumps(settled)[:200])
+seen_w = set()
+WR.detect_changes(stored, [dict(fresh[0], event_type='field_error')], seen_w, 'T1')
+check('watcher: a workflow retry of the same transition is deduplicated',
+      WR.detect_changes(stored, [dict(fresh[0], event_type='field_error')], seen_w, 'T2') == [])
+later = {('824872', '0'): dict(stored[('824872', '0')], last_changed_utc='T9')}
+check('watcher: a later recurrence of the same transition is preserved, not swallowed',
+      len(WR.detect_changes(later, [dict(fresh[0], event_type='field_error')], seen_w, 'T3')) == 1)
+check('watcher: every recorded change carries the official feed and scoring-changes links',
+      all(c['feed_url'].startswith('https://statsapi.mlb.com/')
+          and c['scoring_changes_url'].startswith('https://www.mlb.com/') for c in settled))
+
+ALERTS_JSON = load_json(ROOT / 'docs/data/alerts.json')
+check('alerts.json: the CI ledger exists with its provenance and honesty note',
+      ALERTS_JSON['available'] is True and ALERTS_JSON['generated_from']
+      and 'no open scorer-decision queue' in ALERTS_JSON['note'].lower()
+      and {'status_ok', 'updated_utc', 'plays_observed', 'unresolved_in_feed',
+           'changes_recorded'} <= set(ALERTS_JSON['watcher']))
+check('alerts.json: every row names its source and carries a checkable link',
+      all(a.get('source') in ('ci-watch', 'ci-review') for a in ALERTS_JSON['alerts'])
+      and all(a.get('feed_url', '').startswith('https://statsapi.mlb.com/')
+              for a in ALERTS_JSON['alerts'])
+      and all(a.get('note') for a in ALERTS_JSON['alerts']))
+check('alerts.json: counts agree with the rows they summarise',
+      ALERTS_JSON['counts']['alerts'] == len(ALERTS_JSON['alerts'])
+      and ALERTS_JSON['counts']['run_affected_reviews']
+      == sum(1 for a in ALERTS_JSON['alerts'] if a['source'] == 'ci-review'))
+BROKEN_WATCH = (ALERTS_JSON['watcher'].get('status_ok') is False)
+check('alerts.json: a watcher failure is surfaced, never shown as a silent zero',
+      (not BROKEN_WATCH) or bool(ALERTS_JSON['watcher'].get('error')))
+check('alerts.html states the failure of the scheduled watcher when one is recorded',
+      (not BROKEN_WATCH) or 'reported a failure' in (ROOT / 'docs/alerts.html').read_text())
+
+if shutil.which('node'):
+    js_alerts = r'''const fs=require('fs'),vm=require('vm');
+const ctx={}; vm.runInNewContext(fs.readFileSync('docs/alerts.js','utf8'),ctx);
+const A=ctx.ALERTS;
+const base={game_pk:'1',at_bat:5,matchup:'TB @ ATL',inning:6,half:'top',batter:'X',play_id:'p1',
+  event_type:'',official_call:'pending',status:'no_event_type_yet',score_100:4.2,
+  official_feed_url:'https://statsapi.mlb.com/api/v1.1/game/1/feed/live',savant_url:''};
+if(A.diffBoards(A.boardIndex([]),[base],{newRows:false}).length!==0)
+  throw new Error('the baseline poll raised alerts; opening the page would flood the ledger');
+let a1=A.diffBoards(A.boardIndex([base]),[Object.assign({},base,{event_type:'field_error',official_call:'error',status:'scored'})]);
+if(a1.length!==1||a1[0].type!=='decision_settled'||a1[0].severity!=='high')
+  throw new Error('a feed row that gained a ruling did not raise exactly one decision_settled alert');
+const before=Object.assign({},base,{event_type:'field_error',official_call:'error',status:'scored',rbi_official:0});
+const after=Object.assign({},base,{event_type:'single',official_call:'hit',status:'scored',rbi_official:1,risp:1,run_scored:1});
+const types=A.diffBoards(A.boardIndex([before]),[after]).map(a=>a.type).sort();
+if(types.join(',')!=='event_type_changed,rbi_changed,run_at_stake')
+  throw new Error('error -> single with an RBI move must raise the change, RBI and run-at-stake alerts: '+types);
+const changed=A.diffBoards(A.boardIndex([before]),[after]).find(a=>a.type==='event_type_changed');
+if(!changed.error_to_non_error||!changed.rbi_question.includes('9.04(a)(3)'))
+  throw new Error('the error -> non-error alert does not carry the verified Rule 9.04(a)(3) pointer');
+if(!changed.note.includes('no open scorer-decision queue')&&!changed.note.includes('publishes no open scorer-decision queue'))
+  throw new Error('the alert note must not imply a visible scorer queue');
+const seen=new Set();
+A.diffBoards(A.boardIndex([before]),[after],{seenIds:seen,at:'T1'});
+if(A.diffBoards(A.boardIndex([before]),[after],{seenIds:seen,at:'T2'}).length!==0)
+  throw new Error('the same transition alerted twice');
+const many=A.diffBoards(A.boardIndex([base]),[
+  Object.assign({},base,{at_bat:1,event_type:'field_error',official_call:'error',status:'scored'}),
+  Object.assign({},base,{at_bat:2,event_type:'single',official_call:'hit',status:'scored',score_100:9})]);
+if(many[0].severity!=='high')
+  throw new Error('alerts are not ordered by severity');
+if(A.alertLabel('event_type_changed')!=='ruling changed')
+  throw new Error('alert labels drifted from what the page prints');'''
+    script = ROOT / 'tests' / 'alerts_engine_check.js'
+    script.write_text(js_alerts)
+    try:
+        r = subprocess.run(['node', str(script)], cwd=ROOT, capture_output=True, text=True)
+        check('alerts.js: baseline, settle, error -> hit change, RBI move, dedupe and severity all hold',
+              r.returncode == 0, r.stderr.strip()[-300:])
+    finally:
+        script.unlink(missing_ok=True)
+else:
+    print('  --   (node not installed: skipped the alert-engine behaviour check)')
+
+# ---------------------------------------------------------------- J. the site's live-alert wiring
+alerts_page = (ROOT / 'docs/alerts.html').read_text()
+check('alerts page: loads the shared site script and the pure alert engine',
+      'site.js' in alerts_page and 'alerts.js' in alerts_page)
+check('alerts page: is in the shared navigation',
+      "['alerts.html', 'Live alerts']" in (ROOT / 'docs/site.js').read_text())
+DATA_FILES['alerts'] = ['data/model.json', 'data/alerts.json', 'data/live_now.json']
+PAGES['alerts'] = alerts_page
+check('alerts page: loads the committed model, the CI ledger and the snapshot fallback',
+      all(f in alerts_page for f in ('data/model.json', 'data/alerts.json', 'data/live_now.json')))
+check('alerts page: the notification path is opt-in and never auto-granted',
+      'requestPermission' in alerts_page and 'notifyOn = false' in alerts_page.replace('let notifyOn = false;', 'notifyOn = false'))
+check('alerts page: exports the session ledger, so an observation can be checked later',
+      'downloadCSV(' in alerts_page and 'downloadJSON(' in alerts_page)
+check('alerts page: does not claim to see a scorer queue',
+      'no open scorer-decision queue' in alerts_page or 'publishes no open scorer-decision queue' in alerts_page)
+check('replays page: offers an inline player for rows with a file rendition, and says when there is none',
+      'button[data-play]' in (ROOT / 'docs/replays.html').read_text()
+      and 'no mp4 rendition exposed for this play id' in (ROOT / 'docs/replays.html').read_text())
+check('replays page: the player streams the league host and never re-hosts a clip',
+      'sporty-clips' not in (ROOT / 'docs/replays.html').read_text().split('data-play=')[0]
+      and 'not re-hosted' in (ROOT / 'docs/replays.html').read_text())
+
+# ---------------------------------------------------------------- K. the verified rule text
+rules_page = (ROOT / 'docs/rules.html').read_text()
+rules_flat = flat(rules_page)
+check('rules page: quotes Rule 9.04(a)(3) verbatim from the 2026 rulebook',
+      'before two are out, an error is made on a play on which a runner from third base ordinarily '
+      'would score' in rules_flat)
+check('rules page: quotes the Rule 9.04(b) exceptions and the 9.04(c) judgment standard',
+      'grounds into a force double play or a reverse-force double play' in rules_flat
+      and 'throws to a wrong base' in rules_flat)
+rules_low = rules_flat.lower()
+check('rules page: quotes the Rule 9.01(a) preliminary -> final (24 hours) -> appeal (72 hours) clock',
+      'preliminary' in rules_low and 'within 24 hours after a game concludes' in rules_low
+      and 'within 72 hours of a judgment becoming final' in rules_low)
+check('rules page: quotes the Rule 9.12 error definition and what is not an error',
+      'fumble, muff or wild throw' in rules_flat and 'mental mistakes or misjudgments' in rules_flat)
+check('rules page: the stale "page was not independently extracted" caveat is gone',
+      'not independently extracted' not in rules_flat)
+check('rules page: every quoted rule links the official PDF at its printed page',
+      rules_page.count('2026-official-baseball-rules.pdf#page=') >= 3
+      and 'page=115' in rules_page and 'page=106' in rules_page and 'page=127' in rules_page)
+check('site copy states the RBI consequence of an error play is conditional, not automatic',
+      'error ⇒ no RBI' in rules_page or 'error means no RBI' in rules_flat.replace('\u2019', "'"))
+check('methods page records the watcher defect that was found and fixed',
+      'int' in (ROOT / 'docs/methods.html').read_text()
+      and 'ruling_watch_status.json' in (ROOT / 'docs/methods.html').read_text()
+      and 'normalises both sides' in flat((ROOT / 'docs/methods.html').read_text()))
+
+# ---------------------------------------------------------------- L. new model diagnostics
+check('model.json: the review queue table is monotone in size and reports cost and benefit',
+      [q['top_percent'] for q in MDL['honesty']['review_queue_oof']] == [0.5, 1, 2, 3, 5, 10, 20, 30]
+      and all(q['plays_to_review'] < q2['plays_to_review']
+              for q, q2 in zip(MDL['honesty']['review_queue_oof'],
+                               MDL['honesty']['review_queue_oof'][1:]))
+      and all(q['errors_found'] >= 0 and q['lift_over_base_rate'] > 1
+              for q in MDL['honesty']['review_queue_oof']))
+check('model.json: average precision carries a grouped-bootstrap interval that brackets it',
+      MDL['primary']['cv_average_precision_ci95'][0] < MDL['primary']['cv_average_precision_grouped']
+      < MDL['primary']['cv_average_precision_ci95'][1])
+check('model.json: the regularisation, weighting and extended-feature experiments are published',
+      len(MDL['experiments']['regularisation_grid']) >= 5
+      and 'class_weight_balanced' in MDL['experiments']
+      and 'extended_features' in MDL['experiments']
+      and 'did not' in MDL['experiments']['extended_features']['note'])
+check('model.json: the blend comparator is labelled unshipped with its reason',
+      MDL['blend_comparator']['shipped'] is False
+      and 'live scorer must be evaluable in the browser' in MDL['blend_comparator']['why_not_shipped'])
+check('model.json: permutation importance covers every published feature',
+      {r['feature'] for r in MDL['permutation_importance']['rows']}
+      == set(MDL['primary']['feature_names']))
+check('model page renders the new diagnostics from the JSON, not from literals',
+      all(k in (ROOT / 'docs/model.html').read_text()
+          for k in ('review_queue_oof', 'permutation_importance')))
+
 print()
 if FAILED:
     print(f'{len(FAILED)} FAILURE(S):')

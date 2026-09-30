@@ -44,6 +44,8 @@ jobs:
         run: python3 tools/fetch_live.py --out docs/data/live_slate.json --csv-out docs/data/live_slate.csv
         continue-on-error: true
       - name: Rebuild the derived page data from the freshly collected tables
+        # writes docs/data/alerts.json (the CI observation ledger the alert console falls back to)
+        # alongside the replay/archive/KPI page data
         run: python3 tools/build_site_data.py
         continue-on-error: true
       - name: Show what was produced

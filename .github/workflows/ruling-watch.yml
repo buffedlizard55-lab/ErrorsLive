@@ -53,7 +53,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           for f in data/ingest/ruling_snapshot.csv data/ingest/ruling_changes.csv \
-            data/ingest/ruling_watch_status.json docs/data/ruling_changes.json; do
+            data/ingest/ruling_watch_status.json docs/data/ruling_changes.json \
+            docs/data/alerts.json; do
             if [ -f "$f" ]; then git add "$f"; fi
           done
           if git diff --cached --quiet; then echo 'no observation changes'; exit 0; fi

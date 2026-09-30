@@ -134,9 +134,29 @@
   not prove when or why the scorer made a decision. Zero logged changes is not proof that no changes occurred.</p>
   <div id="pending"><div class="card">Loading <code>data/ruling_changes.json</code>…</div></div>
   <p class="muted" style="font-size:.9rem">RBI notes are conditional. MLB's error glossary summarizes the ordinary
-  treatment of error-dependent runs, while Rule 9.04 contains the controlling exceptions. The full 2026 text of
-  subsection (a)(3) was not independently extracted during this review; consult the linked official rulebook and
-  the official scorer rather than treating this feed row as a ruling.</p>
+  treatment of error-dependent runs; Rule 9.04 contains the controlling exceptions, and the 2026 text of
+  subsection (a)(3) is now reproduced verbatim on <a href="rules.html">Rules &amp; RBI</a> (page 115 of the official
+  PDF): before two are out, an error on a play where a runner from third base ordinarily would score still credits
+  the batter with an RBI. The feed row is still not a ruling — the scorer's judgment is.</p>
+
+  <h2>Live alerts — the browser half of the watcher</h2>
+  <p class="muted"><a href="alerts.html">Live alerts</a> polls the official schedule and game feeds in your browser and
+  diffs each poll against the previous one with <code>docs/alerts.js</code>. That module is deliberately pure — no DOM,
+  no timers, no network — so <code>tests/test_pipeline.py</code> runs it under node and proves the alert rules: a
+  pending feed row that gains an <code>eventType</code> raises <code>decision_settled</code>; an
+  <code>eventType</code> that changes raises <code>event_type_changed</code> (this is the error → hit /
+  fielder's-choice case); an <code>rbi</code> field that moves raises <code>rbi_changed</code>; the same transition is
+  never alerted twice; and a first poll only establishes a baseline so opening the page does not fire hundreds of
+  alerts. When the browser cannot reach <code>statsapi.mlb.com</code>, the page falls back to the CI ledger in
+  <code>docs/data/alerts.json</code>, which is rebuilt by <code>tools/build_site_data.py</code> from
+  <code>data/ingest/ruling_changes.csv</code> and the flagged reviews — never from hand-typed rows.</p>
+  <div class="warn"><b>A watcher defect was found and fixed in this review.</b> The scheduled watcher's status file
+  (<code>data/ingest/ruling_watch_status.json</code>) reported <code>ok: false</code> with
+  <code>TypeError: 'int' object is not subscriptable</code>. Cause: the diff compared values loaded from the snapshot CSV
+  (all text) against freshly parsed API values (integers) for <code>reviewed</code>, <code>overturned</code> and
+  <code>rbi</code>, so an unchanged play looked changed and the ledger then sliced an integer. The comparison now
+  normalises both sides, the diff is a pure function with an offline regression test, and the change ledger can
+  populate again.</div>
 
   <h2>Provenance files</h2>
   <div class="scroll">

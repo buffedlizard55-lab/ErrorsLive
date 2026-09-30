@@ -49,7 +49,10 @@ def compact_replay(r, video):
         'watch_url': (video or {}).get('watch_url') or r.get('savant_url') or '',
         'mp4': (video or {}).get('mp4', ''),
         'mp4_source': (video or {}).get('mp4_source', ''),
+        'video_status': (video or {}).get('video_status', ''),
         'video_checked': bool(video),
+        'play_id_url': (f'https://baseballsavant.mlb.com/sporty-videos?playId={r["play_id"]}'
+                        if r.get('play_id') else ''),
         'feed_url': r.get('feed_url') or
         f'https://statsapi.mlb.com/api/v1.1/game/{r["game_pk"]}/feed/live',
         'savant_game_url': f'https://baseballsavant.mlb.com/gamefeed?gamePk={r["game_pk"]}',
@@ -110,9 +113,114 @@ def write_ruling_changes():
     }, indent=1))
 
 
+def write_alerts():
+    """One ledger of scoring-relevant observations, from the two machine sources that exist.
+
+    The browser watches the live feed itself (docs/alerts.js + docs/alerts.html). This file is what
+    the page shows when the browser cannot reach statsapi.mlb.com, and it is the auditable record of
+    what the scheduled watcher actually saw:
+
+      * `ci-watch`  — field-level changes recorded by tools/watch_rulings.py between captures
+      * `ci-review` — overturned replay reviews the collector flagged as run-affected (heuristic),
+                      each with its per-play video link and its Rule 9.04 conditional RBI note
+
+    Nothing here is inferred: a row exists only because a captured value differed, or because the
+    collector's own labelled heuristic flagged it. Both are stated on every row and on the page.
+    """
+    changes = load_csv(ROOT / 'data' / 'ingest' / 'ruling_changes.csv')
+    snap = load_csv(ROOT / 'data' / 'ingest' / 'ruling_snapshot.csv')
+    status_path = ROOT / 'data' / 'ingest' / 'ruling_watch_status.json'
+    watch_status = json.loads(status_path.read_text()) if status_path.exists() else {}
+    replays = load_csv(DATA / 'replays.csv') if (DATA / 'replays.csv').exists() \
+        else load_csv(ROOT / 'data' / 'ingest' / 'replays.csv')
+    videos = {(v['game_pk'], v['play_id']): v for v in load_csv(DATA / 'replay_videos.csv')}
+
+    alerts = []
+    for r in changes:
+        field = r.get('field', '')
+        alert_type = {'event_type': 'event_type_changed', 'rbi': 'rbi_changed'}.get(field,
+                                                                                     'feed_field_changed')
+        if r.get('from') == '' and field == 'event_type':
+            alert_type = 'decision_settled'
+        severity = {'event_type_changed': 'critical', 'decision_settled': 'high',
+                    'rbi_changed': 'critical'}.get(alert_type, 'medium')
+        alerts.append({
+            'id': f"ci-watch|{r.get('game_pk')}|{r.get('at_bat')}|{field}|{r.get('detected_utc')}",
+            'type': alert_type, 'severity': severity, 'at': r.get('detected_utc', ''),
+            'source': 'ci-watch', 'game_pk': r.get('game_pk', ''), 'date': r.get('date', ''),
+            'matchup': r.get('matchup', ''), 'inning': r.get('inning', ''), 'half': r.get('half', ''),
+            'batter': r.get('batter', ''), 'play_id': r.get('play_id', ''),
+            'field': field, 'from': r.get('from', ''), 'to': r.get('to', ''),
+            'rbi_from': r.get('rbi_from', ''), 'rbi_to': r.get('rbi_to', ''),
+            'was_unresolved_in_feed': int(r.get('was_unresolved_in_feed') or 0),
+            'first_observation_status': r.get('first_observation_status', ''),
+            'description': r.get('description', '')[:300],
+            'note': r.get('rbi_note') or ('Captured field value changed between two scheduled '
+                                          'observations of the official feed.'),
+            'feed_url': r.get('feed_url', ''),
+            'watch_url': r.get('savant_url', ''),
+        })
+
+    watch_updated = watch_status.get('detected_utc', '')
+    affected = [r for r in replays
+                if (r.get('review_overturned') == '1'
+                    and (r.get('run_removed_heuristic') == '1' or r.get('run_removed_hard') == '1'))]
+    for r in affected:
+        v = videos.get((r['game_pk'], r['play_id']), {})
+        alerts.append({
+            'id': f"ci-review|{r['game_pk']}|{r['at_bat']}|run-affected",
+            'type': 'run_at_stake', 'severity': 'high',
+            # The collector observes the final reviewed state, so there is no honest
+            # "when did this change" clock for these rows: the play date is the timeline.
+            'at': '', 'observed_at': watch_updated,
+            'source': 'ci-review', 'game_pk': r.get('game_pk', ''), 'date': r.get('date', ''),
+            'matchup': r.get('matchup', ''), 'inning': r.get('inning', ''), 'half': r.get('half', ''),
+            'batter': r.get('batter', ''), 'play_id': r.get('play_id', ''),
+            'field': 'review', 'from': r.get('initial_call', ''), 'to': r.get('event_type', ''),
+            'rbi_from': '', 'rbi_to': r.get('rbi_official', ''),
+            'runs_by_movement': r.get('runs_by_movement', ''),
+            'score_delta': r.get('score_delta', ''),
+            'description': r.get('description', '')[:300],
+            'note': ('Collector heuristic: an overturned review whose subject/text concerns a run. '
+                     'Candidate, not a confirmed removed run. ' + (r.get('run_removed_rule') or '')),
+            'rbi_rule_note': r.get('rbi_if_error', ''),
+            'feed_url': f"https://statsapi.mlb.com/api/v1.1/game/{r['game_pk']}/feed/live",
+            'watch_url': v.get('watch_url') or r.get('savant_url', ''),
+            'video_url': v.get('mp4', ''),
+        })
+
+    alerts.sort(key=lambda a: (a['at'] or '', a['id']), reverse=True)
+    dates = [r.get('date', '') for r in snap if r.get('date')]
+    unresolved = sum(r.get('status') == 'no_event_type_yet' for r in snap)
+    counts = Counter(a['type'] for a in alerts)
+    (DATA / 'alerts.json').write_text(json.dumps({
+        'available': True,
+        'generated_from': ['data/ingest/ruling_changes.csv', 'data/ingest/ruling_snapshot.csv',
+                           'data/ingest/ruling_watch_status.json', 'docs/data/replays.csv',
+                           'docs/data/replay_videos.csv'],
+        'note': ('Scheduled observations only. MLB exposes no open scorer-decision queue: a changed '
+                 'feed value is evidence that a captured field differed between two observations, '
+                 'not that a decision was pending, when it was made, or why.'),
+        'watcher': {
+            'status_ok': watch_status.get('ok'), 'updated_utc': watch_status.get('detected_utc', ''),
+            'mode': watch_status.get('mode', ''), 'error': watch_status.get('error', ''),
+            'window': watch_status.get('window') or ([min(dates), max(dates)] if dates else []),
+            'plays_observed': len(snap), 'unresolved_in_feed': unresolved,
+            'games': watch_status.get('games'), 'changes_recorded': len(changes),
+        },
+        'counts': {
+            'alerts': len(alerts), 'ci_changes': len(changes), 'run_affected_reviews': len(affected),
+            'by_type': dict(sorted(counts.items())),
+        },
+        'alerts': alerts[:400],
+    }, indent=1))
+    return {'alerts': len(alerts), 'ci_changes': len(changes), 'affected': len(affected)}
+
+
 def main():
     write_ingest_summary()
     write_ruling_changes()
+    write_alerts()
     reps = load_csv(DATA / 'replays.csv')
     vids = {(v['game_pk'], v['play_id']): v for v in load_csv(DATA / 'replay_videos.csv')}
     summary = json.loads((DATA / 'ingest_summary.json').read_text()) \

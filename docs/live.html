@@ -20,6 +20,10 @@
   and pre-pitch context. The model is not trained to predict whether an initial scorer call will later be changed. It
   never nominates “error” as its most likely class in grouped out-of-fold evaluation; use the score to prioritize
   review, not as a verdict. The official scorer's feed label remains the record of the play.</div>
+  <p class="note" style="margin-top:10px"><b>Watching for a decision?</b> The
+  <a href="alerts.html">alert console</a> polls the same endpoints and tells you what changed between polls —
+  a ruling appearing, a ruling changing (error → hit or fielder's choice), an RBI field moving, a review being
+  overturned — with sound, optional browser notifications and an exportable ledger.</p>
   <p class="legend">“No call in feed yet” means Statcast <code>hitData</code> is present but the current feed has no
   <code>result.eventType</code>. MLB does not publish an open-decision queue, so this feed state does not prove a scorer
   has a decision pending. RBI notes are conditional reminders under <a href="rules.html">Rule 9.04</a>, not automatic

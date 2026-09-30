@@ -191,6 +191,86 @@ def transition_key(game_pk, at_bat, field, before, after, previous_change_utc=''
     return (str(game_pk), str(at_bat), field, before, after, previous_change_utc or '')
 
 
+def normalize(value):
+    """One comparable text form for a stored snapshot value.
+
+    The Stats API returns some watched fields as numbers (`rbi`, `reviewed`, `overturned`) while the
+    snapshot CSV stores every column as text, so `0` and `'0'` describe the same observation. The
+    first version of this comparison tested them for equality directly: the mismatch registered as a
+    change and the ledger builder then sliced the integer (`current[:300]`), which crashed every CI
+    run with `TypeError: 'int' object is not subscriptable` and left the change ledger empty. Both
+    sides now pass through here before they are compared, stored or printed.
+    """
+    if value is None:
+        return ''
+    if isinstance(value, bool):
+        return '1' if value else '0'
+    return str(value)
+
+
+def detect_changes(previous, current_rows, seen, now_utc, feed_url_for=None):
+    """Diff the stored feed state against one fresh observation.
+
+    Pure function on purpose: `tests/test_pipeline.py` feeds it a stored shape and a fresh shape
+    offline, so the int/text regression above cannot come back unnoticed, and a workflow retry is
+    proven to be deduplicated without another CI round-trip.
+    """
+    changes = []
+    for r in current_rows:
+        key = (normalize(r.get('game_pk')), normalize(r.get('at_bat')))
+        prev = previous.get(key)
+        if not prev:
+            continue
+        for field in WATCH_FIELDS:
+            was, current = normalize(prev.get(field, '')), normalize(r.get(field, ''))
+            if was == current:
+                continue
+            previous_change_utc = normalize(prev.get('last_changed_utc') or prev.get('last_seen_utc'))
+            change_key = transition_key(key[0], key[1], field, was, current, previous_change_utc)
+            if change_key in seen:
+                continue
+            first_status = normalize(prev.get('status')) or (
+                'scored' if prev.get('event_type') else 'no_event_type_yet')
+            if field == 'event_type':
+                rbi_note = ('The official feed eventType changed. Compare the recorded RBI values and '
+                            "check Rule 9.04 and MLB's scoring-changes log; this feed label alone does "
+                            'not decide the counterfactual RBI.')
+            elif field == 'rbi':
+                rbi_note = ('The official feed RBI field changed; verify the scoring rationale against '
+                            "the 2026 rulebook (Rule 9.04) and MLB's scoring-changes log.")
+            else:
+                rbi_note = ''
+            changes.append({
+                'detected_utc': now_utc, 'game_pk': key[0], 'date': normalize(r.get('date')),
+                'matchup': normalize(r.get('matchup')), 'inning': normalize(r.get('inning')),
+                'half': normalize(r.get('half')),
+                'at_bat': key[1], 'play_id': normalize(r.get('play_id')),
+                'batter': normalize(r.get('batter')),
+                'field': field, 'from': was[:300], 'to': current[:300],
+                'previous_last_changed_utc': previous_change_utc,
+                'first_observation_status': first_status,
+                'was_unresolved_in_feed': int(first_status == 'no_event_type_yet'),
+                'first_seen_utc': normalize(prev.get('first_seen_utc')),
+                'launch_speed': normalize(prev.get('launch_speed')),
+                'launch_angle': normalize(prev.get('launch_angle')),
+                'distance': normalize(prev.get('distance')),
+                'trajectory': normalize(prev.get('trajectory')),
+                'hardness': normalize(prev.get('hardness')),
+                'bases_before': normalize(prev.get('bases_before')),
+                'outs_before': normalize(prev.get('outs_before')),
+                'rbi_from': normalize(prev.get('rbi')), 'rbi_to': normalize(r.get('rbi')),
+                'rbi_note': rbi_note,
+                'reviewed': normalize(r.get('reviewed')), 'overturned': normalize(r.get('overturned')),
+                'review_type': normalize(r.get('review_type')),
+                'feed_url': (feed_url_for or (lambda pk: f'{STATS}/api/v1.1/game/{pk}/feed/live'))(key[0]),
+                'scoring_changes_url': SCORING_CHANGES_URL,
+                'savant_url': (f'https://baseballsavant.mlb.com/sporty-videos?playId='
+                               f'{normalize(r.get("play_id"))}' if normalize(r.get('play_id')) else ''),
+            })
+            seen.add(change_key)
+    return changes
+
+
 CHANGE_KEYS = ['detected_utc', 'game_pk', 'date', 'matchup', 'inning', 'half', 'at_bat', 'play_id',
                'batter', 'field', 'from', 'to', 'previous_last_changed_utc', 'first_observation_status',
                'was_unresolved_in_feed', 'first_seen_utc', 'launch_speed', 'launch_angle', 'distance',
@@ -255,54 +335,10 @@ def main(argv=None):
                 seen.add(transition_key(r['game_pk'], r['at_bat'], r['field'], r['from'], r['to'],
                                         r.get('previous_last_changed_utc', '')))
 
-    for r in rows:
-        key = (str(r['game_pk']), str(r['at_bat']))
-        prev = old.get(key)
-        if not prev:
-            continue
-        for field in WATCH_FIELDS:
-            was, current = prev.get(field, ''), r.get(field, '')
-            if was == current:
-                continue
-            previous_change_utc = (prev.get('last_changed_utc') or prev.get('last_seen_utc') or '')
-            change_key = transition_key(key[0], key[1], field, was, current, previous_change_utc)
-            if change_key in seen:
-                continue
-            first_status = prev.get('status') or (
-                'scored' if prev.get('event_type') else 'no_event_type_yet')
-            was_unresolved = int(first_status == 'no_event_type_yet')
-            rbi_note = ''
-            if field == 'event_type':
-                rbi_note = ("The official feed eventType changed. Compare the recorded RBI values and "
-                            "check Rule 9.04 and MLB's scoring-changes log; this feed label alone does "
-                            'not decide the counterfactual RBI.')
-            elif field == 'rbi':
-                rbi_note = ("The official feed RBI field changed; verify the scoring rationale against "
-                            "the 2026 rulebook and MLB's scoring-changes log.")
-            changes.append({
-                'detected_utc': now_utc, 'game_pk': key[0], 'date': r['date'],
-                'matchup': r['matchup'], 'inning': r['inning'], 'half': r['half'],
-                'at_bat': key[1], 'play_id': r['play_id'], 'batter': r['batter'],
-                'field': field, 'from': was[:300], 'to': current[:300],
-                'previous_last_changed_utc': previous_change_utc,
-                'first_observation_status': first_status,
-                'was_unresolved_in_feed': was_unresolved,
-                'first_seen_utc': prev.get('first_seen_utc', ''),
-                'launch_speed': prev.get('launch_speed', ''),
-                'launch_angle': prev.get('launch_angle', ''), 'distance': prev.get('distance', ''),
-                'trajectory': prev.get('trajectory', ''), 'hardness': prev.get('hardness', ''),
-                'bases_before': prev.get('bases_before', ''), 'outs_before': prev.get('outs_before', ''),
-                'rbi_from': prev.get('rbi', ''), 'rbi_to': r.get('rbi', ''), 'rbi_note': rbi_note,
-                'reviewed': r['reviewed'], 'overturned': r['overturned'],
-                'review_type': r['review_type'],
-                'feed_url': f'{STATS}/api/v1.1/game/{key[0]}/feed/live',
-                'scoring_changes_url': SCORING_CHANGES_URL,
-                'savant_url': (f'https://baseballsavant.mlb.com/sporty-videos?playId={r["play_id"]}'
-                               if r['play_id'] else ''),
-            })
-            seen.add(change_key)
-            print(f"CHANGE {r['date']} {r['matchup']} ab{key[1]} {field}: {was!r} -> {current!r}",
-                  flush=True)
+    changes = detect_changes(old, rows, seen, now_utc)
+    for c in changes:
+        print(f"CHANGE {c['date']} {c['matchup']} ab{c['at_bat']} {c['field']}: "
+              f"{c['from']!r} -> {c['to']!r}", flush=True)
 
     unresolved = sum(r['status'] == 'no_event_type_yet' for r in rows)
     print(f'observed {len(rows)} plays, {len(changes)} changes vs the stored snapshot, '
@@ -312,7 +348,8 @@ def main(argv=None):
             key = (str(r['game_pk']), str(r['at_bat']))
             prev = old.get(key)
             r['first_seen_utc'] = (prev or {}).get('first_seen_utc') or now_utc
-            unchanged = bool(prev) and all(prev.get(k, '') == r.get(k, '') for k in WATCH_FIELDS)
+            unchanged = bool(prev) and all(normalize(prev.get(k, '')) == normalize(r.get(k, ''))
+                                            for k in WATCH_FIELDS)
             # This timestamp means last changed, not last fetched: restamping an unchanged historical
             # window on each hourly run would create needless multi-megabyte Git blobs.
             r['last_changed_utc'] = ((prev or {}).get('last_changed_utc')
