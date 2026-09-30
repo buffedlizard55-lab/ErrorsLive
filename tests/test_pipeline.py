@@ -710,6 +710,16 @@ if slate_path.exists():
           and load_json(slate_path)['mode'] == 'live-slate')
 GAME_KEYS = ['model_rows', 'pk', 'game_pk', 'away_abbr', 'home_abbr', 'state', 'batted_balls', 'errors',
              'top_pick_agrees', 'risp_runs_at_stake', 'overturned_reviews', 'verified', 'url', 'savant']
+spec_fl = importlib.util.spec_from_file_location('fetch_live', ROOT / 'tools/fetch_live.py')
+fl = importlib.util.module_from_spec(spec_fl)
+spec_fl.loader.exec_module(fl)
+check('fetch_live.split_matchup never invents or truncates a team abbreviation',
+      fl.split_matchup('PHI @ ATL') == ('PHI', 'ATL')
+      and fl.split_matchup('CWS @ HOU') == ('CWS', 'HOU')
+      and fl.split_matchup('') == ('', '') and fl.split_matchup(None) == ('', ''))
+check('the live board abbreviations agree with the matchup string it prints',
+      all((g.get('away_abbr', '') + ' @ ' + g.get('home_abbr', '')) == g.get('matchup', '')
+          for g in load_json(ROOT / 'docs/data/live_now.json')['games']))
 check('live_now.json: every game carries the fields the slate tables read',
       all(all(k in g for k in GAME_KEYS) for g in live['games']), 'game keys')
 SUM_KEYS = ['games', 'games_verified_vs_linescore', 'batted_balls', 'errors', 'risp_runs_at_stake',

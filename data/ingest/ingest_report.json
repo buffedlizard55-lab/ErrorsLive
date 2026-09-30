@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-30T00:51:53+00:00",
+ "generated_utc": "2026-09-30T01:11:56+00:00",
  "endpoints": {
   "feed": "https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live?fields=liveData,plays,allPlays,about,atBatIndex...",
   "linescore": "https://statsapi.mlb.com/api/v1/game/{pk}/linescore",
@@ -30,9 +30,88 @@
  "hard_run_removal_examples": [],
  "run_removal_rule": "hard = (#runners whose movement ends at \"score\") - (scoreboard delta); heuristic = overturned review whose text/type concerns a run (HR review turned into a non-HR, runner out at home, scoring/timing review with a runner at the plate)",
  "content_api_schema_probe": {
-  "done": false,
-  "schema": null,
-  "game_pk": null
+  "done": true,
+  "schema": [
+   {
+    "keys": [
+     "blurb",
+     "cclocationVtt",
+     "date",
+     "description",
+     "duration",
+     "headline",
+     "id",
+     "image",
+     "keywordsAll",
+     "keywordsDisplay",
+     "kicker",
+     "mediaPlaybackId",
+     "mediaPlaybackUrl",
+     "noIndex",
+     "playbacks",
+     "seoTitle",
+     "slug",
+     "state",
+     "title",
+     "type"
+    ],
+    "keyword_types": [
+     "game",
+     "game_pk",
+     "mlbtax",
+     "subject",
+     "taxonomy",
+     "team",
+     "team_id"
+    ],
+    "playback_keys": [
+     "height",
+     "name",
+     "url",
+     "width"
+    ]
+   },
+   {
+    "keys": [
+     "blurb",
+     "cclocationVtt",
+     "date",
+     "description",
+     "duration",
+     "headline",
+     "id",
+     "image",
+     "keywordsAll",
+     "keywordsDisplay",
+     "kicker",
+     "mediaPlaybackId",
+     "mediaPlaybackUrl",
+     "noIndex",
+     "playbacks",
+     "seoTitle",
+     "slug",
+     "state",
+     "title",
+     "type"
+    ],
+    "keyword_types": [
+     "game",
+     "game_pk",
+     "mlbtax",
+     "subject",
+     "taxonomy",
+     "team",
+     "team_id"
+    ],
+    "playback_keys": [
+     "height",
+     "name",
+     "url",
+     "width"
+    ]
+   }
+  ],
+  "game_pk": 823671
  },
  "summary": {
   "games": 2430,
@@ -130,6 +209,6 @@
    "": 1792,
    "404": 321
   },
-  "elapsed_s": 134.9
+  "elapsed_s": 117.8
  }
 }

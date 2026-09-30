@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-30T00:58:07Z",
+ "generated_utc": "2026-09-30T01:11:55Z",
  "note": "Observed official-endpoint behaviour; committed by .github/workflows/probe.yml. Re-run: gh workflow run probe.yml",
  "records": [
   {
