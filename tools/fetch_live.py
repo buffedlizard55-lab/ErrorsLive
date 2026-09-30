@@ -61,6 +61,18 @@ def slate(day):
     return out
 
 
+def split_matchup(matchup):
+    """'PHI @ ATL' -> ('PHI', 'ATL').
+
+    Indexing the string (`matchup[-1]`) is how the live board once rendered the home team as a single
+    letter; the abbreviation is taken from the split or not at all.
+    """
+    if ' @ ' in (matchup or ''):
+        away, home = matchup.split(' @ ', 1)
+        return away.strip(), home.strip()
+    return (matchup or '').strip(), ''
+
+
 def game_stats(rows):
     """Per-game counts the pages print, derived only from the scored rows."""
     played = [r for r in rows if r.get('status') == 'scored']
@@ -134,9 +146,8 @@ def main(argv=None):
                         'final_away': plays[-1]['result'].get('awayScore'),
                         'final_home': plays[-1]['result'].get('homeScore'),
                         'pk': m['game_pk'],
-                        'away_abbr': m.get('matchup', '').split(' @ ')[0],
-                        'home_abbr': m.get('matchup', ' @ ')[-1] if ' @ ' in m.get('matchup', '')
-                        else '',
+                        'away_abbr': split_matchup(m.get('matchup'))[0],
+                        'home_abbr': split_matchup(m.get('matchup'))[1],
                         'linescore_away': m.get('away_score'), 'linescore_home': m.get('home_score')}
                 games.append({**m, **info, 'model_rows': rows, 'plays': rows,
                               'url': m.get('official_feed_url', ''), 'savant': m.get('savant_url', ''),
