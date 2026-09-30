@@ -8,10 +8,10 @@
    "2026-09-29"
   ],
   "unresolved_in_feed": 0,
-  "status_ok": true,
-  "status_updated_utc": "2026-09-30T01:14:02Z",
+  "status_ok": false,
+  "status_updated_utc": "2026-09-30T03:14:30Z",
   "mode": "",
-  "status_error": ""
+  "status_error": "TypeError: 'int' object is not subscriptable"
  },
  "changes": 0,
  "rows": []

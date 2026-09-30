@@ -1,7 +1,7 @@
 {
- "ok": true,
- "exit_code": 0,
- "detected_utc": "2026-09-30T01:14:02Z",
+ "ok": false,
+ "exit_code": 1,
+ "error": "TypeError: 'int' object is not subscriptable",
  "ruling_snapshot.csv": {
   "rows": 24751,
   "bytes": 5746012
@@ -9,5 +9,6 @@
  "ruling_changes.csv": {
   "rows": null,
   "bytes": 0
- }
+ },
+ "detected_utc": "2026-09-30T03:14:30Z"
 }
