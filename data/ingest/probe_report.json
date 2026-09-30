@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-30T04:24:50Z",
+ "generated_utc": "2026-09-30T04:27:39Z",
  "note": "Observed official-endpoint behaviour; committed by .github/workflows/probe.yml. Re-run: gh workflow run probe.yml",
  "records": [
   {
@@ -239,7 +239,7 @@
    "probe": "film_room_search",
    "url": "https://www.mlb.com/video/?q=overturned+call",
    "status": 200,
-   "bytes": 411180
+   "bytes": 411174
   },
   {
    "probe": "schedule_watcher_window",
