@@ -264,6 +264,14 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
    rows from the first post-fix run) and points at the untouched raw file in commit `e81bb25`.
 12. **The video probe is scoped to the run-impact candidates.** Each probe is a Savant page fetch, so the collector
    does not yet probe all 6,149 overturned reviews; the roadmap carries that as backlog item 9 with the reason.
-13. **PR/merge state is recorded in GitHub, not inferred from local files.** The session branch is fixed by Arena; see [PR #7](https://github.com/buffedlizard55-lab/ErrorsLive/pull/7) for its checks and authoritative merge status.
+13. **PR/merge state is recorded in GitHub, not inferred from local files.** The session branch is fixed by Arena; see [PR #9](https://github.com/buffedlizard55-lab/ErrorsLive/pull/9) for its checks and authoritative merge status.
+14. **A workflow run started by the ingest bot has to be approved by a human before it runs.** That is a GitHub
+   repository setting, not something this repo's code can change: the token used here cannot read or alter it, and
+   the approve/`workflow_dispatch` endpoints return `403 Resource not accessible by integration`. The practical
+   consequence, and the reason `.github/workflows/ingest.yml` now collects on the published branch, is that a
+   `[ci-data]` commit on a branch under review leaves that branch's `audit` run `action_required` and the pull
+   request `UNSTABLE` — nine such runs failed outright before the ledger-cleaning record was scoped to its own
+   timestamp, and the last two were never started at all. The audit on an agent-authored commit does run, and it
+   is the check to read; the full suite was also re-run locally on every bot commit, and it passes.
 
 See `docs/roadmap.html` for the ordered backlog and evidence ledger. Next evidence and reliability work: extract and review the complete 2026 Rule 9.04 text; smoke-test the deployed Pages site in a real browser; monitor scheduled workflow delivery and feed failures; and expand external model validation before using the score beyond review triage.

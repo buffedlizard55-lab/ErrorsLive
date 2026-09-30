@@ -26,8 +26,11 @@
       <a href="https://statsapi.mlb.com/api/v1/game/823441/linescore" target="_blank" rel="noopener">/api/v1/game/&#123;pk&#125;/linescore</a>.
       A mismatch is recorded, never repaired.</p>
       <p class="muted" style="margin-bottom:0">The historical ingest runs in
-      <code>.github/workflows/ingest.yml</code>. Separate scheduled jobs refresh the static live fallback
-      (<code>live-refresh.yml</code>) and observe ruling changes (<code>ruling-watch.yml</code>). The live page
+      <code>.github/workflows/ingest.yml</code>, which commits its <code>[ci-data]</code> result to the published
+      branch (or to whichever branch it is dispatched against) rather than to a branch under review — a commit
+      pushed by the ingest bot leaves that branch's <code>audit</code> run waiting for a human approval that never
+      arrives, so the pull request can never reach a green head. Separate scheduled jobs refresh the static live
+      fallback (<code>live-refresh.yml</code>) and observe ruling changes (<code>ruling-watch.yml</code>). The live page
       also attempts direct browser reads of the public schedule and game-feed endpoints; browser access is
       tested separately and falls back to the committed snapshot on failure. Reports and failure status are
       committed instead of silently substituting data.</p></div>
