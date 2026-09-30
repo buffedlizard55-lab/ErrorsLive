@@ -31,7 +31,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent.parent
 STATS = 'https://statsapi.mlb.com'
-UA = {'User-Agent': 'LiveScoringErrors-research/1.0 (+https://github.com/buffedlizard55-lab/LiveScoringErrors)'}
+UA = {'User-Agent': 'LiveScoringErrors-research/1.0 (+https://github.com/buffedlizard55-lab/ErrorsLive)'}
 SNAP = ROOT / 'data' / 'ingest' / 'ruling_snapshot.csv'
 CHANGES = ROOT / 'data' / 'ingest' / 'ruling_changes.csv'
 FIELDS = ('liveData,plays,allPlays,result,eventType,event,rbi,description,about,inning,halfInning,'

@@ -39,7 +39,7 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent.parent
-UA = {'User-Agent': 'LiveScoringErrors/1.0 (+https://github.com/buffedlizard55-lab/LiveScoringErrors)'}
+UA = {'User-Agent': 'LiveScoringErrors/1.0 (+https://github.com/buffedlizard55-lab/ErrorsLive)'}
 STATS = 'https://statsapi.mlb.com'
 SAVANT = 'https://baseballsavant.mlb.com'
 

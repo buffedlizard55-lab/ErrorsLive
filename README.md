@@ -4,7 +4,7 @@ Can an MLB official scorer's decision — **hit vs. error vs. fielder's choice**
 Statcast batted-ball physics, in real time? This repository contains the data pipeline, the
 statistical model, and the public site.
 
-**Site (GitHub Pages):** https://buffedlizard55-lab.github.io/LiveScoringErrors/
+**Site (GitHub Pages):** https://buffedlizard55-lab.github.io/ErrorsLive/
 **Sister dataset researched:** https://github.com/nydailynews/mlb-overturned-calls (2014–2018 manager-replay overturns)
 
 ---
@@ -78,7 +78,7 @@ statistical model, and the public site.
 | b | What are the RBI consequences of error vs. hit vs. fielder's choice? | `docs/rules.html` now reproduces the **verbatim 2026 text** of Rule 9.04(a)(1)–(3), (b)(1)–(2) and (c) from the official PDF (page 115), Rule 9.05(b)(1) (page 116) for the hit / fielder's-choice boundary, Rule 9.12 and its Comment (pages 127–128) for what an error is and is not, and Rule 9.01(a) (pages 107–108) for the scorer's clock: preliminary during play, final or revised within 24 hours, a 72-hour Club appeal, and no change after that. The headline answer: an error does **not** automatically mean no RBI — Rule 9.04(a)(3) credits one when, before two outs, an error is made on a play on which a runner from third base ordinarily would score. Live RBI notes remain conditional reminders, not rulings. |
 | c | Can each live batted ball receive a score out of 100? | Yes: `100 × P(final captured feed label = error)`, with class probabilities and pre-pitch context. `docs/index.html` has a calculator; `docs/live.html` attempts direct browser polling; `tools/live_score.py` is the offline CLI twin. Tests compare both implementations on the named model data. |
 | d | Can users inspect overturned calls and watch/download video for run-impact cases? | `docs/replays.html` indexes the ingested 2026 review window (**11,528** reviews, **6,149** marked overturned). **17** overturned rows are heuristic run-impact candidates; **0** passed the separate movement/score consistency diagnostic. Every candidate row now has an **inline player** (the mp4 streams from the league's own `sporty-clips.mlb.com` host, nothing is re-hosted) plus a download control; rows whose play id exposes no file rendition say so and open Baseball Savant instead. Neither count is a verified list of runs removed — and the site says so on the row. The 2014–2018 archive is on `docs/overturned.html`. |
-| e | Is there a GitHub Pages site? | Yes: `/docs`, published at <https://buffedlizard55-lab.github.io/LiveScoringErrors/>. |
+| e | Is there a GitHub Pages site? | Yes: `/docs`, published at <https://buffedlizard55-lab.github.io/ErrorsLive/>. |
 | f | Is “Own the Outcome” a focal point? | The home page and methods page state it; in practice the pipeline records flags and failed fetches instead of silently smoothing them over, and the site surfaces model limits beside headline metrics. |
 | g | Can collection run with minimal manual checking? | Best-effort automation is configured: browser refresh about every 2 minutes while live, static fallback refresh on a 30-minute schedule, active ruling observations every 15 minutes, and a daily recheck of recent games. `docs/alerts.html` turns those observations into a change feed — polls in the browser, diffs each capture against the previous one, raises typed alerts (ruling appeared, ruling changed, RBI moved, review overturned, run scored with a runner in scoring position), optionally notifies and beeps, and exports the ledger; the CI-side ledger in `docs/data/alerts.json` is the fallback when a browser cannot reach the league. A watcher defect found in this session (`TypeError` from comparing CSV text to API integers) is fixed and regression-tested. GitHub schedules are not guaranteed real-time delivery; see the workflows and limitations below. |
 | h | What remains? | See `docs/roadmap.html` and “Limitations and next steps” below. |
@@ -197,6 +197,6 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
    never a count of decisions.
 10. **The video probe is scoped to the run-impact candidates.** Each probe is a Savant page fetch, so the collector
    does not yet probe all 6,149 overturned reviews; the roadmap carries that as backlog item 9 with the reason.
-11. **PR/merge state is recorded in GitHub, not inferred from local files.** The session branch is fixed by Arena; see [PR #7](https://github.com/buffedlizard55-lab/LiveScoringErrors/pull/7) for its checks and authoritative merge status.
+11. **PR/merge state is recorded in GitHub, not inferred from local files.** The session branch is fixed by Arena; see [PR #7](https://github.com/buffedlizard55-lab/ErrorsLive/pull/7) for its checks and authoritative merge status.
 
 See `docs/roadmap.html` for the ordered backlog and evidence ledger. Next evidence and reliability work: extract and review the complete 2026 Rule 9.04 text; smoke-test the deployed Pages site in a real browser; monitor scheduled workflow delivery and feed failures; and expand external model validation before using the score beyond review triage.
