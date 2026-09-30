@@ -10,9 +10,10 @@
 <header class="nav"><div class="nav-inner"></div></header>
 <main>
   <h1>Methods &amp; audit</h1>
-  <p class="lede">Every number on this site is produced by code in this repository from data fetched from
-  official MLB endpoints. Nothing is typed by hand, and the audit suite recomputes the published figures on
-  every push — including the ones that make the model look bad.</p>
+  <p class="lede">Every displayed result is derived by code from either an official MLB feed, the documented
+  NY Daily News archive, or a committed fixture clearly labelled as historical. The audit suite recomputes
+  published metrics and checks claims on every push; snapshots and network reachability are explicitly
+  timestamped and may be stale when an endpoint or scheduled job fails.</p>
 
   <h2>The pipeline</h2>
   <div class="grid cols2">
@@ -24,15 +25,17 @@
       with a trimmed <code>fields</code> list, and re-checks every game's final score against
       <a href="https://statsapi.mlb.com/api/v1/game/823441/linescore" target="_blank" rel="noopener">/api/v1/game/&#123;pk&#125;/linescore</a>.
       A mismatch is recorded, never repaired.</p>
-      <p class="muted" style="margin-bottom:0">Why CI: the build sandbox this project is developed in has no
-      route to <code>statsapi.mlb.com</code>. Rather than let anyone type numbers in, the fetch runs on a
-      GitHub-hosted runner (<code>.github/workflows/ingest.yml</code>) and commits its derived CSVs back to the
-      branch. The committed file <code>data/ingest/ingest_report.json</code> is the run's own report.</p></div>
+      <p class="muted" style="margin-bottom:0">The historical ingest runs in
+      <code>.github/workflows/ingest.yml</code>. Separate scheduled jobs refresh the static live fallback
+      (<code>live-refresh.yml</code>) and observe ruling changes (<code>ruling-watch.yml</code>). The live page
+      also attempts direct browser reads of the public schedule and game-feed endpoints; browser access is
+      tested separately and falls back to the committed snapshot on failure. Reports and failure status are
+      committed instead of silently substituting data.</p></div>
     <div class="card"><h3>2 · Rebuild (offline, byte-reproducible)</h3>
-      <p class="muted"><code>python3 tools/run_all.py</code> rebuilds the committed site artifacts from the
-      committed sources: the 24-game audit sample (<code>docs/data/bip.csv</code>, <code>games.csv</code>), the
-      model (<code>model.json</code>), the NYDN archive (<code>overturned_calls.csv</code>) and the live
-      fixture board (<code>live_sample.json</code>). CI runs it and fails the build if
+      <p class="muted"><code>python3 tools/run_all.py</code> rebuilds offline-derived artifacts from committed
+      sources: the audit sample, fitted model, NYDN archive and labelled historical live fixture. The live
+      official snapshot is a separate network artifact and is not rewritten by the offline rebuild. CI runs
+      it and fails the build if
       <code>git diff</code> is not empty — i.e. if the committed artifacts are not exactly what the code
       produces.</p>
       <p class="muted" style="margin-bottom:0"><code>python3 tests/test_pipeline.py</code> then recomputes the
@@ -48,8 +51,8 @@
     <tr><th>Dataset</th><th>What it is</th><th>How it may be used</th><th>File</th></tr>
     <tr><td><b>Ingested season window</b></td>
       <td>Every batted ball in every game of a contiguous date window, fetched from the official feed.</td>
-      <td><b>The model's training data.</b> A whole-population window, so its error rate is the real in-season
-      base rate — this is why the published error rate is roughly 1% rather than the 1.9% of the enriched sample.</td>
+      <td><b>The model's training data.</b> It is a whole-population window for the games collected, so its
+      0.80% error rate describes this late-season window only. It is not a full-season or future-season base rate.</td>
       <td><code>docs/data/bip_official.csv</code></td></tr>
     <tr><td><b>24-game audit sample</b></td>
       <td>24 games stratified to be error-<b>rich</b> (strata A ≥3 team errors, B =2, C ≤1; fractions
@@ -63,14 +66,18 @@
 
   <h2>Labels, and what is never invented</h2>
   <ul>
-    <li>A play's label is the official scorer's own <code>result.eventType</code> from the feed. Nothing is
-      inferred, imputed or hand-edited.</li>
+    <li>The model target is the latest captured official feed's final <code>result.eventType</code>, mapped to
+      hit / error / fielder's choice / out. It is not an initial-call history, and nothing is imputed or
+      hand-edited.</li>
+    <li>The live feed state <code>no_event_type_yet</code> means contact <code>hitData</code> exists while
+      <code>result.eventType</code> is absent. MLB does not expose its scorer queue; this is not proof that an
+      official ruling is pending.</li>
     <li>Batted balls with no complete Statcast vector are <b>quarantined</b>, not filled in: the count is
       published in <code>data/data_quality.json</code> and in the model's honesty block.</li>
-    <li>Two independent run-removal tests are published for reviewed plays: a <b>hard</b> consistency test
-      (runners recorded at the plate vs the scoreboard delta) and a labelled <b>heuristic</b> (an overturned
-      home-run/tag/force review whose corrected text takes a run off). The rule string is stored on every row
-      that fires, and the counts are printed even when they are zero.</li>
+    <li>Two run-impact diagnostics are published for reviewed plays: a runner-movement/scoreboard
+      <b>consistency check</b> (legacy field name <code>run_removed_hard</code>; not proof of a run removal)
+      and a labelled <b>heuristic</b> for selected overturned reviews. The reason is stored on each flagged row;
+      heuristic candidates are not manually confirmed.</li>
     <li>MLB's two-letter <code>reviewType</code> codes (<code>MJ</code>, <code>MA</code>, …) are stored
       verbatim and <b>never translated by guesswork</b>. Where a human-readable subject is needed the site uses
       the feed's own play text — e.g. “Marlins challenged (tag play), call on the field was overturned: …”.</li>
@@ -80,13 +87,15 @@
 
   <h2>Validation design</h2>
   <ul>
-    <li><b>GroupKFold by game</b> is the published cross-validation. Random folds are shown beside it as the
-      optimistic bound, and the gap between them is published.</li>
+    <li><b>GroupKFold by game</b> is the published cross-validation. StandardScaler is fitted inside each
+      training fold. Stratified random folds are a comparator only: neither score is assumed to bound the other.</li>
     <li><b>Group bootstrap</b> (whole games resampled) gives the intervals, because games — not plays — are the
       independent unit here.</li>
     <li><b>Model-free surface</b> (trajectory × exit-velocity error rates with Wilson intervals) is published so
       the key relationship can be checked without trusting any model.</li>
-    <li><b>Calibration</b> is published bin by bin, together with an isotonic re-calibration check.</li>
+    <li><b>Calibration</b> is shown bin by bin from grouped out-of-fold predictions. The isotonic Brier check
+      uses nested GroupKFold: inner-fold predictions fit the calibrator, and each outer game fold is held out
+      from both base-model fitting and calibration evaluation.</li>
     <li>The audit suite re-derives the model from the dataset the model declares it used, so a stale page fails
       CI instead of quietly misleading a reader.</li>
   </ul>
@@ -94,11 +103,15 @@
   <h2>Known limitations (kept current, not buried)</h2>
   <div class="warn">
     <ul style="margin:0">
-      <li>The model sees contact physics and pre-pitch context only. Fielder positioning, hang time, park,
-      weather, the identity of the fielder and the scorer's own standards are <b>not</b> inputs — which is why
-      P(error) tops out in the low single digits.</li>
-      <li>Out of fold, the model does not find errors: it ranks balls within a game and rules errors out. That
-      is stated on the home page and in the honesty block of <code>model.json</code>, not only here.</li>
+      <li>The model sees contact physics and limited pre-pitch context only. Fielder positioning, hang time,
+      park, weather and scorer identity are not inputs. Its target is the latest final feed label, not the
+      probability of a future reclassification.</li>
+      <li>In grouped out-of-fold evaluation, the model does not nominate error as the most likely class. The
+      /100 score is therefore a ranking/triage aid, not a decision or an overturn probability.</li>
+      <li>The model sample spans 590 games from 2026-08-15 through 2026-09-27. It does not establish
+      performance on a full season, another year, or an unseen scorer/park environment.</li>
+      <li>The ruling watcher polls live games every 15 minutes and rechecks recent final games daily. It can
+      miss a short-lived feed state between polls; it cannot see an MLB internal pending queue.</li>
       <li>Official review data in modern feeds mixes replay reviews with automated pitch-result challenges;
       both are kept, labelled with <code>is_pitch_challenge</code>, and counted separately.</li>
       <li>Raw feeds are <b>not</b> committed for the ingested window (they are hundreds of megabytes). What is
@@ -110,20 +123,20 @@
     </ul>
   </div>
 
-  <h2>“Pending” scoring decisions — how this project answers that part of the brief</h2>
-  <p class="muted">A scorer's open judgement is not published anywhere: there is no queue to read. What
-  <i>is</i> observable is the moment a decision lands. <code>tools/watch_rulings.py</code> re-reads the
-  official play-by-play for a rolling window of recent dates and compares every scoring-relevant play
-  (event type, RBI and description) with the last observation stored in
-  <code>data/ingest/ruling_snapshot.csv</code>. A row whose ruling differs was, by definition, still open when
-  it was first seen — the before/after pair is appended to <code>data/ingest/ruling_changes.csv</code> with the
-  official feed link, so it can be re-checked by hand. The table below is that record, regenerated from the
-  files. An empty table is a real result, not a missing feature.</p>
+  <h2>Observing scoring changes — not an official pending queue</h2>
+  <p class="muted"><code>tools/watch_rulings.py</code> captures active feeds every 15 minutes and re-reads the
+  recent live/final window daily. When <code>hitData</code> is present but <code>result.eventType</code> is
+  absent, it records <code>no_event_type_yet</code>; later changes to event type, RBI, description or review
+  metadata are appended to <code>data/ingest/ruling_changes.csv</code>. The record includes whether the first
+  captured state already had an eventType, contact/context fields, timestamps, the official feed, and MLB's
+  <a href="https://www.mlb.com/official-information/scoring-changes" target="_blank" rel="noopener">scoring-changes page</a>.
+  A difference between snapshots proves only that the feed values changed between those observations. It does
+  not prove when or why the scorer made a decision. Zero logged changes is not proof that no changes occurred.</p>
   <div id="pending"><div class="card">Loading <code>data/ruling_changes.json</code>…</div></div>
-  <p class="muted" style="font-size:.9rem">RBI consequences are stated under MLB's own rules, quoted verbatim on
-  <a href="rules.html">Rules &amp; RBI</a>: a run that scores only because of a misplay carries <b>no RBI</b>
-  ("batters do not receive RBIs for any runs that would not have scored without the help of an error"), while
-  the same run on a hit — or on a run-scoring fielder's choice — can put an RBI on the batter's line.</p>
+  <p class="muted" style="font-size:.9rem">RBI notes are conditional. MLB's error glossary summarizes the ordinary
+  treatment of error-dependent runs, while Rule 9.04 contains the controlling exceptions. The full 2026 text of
+  subsection (a)(3) was not independently extracted during this review; consult the linked official rulebook and
+  the official scorer rather than treating this feed row as a ruling.</p>
 
   <h2>Provenance files</h2>
   <div class="scroll">
@@ -131,8 +144,10 @@
     <tr><th>File</th><th>Contents</th></tr>
     <tr><td><code>data/ingest/games.csv</code></td><td>One row per ingested game: score, feed/linescore URLs, byte counts, review and overturn counts, verification result.</td></tr>
     <tr><td><code>data/ingest/ingest_report.json</code></td><td>The ingest run's own report: endpoints, windows, counts, flags, failures, and the exact run-removal rule text.</td></tr>
-    <tr><td><code>data/ingest/ruling_snapshot.csv</code></td><td>The watcher's rolling record of every scoring-relevant play it has observed (ruling + description hash + first/last seen).</td></tr>
-    <tr><td><code>data/ingest/ruling_changes.csv</code></td><td>Every ruling that changed between observations, with from/to values, the RBI consequence and the official feed URL.</td></tr>
+    <tr><td><code>data/ingest/ruling_snapshot.csv</code></td><td>Bounded rolling observations of live/final scoring-relevant plays, including feed status, contact/context fields, first-seen and last-changed timestamps.</td></tr>
+    <tr><td><code>data/ingest/ruling_changes.csv</code></td><td>Fields that differed between captures, with first-observation feed state, RBI values (not inferred consequences), source links and captured contact/context.</td></tr>
+    <tr><td><code>data/ingest/ruling_watch_status.json</code></td><td>Watcher status, window, observed games/plays, unresolved-in-feed count and fetch failures.</td></tr>
+    <tr><td><code>docs/data/live_refresh_status.json</code></td><td>Latest committed status for the scheduled static live-snapshot refresh; failed runs retain the previous complete snapshot.</td></tr>
     <tr><td><code>data/ingest/probe_report.json</code></td><td>Read-only probe of the official endpoints: status codes, CORS headers, byte sizes, per-era <code>reviewDetails</code> coverage.</td></tr>
     <tr><td><code>data/verified_linescores.json</code></td><td>The 24-game official verification ledger (one official URL per game).</td></tr>
     <tr><td><code>data/nydn_quality.json</code></td><td>Every source irregularity in the 2014–18 archive, with counts; nothing repaired silently.</td></tr>
@@ -159,7 +174,7 @@
       ${kpiCard(w.errors.toLocaleString(), `ruled errors (${(100 * w.errors / w.bip).toFixed(2)}%)`)}
       ${kpiCard(w.reviews.toLocaleString(), 'reviewed plays')}
       ${kpiCard(`<span class="ok">${w.overturned.toLocaleString()}</span>`, 'overturned on review')}
-      ${kpiCard(w.run_removed_hard_rows + w.run_removed_heuristic_rows, `run-affected rows (${w.run_removed_hard_rows} hard, ${w.run_removed_heuristic_rows} heuristic)`)}
+      ${kpiCard(w.run_removed_hard_rows + w.run_removed_heuristic_rows, `run-impact flags (${w.run_removed_hard_rows} consistency discrepancies, ${w.run_removed_heuristic_rows} heuristic candidates)`)}
       ${kpiCard(w.games_verified_vs_linescore.toLocaleString(), 'games verified against the official linescore')}
       ${kpiCard(w.pitch_challenges.toLocaleString(), 'automated pitch-result challenges (labelled, not replay reviews)')}
       ${kpiCard(w.link_rows.toLocaleString(), 'archived 2014–18 video links resolved so far')}
@@ -171,19 +186,24 @@
   const rc = await loadMaybe('data/ruling_changes.json');
   const host = document.getElementById('pending');
   if (!rc) { host.innerHTML = '<div class="note">No watcher output committed yet.</div>'; return; }
-  host.innerHTML = `<div class="grid cols3">
-      ${kpiCard((rc.watched.plays || 0).toLocaleString(), 'scoring-relevant plays currently watched')}
-      ${kpiCard(rc.changes.toLocaleString(), 'rulings that changed after first observation')}
-      ${kpiCard(esc((rc.watched.window || []).join(' → ') || '—'), 'window covered by the snapshot')}
+  host.innerHTML = `${rc.watched.status_ok === false ? `<div class="warn">Latest watcher status is not successful. ${esc(rc.watched.status_error || 'See the committed status file and workflow run.')}</div>` : ''}
+    <div class="grid cols3">
+      ${kpiCard((rc.watched.plays || 0).toLocaleString(), 'plays retained in the rolling snapshot')}
+      ${kpiCard((rc.watched.unresolved_in_feed || 0).toLocaleString(), 'plays with hitData but no eventType at last capture')}
+      ${kpiCard(rc.changes.toLocaleString(), 'field changes recorded between captures')}
+      ${kpiCard(esc((rc.watched.window || []).join(' → ') || '—'), 'date window represented in the snapshot')}
+      ${kpiCard(esc(rc.watched.mode || '—'), 'most recent recorded watcher mode')}
+      ${kpiCard(esc(rc.watched.status_updated_utc || '—'), 'status record last changed (not a poll timestamp)')}
     </div>` + (rc.rows.length ? `<div class="scroll" style="margin-top:12px"><table class="compact">
-      <tr><th>Detected</th><th>Game</th><th>Inn</th><th>Batter</th><th>Field</th><th>From → to</th><th>RBI</th><th>Official</th></tr>
+      <tr><th>Detected</th><th>Game</th><th>Inn</th><th>Batter</th><th>Field</th><th>First observed</th><th>From → to</th><th>RBI</th><th>Sources</th></tr>
       ${rc.rows.slice().reverse().map(r => `<tr><td class="nowrap">${esc(r.detected_utc)}</td>
         <td class="nowrap">${esc(r.date)} ${esc(r.matchup)}</td><td class="nowrap">${esc(r.inning)}${esc((r.half || '').charAt(0))}</td>
         <td>${esc(r.batter)}</td><td class="muted">${esc(r.field)}</td>
+        <td>${r.was_unresolved_in_feed === '1' || r.was_unresolved_in_feed === 1 ? 'no eventType in first capture' : 'already had eventType / unknown legacy state'}<br><span class="muted">${esc(r.first_seen_utc || '')}</span></td>
         <td>${esc(r.from)} <b>→</b> ${esc(r.to)}${r.rbi_note ? '<br><span class="muted">' + esc(r.rbi_note) + '</span>' : ''}</td>
         <td class="nowrap">${esc(r.rbi_from)} → ${esc(r.rbi_to)}</td>
-        <td>${linkOut(r.feed_url, 'feed')}</td></tr>`).join('')}
-    </table></div>` : '<p class="legend" style="margin-top:10px">No ruling change has been detected yet in the watched window: either the window is too new, or no open decision has been revised since the watcher first saw it.</p>');
+        <td>${linkOut(r.feed_url, 'feed')} ${linkOut(r.scoring_changes_url, 'MLB changes')} ${linkOut(r.savant_url, 'video')}</td></tr>`).join('')}
+    </table></div>` : '<p class="legend" style="margin-top:10px">No field change has been logged between captures in this rolling window. The 15-minute live poll can miss a short-lived feed state, and MLB does not publish its internal scorer queue; zero is not evidence that no scoring changes took place.</p>');
 })();
 </script>
 </body>

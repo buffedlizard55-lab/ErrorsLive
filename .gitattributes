@@ -1,0 +1,2 @@
+# Python's csv.writer uses RFC 4180 CRLF rows; don't misreport the carriage return as trailing whitespace.
+*.csv whitespace=cr-at-eol

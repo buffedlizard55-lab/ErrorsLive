@@ -3,11 +3,11 @@
 
 For every ball in play it prints, BEFORE the human scoring judgement is final:
 
-  SCORE /100        100 x P(ruled ERROR)          (binary logistic, the same number the site shows)
+  SCORE /100        100 x P(final feed label = ERROR) (binary logistic; the same number as the site)
   P(hit) P(fc) P(out)                             (4-class multinomial)
   top pick          the most likely macro call and how confident we are
   runners on        bases occupied BEFORE the ball was hit (2nd/3rd -> RBI is at stake)
-  RBI if ruled ...  what the batter's RBI would be under each possible ruling (Rules 9.04/9.12)
+  RBI notes          conditional Rule 9.04 reminders, not counterfactual scorer decisions
 
 Usage
   python3 tools/live_score.py --feed data/source/feed_823441.json
@@ -22,13 +22,14 @@ tests/test_pipeline.py asserts the two implementations agree to 1e-9 on every ar
 """
 import argparse, csv, json, math, sys
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from urllib.request import urlopen, Request
 
 ROOT = Path(__file__).resolve().parent.parent
 MODEL = ROOT / 'docs' / 'data' / 'model.json'
 API = 'https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live'
-SCHED = 'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={d}&gameType=R'
+SCHED = 'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={d}&gameType=R,F,D,L,W'
 SLIM = ('liveData,plays,allPlays,result,eventType,description,rbi,awayScore,homeScore,atBatIndex,'
         'about,atBatIndex,halfInning,inning,isComplete,batter,fullName,pitcher,matchup,batSide,'
         'pitchHand,code,runners,movement,start,end,outBase,isOut,playEvents,playId,count,outs,'
@@ -144,28 +145,31 @@ def state_from_play(play, hd):
             'pitch': (matchup.get('pitchHand') or {}).get('code', '')}
 
 
-def rbi_if_ruled(cls, run_scored, official_et):
-    """What the batter's RBI would be under each candidate ruling.
+def rbi_if_ruled(cls, run_scored, official_et, bases=(), outs=0):
+    """Return a conditional RBI reminder, never a deterministic scorer decision.
 
-    Rule basis (official MLB glossary, quoted verbatim on docs/rules.html):
-      - Error  : "batters do not receive RBIs for any runs that would not have scored without the
-                 help of an error"  -> no RBI when the run exists only because of the misplay.
-      - RBI    : "A player does not receive an RBI when the run scores as a result of an error or
-                 ground into double play."
-      - A hit, a home run and a run-scoring fielder's choice can all put an RBI on the books.
-    Returns (label, why) or None when the ruling cannot change the RBI on this play.
+    The full operative text of 2026 Rule 9.04(a)(3) was not independently retrievable in this
+    review. Until that exact wording is verified, the tool deliberately does not encode a specific
+    runner/outs eligibility test; it points the reader to the official rule and scorer instead.
     """
-    if official_et == 'home_run':
-        return 'RBI (home run scores the batter)' if cls != 'error' else 'no RBI (HR is never an error)'
     if not run_scored:
         return None
+    if official_et == 'home_run':
+        if cls == 'hit':
+            return 'The official play is a home run (a hit); check the recorded RBI field for the official result.'
+        return ('not a valid alternative: the official play is a home run; this feed row cannot model '
+                'a counterfactual error or fielder\'s-choice ruling')
     if cls == 'error':
-        return 'NO RBI (run exists only because of the error)'
-    if official_et in ('grounded_into_double_play', 'double_play'):
-        return None
+        return ('No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide '
+                'an exception; consult the full 2026 rule and the official scorer. This feed row cannot '
+                'establish whether the exception applies.')
     if cls == 'fielders_choice':
-        return 'RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)'
-    return 'RBI'
+        return ("A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's "
+                'decision control, and this feed row does not settle any exception.')
+    if cls == 'hit':
+        return ('An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer '
+                'control any exception or alternative-call counterfactual.')
+    return 'RBI depends on the official scoring rule for this play.'
 
 
 def score_feed(feed, pk=None, scorer=None, meta=None):
@@ -175,9 +179,8 @@ def score_feed(feed, pk=None, scorer=None, meta=None):
     rows = []
     for pl in plays:
         res = pl['result']
-        # In a live game the current play can have contact data and no `eventType` yet: the scorer has
-        # not ruled. That is the project's central case, so it is carried as its own status instead of
-        # being skipped or crashing the walk.
+        # In a live feed a play can have contact data but no `eventType`. Preserve that observable
+        # API state; it does not prove an official scorer's private queue status.
         et = res.get('eventType') or ''
         hd = next((e['hitData'] for e in pl.get('playEvents', []) if 'hitData' in e), None)
         if hd is None:
@@ -186,7 +189,8 @@ def score_feed(feed, pk=None, scorer=None, meta=None):
         if not all(k in hd for k in need):
             rows.append({'game_pk': pk, 'at_bat': pl.get('about', {}).get('atBatIndex'),
                          'event_type': et, 'official_call': macro_class(et), 'status': 'no_vector',
-                         'description': res.get('description', '')})
+                         'description': res.get('description', ''),
+                         'official_feed_url': API.format(pk=pk) if pk is not None else ''})
             continue
         st = state_from_play(pl, hd)
         bases = sorted(st['bases'])
@@ -202,10 +206,11 @@ def score_feed(feed, pk=None, scorer=None, meta=None):
         ruling_in = bool(et)
         row = {
             'game_pk': pk, 'at_bat': pl.get('about', {}).get('atBatIndex'),
+            'official_feed_url': API.format(pk=pk) if pk is not None else '',
             'inning': pl.get('about', {}).get('inning'),
             'half': pl.get('about', {}).get('halfInning'),
             'event_type': et, 'official_call': macro_class(et) if ruling_in else 'pending',
-            'status': 'scored' if ruling_in else 'pending_ruling',
+            'status': 'scored' if ruling_in else 'no_event_type_yet',
             'description': res.get('description', ''),
             'launch_speed': hd['launchSpeed'], 'launch_angle': hd['launchAngle'],
             'distance': hd['totalDistance'], 'trajectory': hd.get('trajectory', ''),
@@ -224,9 +229,9 @@ def score_feed(feed, pk=None, scorer=None, meta=None):
             'savant_url': f'https://baseballsavant.mlb.com/sporty-videos?playId={pid}' if pid else '',
         }
         if row['risp'] and row['run_scored']:
-            row['rbi_if_error'] = rbi_if_ruled('error', True, et)
-            row['rbi_if_hit'] = rbi_if_ruled('hit', True, et)
-            row['rbi_if_fc'] = rbi_if_ruled('fielders_choice', True, et)
+            row['rbi_if_error'] = rbi_if_ruled('error', True, et, st['bases'], st['outs'])
+            row['rbi_if_hit'] = rbi_if_ruled('hit', True, et, st['bases'], st['outs'])
+            row['rbi_if_fc'] = rbi_if_ruled('fielders_choice', True, et, st['bases'], st['outs'])
         rows.append(row)
     if meta:
         for r in rows:
@@ -244,8 +249,14 @@ def fetch_feed(pk):
     return http_json(API.format(pk=pk) + '?fields=' + SLIM)
 
 
+def eastern_game_day(now=None):
+    """Today's official MLB schedule date in US Eastern time, including daylight-saving changes."""
+    current = now or datetime.now(timezone.utc)
+    return current.astimezone(ZoneInfo('America/New_York')).date().strftime('%m/%d/%Y')
+
+
 def todays_games():
-    d = datetime.now(timezone.utc).strftime('%m/%d/%Y')
+    d = eastern_game_day()
     sched = http_json(SCHED.format(d=d))
     out = []
     for day in sched.get('dates', []):

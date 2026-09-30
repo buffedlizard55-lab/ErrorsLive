@@ -83,23 +83,29 @@ def write_ingest_summary():
 
 
 def write_ruling_changes():
-    """The watcher's change log, compact, for the page that explains 'pending' decisions.
-
-    `data/ingest/ruling_changes.csv` is the permanent record written by tools/watch_rulings.py in CI.
-    An empty table is a real result, not a missing file: it means no ruling in the watched window has
-    changed since it was first observed.
-    """
+    """The watcher observation-diff ledger and its explicit coverage/freshness metadata."""
     rows = load_csv(ROOT / 'data' / 'ingest' / 'ruling_changes.csv')
     snap = load_csv(ROOT / 'data' / 'ingest' / 'ruling_snapshot.csv')
     dates = [r.get('date', '') for r in snap if r.get('date')]
+    status_path = ROOT / 'data' / 'ingest' / 'ruling_watch_status.json'
+    watch_status = json.loads(status_path.read_text()) if status_path.exists() else {}
+    unresolved = sum(r.get('status') == 'no_event_type_yet' for r in snap)
     (DATA / 'ruling_changes.json').write_text(json.dumps({
         'available': True,
         'source': 'data/ingest/ruling_changes.csv + ruling_snapshot.csv (tools/watch_rulings.py, CI)',
-        'watched': {'plays': len(snap), 'window': [min(dates), max(dates)] if dates else []},
+        'watched': {
+            'plays': len(snap), 'window': [min(dates), max(dates)] if dates else [],
+            'unresolved_in_feed': unresolved, 'status_ok': watch_status.get('ok'),
+            'status_updated_utc': watch_status.get('detected_utc', ''),
+            'mode': watch_status.get('mode', ''), 'status_error': watch_status.get('error', ''),
+        },
         'changes': len(rows),
-        'rows': [{k: r.get(k, '') for k in ('detected_utc', 'date', 'matchup', 'inning', 'half', 'at_bat',
-                                            'play_id', 'batter', 'field', 'from', 'to', 'rbi_from', 'rbi_to',
-                                            'rbi_note', 'reviewed', 'overturned', 'feed_url')}
+        'rows': [{k: r.get(k, '') for k in (
+            'detected_utc', 'date', 'matchup', 'inning', 'half', 'at_bat', 'play_id', 'batter',
+            'field', 'from', 'to', 'first_observation_status', 'was_unresolved_in_feed',
+            'first_seen_utc', 'launch_speed', 'launch_angle', 'distance', 'trajectory', 'hardness',
+            'bases_before', 'outs_before', 'rbi_from', 'rbi_to', 'rbi_note', 'reviewed',
+            'overturned', 'feed_url', 'scoring_changes_url', 'savant_url')}
                  for r in rows[-200:]],
     }, indent=1))
 
@@ -196,7 +202,9 @@ def main():
     model = json.loads((DATA / 'model.json').read_text()) if (DATA / 'model.json').exists() else {}
     bip = load_csv(DATA / 'bip.csv')
     bip_off = load_csv(DATA / 'bip_official.csv')
-    gms = load_csv(DATA / 'games.csv')
+    # docs/data/games.csv is the 24-game audit sample; the full official collector ledger lives
+    # under data/ingest/games.csv. Keep those scopes separate in published counts.
+    gms = load_csv(ROOT / 'data' / 'ingest' / 'games.csv')
     kpis = {
         'model': {
             'dataset': model.get('meta', {}).get('dataset'),
@@ -208,18 +216,26 @@ def main():
             'auc_grouped': model.get('primary', {}).get('cv_auc'),
             'auc_ci95': model.get('primary', {}).get('cv_auc_ci95'),
             'auc_random_kfold': model.get('primary', {}).get('cv_auc_random_kfold'),
+            'average_precision_grouped': model.get('primary', {}).get('cv_average_precision_grouped'),
+            'average_precision_random_kfold': model.get('primary', {}).get('cv_average_precision_random_kfold'),
             'auc_gbm_grouped': model.get('primary', {}).get('cv_auc_gradient_boosting_grouped'),
             'brier': model.get('primary', {}).get('cv_brier_raw'),
+            'brier_isotonic_nested': model.get('primary', {}).get('cv_brier_isotonic'),
             'top1': model.get('honesty', {}).get('oof_top1_accuracy'),
-            'p_error_max_x100': model.get('honesty', {}).get('p_error_observed_max_x100'),
+            'p_error_training_min_x100': model.get('honesty', {}).get('p_error_training_min_x100'),
+            'p_error_training_max_x100': model.get('honesty', {}).get('p_error_training_max_x100'),
+            'top_error_risk_bands_oof': model.get('honesty', {}).get('top_error_risk_bands_oof'),
             'error_recall': model.get('honesty', {}).get('oof_error_recall'),
             'error_nominated_top1': model.get('honesty', {}).get('oof_error_nominated_top1'),
         },
         'audit_sample': {'bip': len(bip), 'games': len({r.get('game_pk') for r in bip}),
                          'errors': sum(1 for r in bip if r['macro_class'] == 'error')},
-        'ingested': {'bip': len(bip_off), 'games': len(gms),
-                     'errors': sum(1 for r in bip_off if r['macro_class'] == 'error'),
-                     'fielders_choice': sum(1 for r in bip_off if r['macro_class'] == 'fielders_choice')},
+        'ingested': {'games': len(gms),
+                     'games_verified_vs_linescore': summary.get('summary', {}).get('games_verified_vs_linescore'),
+                     'games_unverified': summary.get('summary', {}).get('games_unverified', [])},
+        'model_dataset': {'bip': len(bip_off), 'games': model.get('meta', {}).get('games'),
+                          'errors': sum(1 for r in bip_off if r['macro_class'] == 'error'),
+                          'fielders_choice': sum(1 for r in bip_off if r['macro_class'] == 'fielders_choice')},
         'replays': replays_site['counts'],
         'nydn': nydn_site['counts'],
         'ingest': summary.get('summary', {}),

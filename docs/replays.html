@@ -2,50 +2,52 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Overturned calls &amp; runs removed — LiveScoringErrors</title>
+<title>Replay reviews &amp; run-impact flags — LiveScoringErrors</title>
 <link rel="stylesheet" href="site.css">
-<meta name="description" content="Every reviewed play pulled from the official MLB feed, the subset where a run left the scoreboard, and a click-to-watch / click-to-download video link for each one.">
+<meta name="description" content="Reviewed plays from the ingested MLB feed, explicitly labelled run-impact heuristics, and per-play watch/download links when available.">
 </head>
 <body>
 <header class="nav"><div class="nav-inner"></div></header>
 <main>
-  <h1>Overturned calls — and the runs they took off the board</h1>
-  <p class="lede">A challenge can erase a run that is already on the scoreboard. This page is built from two
+  <h1>Replay reviews — with run-impact flags clearly labelled</h1>
+  <p class="lede">Some replay reviews can change whether a run is on the scoreboard. This page is built from two
   independent, machine-read sources and keeps them labelled: the <b>modern ledger</b> straight from the league's
-  own play-by-play, and the <b>2014–18 archive</b> of replay rulings.</p>
+  own play-by-play, and the <b>2014–18 archive</b> of replay rulings. This is not a claim to a complete all-years MLB archive.</p>
 
   <div class="grid cols2">
     <div class="card"><h3>1 · Modern ledger — official MLB feed</h3><p class="muted">
       Every reviewed play in every ingested game, straight from
       <a href="https://statsapi.mlb.com/api/v1.1/game/823441/feed/live" target="_blank" rel="noopener">statsapi.mlb.com</a>
-      (<code>reviewDetails</code>): review type, challenge subject, the final call, the score before and after, and
-      two independent run-removal flags. Each row carries the play id the league itself publishes — that is what makes
+      (<code>reviewDetails</code>): review type, feed text, score movement and two separate diagnostics — a
+      runner-movement/scoreboard consistency check and a labelled run-impact heuristic. Neither is proof by itself
+      that a run was removed. Each row carries the play id the league itself publishes — that is what makes
       a per-play video link possible.</p></div>
     <div class="card"><h3>2 · Archive — 2014–18 replay rulings</h3><p class="muted">
       The NY Daily News <a href="https://github.com/nydailynews/mlb-overturned-calls" target="_blank" rel="noopener">mlb-overturned-calls</a>
       archive with its own run-removal field. Its video links are 12-year-old short links, so instead of pretending they
       work, the pipeline <b>resolves every one and records what comes back</b> —
       see <a href="overturned.html">the archive page</a>. Note: the repository named in the brief,
-      <code>github.com/buffedlizard55-lab/MLB-overturned-calls</code>, returns HTTP 404 (checked 2026-09-29).</p></div>
+      <code>github.com/buffedlizard55-lab/MLB-overturned-calls</code>, returns HTTP 404 (checked 2026-09-30).</p></div>
   </div>
 
-  <h2>Run-removal, stated as evidence rather than a claim</h2>
+  <h2>Run-impact screening — evidence, not a verdict</h2>
   <div class="note">
-    <p style="margin:0 0 6px"><b>HARD flag.</b> The feed's own runner movements say N runners reached the plate but the
-    scoreboard moved by fewer than N runs. That is only possible if a run came off — no interpretation involved. It is
-    published even when it is zero: on the current window it never fires, which says the league's feed keeps the
-    corrected movement and the corrected score consistent.</p>
-    <p style="margin:0"><b>HEURISTIC flag.</b> An overturned review whose own text or type is about a run: a home-run
-    review overturned into a non-home-run, a runner put out at home, or a scoring/timing review on a play where a
-    runner reached the plate. The exact reason is stored on the row and printed below, so every flag can be checked
-    against the video. Both flags carry their real counts — including when they are zero.</p>
+    <p style="margin:0 0 6px"><b>Runner-movement / scoreboard consistency check</b> (legacy data field name:
+    <code>run_removed_hard</code>). It compares the feed's runner movements with the scoreboard delta for the play.
+    A nonzero discrepancy would be a data-consistency flag requiring review; it is <b>not proof</b> that replay
+    removed a run. It is zero in the current ingest window.</p>
+    <p style="margin:0"><b>Run-impact heuristic.</b> Flags selected overturned reviews based on review subject, result
+    text and play type (for example, a home-run review ending in a non-home-run, or text stating a runner was out at
+    home). It can miss cases or flag false positives. The stored reason is an index aid; verify the official feed
+    and video. These rows are not a manually confirmed list of removed runs.</p>
   </div>
 
   <div class="grid cols3" id="kpis"><div class="card">Loading <code>data/replays_site.json</code>…</div></div>
   <div id="flags"></div>
 
-  <h2>The list: overturned calls that removed a run</h2>
-  <p class="lede" style="font-size:.95rem">Each row has a <b>watch</b> link (Baseball Savant's per-play video page,
+  <h2>The list: overturned calls flagged as run-affected (heuristic)</h2>
+  <p class="lede" style="font-size:.95rem">These rows are candidates, not confirmed run removals. Each row has a
+  <b>watch</b> link (Baseball Savant's per-play video page,
   the league's own video host) and, when a file rendition is exposed for that play id, a <b>download</b> link straight
   to the mp4. Rows with no file rendition say so — the pipeline never substitutes a different play's video. The
   official feed for the game and the Baseball Savant game page are on every row for manual checking.</p>
@@ -57,7 +59,7 @@
   </div>
   <div class="scroll"><table class="compact" id="tbl"></table></div>
 
-  <h2>Every overturned review in the window</h2>
+  <h2>Every overturned review in the ingested window</h2>
   <p class="lede" style="font-size:.95rem">The compact index of all overturned reviews (the table above is the
   run-affected subset). Filter by anything in the row; the play id opens the per-play video page.</p>
   <div class="filterbar">
@@ -75,8 +77,9 @@
       <code>isOverturned</code> and <code>reviewType</code>.</li>
     <li>Open the <b>watch</b> link. If the league has a clip for that play id it plays there; if not, the page says
       "No Video Found" — that is an honest dead end, and the row is labelled.</li>
-    <li>For the RBI consequence, read the rule quotations on <a href="rules.html">Rules &amp; RBI</a>; they are copied
-      verbatim from MLB's own glossary, with the source links.</li>
+    <li>For RBI context, read the conditional notes and official source links on
+      <a href="rules.html">Rules &amp; RBI</a>. The feed's RBI field is the recorded statistic; hypothetical
+      alternative calls still require the official scorer's judgment.</li>
   </ol>
 </main>
 <footer><div class="inner">
@@ -101,7 +104,7 @@ const $ = id => document.getElementById(id);
   $('kpis').innerHTML =
     kpiCard((c.reviewed_plays || 0).toLocaleString(), 'reviewed plays in the window (official feed)') +
     kpiCard((c.overturned || 0).toLocaleString(), 'overturned on review') +
-    kpiCard((c.run_removed_hard || 0).toLocaleString(), 'run removals the feed itself proves (hard flag)') +
+    kpiCard((c.run_removed_hard || 0).toLocaleString(), 'runner-movement / score inconsistencies (not proof of a removal)') +
     kpiCard((c.run_removed_heuristic || 0).toLocaleString(), 'run-affected by the labelled heuristic') +
     kpiCard((c.with_watch_link || 0).toLocaleString(), 'run-affected rows with a per-play video page') +
     kpiCard((c.with_mp4 || 0).toLocaleString(), 'run-affected rows with a direct mp4');

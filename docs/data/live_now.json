@@ -1,7 +1,7 @@
 {
  "mode": "offline-fixture",
  "generated_utc": "",
- "note": "Built by tools/run_all.py from the committed fixture feed: this is the labelled fallback the page shows when a browser cannot reach statsapi.mlb.com. CI replaces this file with the real slate (tools/fetch_live.py, mode live-slate).",
+ "note": "Built by tools/run_all.py from a committed historical fixture for offline reproducibility; it is not a current game or a live fallback.",
  "game_day": "2026-07-18",
  "game_date": "2026-07-18",
  "source": "data/source/feed_823441.json",
@@ -10,13 +10,13 @@
   "n_model": 30206,
   "n_bip": 30298,
   "games": 590,
-  "auc_grouped": 0.7809,
+  "auc_grouped": 0.7808,
   "auc_ci95": [
-   0.7543,
-   0.806
+   0.7542,
+   0.8056
   ],
   "error_recall": 0.0,
-  "dataset_note": "Whole-population window sample: every batted ball in every game of the ingested window, so the error rate is the real in-season base rate."
+  "dataset_note": "Whole-population model-window sample (2026-08-15 through 2026-09-27): every captured batted ball in each selected game, so the error rate is the observed class rate for this window; it is not the full collector-window rate."
  },
  "summary": {
   "games": 1,
@@ -25,7 +25,7 @@
   "errors": 1,
   "risp_runs_at_stake": 2,
   "overturned_reviews": 2,
-  "pending_rulings": 0,
+  "unresolved_in_feed": 0,
   "top_pick_agreement": "32/46",
   "failures": 0
  },
@@ -51,6 +51,7 @@
     {
      "game_pk": 823441,
      "at_bat": 1,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -85,6 +86,7 @@
     {
      "game_pk": 823441,
      "at_bat": 4,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -119,6 +121,7 @@
     {
      "game_pk": 823441,
      "at_bat": 5,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -153,6 +156,7 @@
     {
      "game_pk": 823441,
      "at_bat": 6,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "home_run",
@@ -187,6 +191,7 @@
     {
      "game_pk": 823441,
      "at_bat": 8,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "force_out",
@@ -221,6 +226,7 @@
     {
      "game_pk": 823441,
      "at_bat": 11,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -255,6 +261,7 @@
     {
      "game_pk": 823441,
      "at_bat": 12,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "home_run",
@@ -289,6 +296,7 @@
     {
      "game_pk": 823441,
      "at_bat": 13,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_error",
@@ -323,6 +331,7 @@
     {
      "game_pk": 823441,
      "at_bat": 16,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -357,6 +366,7 @@
     {
      "game_pk": 823441,
      "at_bat": 18,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -391,6 +401,7 @@
     {
      "game_pk": 823441,
      "at_bat": 19,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -425,6 +436,7 @@
     {
      "game_pk": 823441,
      "at_bat": 21,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -459,6 +471,7 @@
     {
      "game_pk": 823441,
      "at_bat": 23,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -493,6 +506,7 @@
     {
      "game_pk": 823441,
      "at_bat": 25,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -527,6 +541,7 @@
     {
      "game_pk": 823441,
      "at_bat": 26,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -561,6 +576,7 @@
     {
      "game_pk": 823441,
      "at_bat": 27,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -595,6 +611,7 @@
     {
      "game_pk": 823441,
      "at_bat": 28,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -629,6 +646,7 @@
     {
      "game_pk": 823441,
      "at_bat": 30,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -663,6 +681,7 @@
     {
      "game_pk": 823441,
      "at_bat": 32,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -697,6 +716,7 @@
     {
      "game_pk": 823441,
      "at_bat": 35,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -731,6 +751,7 @@
     {
      "game_pk": 823441,
      "at_bat": 36,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -765,6 +786,7 @@
     {
      "game_pk": 823441,
      "at_bat": 38,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "home_run",
@@ -799,6 +821,7 @@
     {
      "game_pk": 823441,
      "at_bat": 40,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -833,6 +856,7 @@
     {
      "game_pk": 823441,
      "at_bat": 41,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -862,14 +886,15 @@
      "review_type": "",
      "play_id": "",
      "savant_url": "",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "data/source/feed_823441.json"
     },
     {
      "game_pk": 823441,
      "at_bat": 42,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -904,6 +929,7 @@
     {
      "game_pk": 823441,
      "at_bat": 46,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -938,6 +964,7 @@
     {
      "game_pk": 823441,
      "at_bat": 47,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -972,6 +999,7 @@
     {
      "game_pk": 823441,
      "at_bat": 49,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "triple",
@@ -1006,6 +1034,7 @@
     {
      "game_pk": 823441,
      "at_bat": 52,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -1035,14 +1064,15 @@
      "review_type": "",
      "play_id": "",
      "savant_url": "",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "data/source/feed_823441.json"
     },
     {
      "game_pk": 823441,
      "at_bat": 53,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1077,6 +1107,7 @@
     {
      "game_pk": 823441,
      "at_bat": 54,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1111,6 +1142,7 @@
     {
      "game_pk": 823441,
      "at_bat": 57,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1145,6 +1177,7 @@
     {
      "game_pk": 823441,
      "at_bat": 58,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -1179,6 +1212,7 @@
     {
      "game_pk": 823441,
      "at_bat": 59,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1213,6 +1247,7 @@
     {
      "game_pk": 823441,
      "at_bat": 60,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -1247,6 +1282,7 @@
     {
      "game_pk": 823441,
      "at_bat": 62,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1281,6 +1317,7 @@
     {
      "game_pk": 823441,
      "at_bat": 63,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -1315,6 +1352,7 @@
     {
      "game_pk": 823441,
      "at_bat": 64,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1349,6 +1387,7 @@
     {
      "game_pk": 823441,
      "at_bat": 66,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1383,6 +1422,7 @@
     {
      "game_pk": 823441,
      "at_bat": 67,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1417,6 +1457,7 @@
     {
      "game_pk": 823441,
      "at_bat": 68,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1451,6 +1492,7 @@
     {
      "game_pk": 823441,
      "at_bat": 69,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -1485,6 +1527,7 @@
     {
      "game_pk": 823441,
      "at_bat": 70,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1519,6 +1562,7 @@
     {
      "game_pk": 823441,
      "at_bat": 71,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1553,6 +1597,7 @@
     {
      "game_pk": 823441,
      "at_bat": 72,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1587,6 +1632,7 @@
     {
      "game_pk": 823441,
      "at_bat": 74,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1623,6 +1669,7 @@
     {
      "game_pk": 823441,
      "at_bat": 1,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1657,6 +1704,7 @@
     {
      "game_pk": 823441,
      "at_bat": 4,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1691,6 +1739,7 @@
     {
      "game_pk": 823441,
      "at_bat": 5,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -1725,6 +1774,7 @@
     {
      "game_pk": 823441,
      "at_bat": 6,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "home_run",
@@ -1759,6 +1809,7 @@
     {
      "game_pk": 823441,
      "at_bat": 8,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "force_out",
@@ -1793,6 +1844,7 @@
     {
      "game_pk": 823441,
      "at_bat": 11,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1827,6 +1879,7 @@
     {
      "game_pk": 823441,
      "at_bat": 12,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "home_run",
@@ -1861,6 +1914,7 @@
     {
      "game_pk": 823441,
      "at_bat": 13,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_error",
@@ -1895,6 +1949,7 @@
     {
      "game_pk": 823441,
      "at_bat": 16,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -1929,6 +1984,7 @@
     {
      "game_pk": 823441,
      "at_bat": 18,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1963,6 +2019,7 @@
     {
      "game_pk": 823441,
      "at_bat": 19,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -1997,6 +2054,7 @@
     {
      "game_pk": 823441,
      "at_bat": 21,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2031,6 +2089,7 @@
     {
      "game_pk": 823441,
      "at_bat": 23,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2065,6 +2124,7 @@
     {
      "game_pk": 823441,
      "at_bat": 25,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2099,6 +2159,7 @@
     {
      "game_pk": 823441,
      "at_bat": 26,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2133,6 +2194,7 @@
     {
      "game_pk": 823441,
      "at_bat": 27,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2167,6 +2229,7 @@
     {
      "game_pk": 823441,
      "at_bat": 28,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -2201,6 +2264,7 @@
     {
      "game_pk": 823441,
      "at_bat": 30,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -2235,6 +2299,7 @@
     {
      "game_pk": 823441,
      "at_bat": 32,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2269,6 +2334,7 @@
     {
      "game_pk": 823441,
      "at_bat": 35,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2303,6 +2369,7 @@
     {
      "game_pk": 823441,
      "at_bat": 36,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2337,6 +2404,7 @@
     {
      "game_pk": 823441,
      "at_bat": 38,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "home_run",
@@ -2371,6 +2439,7 @@
     {
      "game_pk": 823441,
      "at_bat": 40,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2405,6 +2474,7 @@
     {
      "game_pk": 823441,
      "at_bat": 41,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -2434,14 +2504,15 @@
      "review_type": "",
      "play_id": "",
      "savant_url": "",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "data/source/feed_823441.json"
     },
     {
      "game_pk": 823441,
      "at_bat": 42,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -2476,6 +2547,7 @@
     {
      "game_pk": 823441,
      "at_bat": 46,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2510,6 +2582,7 @@
     {
      "game_pk": 823441,
      "at_bat": 47,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2544,6 +2617,7 @@
     {
      "game_pk": 823441,
      "at_bat": 49,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "triple",
@@ -2578,6 +2652,7 @@
     {
      "game_pk": 823441,
      "at_bat": 52,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -2607,14 +2682,15 @@
      "review_type": "",
      "play_id": "",
      "savant_url": "",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "data/source/feed_823441.json"
     },
     {
      "game_pk": 823441,
      "at_bat": 53,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2649,6 +2725,7 @@
     {
      "game_pk": 823441,
      "at_bat": 54,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2683,6 +2760,7 @@
     {
      "game_pk": 823441,
      "at_bat": 57,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2717,6 +2795,7 @@
     {
      "game_pk": 823441,
      "at_bat": 58,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -2751,6 +2830,7 @@
     {
      "game_pk": 823441,
      "at_bat": 59,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2785,6 +2865,7 @@
     {
      "game_pk": 823441,
      "at_bat": 60,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -2819,6 +2900,7 @@
     {
      "game_pk": 823441,
      "at_bat": 62,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2853,6 +2935,7 @@
     {
      "game_pk": 823441,
      "at_bat": 63,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -2887,6 +2970,7 @@
     {
      "game_pk": 823441,
      "at_bat": 64,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2921,6 +3005,7 @@
     {
      "game_pk": 823441,
      "at_bat": 66,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2955,6 +3040,7 @@
     {
      "game_pk": 823441,
      "at_bat": 67,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -2989,6 +3075,7 @@
     {
      "game_pk": 823441,
      "at_bat": 68,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -3023,6 +3110,7 @@
     {
      "game_pk": 823441,
      "at_bat": 69,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "single",
@@ -3057,6 +3145,7 @@
     {
      "game_pk": 823441,
      "at_bat": 70,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -3091,6 +3180,7 @@
     {
      "game_pk": 823441,
      "at_bat": 71,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -3125,6 +3215,7 @@
     {
      "game_pk": 823441,
      "at_bat": 72,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -3159,6 +3250,7 @@
     {
      "game_pk": 823441,
      "at_bat": 74,
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
      "inning": null,
      "half": null,
      "event_type": "field_out",
@@ -3195,7 +3287,7 @@
    "url": "https://statsapi.mlb.com/api/v1.1/game/823441/feed/live",
    "savant": "https://baseballsavant.mlb.com/gamefeed?gamePk=823441",
    "batted_balls": 46,
-   "pending_rulings": 0,
+   "unresolved_in_feed": 0,
    "errors": 1,
    "top_pick_agrees": 32,
    "risp_runs_at_stake": 2,

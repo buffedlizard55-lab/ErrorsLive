@@ -4,28 +4,33 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Live board — LiveScoringErrors</title>
 <link rel="stylesheet" href="site.css">
-<meta name="description" content="Every batted ball on the slate scored before the official ruling, with base/out state, the RBI each candidate ruling would award, and per-play video links for overturned reviews.">
+<meta name="description" content="An automatically refreshed MLB live board that scores batted balls before a feed ruling, with base/out state, conditional RBI notes, and official video links.">
 </head>
 <body>
 <header class="nav"><div class="nav-inner"></div></header>
 <main>
   <h1>Live board — the model on the official feed, ball by ball</h1>
-  <p class="lede">Rows are produced by <code>tools/fetch_live.py</code> from
-  <a href="https://statsapi.mlb.com/api/v1.1/game/823441/feed/live" target="_blank" rel="noopener">statsapi.mlb.com</a>
-  and committed as <code>data/live_now.json</code> by the CI job (or run locally: the command is at the bottom of
-  this page). Every game is re-checked against the league's own linescore endpoint before its rows are shown.</p>
+  <p class="lede">When MLB's Stats API permits cross-origin reads, this page fetches today's schedule and game feeds
+  directly in your browser, then re-polls live games every two minutes. If browser access is blocked, it falls back
+  to the last committed snapshot produced by GitHub Actions. Refreshes are best-effort, not a real-time guarantee.</p>
 
   <div id="meta"></div>
-  <div class="truth gold"><b>What the SCORE/100 column is.</b> 100 × P(the official scorer rules this batted ball an
-  error). Out-of-fold, the model <b>never</b> nominates “error” as its most likely ruling, so treat the column as a
-  ranking of where to look — it is not a verdict, and the official scorer's call in the feed is the source of record.</div>
+  <div id="refreshState" class="note" role="status" aria-live="polite">Loading the model and latest feed…</div>
+  <div class="truth gold"><b>What SCORE/100 means.</b> It is 100 × P(the final feed label is “error”), using contact physics
+  and pre-pitch context. The model is not trained to predict whether an initial scorer call will later be changed. It
+  never nominates “error” as its most likely class in grouped out-of-fold evaluation; use the score to prioritize
+  review, not as a verdict. The official scorer's feed label remains the record of the play.</div>
+  <p class="legend">“No call in feed yet” means Statcast <code>hitData</code> is present but the current feed has no
+  <code>result.eventType</code>. MLB does not publish an open-decision queue, so this feed state does not prove a scorer
+  has a decision pending. RBI notes are conditional reminders under <a href="rules.html">Rule 9.04</a>, not automatic
+  counterfactual rulings.</p>
 
   <div class="grid cols3" id="kpis"><div class="card">Loading…</div></div>
   <div id="flags"></div>
 
   <div class="filterbar">
-    <div><label>Game</label><select id="fGame"><option value="">every game on the slate</option></select></div>
-    <div><label>Show</label><select id="fShow">
+    <div><label for="fGame">Game</label><select id="fGame"><option value="">every game on the slate</option></select></div>
+    <div><label for="fShow">Show</label><select id="fShow">
       <option value="all">Every batted ball in play</option>
       <option value="top">Top 20 by score</option>
       <option value="err">Ruled ERROR</option>
@@ -34,7 +39,7 @@
       <option value="rev">Reviewed / challenged</option>
       <option value="over">Challenge OVERTURNED</option>
     </select></div>
-    <div><label>Search play text</label><input id="fQ" placeholder="batter or description"></div>
+    <div><label for="fQ">Search play text</label><input id="fQ" placeholder="batter or description"></div>
     <div><button class="btn" id="dl">Download filtered CSV</button></div>
   </div>
   <p class="legend" id="count"></p>
@@ -45,61 +50,277 @@
     <pre style="margin:0 0 8px;overflow-x:auto"><code>python3 tools/fetch_live.py                        # today's slate (US Eastern game date)
 python3 tools/fetch_live.py --date 2026-09-28      # a specific date
 python3 tools/fetch_live.py --pk 823441            # one game, live, mid-inning
-python3 tools/fetch_live.py --out docs/data/live_now.json --csv /tmp/live.csv</code></pre>
-    <p style="margin:0">Needs outbound HTTPS to <code>statsapi.mlb.com</code>. Where that is blocked (this build
-    sandbox), the committed snapshot above is what the CI runner fetched — with its own timestamp, so you always know
-    how old the board is.</p>
+python3 tools/fetch_live.py --out docs/data/live_slate.json --csv-out docs/data/live_slate.csv</code></pre>
+    <p style="margin:0">The browser path reads only public MLB endpoints. Local collection needs outbound HTTPS to
+    <code>statsapi.mlb.com</code>; the page shows the last committed snapshot if direct access is unavailable.</p>
   </div>
   <div class="note" style="margin-top:10px">
-    <b>Can this page poll the feed itself?</b>
-    <button class="btn" id="tryLive">Try a direct browser fetch of today's schedule</button>
-    <span id="corsOut" class="muted"></span>
-    <p style="margin:8px 0 0">The button asks <code>statsapi.mlb.com</code> from your browser. If the league's
-    endpoint answers with permissive CORS headers, the result is shown — that is the honest test, run in front of
-    you rather than asserted in advance.</p>
+    <b>Connection check</b>
+    <button class="btn" id="tryLive" type="button">Retry official feed now</button>
+    <span id="corsOut" class="muted" aria-live="polite"></span>
+    <p style="margin:8px 0 0">This retries the real schedule and game-feed requests. The collector reports the outcome
+    above and keeps the last usable snapshot visible if an endpoint or network request fails.</p>
   </div>
 </main>
 <footer><div class="inner">
-  <span>Generated from the official Stats API by <code>tools/fetch_live.py</code> · model
+  <span>Public MLB Stats API → <code>tools/live_score.py</code> / <code>docs/site.js</code> · model
     <code>docs/data/model.json</code></span><span>Not affiliated with MLB</span>
 </div></footer>
 <script src="site.js"></script>
 <script>
-let LIVE = null, ROWS = [];
+let LIVE = null, ROWS = [], MODEL = null, SNAPSHOT = null, REFRESH_STATUS = null;
+let scheduleCache = null, scheduleDay = '', scheduleFetchedAt = 0;
+let pollBusy = false, pollTimer = null;
+const feedCache = new Map();
 const $ = id => document.getElementById(id);
+const MLB = 'https://statsapi.mlb.com';
+const LIVE_POLL_MS = 2 * 60 * 1000;
+const SCHEDULE_POLL_MS = 5 * 60 * 1000;
+const FEED_FIELDS = 'liveData,plays,allPlays,result,eventType,event,rbi,description,about,inning,halfInning,atBatIndex,playEvents,playId,reviewDetails,isOverturned,reviewType,matchup,batter,pitcher,fullName,batSide,pitchHand,runners,movement,start,end,count,outs,hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness';
 
-(async function () {
-  LIVE = (await loadMaybe('data/live_slate.json'))
-    || (await loadMaybe('data/live_now.json'));
-  if (!LIVE) {
-    $('kpis').innerHTML = '<div class="warn">No snapshot yet. Run <code>python3 tools/fetch_live.py</code> (needs network) or dispatch the CI <b>ingest</b> workflow.</div>';
-    return;
+(async function init() {
+  const [model, current, fixture, refreshStatus] = await Promise.all([
+    loadMaybe('data/model.json'), loadMaybe('data/live_slate.json'),
+    loadMaybe('data/live_now.json'), loadMaybe('data/live_refresh_status.json')
+  ]);
+  MODEL = model;
+  SNAPSHOT = current || fixture;
+  REFRESH_STATUS = refreshStatus;
+  if (SNAPSHOT) renderBoard(SNAPSHOT, 'snapshot');
+  else {
+    $('kpis').innerHTML = '<div class="warn">No committed snapshot yet. The page will still try the live Stats API.</div>';
+    $('tbl').innerHTML = '<tr><td>Waiting for an official feed response…</td></tr>';
   }
-  ROWS = LIVE.games.flatMap(g => g.model_rows.map(r => ({ ...r, matchup: `${g.away_abbr || g.away} @ ${g.home_abbr || g.home}`, game_state: g.state })));
-  const s = LIVE.summary;
-  $('meta').innerHTML = `<div class="note">Snapshot generated <b>${esc(LIVE.generated_utc || 'offline build')}</b>
-    for game date <b>${esc(LIVE.game_date)}</b>. Mode: <b>${esc(LIVE.mode || 'unknown')}</b> — ${esc(LIVE.note || '')}
-    Source: <code>${esc(LIVE.source)}</code>.
-    ${s.games_verified_vs_linescore}/${s.games} games re-checked against the official linescore endpoint.</div>`;
-  $('flags').innerHTML = flagBox(LIVE.flags);
-  $('kpis').innerHTML =
-    kpiCard(s.games, 'games on the slate') +
-    kpiCard(s.batted_balls.toLocaleString(), 'batted balls scored before the ruling') +
-    kpiCard(s.errors, 'ruled errors by the official scorer') +
-    kpiCard(s.risp_runs_at_stake, 'runs scored with a runner on 2nd/3rd — RBI at stake') +
-    kpiCard(s.overturned_reviews, 'challenges overturned') +
-    kpiCard(s.pending_rulings || 0, 'balls in play still awaiting the scorer (model answer shown)') +
-    kpiCard(s.top_pick_agreement, 'top pick matched the official call');
-  $('fGame').insertAdjacentHTML('beforeend', LIVE.games.map(g =>
-    `<option value="${esc(g.pk)}">${esc(g.away_abbr || g.away)} @ ${esc(g.home_abbr || g.home)} — ${esc(g.state || '')}</option>`).join(''));
+  $('tryLive').addEventListener('click', () => pollOfficial(true));
   ['fGame', 'fShow', 'fQ'].forEach(id => $(id).addEventListener('input', render));
   $('dl').addEventListener('click', () => downloadCSV('live_board.csv', filtered()));
-  render();
+  if (!MODEL) {
+    setRefresh('Model artifact could not be loaded; live scoring is unavailable.', true);
+    return;
+  }
+  await pollOfficial(true);
+  scheduleNextPoll();
 })();
+
+function setRefresh(message, isError = false) {
+  $('refreshState').className = isError ? 'warn' : 'note';
+  $('refreshState').textContent = message;
+}
+
+function easternDateString(now = new Date()) {
+  const p = new Intl.DateTimeFormat('en-US', {timeZone: 'America/New_York',
+    year: 'numeric', month: '2-digit', day: '2-digit'}).formatToParts(now);
+  const part = k => p.find(x => x.type === k).value;
+  return `${part('year')}-${part('month')}-${part('day')}`;
+}
+
+async function fetchJSONWithTimeout(url, timeoutMs = 18000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {cache: 'no-store', signal: controller.signal});
+    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+    return await response.json();
+  } finally { clearTimeout(timer); }
+}
+
+function scheduledGames(json) {
+  return (json.dates || []).flatMap(d => d.games || []).filter(g =>
+    ['Live', 'Final'].includes((g.status || {}).abstractGameState));
+}
+
+async function mapLimit(items, limit, fn) {
+  let next = 0;
+  const results = new Array(items.length);
+  await Promise.all(Array.from({length: Math.min(limit, items.length)}, async () => {
+    while (next < items.length) {
+      const i = next++;
+      try { results[i] = {ok: true, value: await fn(items[i])}; }
+      catch (error) { results[i] = {ok: false, error}; }
+    }
+  }));
+  return results;
+}
+
+async function pollOfficial(forceSchedule = false) {
+  if (pollBusy || !MODEL) return;
+  pollBusy = true;
+  $('corsOut').textContent = ' checking MLB Stats API…';
+  try {
+    const day = easternDateString();
+    const now = Date.now();
+    if (forceSchedule || !scheduleCache || day !== scheduleDay || now - scheduleFetchedAt >= SCHEDULE_POLL_MS) {
+      const u = new URL(`${MLB}/api/v1/schedule`);
+      u.searchParams.set('sportId', '1'); u.searchParams.set('date', day);
+      u.searchParams.set('hydrate', 'linescore,team');
+      u.searchParams.set('gameType', 'R,F,D,L,W');
+      scheduleCache = scheduledGames(await fetchJSONWithTimeout(u.toString()));
+      scheduleDay = day; scheduleFetchedAt = Date.now();
+    }
+
+    const games = scheduleCache || [];
+    const toFetch = games.filter(g => {
+      const key = String(g.gamePk), cached = feedCache.get(key);
+      const state = (g.status || {}).abstractGameState;
+      return state === 'Live' || !cached || (state === 'Final' && cached.state !== 'Final');
+    });
+    const fetched = await mapLimit(toFetch, 4, async g => {
+      const url = `${MLB}/api/v1.1/game/${g.gamePk}/feed/live?fields=${encodeURIComponent(FEED_FIELDS)}`;
+      const feed = await fetchJSONWithTimeout(url);
+      return {game: g, feed, url};
+    });
+    const failures = [];
+    fetched.forEach(result => {
+      if (result.ok) {
+        const {game, feed, url} = result.value;
+        feedCache.set(String(game.gamePk), {feed, url,
+          state: (game.status || {}).abstractGameState, fetchedAt: new Date().toISOString()});
+      } else {
+        const failedGame = toFetch[fetched.indexOf(result)];
+        failures.push(`${failedGame ? failedGame.gamePk : 'unknown game'}: ${result.error.message || result.error}`);
+      }
+    });
+
+    const outputGames = [];
+    for (const game of games) {
+      const pk = String(game.gamePk), cached = feedCache.get(pk);
+      if (!cached) {
+        const old = (SNAPSHOT && SNAPSHOT.game_date === day ? SNAPSHOT.games || [] : [])
+          .find(x => String(x.pk || x.game_pk) === pk);
+        if (old) outputGames.push({...old, state: (game.status || {}).detailedState || old.state});
+        continue;
+      }
+      const teams = game.teams || {};
+      const away = (teams.away || {}).team || {}, home = (teams.home || {}).team || {};
+      const linescore = game.linescore || {};
+      const plays = (((cached.feed || {}).liveData || {}).plays || {}).allPlays || [];
+      const lastResult = plays.length ? (plays[plays.length - 1].result || {}) : {};
+      const modelRows = scoreLiveFeed(cached.feed, {
+        gamePk: pk, official_feed_url: cached.url
+      }, MODEL);
+      const played = modelRows.filter(r => r.status === 'scored');
+      const awayScore = (linescore.teams || {}).away || {};
+      const homeScore = (linescore.teams || {}).home || {};
+      const state = (game.status || {}).detailedState || (game.status || {}).abstractGameState || '';
+      const gameRow = {
+        game_pk: pk, pk, matchup: `${away.abbreviation || away.name || ''} @ ${home.abbreviation || home.name || ''}`,
+        away: away.name || '', home: home.name || '', away_abbr: away.abbreviation || '',
+        home_abbr: home.abbreviation || '', game_type: game.gameType || '', state,
+        abstract_state: (game.status || {}).abstractGameState || '',
+        away_score: awayScore.runs ?? null, home_score: homeScore.runs ?? null,
+        linescore_away: awayScore.runs ?? null, linescore_home: homeScore.runs ?? null,
+        final_away: lastResult.awayScore ?? null, final_home: lastResult.homeScore ?? null,
+        official_feed_url: cached.url, savant_url: `https://baseballsavant.mlb.com/gamefeed?gamePk=${pk}`,
+        model_rows: modelRows, plays: modelRows, source: cached.url,
+        verified: Number(awayScore.runs != null && homeScore.runs != null &&
+          lastResult.awayScore === awayScore.runs && lastResult.homeScore === homeScore.runs),
+      };
+      gameRow.batted_balls = played.length;
+      gameRow.errors = played.filter(r => r.official_call === 'error').length;
+      gameRow.risp_runs_at_stake = played.filter(r => r.risp && r.run_scored).length;
+      gameRow.overturned_reviews = played.filter(r => r.review_overturned === true).length;
+      gameRow.unresolved_in_feed = modelRows.filter(r => r.status === 'no_event_type_yet').length;
+      gameRow.top_pick_agreement = `${played.reduce((n, r) => n + r.model_agrees_with_call, 0)}/${played.length}`;
+      outputGames.push(gameRow);
+    }
+
+    const allRows = outputGames.flatMap(g => g.model_rows || []);
+    const playedRows = allRows.filter(r => r.status === 'scored');
+    const verified = outputGames.filter(g => g.verified).length;
+    const liveDoc = {
+      mode: 'browser-live', generated_utc: new Date().toISOString(), game_date: day, game_day: day,
+      note: 'Fetched directly by this browser from the official MLB Stats API.',
+      source: `${MLB}/api/v1/schedule?sportId=1&date=${day}`,
+      model: SNAPSHOT && SNAPSHOT.model ? SNAPSHOT.model : {},
+      summary: {
+        games: outputGames.length, games_verified_vs_linescore: verified,
+        batted_balls: playedRows.length,
+        errors: playedRows.filter(r => r.official_call === 'error').length,
+        risp_runs_at_stake: playedRows.filter(r => r.risp && r.run_scored).length,
+        overturned_reviews: playedRows.filter(r => r.review_overturned === true).length,
+        unresolved_in_feed: allRows.filter(r => r.status === 'no_event_type_yet').length,
+        top_pick_agreement: `${playedRows.reduce((n, r) => n + r.model_agrees_with_call, 0)}/${playedRows.length}`,
+        failures: failures.length,
+      },
+      flags: failures, failures: failures.map(message => ({error: message})), games: outputGames,
+    };
+    LIVE = liveDoc;
+    renderBoard(LIVE, 'direct');
+    $('corsOut').textContent = ` connected; ${games.length} live/final games in the schedule`;
+    setRefresh(`Direct browser feed received ${new Date(liveDoc.generated_utc).toLocaleTimeString()} · ` +
+      `next live-game poll in about ${Math.round(LIVE_POLL_MS / 60000)} minutes. ` +
+      (failures.length ? `${failures.length} feed request(s) failed; fallback rows are retained where available.` : ''),
+      failures.length > 0);
+  } catch (error) {
+    const reason = error && error.name === 'AbortError' ? 'request timed out' : (error.message || String(error));
+    $('corsOut').textContent = ` unavailable (${reason})`;
+    if (LIVE && LIVE.mode === 'browser-live') {
+      setRefresh(`Live request failed: ${reason}. Showing the last successful browser response from ${LIVE.generated_utc}.`, true);
+    } else if (SNAPSHOT) {
+      LIVE = SNAPSHOT; renderBoard(LIVE, 'snapshot');
+      setRefresh(`Direct live access failed: ${reason}. Showing the last committed snapshot instead.`, true);
+    } else {
+      setRefresh(`Could not reach the official Stats API (${reason}) and no snapshot is available.`, true);
+    }
+  } finally {
+    pollBusy = false;
+  }
+}
+
+function scheduleNextPoll() {
+  clearTimeout(pollTimer);
+  const active = LIVE && (LIVE.games || []).some(g => g.abstract_state === 'Live' || /^In Progress/i.test(g.state || ''));
+  const wait = active ? LIVE_POLL_MS : SCHEDULE_POLL_MS;
+  pollTimer = setTimeout(async () => {
+    if (document.visibilityState === 'visible') await pollOfficial(false);
+    scheduleNextPoll();
+  }, wait);
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    clearTimeout(pollTimer); pollOfficial(false).finally(scheduleNextPoll);
+  }
+});
+
+function renderBoard(doc, sourceMode) {
+  LIVE = doc;
+  ROWS = (doc.games || []).flatMap(g => (g.model_rows || []).map(r => ({
+    ...r, matchup: `${g.away_abbr || g.away || ''} @ ${g.home_abbr || g.home || ''}`,
+    game_state: g.state || '', game_pk: r.game_pk || g.pk || g.game_pk,
+    official_feed_url: r.official_feed_url || g.official_feed_url || ''
+  })));
+  const s = doc.summary || {};
+  const modeNote = sourceMode === 'direct'
+    ? 'Direct browser request to the official schedule and game-feed endpoints.'
+    : `Committed snapshot · ${esc(doc.note || 'offline or scheduled snapshot')}`;
+  const generated = doc.generated_utc ? new Date(doc.generated_utc).toLocaleString() : 'not timestamped';
+  const refreshFailure = sourceMode === 'snapshot' && REFRESH_STATUS && REFRESH_STATUS.ok === false;
+  const retentionNote = REFRESH_STATUS && REFRESH_STATUS.snapshot_retained === false
+    ? 'A new snapshot was installed before status reporting failed.'
+    : 'The previous complete snapshot was retained.';
+  const staticStatus = refreshFailure
+    ? `<br><span class="no">Latest automatic refresh failed at ${esc(REFRESH_STATUS.attempted_utc || REFRESH_STATUS.detected_utc || 'unknown time')}; ${retentionNote}</span>` : '';
+  $('meta').innerHTML = `<div class="note">${modeNote}<br>Snapshot/feed received <b>${esc(generated)}</b>
+    for MLB game date <b>${esc(doc.game_date || 'unknown')}</b>. ${esc(doc.source || '')}
+    <br>${Number(s.games_verified_vs_linescore || 0)}/${Number(s.games || 0)} games currently match the official linescore.${staticStatus}</div>`;
+  $('flags').innerHTML = flagBox(doc.flags || []);
+  $('kpis').innerHTML =
+    kpiCard(Number(s.games || 0), 'live/final games on this date') +
+    kpiCard(Number(s.batted_balls || 0).toLocaleString(), 'batted balls with a feed ruling') +
+    kpiCard(Number(s.errors || 0), 'ruled errors in captured rows') +
+    kpiCard(Number(s.risp_runs_at_stake || 0), 'scored runs with a runner on 2nd/3rd') +
+    kpiCard(Number(s.overturned_reviews || 0), 'reviews marked overturned in captured rows') +
+    kpiCard(Number(s.unresolved_in_feed || 0), 'contact plays with no result.eventType yet') +
+    kpiCard(esc(s.top_pick_agreement || '0/0'), 'top pick matched the current feed label');
+  const select = $('fGame');
+  select.innerHTML = '<option value="">every game on the slate</option>' +
+    (doc.games || []).map(g => `<option value="${esc(g.pk || g.game_pk)}">${esc(g.away_abbr || g.away || '')} @ ${esc(g.home_abbr || g.home || '')} — ${esc(g.state || '')}</option>`).join('');
+  render();
+}
 
 function filtered() {
   const g = $('fGame').value, mode = $('fShow').value, q = $('fQ').value.toLowerCase();
-  let r = ROWS.slice().sort((a, b) => b.score_100 - a.score_100);
+  let r = ROWS.slice().sort((a, b) => (Number(b.score_100) || -1) - (Number(a.score_100) || -1));
   if (g) r = r.filter(x => String(x.game_pk) === g);
   if (mode === 'top') r = r.slice(0, 20);
   if (mode === 'err') r = r.filter(x => x.official_call === 'error');
@@ -107,50 +328,41 @@ function filtered() {
   if (mode === 'stake') r = r.filter(x => x.risp && x.run_scored);
   if (mode === 'rev') r = r.filter(x => x.reviewed);
   if (mode === 'over') r = r.filter(x => x.review_overturned === true || x.review_overturned === 'true');
-  if (q) r = r.filter(x => (x.description || '').toLowerCase().includes(q));
+  if (q) r = r.filter(x => (x.description || '').toLowerCase().includes(q) || (x.batter || '').toLowerCase().includes(q));
   return r;
 }
 
 function render() {
+  if (!LIVE) return;
   const r = filtered();
   $('count').textContent = `${r.length} of ${ROWS.length} batted balls shown, highest score first.`;
-  $('tbl').innerHTML =
-    `<tr><th>Game</th><th>Inn</th><th>Official call</th><th class="right">SCORE/100</th><th>Model top pick</th>
-      <th class="right">conf.</th><th class="right">EV / LA / dist</th><th>On</th><th class="right">Outs</th>
-      <th>Play</th><th>Watch</th></tr>` +
-    r.map(x => `<tr>
-      <td class="nowrap">${esc(x.matchup || '')}</td>
-      <td class="nowrap">${esc((x.half || '').charAt(0).toUpperCase())}${esc(x.inning || '')}</td>
-      <td><span class="pill ${x.official_call === 'error' ? 'err' : x.official_call === 'pending' ? 'mid' : x.official_call === 'out' ? '' : 'on'}">${esc(callName(x.official_call))}</span></td>
-      <td class="right"><b style="color:${x.score_100 >= 3 ? 'var(--bad)' : x.score_100 >= 1.5 ? 'var(--accent)' : 'var(--good)'}">${x.score_100}</b></td>
-      <td class="muted">${esc(callName(x.top_pick))}${x.official_call === 'pending' ? ' <span class="mid">(not ruled yet)</span>' : x.top_pick !== x.official_call ? ' <span class="no">(≠ call)</span>' : ''}</td>
-      <td class="right muted">${(100 * x.top_prob).toFixed(0)}%</td>
-      <td class="right nowrap">${x.launch_speed} / ${x.launch_angle}° / ${x.distance}ft<br>
-        <span class="muted">${esc((x.trajectory || '').replace('_', ' '))} · ${esc(x.hardness || '')}</span></td>
-      <td class="nowrap">${x.runners_on === '-' ? '—' : esc(x.runners_on)}${x.risp ? ' <span class="mid">RISP</span>' : ''}</td>
-      <td class="right">${x.outs_before ?? ''}</td>
-      <td>${esc(x.description)}
-        ${x.risp && x.run_scored ? `<br><span class="muted">if <b>error</b> → ${esc(x.rbi_if_error || '')} ·
-          if <b>hit</b> → ${esc(x.rbi_if_hit || '')} · if <b>FC</b> → ${esc(x.rbi_if_fc || '')}</span>` : ''}
-        ${x.reviewed ? `<br><span class="mid">reviewed (${esc(x.review_type || '')}) — overturned: ${esc(String(x.review_overturned))}</span>` : ''}</td>
-      <td>${x.savant_url ? linkOut(x.savant_url, 'watch') : ''}</td>
-    </tr>`).join('');
+  $('tbl').innerHTML = `<tr><th>Game</th><th>Inn</th><th>Official feed</th><th class="right">SCORE/100</th><th>Model top pick</th>
+    <th class="right">conf.</th><th class="right">EV / LA / dist</th><th>On</th><th class="right">Outs</th><th>Play / RBI notes</th><th>Source / video</th></tr>` +
+    r.map(x => {
+      const validScore = Number.isFinite(Number(x.score_100));
+      const scoreText = validScore ? Number(x.score_100).toFixed(2) : '—';
+      const scoreColor = validScore ? (x.score_100 >= 3 ? 'var(--bad)' : x.score_100 >= 1.5 ? 'var(--accent)' : 'var(--good)') : 'var(--muted)';
+      const pct = Number.isFinite(Number(x.top_prob)) ? `${(100 * Number(x.top_prob)).toFixed(0)}%` : '—';
+      const noVector = x.status === 'no_vector';
+      return `<tr>
+        <td class="nowrap">${esc(x.matchup || '')}</td>
+        <td class="nowrap">${esc((x.half || '').charAt(0).toUpperCase())}${esc(x.inning || '')}</td>
+        <td><span class="pill ${x.official_call === 'error' ? 'err' : x.official_call === 'pending' ? 'mid' : ''}">${esc(callName(x.official_call))}</span></td>
+        <td class="right"><b style="color:${scoreColor}">${scoreText}</b></td>
+        <td class="muted">${noVector ? 'not scored (incomplete Statcast vector)' : esc(callName(x.top_pick))}${x.official_call === 'pending' ? ' <span class="mid">(no result.eventType yet)</span>' : x.top_pick && x.top_pick !== x.official_call ? ' <span class="no">(≠ feed label)</span>' : ''}</td>
+        <td class="right muted">${pct}</td>
+        <td class="right nowrap">${noVector ? '—' : `${esc(x.launch_speed)} / ${esc(x.launch_angle)}° / ${esc(x.distance)}ft`}<br>
+          <span class="muted">${esc((x.trajectory || '').replace('_', ' '))} · ${esc(x.hardness || '')}</span></td>
+        <td class="nowrap">${x.runners_on === '-' || !x.runners_on ? '—' : esc(x.runners_on)}${x.risp ? ' <span class="mid">RISP</span>' : ''}</td>
+        <td class="right">${esc(x.outs_before ?? '')}</td>
+        <td>${esc(x.description || '')}
+          ${x.risp && x.run_scored && x.rbi_if_error ? `<br><span class="muted">Conditional Rule 9.04 notes — error: ${esc(x.rbi_if_error)} · hit: ${esc(x.rbi_if_hit || '')} · FC: ${esc(x.rbi_if_fc || '')}</span>` : ''}
+          ${x.reviewed ? `<br><span class="mid">reviewed (${esc(x.review_type || '')}) — overturned: ${esc(String(x.review_overturned))}</span>` : ''}</td>
+        <td class="nowrap">${x.official_feed_url ? linkOut(x.official_feed_url, 'official feed') : ''}
+          ${x.savant_url ? linkOut(x.savant_url, 'watch') : ''}</td>
+      </tr>`;
+    }).join('');
 }
-
-$('tryLive').addEventListener('click', async () => {
-  const out = $('corsOut');
-  out.textContent = ' asking statsapi.mlb.com…';
-  const url = 'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=' +
-    new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
-  try {
-    const r = await fetch(url, { cache: 'no-store' });
-    const j = await r.json();
-    const n = (j.dates || []).reduce((s, d) => s + (d.games || []).length, 0);
-    out.innerHTML = ` <span class="ok">answered ${r.status} with ${n} game(s)</span> — this browser can read the official feed directly (CORS allowed).`;
-  } catch (e) {
-    out.innerHTML = ` <span class="no">blocked or unreachable (${esc(e.message)})</span> — the committed snapshot above is the fallback, and this is exactly the case the CI ingest exists to cover.`;
-  }
-});
 </script>
 </body>
 </html>
