@@ -186,10 +186,12 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
   failures, and — on the next run with the same window — **0 changes**, i.e. no phantom churn. The first
   successful run recorded 13,456 "changes", of which 12,349 were one artifact: the stored snapshot predated the
   `status` column, so every value read back empty and its first re-observation was logged as `'' → 'scored'`. A
-  second defect: the schedule endpoint lists a game that runs past midnight under two dates, so the same gamePk was
-  fetched twice and every play stored twice (12,402 duplicated snapshot rows). Both are fixed — the comparison is
-  gated to the columns the stored snapshot actually carries and never treats an unknown previous value as an
-  observation, and the schedule is de-duplicated by `gamePk` at its official date — and the artifact rows are
+  second defect: the collector appended a fresh copy of every play on each capture instead of updating the stored
+  row, and the schedule endpoint lists a game that runs past midnight under two dates, so game 824785 was fetched
+  under both. The stored snapshot held 24,751 rows for 12,349 plays — 12,349 re-capture rows plus 53 dual-date rows,
+  12,402 duplicated rows in all. Both are fixed — the comparison is gated to the columns the stored snapshot actually
+  carries and never treats an unknown previous value as an observation, and the schedule is de-duplicated by `gamePk`
+  at its official date with stored rows de-duplicated by `(game_pk, at_bat)` — and the artifact rows are
   removed from `data/ingest/ruling_changes.csv` with the untouched raw file preserved in commit `e81bb25` and the
   removal documented in `data/ingest/ruling_changes_cleaning.json`. What remains in the ledger is its first real
   content: **1,107** observed field differences between two captures of the official feed (`reviewed 0→1` ×426,

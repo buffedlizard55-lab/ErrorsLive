@@ -111,8 +111,9 @@ def schedule(start, end, active_only=False):
             pk = str(g['gamePk'])
             if pk in seen_pks:
                 # A game that runs past midnight is listed under both dates; the same gamePk would
-                # otherwise be fetched twice and every play would be stored twice under two dates
-                # (the 2026-09-30 snapshot had 12,402 such phantom rows).
+                # otherwise be fetched twice and every play stored twice under two dates (the
+                # pre-fix 2026-09-30 snapshot carried 53 such rows for game 824785; its 12,402
+                # duplicated rows were mostly one re-captured copy of every play).
                 continue
             seen_pks.add(pk)
             out.append({'pk': pk, 'date': str(g.get('officialDate') or d['date']),

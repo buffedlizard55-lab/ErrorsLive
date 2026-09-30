@@ -1228,6 +1228,36 @@ with _tempfile.TemporaryDirectory() as _td:
     finally:
         WR.schedule, WR.get_json, WR.ROOT, WR.SNAP, WR.CHANGES = _save
 
+# ---------------------------------------------------------------- N. the ledger-cleaning record
+print('== N. the change-ledger cleaning record and the duplicate-row attribution ==')
+import collections as _collections
+_clean = load_json(ROOT / 'data' / 'ingest' / 'ruling_changes_cleaning.json')
+_ledger = load_csv(ROOT / 'data' / 'ingest' / 'ruling_changes.csv')
+check('cleaning record: the arithmetic closes against the committed ledger',
+      _clean['rows_before'] - _clean['rows_dropped'] == _clean['rows_after'] == len(_ledger)
+      and sum(_clean['dropped_rows_by_transition'].values()) == _clean['rows_dropped'],
+      f"before {_clean['rows_before']} - dropped {_clean['rows_dropped']} != ledger {len(_ledger)}")
+check('cleaning record: kept rows by field and by transition match the ledger it describes',
+      _clean['kept_rows_by_field'] == dict(_collections.Counter(r['field'] for r in _ledger))
+      and _clean['kept_rows_by_transition']
+      == dict(_collections.Counter(f"{r['field']}: {r['from']} -> {r['to']}" for r in _ledger)),
+      f"json {_clean['kept_rows_by_transition']}")
+check('cleaning record: the distinct-play count matches the ledger',
+      _clean['kept_distinct_plays'] == len({(r['game_pk'], r['at_bat']) for r in _ledger})
+      and _clean['kept_detected_utc'] == min(r['detected_utc'] for r in _ledger))
+check('cleaning record: the timestamp is a real ISO-8601 instant, not a placeholder',
+      re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z', _clean['cleaned_utc']) is not None
+      and _clean.get('cleaned_utc_basis'), _clean['cleaned_utc'])
+_readme, _methods = (ROOT / 'README.md').read_text(), (ROOT / 'docs' / 'methods.html').read_text()
+_watcher_src = (ROOT / 'tools' / 'watch_rulings.py').read_text()
+check('duplicate-row attribution: the 12,402 rows are split into re-captures plus the dual-date game',
+      '12,349 re-capture rows plus 53 dual-date rows' in flat(_readme)
+      and 're-captures of plays already stored' in flat(_methods))
+check('duplicate-row attribution: the old "all 12,402 rows were the dual-date defect" claim is gone',
+      'every play stored twice (12,402' not in flat(_readme)
+      and 'the snapshot held 12,402 duplicated rows' not in flat(_methods)
+      and '12,402 such phantom rows' not in _watcher_src)
+
 print()
 if FAILED:
     print(f'{len(FAILED)} FAILURE(S):')

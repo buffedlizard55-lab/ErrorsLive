@@ -164,10 +164,12 @@
   <code>overturned</code>) is treated as unknown rather than as an observation. The 12,349 artifact rows were removed
   from <code>data/ingest/ruling_changes.csv</code>; the untouched raw file is preserved in git commit
   <code>e81bb25</code> and the removal is documented in
-  <code>data/ingest/ruling_changes_cleaning.json</code>. (2) A game that runs past midnight is listed by the schedule
-  endpoint under two dates, so the same game was fetched twice and every play stored twice: the snapshot held 12,402
-  duplicated rows. The schedule is now de-duplicated by <code>gamePk</code> at its official date, and rows are
-  de-duplicated by <code>(game_pk, at_bat)</code> before comparison. With both fixes the same window reports
+  <code>data/ingest/ruling_changes_cleaning.json</code>. (2) The collector appended a fresh copy of every play on each
+  capture, so the pre-fix snapshot held 24,751 rows for 12,349 plays: 12,402 of those rows were duplicates — 12,349
+  re-captures of plays already stored, plus 53 rows for a single game (824785) that the schedule endpoint lists under
+  two dates because it ran past midnight. The schedule is now de-duplicated by <code>gamePk</code> at its official
+  date, and stored rows are de-duplicated by <code>(game_pk, at_bat)</code> before comparison. With both fixes the
+  same window reports
   <b>0</b> changes, and the ledger holds its first real observations: <b>1,107</b> field differences between two
   captures of the official feed (<code>reviewed 0→1</code> ×426, <code>review_type</code> appearing ×426,
   <code>overturned 0→1</code> ×255). A difference is evidence that the captured field changed between two
