@@ -193,10 +193,10 @@
    "": 1792,
    "404": 321
   },
-  "elapsed_s": 117.8
+  "elapsed_s": 93.6
  },
  "ingest_meta": {
-  "generated_utc": "2026-09-30T01:11:56+00:00",
+  "generated_utc": "2026-09-30T04:07:09+00:00",
   "windows": [
    {
     "start": "2026-03-25",
@@ -213,6 +213,6 @@
     "cumulative_unique_games": 2430
    }
   ],
-  "run_removal_rule": "hard = (#runners whose movement ends at \"score\") - (scoreboard delta); heuristic = overturned review whose text/type concerns a run (HR review turned into a non-HR, runner out at home, scoring/timing review with a runner at the plate)"
+  "run_removal_rule": "legacy run_removed_hard field = max(0, runner movements ending at score - scoreboard delta); this is a feed consistency diagnostic, not proof of a run removal. Heuristic = an overturned review whose subject/final text suggests a run was affected; it is an index aid only."
  }
 }

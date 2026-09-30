@@ -1,14 +1,28 @@
 {
- "ok": false,
- "exit_code": 1,
- "error": "TypeError: 'int' object is not subscriptable",
+ "ok": true,
+ "mode": "live-and-final",
+ "window": [
+  "2026-09-10",
+  "2026-09-30"
+ ],
+ "games": 240,
+ "live_games": 1,
+ "final_games": 239,
+ "plays": 12849,
+ "unresolved_in_feed": 0,
+ "changes": 13456,
+ "failures": [],
+ "detected_utc": "2026-09-30T04:08:47Z",
+ "exit_code": 0,
+ "tool": "tools/watch_rulings.py",
+ "tool_version": 2,
+ "python": "3.11.16",
  "ruling_snapshot.csv": {
-  "rows": 24751,
-  "bytes": 5746012
+  "rows": 12849,
+  "bytes": 3589872
  },
  "ruling_changes.csv": {
-  "rows": null,
-  "bytes": 0
- },
- "detected_utc": "2026-09-30T03:14:30Z"
+  "rows": 13456,
+  "bytes": 5331834
+ }
 }
