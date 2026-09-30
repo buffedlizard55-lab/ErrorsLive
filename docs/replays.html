@@ -128,10 +128,15 @@ function renderRuns() {
         <td class="nowrap">runners scored: ${esc(x.runs_by_movement)}<br>scoreboard moved: ${esc(x.score_delta)}</td>
         <td class="muted" style="max-width:260px">${esc(x.rule)}<br><span class="muted">RBI now: ${esc(x.rbi_official)}</span></td>
         <td class="nowrap">
-          ${linkOut(x.watch_url, 'watch')}
-          ${x.mp4 ? `<a class="chip" href="${esc(x.mp4)}" download target="_blank" rel="noopener">download mp4 ↓</a>` : '<span class="muted">no mp4 rendition</span>'}
+          ${x.mp4 ? `<button class="btn" type="button" data-play="${esc(x.mp4)}"
+              data-play-label="${esc(`${x.date} ${x.matchup} — ${x.batter}`)}"
+              data-play-src="${esc(x.mp4_source || 'mlb video host')}">▶ watch here</button>
+            <a class="chip" href="${esc(x.mp4)}" download>download mp4 ↓</a>`
+            : `<button class="btn" type="button" data-open="${esc(x.watch_url || x.play_id_url)}">watch at the source ↗</button>
+               <span class="muted">no mp4 rendition exposed for this play id</span>`}
           ${linkOut(x.feed_url, 'official feed')}
           ${linkOut(x.savant_game_url, 'savant game')}
+          ${x.video_checked ? `<br><span class="muted">video checked: HTTP ${esc(x.video_status || '—')} via ${esc(x.mp4_source || 'savant')}</span>` : ''}
         </td></tr>`).join('') :
       '<tr><td colspan="9" class="muted">No run-affected overturned review in the current window — the honest answer is an empty list, not a padded one.</td></tr>');
 
@@ -178,6 +183,43 @@ function renderIndex() {
           ${linkOut('https://statsapi.mlb.com/api/v1.1/game/' + x.g + '/feed/live', 'official feed')}</td>
       </tr>`).join('');
 }
+
+/* ---- inline player: watch a flagged play without leaving this page ----
+   The mp4 is streamed straight from the league's own video host (sporty-clips.mlb.com); nothing is
+   re-hosted or proxied. If a play id has no exposed file rendition, the button opens Baseball
+   Savant's per-play page instead and the row says so — the pipeline never substitutes another
+   play's clip. Browsers may play the file rather than save it: that is a browser policy, so the
+   download control is offered beside the player and labelled for what it does. */
+document.addEventListener('click', event => {
+  const play = event.target.closest && event.target.closest('button[data-play]');
+  const open = event.target.closest && event.target.closest('button[data-open]');
+  if (play) {
+    const dialog = $('player');
+    const video = $('playerVideo');
+    video.src = play.dataset.play;
+    $('playerTitle').textContent = play.dataset.playLabel || 'flagged play';
+    $('playerSrc').textContent = `streamed from ${play.dataset.playSrc || 'the league video host'}; not re-hosted by this project`;
+    $('playerDownload').href = play.dataset.play;
+    if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
+    video.play().catch(() => { /* autoplay policy: the reader can press play */ });
+  }
+  if (open && open.dataset.open) window.open(open.dataset.open, '_blank', 'noopener');
+});
+$('playerClose').addEventListener('click', () => {
+  const video = $('playerVideo');
+  video.pause(); video.removeAttribute('src'); video.load();
+  $('player').close ? $('player').close() : $('player').removeAttribute('open');
+});
 </script>
+<div id="playerWrap"></div>
+<dialog id="player" style="max-width:820px;width:92%;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:14px">
+  <h3 id="playerTitle" style="margin-top:0">flagged play</h3>
+  <video id="playerVideo" controls preload="metadata" style="width:100%;border-radius:10px;background:#000"></video>
+  <p class="muted" id="playerSrc" style="font-size:.82rem"></p>
+  <div class="rowflex">
+    <a class="btn" id="playerDownload" href="" download>download this mp4 ↓</a>
+    <button class="btn" id="playerClose" type="button">close</button>
+  </div>
+</dialog>
 </body>
 </html>

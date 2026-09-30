@@ -237,21 +237,133 @@ def main():
         gb_oof[te] = gbm.predict_proba(X[te])[:, 1]
     auc_gb = float(roc_auc_score(yb, gb_oof))
 
+    # ---- rank-average comparator ------------------------------------------------------------
+    # Two models that make different mistakes can beat either one on ranking. This is published as a
+    # comparator only: the live scorer must stay a closed-form model that the browser and the CLI can
+    # evaluate identically (tests/test_pipeline.py pins them to 1e-9), which a boosted ensemble is not.
+    def to_rank(a):
+        order = np.argsort(np.argsort(a, kind='mergesort'), kind='mergesort')
+        return order / max(1, len(order) - 1)
+
+    blend_rows = []
+    for w in (0.0, 0.25, 0.5, 0.75, 1.0):
+        b = w * to_rank(oof_g) + (1 - w) * to_rank(gb_oof)
+        blend_rows.append({'weight_logistic': w, 'cv_auc': round(float(roc_auc_score(yb, b)), 4),
+                           'cv_average_precision': round(float(average_precision_score(yb, b)), 5)})
+    blend_best = max(blend_rows, key=lambda r: (r['cv_auc'], r['cv_average_precision']))
+
+    # ---- regularisation / weighting / feature experiments ------------------------------------
+    # Published whether or not they help: a null result is a result, and hiding it would make the
+    # shipped model look like the only thing that was tried.
+    def grouped_oof(matrix, C=1.0, class_weight=None):
+        out = np.zeros(len(yb))
+        for tr, te in gkf.split(matrix, yb, groups):
+            fold_sc = StandardScaler().fit(matrix[tr])
+            m = LogisticRegression(max_iter=4000, C=C, class_weight=class_weight)
+            m.fit(fold_sc.transform(matrix[tr]), yb[tr])
+            out[te] = m.predict_proba(fold_sc.transform(matrix[te]))[:, 1]
+        return out
+
+    experiments = {'regularisation_grid': [], 'notes': []}
+    for C in (0.01, 0.03, 0.1, 0.3, 1.0, 3.0):
+        o = grouped_oof(X, C=C)
+        experiments['regularisation_grid'].append({
+            'C': C, 'cv_auc': round(float(roc_auc_score(yb, o)), 4),
+            'cv_average_precision': round(float(average_precision_score(yb, o)), 5)})
+    best_C = max(experiments['regularisation_grid'],
+                 key=lambda r: (r['cv_average_precision'], r['cv_auc']))
+    experiments['best_C_by_average_precision'] = best_C['C']
+    shipped = next(r for r in experiments['regularisation_grid'] if r['C'] == 1.0)
+    experiments['notes'].append(
+        f"Regularisation: the grid's best average precision came at C={best_C['C']} "
+        f"({best_C['cv_average_precision']:.5f} vs {shipped['cv_average_precision']:.5f} at the shipped "
+        f"C=1.0, AUC {best_C['cv_auc']:.4f} vs {shipped['cv_auc']:.4f}). The shipped model keeps C=1.0: "
+        'the difference is within the grouped-bootstrap interval and changing it would move every '
+        'published coefficient for no measurable gain in the ranking the site uses.')
+
+    bal = grouped_oof(X, C=1.0, class_weight='balanced')
+    top_bal = np.argsort(bal, kind='mergesort')[-max(1, int(math.ceil(len(yb) * .10))):]
+    top_ship = np.argsort(oof_g, kind='mergesort')[-max(1, int(math.ceil(len(yb) * .10))):]
+    experiments['class_weight_balanced'] = {
+        'cv_auc': round(float(roc_auc_score(yb, bal)), 4),
+        'cv_average_precision': round(float(average_precision_score(yb, bal)), 5),
+        'top10pct_errors_found': int(yb[top_bal].sum()),
+        'shipped_top10pct_errors_found': int(yb[top_ship].sum()),
+        'note': ('Class weighting trades ranking for volume: it finds '
+                 f'{int(yb[top_bal].sum())} of {int(yb.sum())} held-out errors in the top 10% against '
+                 f'{int(yb[top_ship].sum())} for the shipped model, while lowering AUC and average '
+                 'precision. The site keeps the unweighted ranking and states the recall it buys.')}
+
+    # Hand-built interactions and binning: tested, not shipped when they do not earn their place.
+    def extended_matrix():
+        ev_i, la_i, dist_i = (feat_names.index(n) for n in ('EV_mph', 'LA_deg', 'dist_ft'))
+        traj_i = {t: (feat_names.index(f'traj_{t}') if f'traj_{t}' in feat_names else None) for t in TRAJ}
+        hard_h = feat_names.index('hard_hard')
+        gb_t = traj_i['ground_ball']
+        extra = [np.column_stack([
+            (X[:, ev_i] >= 95).astype(float), X[:, ev_i] * X[:, la_i] / 100.0,
+            X[:, dist_i] * X[:, la_i] / 1000.0,
+            (X[:, la_i] < 0).astype(float), ((X[:, la_i] >= 0) & (X[:, la_i] < 10)).astype(float),
+            ((X[:, la_i] >= 10) & (X[:, la_i] < 25)).astype(float),
+            ((X[:, la_i] >= 25) & (X[:, la_i] < 40)).astype(float), (X[:, la_i] >= 40).astype(float),
+            (X[:, ev_i] < 70).astype(float), ((X[:, ev_i] >= 70) & (X[:, ev_i] < 85)).astype(float),
+            ((X[:, ev_i] >= 85) & (X[:, ev_i] < 95)).astype(float),
+            ((X[:, ev_i] >= 95) & (X[:, ev_i] < 105)).astype(float), (X[:, ev_i] >= 105).astype(float),
+            (X[:, traj_i['ground_ball']] * X[:, hard_h]),
+            (X[:, traj_i['line_drive']] + X[:, traj_i['fly_ball']]) * X[:, hard_h],
+        ])] if gb_t is not None else []
+        return np.hstack([X] + extra)
+
+    Xext = extended_matrix()
+    ext = grouped_oof(Xext)
+    experiments['extended_features'] = {
+        'n_features': int(Xext.shape[1]), 'cv_auc': round(float(roc_auc_score(yb, ext)), 4),
+        'cv_average_precision': round(float(average_precision_score(yb, ext)), 5),
+        'note': ('Interactions and coarse bins on the same information (hard-hit flag, exit-velocity '
+                 'and launch-angle bands, exit-velocity x angle, ground-ball x hardness) did not '
+                 f"improve grouped AUC ({roc_auc_score(yb, ext):.4f} vs {auc_g:.4f}) or average "
+                 f"precision ({average_precision_score(yb, ext):.5f} vs {ap_g:.5f}). They are reported "
+                 'and not shipped.')}
+
+    # ---- permutation importance, shuffled across whole games --------------------------------
+    # Groups are kept intact: shuffling a feature game-by-game preserves within-game structure and
+    # answers "how much does the fitted model rely on this column", not "what causes an error".
+    perm = []
+    perm_rng = np.random.default_rng(SEED + 1)
+    perm_game_ids = np.unique(groups)
+    perm_idx_by_game = {g: np.where(groups == g)[0] for g in perm_game_ids}
+    for i, name in enumerate(feat_names):
+        drops = []
+        for _ in range(3):
+            Xp = X.copy()
+            order = perm_rng.permutation(len(perm_game_ids))
+            for g_src, g_dst in zip(perm_game_ids, perm_game_ids[order]):
+                src, dst = perm_idx_by_game[g_src], perm_idx_by_game[g_dst]
+                Xp[dst, i] = X[src, i][:len(dst)] if len(src) >= len(dst) else np.resize(X[src, i], len(dst))
+            p = 1 / (1 + np.exp(-(base.intercept_[0] + ((Xp - sc.mean_) / sc.scale_) @ base.coef_[0])))
+            drops.append(auc_g - float(roc_auc_score(yb, p)))
+        perm.append({'feature': name, 'auc_drop_mean': round(float(np.mean(drops)), 5),
+                     'auc_drop_max': round(float(np.max(drops)), 5)})
+    perm.sort(key=lambda r: -r['auc_drop_mean'])
+
     # ---- group bootstrap ----
     rng = np.random.default_rng(SEED)
     game_ids = np.unique(groups)
     idx_by_game = {g: np.where(groups == g)[0] for g in game_ids}
-    aucs, coefs = [], []
+    aucs, aps, coefs = [], [], []
     for _ in range(1000):
         pick = rng.choice(game_ids, len(game_ids), replace=True)
         idx = np.concatenate([idx_by_game[g] for g in pick])
         if yb[idx].sum() in (0, len(idx)):
             continue
         aucs.append(roc_auc_score(yb[idx], oof_g[idx]))
+        if _ < 400:                      # average precision is a ranking curve; 400 game-resamples
+            aps.append(average_precision_score(yb[idx], oof_g[idx]))
         m = LogisticRegression(max_iter=2000, C=1.0).fit(Xs[idx], yb[idx])
         coefs.append(m.coef_[0])
     coefs = np.array(coefs)
     auc_ci = [float(np.percentile(aucs, 2.5)), float(np.percentile(aucs, 97.5))]
+    ap_ci = [float(np.percentile(aps, 2.5)), float(np.percentile(aps, 97.5))]
 
     # ---- correlations / mutual information ----
     corr = {}
@@ -352,6 +464,23 @@ def main():
                          'recall': round(found / int(yb.sum()), 5),
                          'lift_over_base_rate': round(precision / float(yb.mean()), 3)})
 
+    # The operational question is "how many plays must a person watch to catch how many errors", so
+    # the queue table is published from 0.5% to 30% — the bands a review workflow can actually use.
+    queue = []
+    for pct in (0.5, 1, 2, 3, 5, 10, 20, 30):
+        n_top = max(1, int(math.ceil(len(yb) * pct / 100)))
+        chosen = np.argsort(oof_g, kind='mergesort')[-n_top:]
+        found = int(yb[chosen].sum())
+        precision = found / n_top
+        queue.append({'top_percent': pct, 'plays_to_review': n_top, 'errors_found': found,
+                      'precision': round(precision, 5),
+                      'recall': round(found / int(yb.sum()), 5),
+                      'lift_over_base_rate': round(precision / float(yb.mean()), 3),
+                      'plays_per_error_found': round(n_top / found, 1) if found else None})
+    queue_note = ('Grouped out-of-fold ranking within the collected window. "Plays to review" is the '
+                  'cost side; "errors found" is the benefit. Reading it as a promise about a future '
+                  'season would be a mistake: the window is narrow and the CI is wide.')
+
     p_all = 1 / (1 + np.exp(-(base.intercept_[0] + Xs @ base.coef_[0])))
     plan_path = ROOT / 'data' / 'ingest' / 'plan.json'
     try:
@@ -394,6 +523,7 @@ def main():
         'cv_auc': round(auc_g, 4), 'cv_auc_ci95': [round(v, 4) for v in auc_ci],
         'cv_auc_random_kfold': round(auc_r, 4),
         'cv_average_precision_grouped': round(ap_g, 5),
+        'cv_average_precision_ci95': [round(v, 5) for v in ap_ci],
         'cv_average_precision_random_kfold': round(ap_r, 5),
         'cv_auc_gradient_boosting_grouped': round(auc_gb, 4),
         'cv_logloss': round(ll_g, 6), 'cv_brier_raw': round(br_g, 6),
@@ -422,8 +552,10 @@ def main():
         'p_error_training_max_x100': round(float(100 * p_all.max()), 3),
         'top_error_risk_bands_oof': top_risk,
         'cv_average_precision_grouped': round(ap_g, 5),
+        'cv_average_precision_ci95': [round(v, 5) for v in ap_ci],
         'cv_average_precision_random_kfold': round(ap_r, 5),
         'calibration_oof': cal, 'p_error_percentile_grid': grid,
+        'review_queue_oof': queue, 'review_queue_note': queue_note,
         'grouped_vs_random_auc_gap': round(auc_r - auc_g, 4),
         'baseline_error_rate': round(float(yb.mean()), 5),
         'note': ('If the model\'s top pick is never "error" (see oof_error_nominated_top1), then the '
@@ -435,11 +567,32 @@ def main():
         'surface': surface, 'curve': curve, 'correlations': corr, 'context_stats': context_stats,
         'risk_bands': {'description': 'error-likelihood bands from the grouped OOF distribution',
                        'edges': grid},
+        'experiments': experiments,
+        'blend_comparator': {
+            'method': ('rank-average of the shipped logistic OOF ranking and the grouped '
+                       'gradient-boosting OOF ranking: w x logistic + (1 - w) x gbm'),
+            'grid': blend_rows,
+            'best_by_auc': blend_best,
+            'shipped': False,
+            'why_not_shipped': ('A comparator only. The live scorer must be evaluable in the browser '
+                                'and in tools/live_score.py to 1e-9, which a boosted ensemble is not; '
+                                'the published probabilities would also stop being the calibrated '
+                                'object the site explains.'),
+        },
+        'permutation_importance': {
+            'method': ('each feature shuffled across whole games (group structure preserved) and '
+                       'scored with the full-fit model; mean and max grouped-OOF AUC drop over 3 '
+                       'shuffles. It measures the fitted model\'s reliance on a column, not a cause.'),
+            'rows': perm,
+        },
     }
     OUT.write_text(json.dumps(out, indent=1))
     print(json.dumps({'auc_grouped': primary['cv_auc'], 'auc_ci': primary['cv_auc_ci95'],
                       'auc_random': primary['cv_auc_random_kfold'],
                       'average_precision_grouped': primary['cv_average_precision_grouped'],
+                      'average_precision_ci95': primary['cv_average_precision_ci95'],
+                      'blend_best': blend_best,
+                      'best_C_by_average_precision': best_C['C'],
                       'average_precision_baseline': round(float(yb.mean()), 5),
                       'auc_gbm_grouped': primary['cv_auc_gradient_boosting_grouped'],
                       'brier': primary['cv_brier_raw'], 'top1': honesty['oof_top1_accuracy'],

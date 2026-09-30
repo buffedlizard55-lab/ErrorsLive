@@ -31,7 +31,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent.parent
 STATS = 'https://statsapi.mlb.com'
-UA = {'User-Agent': 'LiveScoringErrors-research/1.0 (+https://github.com/buffedlizard55-lab/LiveScoringErrors)'}
+UA = {'User-Agent': 'LiveScoringErrors-research/1.0 (+https://github.com/buffedlizard55-lab/ErrorsLive)'}
 SNAP = ROOT / 'data' / 'ingest' / 'ruling_snapshot.csv'
 CHANGES = ROOT / 'data' / 'ingest' / 'ruling_changes.csv'
 FIELDS = ('liveData,plays,allPlays,result,eventType,event,rbi,description,about,inning,halfInning,'
@@ -48,7 +48,17 @@ BATTED = {'single', 'double', 'triple', 'home_run', 'field_out', 'force_out', 'f
 
 
 WATCHABLE_STATES = {'Live', 'Final'}
+# Recorded in the status file: a run's status is only as trustworthy as the revision of this tool
+# that produced it, and the 2026-09-30 TypeError fix was invisible from the outside until this was
+# stamped. Bump it whenever the comparison or the stored shape changes.
+TOOL_VERSION = 2
 WATCH_FIELDS = ('event_type', 'rbi', 'description', 'status', 'reviewed', 'overturned', 'review_type')
+# `status` is derived here from eventType + hitData, and `reviewed`/`overturned` are booleans: a stored
+# empty value therefore means "the snapshot that produced this row predates the column", not "the play
+# had no ruling". The first run after the 2026-09-30 fix recorded 12,349 of exactly those phantom
+# transitions (`'' -> 'scored'` against a snapshot written before `status` existed) and published them
+# as alerts; an unknown previous value must never be reported as an observed change.
+UNKNOWN_FROM_IS_NOT_A_CHANGE = ('status', 'reviewed', 'overturned')
 SCORING_CHANGES_URL = 'https://www.mlb.com/official-information/scoring-changes'
 
 
@@ -91,14 +101,22 @@ def schedule(start, end, active_only=False):
     """Official schedule for live and final games; previews are not yet scoreable."""
     url = (f'{STATS}/api/v1/schedule?sportId=1&startDate={start}&endDate={end}'
            f'&gameType=R,F,D,L,W&hydrate=team')
-    out = []
+    out, seen_pks = [], set()
     for d in get_json(url).get('dates', []):
         for g in d['games']:
             status = g.get('status') or {}
             abstract_state = status.get('abstractGameState', '')
             if abstract_state not in WATCHABLE_STATES or (active_only and abstract_state != 'Live'):
                 continue
-            out.append({'pk': str(g['gamePk']), 'date': d['date'],
+            pk = str(g['gamePk'])
+            if pk in seen_pks:
+                # A game that runs past midnight is listed under both dates; the same gamePk would
+                # otherwise be fetched twice and every play stored twice under two dates (the
+                # pre-fix 2026-09-30 snapshot carried 53 such rows for game 824785; its 12,402
+                # duplicated rows were mostly one re-captured copy of every play).
+                continue
+            seen_pks.add(pk)
+            out.append({'pk': pk, 'date': str(g.get('officialDate') or d['date']),
                         'away': team_abbr(g['teams']['away']['team']),
                         'home': team_abbr(g['teams']['home']['team']),
                         'gameType': g.get('gameType', 'R'),
@@ -178,6 +196,19 @@ def load_snapshot():
             for r in csv.DictReader(open(SNAP, newline=''))}
 
 
+def stored_fields():
+    """The watched fields the stored snapshot actually carries a column for.
+
+    Comparing a column the previous snapshot never stored produces a phantom change on its first run
+    (the 2026-09-30 flood), so the previous format gates what can be compared.
+    """
+    if not SNAP.exists() or not SNAP.stat().st_size:
+        return ()
+    with open(SNAP, newline='') as f:
+        header = next(csv.reader(f), [])
+    return tuple(f for f in WATCH_FIELDS if f in header)
+
+
 def write_csv(path, rows, keys):
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'w', newline='') as f:
@@ -189,6 +220,88 @@ def write_csv(path, rows, keys):
 def transition_key(game_pk, at_bat, field, before, after, previous_change_utc=''):
     """Deduplicate workflow retries without hiding a later recurrence of the same transition."""
     return (str(game_pk), str(at_bat), field, before, after, previous_change_utc or '')
+
+
+def normalize(value):
+    """One comparable text form for a stored snapshot value.
+
+    The Stats API returns some watched fields as numbers (`rbi`, `reviewed`, `overturned`) while the
+    snapshot CSV stores every column as text, so `0` and `'0'` describe the same observation. The
+    first version of this comparison tested them for equality directly: the mismatch registered as a
+    change and the ledger builder then sliced the integer (`current[:300]`), which crashed every CI
+    run with `TypeError: 'int' object is not subscriptable` and left the change ledger empty. Both
+    sides now pass through here before they are compared, stored or printed.
+    """
+    if value is None:
+        return ''
+    if isinstance(value, bool):
+        return '1' if value else '0'
+    return str(value)
+
+
+def detect_changes(previous, current_rows, seen, now_utc, feed_url_for=None, fields=None):
+    """Diff the stored feed state against one fresh observation.
+
+    Pure function on purpose: `tests/test_pipeline.py` feeds it a stored shape and a fresh shape
+    offline, so the int/text regression above cannot come back unnoticed, and a workflow retry is
+    proven to be deduplicated without another CI round-trip.
+    """
+    changes = []
+    for r in current_rows:
+        key = (normalize(r.get('game_pk')), normalize(r.get('at_bat')))
+        prev = previous.get(key)
+        if not prev:
+            continue
+        for field in (fields or WATCH_FIELDS):
+            was, current = normalize(prev.get(field, '')), normalize(r.get(field, ''))
+            if was == current:
+                continue
+            if was == '' and field in UNKNOWN_FROM_IS_NOT_A_CHANGE:
+                continue                     # the previous format never stored this column
+            previous_change_utc = normalize(prev.get('last_changed_utc') or prev.get('last_seen_utc'))
+            change_key = transition_key(key[0], key[1], field, was, current, previous_change_utc)
+            if change_key in seen:
+                continue
+            first_status = normalize(prev.get('status')) or (
+                'scored' if prev.get('event_type') else 'no_event_type_yet')
+            if field == 'event_type':
+                rbi_note = ('The official feed eventType changed. Compare the recorded RBI values and '
+                            "check Rule 9.04 and MLB's scoring-changes log; this feed label alone does "
+                            'not decide the counterfactual RBI.')
+            elif field == 'rbi':
+                rbi_note = ('The official feed RBI field changed; verify the scoring rationale against '
+                            "the 2026 rulebook (Rule 9.04) and MLB's scoring-changes log.")
+            else:
+                rbi_note = ''
+            changes.append({
+                'detected_utc': now_utc, 'game_pk': key[0], 'date': normalize(r.get('date')),
+                'matchup': normalize(r.get('matchup')), 'inning': normalize(r.get('inning')),
+                'half': normalize(r.get('half')),
+                'at_bat': key[1], 'play_id': normalize(r.get('play_id')),
+                'batter': normalize(r.get('batter')),
+                'field': field, 'from': was[:300], 'to': current[:300],
+                'previous_last_changed_utc': previous_change_utc,
+                'first_observation_status': first_status,
+                'was_unresolved_in_feed': int(first_status == 'no_event_type_yet'),
+                'first_seen_utc': normalize(prev.get('first_seen_utc')),
+                'launch_speed': normalize(prev.get('launch_speed')),
+                'launch_angle': normalize(prev.get('launch_angle')),
+                'distance': normalize(prev.get('distance')),
+                'trajectory': normalize(prev.get('trajectory')),
+                'hardness': normalize(prev.get('hardness')),
+                'bases_before': normalize(prev.get('bases_before')),
+                'outs_before': normalize(prev.get('outs_before')),
+                'rbi_from': normalize(prev.get('rbi')), 'rbi_to': normalize(r.get('rbi')),
+                'rbi_note': rbi_note,
+                'reviewed': normalize(r.get('reviewed')), 'overturned': normalize(r.get('overturned')),
+                'review_type': normalize(r.get('review_type')),
+                'feed_url': (feed_url_for or (lambda pk: f'{STATS}/api/v1.1/game/{pk}/feed/live'))(key[0]),
+                'scoring_changes_url': SCORING_CHANGES_URL,
+                'savant_url': (f'https://baseballsavant.mlb.com/sporty-videos?playId='
+                               f'{normalize(r.get("play_id"))}' if normalize(r.get('play_id')) else ''),
+            })
+            seen.add(change_key)
+    return changes
 
 
 CHANGE_KEYS = ['detected_utc', 'game_pk', 'date', 'matchup', 'inning', 'half', 'at_bat', 'play_id',
@@ -244,7 +357,19 @@ def main(argv=None):
             if (i + 1) % 40 == 0:
                 print(f'  {i+1}/{len(games)} games, {len(rows)} scoring-relevant plays', flush=True)
 
+    deduped, seen_keys = [], set()
+    for r in rows:
+        key = (str(r['game_pk']), str(r['at_bat']))
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+        deduped.append(r)
+    if len(deduped) != len(rows):
+        print(f'dropped {len(rows) - len(deduped)} duplicate (game_pk, at_bat) rows before comparing')
+    rows = deduped
+
     old = load_snapshot()
+    fields = stored_fields()
     now_utc = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     print(f'fetched {len(rows)} scoring-relevant plays from {len(games)} games', flush=True)
     changes = []
@@ -255,54 +380,10 @@ def main(argv=None):
                 seen.add(transition_key(r['game_pk'], r['at_bat'], r['field'], r['from'], r['to'],
                                         r.get('previous_last_changed_utc', '')))
 
-    for r in rows:
-        key = (str(r['game_pk']), str(r['at_bat']))
-        prev = old.get(key)
-        if not prev:
-            continue
-        for field in WATCH_FIELDS:
-            was, current = prev.get(field, ''), r.get(field, '')
-            if was == current:
-                continue
-            previous_change_utc = (prev.get('last_changed_utc') or prev.get('last_seen_utc') or '')
-            change_key = transition_key(key[0], key[1], field, was, current, previous_change_utc)
-            if change_key in seen:
-                continue
-            first_status = prev.get('status') or (
-                'scored' if prev.get('event_type') else 'no_event_type_yet')
-            was_unresolved = int(first_status == 'no_event_type_yet')
-            rbi_note = ''
-            if field == 'event_type':
-                rbi_note = ("The official feed eventType changed. Compare the recorded RBI values and "
-                            "check Rule 9.04 and MLB's scoring-changes log; this feed label alone does "
-                            'not decide the counterfactual RBI.')
-            elif field == 'rbi':
-                rbi_note = ("The official feed RBI field changed; verify the scoring rationale against "
-                            "the 2026 rulebook and MLB's scoring-changes log.")
-            changes.append({
-                'detected_utc': now_utc, 'game_pk': key[0], 'date': r['date'],
-                'matchup': r['matchup'], 'inning': r['inning'], 'half': r['half'],
-                'at_bat': key[1], 'play_id': r['play_id'], 'batter': r['batter'],
-                'field': field, 'from': was[:300], 'to': current[:300],
-                'previous_last_changed_utc': previous_change_utc,
-                'first_observation_status': first_status,
-                'was_unresolved_in_feed': was_unresolved,
-                'first_seen_utc': prev.get('first_seen_utc', ''),
-                'launch_speed': prev.get('launch_speed', ''),
-                'launch_angle': prev.get('launch_angle', ''), 'distance': prev.get('distance', ''),
-                'trajectory': prev.get('trajectory', ''), 'hardness': prev.get('hardness', ''),
-                'bases_before': prev.get('bases_before', ''), 'outs_before': prev.get('outs_before', ''),
-                'rbi_from': prev.get('rbi', ''), 'rbi_to': r.get('rbi', ''), 'rbi_note': rbi_note,
-                'reviewed': r['reviewed'], 'overturned': r['overturned'],
-                'review_type': r['review_type'],
-                'feed_url': f'{STATS}/api/v1.1/game/{key[0]}/feed/live',
-                'scoring_changes_url': SCORING_CHANGES_URL,
-                'savant_url': (f'https://baseballsavant.mlb.com/sporty-videos?playId={r["play_id"]}'
-                               if r['play_id'] else ''),
-            })
-            seen.add(change_key)
-            print(f"CHANGE {r['date']} {r['matchup']} ab{key[1]} {field}: {was!r} -> {current!r}",
-                  flush=True)
+    changes = detect_changes(old, rows, seen, now_utc, fields=fields)
+    for c in changes:
+        print(f"CHANGE {c['date']} {c['matchup']} ab{c['at_bat']} {c['field']}: "
+              f"{c['from']!r} -> {c['to']!r}", flush=True)
 
     unresolved = sum(r['status'] == 'no_event_type_yet' for r in rows)
     print(f'observed {len(rows)} plays, {len(changes)} changes vs the stored snapshot, '
@@ -312,7 +393,8 @@ def main(argv=None):
             key = (str(r['game_pk']), str(r['at_bat']))
             prev = old.get(key)
             r['first_seen_utc'] = (prev or {}).get('first_seen_utc') or now_utc
-            unchanged = bool(prev) and all(prev.get(k, '') == r.get(k, '') for k in WATCH_FIELDS)
+            unchanged = bool(prev) and all(normalize(prev.get(k, '')) == normalize(r.get(k, ''))
+                                            for k in WATCH_FIELDS)
             # This timestamp means last changed, not last fetched: restamping an unchanged historical
             # window on each hourly run would create needless multi-megabyte Git blobs.
             r['last_changed_utc'] = ((prev or {}).get('last_changed_utc')
@@ -331,6 +413,7 @@ def main(argv=None):
               f'and {CHANGES.relative_to(ROOT)} ({len(changes)} new)', flush=True)
 
     summary = {'ok': not failures, 'mode': mode, 'window': [start, anchor.isoformat()],
+               'fields_compared': list(fields),
                'games': len(games), 'live_games': sum(g['abstract_state'] == 'Live' for g in games),
                'final_games': sum(g['abstract_state'] == 'Final' for g in games),
                'plays': len(rows), 'unresolved_in_feed': unresolved, 'changes': len(changes),
@@ -358,6 +441,9 @@ def run_safely(argv=None):
     except BaseException as e:                                   # noqa: BLE001 - report, never hide
         status = {'ok': False, 'exit_code': 1, 'error': f'{type(e).__name__}: {e}'[:400]}
         print('WATCH FAILED ' + json.dumps(status), flush=True)
+    status['tool'] = 'tools/watch_rulings.py'
+    status['tool_version'] = TOOL_VERSION
+    status['python'] = sys.version.split()[0]
     for name in ('ruling_snapshot.csv', 'ruling_changes.csv'):
         path = ROOT / 'data' / 'ingest' / name
         status[name] = {'rows': (sum(1 for _ in open(path)) - 1) if path.exists() else None,

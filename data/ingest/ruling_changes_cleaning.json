@@ -1,0 +1,31 @@
+{
+ "cleaned_utc": "2026-09-30T04:13:24Z",
+ "cleaned_utc_basis": "commit time of 0c5cbba, the commit that stored this cleaned ledger; the cleaning pass itself ran moments earlier and its wall clock was not written down.",
+ "file": "data/ingest/ruling_changes.csv",
+ "rows_before": 13456,
+ "rows_dropped": 12349,
+ "rows_after": 1107,
+ "dropped_rule": "field == 'status' and from == ''",
+ "dropped_rows_by_transition": {
+  "status:  -> scored": 12349
+ },
+ "reason": "The snapshot the run compared against was written before the `status` column existed, so every row read back as '' and its first re-observation was recorded as '' -> 'scored'. Those rows are unknown previous values, not observed changes; the comparison now skips columns the previous snapshot did not store (tools/watch_rulings.py UNKNOWN_FROM_IS_NOT_A_CHANGE). The untouched raw ledger of that first post-fix run is in git commit e81bb25 (git show e81bb25:data/ingest/ruling_changes.csv).",
+ "kept_rows_by_field": {
+  "reviewed": 426,
+  "review_type": 426,
+  "overturned": 255
+ },
+ "kept_rows_by_transition": {
+  "overturned: 0 -> 1": 255,
+  "review_type:  -> MA": 11,
+  "review_type:  -> MF": 1,
+  "review_type:  -> MI": 1,
+  "review_type:  -> MJ": 409,
+  "review_type:  -> NH": 3,
+  "review_type:  -> NO": 1,
+  "reviewed: 0 -> 1": 426
+ },
+ "kept_distinct_plays": 426,
+ "kept_detected_utc": "2026-09-30T04:08:46Z",
+ "verification": "Kept rows were re-counted from the committed data/ingest/ruling_changes.csv; tests/test_pipeline.py re-checks rows_after, kept_rows_by_field, kept_rows_by_transition and kept_distinct_plays against that file on every run."
+}

@@ -1,14 +1,37 @@
 {
- "ok": false,
- "exit_code": 1,
- "error": "TypeError: 'int' object is not subscriptable",
+ "ok": true,
+ "mode": "live-and-final",
+ "window": [
+  "2026-09-10",
+  "2026-09-30"
+ ],
+ "fields_compared": [
+  "event_type",
+  "rbi",
+  "description",
+  "status",
+  "reviewed",
+  "overturned",
+  "review_type"
+ ],
+ "games": 239,
+ "live_games": 1,
+ "final_games": 238,
+ "plays": 12800,
+ "unresolved_in_feed": 0,
+ "changes": 0,
+ "failures": [],
+ "detected_utc": "2026-09-30T04:26:44Z",
+ "exit_code": 0,
+ "tool": "tools/watch_rulings.py",
+ "tool_version": 2,
+ "python": "3.11.16",
  "ruling_snapshot.csv": {
-  "rows": 24751,
-  "bytes": 5746012
+  "rows": 12800,
+  "bytes": 3575948
  },
  "ruling_changes.csv": {
-  "rows": null,
-  "bytes": 0
- },
- "detected_utc": "2026-09-30T03:14:30Z"
+  "rows": 1107,
+  "bytes": 440715
+ }
 }

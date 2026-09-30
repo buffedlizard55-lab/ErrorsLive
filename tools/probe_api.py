@@ -29,7 +29,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'data' / 'ingest' / 'probe_report.json'
-UA = {'User-Agent': 'LiveScoringErrors-research/1.0 (+https://github.com/buffedlizard55-lab/LiveScoringErrors)'}
+UA = {'User-Agent': 'LiveScoringErrors-research/1.0 (+https://github.com/buffedlizard55-lab/ErrorsLive)'}
 RECORDS = []
 FEED_FIELDS = ('gameData,datetime,officialDate,teams,away,home,name,abbreviation,'
                'liveData,plays,allPlays,result,event,eventType,rbi,description,about,inning,'

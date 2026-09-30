@@ -18,7 +18,17 @@
   The model uses those permitted inputs to estimate whether the latest captured official feed label is an error.
   It does not predict whether an initial call will later be reclassified. The live board fetches the public
   <a href="https://statsapi.mlb.com/api/v1.1/game/823441/feed/live" target="_blank" rel="noopener">MLB Stats API feed</a>
-  directly when browser access is available.</p>
+  directly when browser access is available, and the <a href="alerts.html">alert console</a> watches it for you —
+  it polls, diffs each capture against the last, and raises an alert when a ruling appears, changes, or moves an RBI,
+  with the rule text and the video link attached.</p>
+
+  <div class="grid cols2" style="margin-top:6px">
+    <div class="card"><h3>Live board</h3><p class="muted">Every batted ball in today's games, scored before the feed
+      settles, with the base/out state and the conditional RBI notes. <a href="live.html">Open the live board →</a></p></div>
+    <div class="card"><h3>Live alerts</h3><p class="muted">A change feed: what the official API said last time, what it
+      says now, and what moved — with browser notifications, sound and an exportable ledger.
+      <a href="alerts.html">Open the alert console →</a></p></div>
+  </div>
 
   <div class="truth gold" id="honesty"><b>Loading the model…</b></div>
 
@@ -167,17 +177,24 @@ function preset(p) {
 (async function init() {
   MODEL = await loadJSON('data/model.json');
   const m = MODEL.meta, h = MODEL.honesty, p = MODEL.primary, corr = MODEL.correlations || {};
+  const q0 = (h.review_queue_oof || [])[0];          // the smallest published review band
   const top5 = Object.entries(corr).sort((a, b) => Math.abs(b[1].r) - Math.abs(a[1].r)).slice(0, 4);
   $('honesty').innerHTML = `<b>Read this first — what the number can and cannot do.</b> Across the
     ${m.n_model.toLocaleString()} training rows, the <i>training-fit</i> P(error) range is
     <b>${h.p_error_training_min_x100}–${h.p_error_training_max_x100} per 100</b> (not a held-out range),
     and out-of-fold the model nominates “error” as its most likely ruling <b>${h.oof_error_nominated_top1} times</b>.
     So this is a <i>ranking</i> tool, not a verdict: use it to decide which batted ball deserves a second look,
-    never to declare a call. Full validation on the <a href="model.html">model page</a>.`;
+    never to declare a call. The <a href="model.html">model page</a> publishes the review queue as cost against
+    benefit: watching the highest-scored 0.5% of held-out plays (${(q0 && q0.plays_to_review !== undefined) ? q0.plays_to_review.toLocaleString() : '–'}
+    plays) found <b>${q0 ? q0.errors_found : '–'} of the ${h.oof_top1_accuracy !== undefined ? m.n_error : m.n_error} errors</b>
+    at <b>${q0 ? (100 * q0.precision).toFixed(2) : '–'}%</b> precision — ${q0 ? q0.lift_over_base_rate : '–'}× the base rate.
+    That is the honest way to read this model: not “it calls errors”, but “it sorts them.”`;
   $('modelProvenance').innerHTML = `Fitted on <b>${m.n_model.toLocaleString()} Statcast batted balls</b> from
     ${m.games} games (${esc(m.dataset)}). ${esc(m.dataset_note)} Validated with GroupKFold by game;
     grouped out-of-fold ROC AUC <b>${p.cv_auc}</b> (95% CI ${p.cv_auc_ci95[0]}–${p.cv_auc_ci95[1]}),
-    average precision <b>${(100 * p.cv_average_precision_grouped).toFixed(3)}%</b> versus a <b>${m.error_rate_pct}%</b> prevalence baseline;
+    average precision <b>${(100 * p.cv_average_precision_grouped).toFixed(3)}%</b>
+    (95% grouped-bootstrap interval ${(p.cv_average_precision_ci95 || []).map(v => (100 * v).toFixed(3) + '%').join('–')})
+    versus a <b>${m.error_rate_pct}%</b> prevalence baseline;
     stratified random-fold ROC AUC comparator ${p.cv_auc_random_kfold}.`;
   $('finding').innerHTML = `<b>Model associations.</b> The fitted model and model-free surface show how observed
     contact/context features relate to the final feed label; these are associations, not causal effects.

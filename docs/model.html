@@ -39,6 +39,29 @@
   precision and recall among the highest-scored fraction of held-out games. The baseline precision is the model
   window's error rate. These are retrospective same-window results, not a promise about future seasons.</p>
   <div class="scroll"><table class="compact" id="topRisk"></table></div>
+  <p class="legend" style="margin-top:8px">Grouped out-of-fold average precision is
+    <b><span id="apCi">–</span></b> — the interval is a 400-replicate bootstrap that resamples whole
+    games, because plays inside one game share a park, a scorer and a night.</p>
+
+  <h2>What a review actually costs — the queue table</h2>
+  <p class="lede" style="font-size:.95rem">The operational question is not “what is the AUC”, it is
+  “how many plays must someone watch to catch how many errors”. These are grouped out-of-fold numbers
+  for the shipped logistic model; the same table is in <code>data/model.json</code> as
+  <code>honesty.review_queue_oof</code>, so a reader never has to trust a number typed into this page.</p>
+  <div class="scroll"><table class="compact" id="queue"></table></div>
+
+  <h2>Feature experiments — what was tried and what did not work</h2>
+  <p class="lede" style="font-size:.95rem">A model page that only shows the winner hides the search.
+  Everything below was fitted on the same folds and is reported even where it lost.</p>
+  <div class="scroll"><table class="compact" id="experiments"></table></div>
+  <div class="scroll"><table class="compact" id="blend"></table></div>
+
+  <h2>What the fitted model leans on — game-level permutation importance</h2>
+  <p class="lede" style="font-size:.95rem">Each feature is shuffled <i>across whole games</i> and the
+  grouped out-of-fold AUC is recomputed. A large drop means the fitted model uses that column heavily;
+  a drop at or below zero means shuffling it changed nothing measurable. This measures reliance, not
+  causation — and it is the honest answer to “which input is doing the work”.</p>
+  <div class="scroll"><table class="compact" id="perm"></table></div>
 
   <div class="grid cols2" style="margin-top:12px">
     <div class="card"><h3>Calibration — do predicted probabilities track observed rates?</h3>
@@ -120,6 +143,46 @@ const $ = id => document.getElementById(id);
     (h.top_error_risk_bands_oof || []).map(x => `<tr><td>top ${x.top_percent}%</td><td class="right">${x.n.toLocaleString()}</td>
       <td class="right">${x.errors_found}</td><td class="right">${(100*x.precision).toFixed(2)}%</td>
       <td class="right">${(100*x.recall).toFixed(1)}%</td><td class="right">${x.lift_over_base_rate}×</td></tr>`).join('');
+  const apCi = p.cv_average_precision_ci95 || [];
+  $('apCi').innerHTML = `<b>${(100 * p.cv_average_precision_grouped).toFixed(3)}%</b>` +
+    (apCi.length ? ` (95% grouped-bootstrap interval ${(100 * apCi[0]).toFixed(3)}%–${(100 * apCi[1]).toFixed(3)}%)` : '');
+  $('queue').innerHTML = `<tr><th>Review the top</th><th class="right">plays to review</th>
+      <th class="right">errors found</th><th class="right">precision</th><th class="right">recall</th>
+      <th class="right">lift vs prevalence</th><th class="right">plays watched per error found</th></tr>` +
+    (h.review_queue_oof || []).map(q => `<tr><td>${q.top_percent}%</td>
+      <td class="right">${q.plays_to_review.toLocaleString()}</td>
+      <td class="right"><b>${q.errors_found}</b></td><td class="right">${(100 * q.precision).toFixed(2)}%</td>
+      <td class="right">${(100 * q.recall).toFixed(1)}%</td><td class="right">${q.lift_over_base_rate}×</td>
+      <td class="right muted">${q.plays_per_error_found === null ? '–' : q.plays_per_error_found}</td></tr>`).join('');
+  const ex = M.experiments || {};
+  $('experiments').innerHTML = `<tr><th>Experiment</th><th class="right">grouped AUC</th>
+      <th class="right">grouped average precision</th><th>What happened</th></tr>` +
+    (ex.regularisation_grid || []).map(r => `<tr><td>logistic C = ${r.C}</td>
+      <td class="right">${r.cv_auc}</td><td class="right">${r.cv_average_precision}</td>
+      <td class="muted">${r.C === 1 ? 'shipped' : (r.C === ex.best_C_by_average_precision ? 'best average precision in the grid' : '')}</td></tr>`).join('') +
+    (ex.class_weight_balanced ? `<tr><td>class_weight = balanced</td>
+      <td class="right">${ex.class_weight_balanced.cv_auc}</td>
+      <td class="right">${ex.class_weight_balanced.cv_average_precision}</td>
+      <td class="muted">${esc(ex.class_weight_balanced.note)}</td></tr>` : '') +
+    (ex.extended_features ? `<tr><td>hand-built interactions and bins (${ex.extended_features.n_features} features)</td>
+      <td class="right">${ex.extended_features.cv_auc}</td>
+      <td class="right">${ex.extended_features.cv_average_precision}</td>
+      <td class="muted">${esc(ex.extended_features.note)}</td></tr>` : '') +
+    (ex.notes || []).map(n => `<tr><td colspan="4" class="muted">${esc(n)}</td></tr>`).join('');
+  const bl = M.blend_comparator || {};
+  $('blend').innerHTML = `<tr><th>Rank-average comparator</th><th class="right">grouped AUC</th>
+      <th class="right">grouped average precision</th><th>Status</th></tr>` +
+    (bl.grid || []).map(r => `<tr><td>${(100 * r.weight_logistic)}% logistic / ${(100 * (1 - r.weight_logistic))}% trees</td>
+      <td class="right">${r.cv_auc}</td><td class="right">${r.cv_average_precision}</td>
+      <td class="muted">${bl.shipped === false ? 'comparator, not shipped' : ''}</td></tr>`).join('') +
+    `<tr><td colspan="4" class="muted">${esc(bl.why_not_shipped || '')}</td></tr>`;
+  const pi = (M.permutation_importance || {}).rows || [];
+  $('perm').innerHTML = `<tr><th>feature</th><th class="right">mean AUC drop when shuffled across games</th>
+      <th class="right">largest drop seen</th><th>reading</th></tr>` +
+    pi.map(r => `<tr><td><b>${esc(r.feature)}</b></td>
+      <td class="right">${num(r.auc_drop_mean, 4)}</td><td class="right">${num(r.auc_drop_max, 4)}</td>
+      <td class="muted">${r.auc_drop_mean <= 0 ? 'no measurable reliance' : 'the fitted model uses this column'}</td></tr>`).join('') +
+    `<tr><td colspan="4" class="muted">${esc((M.permutation_importance || {}).method || '')}</td></tr>`;
   $('gap').innerHTML = `<b>${M.honesty.grouped_vs_random_auc_gap}</b> AUC points (random minus grouped).
     A negative value means the random split scored lower in this comparison; neither result is a formal bound,
     and this difference alone does not establish whether within-game dependence inflated performance.`;

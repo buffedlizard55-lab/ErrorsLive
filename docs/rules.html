@@ -9,20 +9,28 @@
 <body>
 <header class="nav"><div class="nav-inner"></div></header>
 <main>
-  <h1>Official scoring rules &amp; RBI</h1>
-  <p class="lede">The rules page uses MLB's <b>2026 Official Baseball Rules</b> and its official stat glossaries.
-  Rule titles and page numbers below are from the PDF's table of contents; the linked rulebook is the authority for
-  full wording. The RBI notes on this site are conditional explanations, not automated rulings.</p>
+  <h1>Official scoring rules &amp; RBI — the verified text</h1>
+  <p class="lede">The quotations on this page were read from MLB's own <b>2026 Official Baseball Rules</b> PDF
+  (192 pages, <code>mktg.mlbstatic.com</code>) and are reproduced verbatim, with the printed page number for each.
+  Every claim on this site that touches scoring or RBI resolves to one of these paragraphs. The RBI notes shown on the
+  Live board and the alert console remain <b>conditional explanations</b>: the rule tells you what the official scorer
+  is required to consider, not what a particular scorer decided.</p>
+  <div class="truth"><b>How these quotations were verified.</b> The PDF's text was read from the publisher's file and
+  cross-checked against the document's own table of contents, which lists each Rule 9 section with its printed page
+  (9.01 → 106, 9.04 → 115, 9.05 → 115, 9.12 → 127, 9.16 → 134). The page links below open the official PDF at the
+  matching page. Where this project summarises rather than quotes, the summary is labelled as a summary.</div>
 
   <h2>Relevant sections in the 2026 rulebook</h2>
   <div class="scroll"><table>
     <tr><th>Rule</th><th>Official section title</th><th class="right">PDF page</th><th>Relevance</th></tr>
     <tr><td><b>9.01</b></td><td>Official Scorer (General Rules)</td><td class="right">106</td>
-      <td>Scorer judgment and responsibility</td></tr>
+      <td>Scorer authority; the preliminary → final (24h) → appeal (72h) clock that defines when a decision can still change</td></tr>
+    <tr><td><b>9.05</b></td><td>Base Hits</td><td class="right">115</td>
+      <td>The hit / fielder's-choice boundary: no hit when a runner is forced out, or would have been forced out except for a fielding error</td></tr>
     <tr><td><b>9.04</b></td><td><b>Runs Batted In</b></td><td class="right">115</td>
       <td>When the batter receives an RBI and when exceptions apply</td></tr>
     <tr><td><b>9.12</b></td><td><b>Errors</b></td><td class="right">127</td>
-      <td>Official error scoring</td></tr>
+      <td>Official error scoring: misplay (fumble, muff or wild throw), ordinary effort, and what is <i>not</i> an error</td></tr>
     <tr><td><b>9.16</b></td><td>Earned Runs and Runs Allowed</td><td class="right">134</td>
       <td>Separate pitcher statistics affected by scoring changes</td></tr>
   </table></div>
@@ -45,8 +53,95 @@
     </div>
   </div>
 
-  <h2>Important error-play exception in Rule 9.04</h2>
-  <div class="truth gold"><b>Do not turn the glossary summary into an automatic ruling.</b> Rule 9.04(a)(3) is an exception reference relevant to error-play RBI questions, but this page does not reproduce its operative conditions. The official 2026 PDF at page 115 is controlling. The full page was not independently extracted in this review, so verify the exact text and the play's counterfactual directly with the linked rulebook and official scorer before applying the exception.</div>
+  <h2>The rule that decides the brief's RBI question — Rule 9.04, pages 115–116</h2>
+  <div class="truth gold"><b>Verbatim, 2026 Official Baseball Rules, Rule 9.04 (<i>Runs Batted In</i>), pages 115–116
+  (the rule opens on 115; subdivisions (b) and (c) are carried on 116):</b>
+    <blockquote>“A run batted in is a statistic credited to a batter whose action at bat causes one or more runs to
+    score, as set forth in this Rule 9.04.</blockquote>
+    <blockquote>(a) The Official Scorer shall credit the batter with a run batted in for every run that scores
+    (1) unaided by an error and as part of a play begun by the batter's safe hit (including the batter's home run),
+    sacrifice bunt, sacrifice fly, infield out or fielder's choice, unless Rule 9.04(b) applies;
+    (2) by reason of the batter becoming a runner with the bases full (because of a base on balls, an award of first
+    base for being touched by a pitched ball or for interference, obstruction, or shift restriction violation); or
+    (3) when, before two are out, an error is made on a play on which a runner from third base ordinarily would
+    score.</blockquote>
+    <blockquote>(b) The Official Scorer shall not credit a run batted in (1) when the batter grounds into a force
+    double play or a reverse-force double play; or (2) when a fielder is charged with an error because the fielder
+    muffs a throw at first base that would have completed a force double play.</blockquote>
+    <blockquote>(c) The Official Scorer's judgment must determine whether a run batted in shall be credited for a run
+    that scores when a fielder holds the ball or throws to a wrong base. Ordinarily, if the runner keeps going, the
+    Official Scorer should credit a run batted in; if the runner stops and takes off again when the runner notices the
+    misplay, the Official Scorer should credit the run as scored on a fielder's choice.”</blockquote>
+    <p style="margin:10px 0 0"><a class="btn" href="https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf#page=115" target="_blank" rel="noopener">Read Rule 9.04 in the official PDF (opens at page 115) ↗</a></p>
+  </div>
+  <div class="grid cols2">
+    <div class="card"><h3>So: does an error mean no RBI?</h3>
+      <p class="muted">Not always — and that is the point of Rule 9.04(a)(3). If the scorer charges an error but the
+      run would have scored anyway from third base with fewer than two outs, the batter is credited with an RBI. The
+      common “error ⇒ no RBI” summary in the glossary describes 9.04(a)(1) (“unaided by an error”); it is not the whole
+      rule. A run that scores <i>because</i> of the error, with two outs, or on a force double play, is not an RBI
+      ((b)(1) and (b)(2)).</p></div>
+    <div class="card"><h3>Hit or fielder's choice?</h3>
+      <p class="muted">Rule 9.05(b)(1), page 118: “The Official Scorer shall not credit a base hit when a: (1) runner is
+      forced out by a batted ball, or would have been forced out except for a fielding error.” That sentence is the
+      hit-versus-fielder's-choice boundary the model's four classes sit on. Rule 9.05(a) Comment (pages 117–118) adds:
+      “In applying Rule 9.05(a), the Official Scorer shall always give the batter the benefit of the doubt.”
+      <a href="https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf#page=118" target="_blank" rel="noopener">Open the PDF at page 118 ↗</a></p></div>
+  </div>
+
+  <h2>The scorer's real clock — Rule 9.01(a), pages 107–108</h2>
+  <p class="lede" style="font-size:.95rem">This is the authoritative answer to “can we see a pending scoring decision?”
+  The rule names the phases a decision passes through. A public feed can show the first and last of them; it never
+  shows the queue.</p>
+  <div class="truth"><blockquote>“Upon conclusion of an event in the field requiring a scorer's judgment, the Official
+    Scorer will first make a ‘preliminary’ judgment call, generally using best efforts to do so in a timely fashion in
+    line with the general pace of play, and no later than the start of the next plate appearance. Within 24 hours after
+    a game concludes or is suspended, the Official Scorer will, at his or her discretion, render such preliminary
+    judgments as ‘final,’ or revise the initial judgment call to become a final judgment. A Major League player or Club
+    may request that the Commissioner's designee review a final judgment call of an Official Scorer made in a game in
+    which such player or Club participated, by notifying the Office of the Commissioner in writing or by approved
+    electronic means within 72 hours of a judgment becoming final. The Commissioner's designee shall have access to all
+    relevant and available video and, after considering any evidence he wishes to consider, may order a change in a
+    final judgment call if he determines that the final judgment of the Official Scorer was clearly erroneous. No
+    judgment decision shall be changed thereafter.”</blockquote>
+    <p style="margin:10px 0 0">The quoted clock is the text of Rule 9.01(a) on printed page 108 (the rule opens on page
+    106 and the authority passage below ends at printed 107). Rule 9.01 also states the scorer's authority in the same words the model's
+    honesty block uses: “The Official Scorer shall have sole authority to make all decisions concerning application of
+    Rule 9 that involve judgment, such as whether a batter's advance to first base is the result of a hit or an error.”
+    <a class="btn" href="https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf#page=106" target="_blank" rel="noopener">Read Rule 9.01 (page 106) ↗</a></p>
+  </div>
+  <div class="scroll"><table>
+    <tr><th>Phase</th><th>What the rule says</th><th>What this project can observe</th></tr>
+    <tr><td><b>Preliminary</b></td><td>Made during play, generally no later than the start of the next plate appearance</td>
+      <td>Statcast <code>hitData</code> present with no <code>result.eventType</code> — a feed state, not a queue</td></tr>
+    <tr><td><b>Final or revised</b></td><td>Within 24 hours after the game concludes or is suspended</td>
+      <td>A later capture showing an added or changed <code>eventType</code>, <code>rbi</code> or description</td></tr>
+    <tr><td><b>Appeal</b></td><td>A Club may ask the Commissioner's designee to review within 72 hours of finality; a change requires “clearly erroneous”</td>
+      <td>Nothing in the feed announces an appeal; only a later value change is visible</td></tr>
+    <tr><td><b>Closed</b></td><td>“No judgment decision shall be changed thereafter.”</td>
+      <td>A stable value across captures — evidence, not proof, that the window closed</td></tr>
+  </table></div>
+
+  <h2>What an error is — Rule 9.12, page 127</h2>
+  <div class="truth"><blockquote>“An error is a statistic charged against a fielder whose action has assisted the team
+    on offense, as set forth in this Rule 9.12. (a) The Official Scorer shall charge an error against any fielder:
+    (1) whose misplay (fumble, muff or wild throw) prolongs the time at bat of a batter, prolongs the presence on the
+    bases of a runner or permits a runner to advance one or more bases, unless, in the judgment of the Official Scorer,
+    such fielder deliberately permits a foul fly to fall safe with a runner on third base before two are out in order
+    that the runner on third shall not score after the catch;”</blockquote>
+    <p style="margin:10px 0 0">The same rule's Comment (printed pages 128–129; the quotations below span both) bounds the judgment the model is trying to predict:
+    “Slow handling of the ball that does not involve mechanical misplay shall not be construed as an error… The Official
+    Scorer shall not score mental mistakes or misjudgments as errors unless a specific rule prescribes otherwise. A
+    fielder's mental mistake that leads to a physical misplay… shall not be considered a mental mistake for purposes of
+    this rule and the Official Scorer shall charge a fielder committing such a mistake with an error… The Official
+    Scorer shall not charge an error to a fielder who incorrectly throws to the wrong base on a play.”
+    <a class="btn" href="https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf#page=127" target="_blank" rel="noopener">Read Rule 9.12 (page 127) ↗</a></p>
+  </div>
+  <p class="note"><b>Why that matters for a model.</b> “Ordinary effort”, “in the judgment of the Official Scorer” and
+  “mechanical misplay” are judgment standards. Contact physics (exit velocity, launch angle, distance, trajectory,
+  hardness) cannot see where the fielders stood, how hard the ball was hit relative to the play, or whether the
+  fielder's first step was clean. That is exactly why the model publishes a ranking with a stated precision — and why
+  the site never prints a probability as though it were a ruling.</p>
 
   <h2>How to read the site's candidate RBI notes</h2>
   <p class="muted">On the <a href="live.html">Live Board</a>, a note appears for a scored run with a runner on second or third. These are conditional prompts based on available feed context; the feed does not establish the counterfactual required to settle an RBI.</p>
