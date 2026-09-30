@@ -236,6 +236,35 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
   CLI **row for row** on the committed fixture — call, score, base/out state and notes). The row-parity check was
   mutation-tested: re-introducing the RISP-only gate fails it.
 
+### 2026-09-30 session (3) — the audit made robust to its own live data, and PR #9 merged
+
+- **Pass 1 — what production showed.** [PR #9](https://github.com/buffedlizard55-lab/ErrorsLive/pull/9) was opened
+  and its first `audit` run passed, and then the scheduled collector ran *on the pull request itself* and committed
+  refreshed `data/ingest/` artifacts, advancing the branch head underneath the run that had just passed. Re-running
+  the suite on that head failed three checks.
+- **Pass 2 — two defects, both surfaced by this project's own CI rather than by inspection.**
+  (a) **The cleaning record was checked against a live total.** Section N of `tests/test_pipeline.py` compared
+  `data/ingest/ruling_changes_cleaning.json` against the *whole* of `data/ingest/ruling_changes.csv`, so the first
+  legitimate observation the watcher appended — one `description` difference, game 849843 at-bat 4,
+  2026-09-30T05:28:01Z — failed `rows_before − rows_dropped == rows_after == len(ledger)` and the two counts derived
+  from it. The record describes the ledger **as it stood at `cleaned_utc`**; it is now compared against that slice,
+  with two further checks that the artifact the cleaning removed (`status: '' → scored`) has not come back and that
+  every post-clean row carries its own official feed URL and play id. Nine earlier bot-triggered audit runs had
+  failed for this same reason — the ledger was growing exactly as a live feed is supposed to.
+  (b) **A pull request could never reach a green head.** `.github/workflows/ingest.yml` collected on
+  `push: branches: ['arena/**']`, so every push left the branch head as a commit authored by the ingest bot, and a
+  workflow run started by that bot has to be approved by a human under this repository's settings. The head's audit
+  run sat at `action_required` with zero jobs and the PR at `UNSTABLE`; the approve and `workflow_dispatch`
+  endpoints both return `403 Resource not accessible by integration` for this token, so it could not be unblocked
+  from here. Collection now runs on `push: branches: [main]` plus `workflow_dispatch`, and the workflow says why.
+  A branch under review keeps an authored head whose audit runs, and the data lands where GitHub Pages builds.
+- **Pass 3 — merge.** `origin/main` had moved on by seven CI commits since the branch point, so the merge conflicted
+  in exactly the five files those runs rewrite (`ruling_changes.csv`, `ruling_snapshot.csv`,
+  `ruling_watch_status.json`, `docs/data/alerts.json`, `docs/data/ruling_changes.json`); each was resolved to the
+  newer observation. Regenerating the derived data then corrected two `rbi_rule_note` strings that main's CI had
+  rewritten with the pre-verification wording — the same stale claim session (2) had removed. PR #9 was merged as
+  `c49e200`, and the `audit` workflow concluded **success** both on that merge commit and on `main`.
+
 ## Limitations and next steps
 
 1. ~~**Rule 9.04(a)(3) full-text verification remains open.**~~ **Closed 2026-09-30.** The full 2026 rulebook text was read (TOC page map plus running text) and Rule 9.04(a)(1)–(3), (b)(1)–(2), (c), Rule 9.05(b)(1) and Comment, Rule 9.12(a)(1) and Comment, and Rule 9.01(a) are quoted verbatim on `docs/rules.html`, each linked to the official PDF at its printed page. The one remaining caveat: `tests/test_pipeline.py` asserts those quotations against the page copy, not against a live re-fetch of the PDF (this sandbox cannot reach `mktg.mlbstatic.com`), so a future edition changing the wording would need the quotation and the test updated together.
@@ -273,5 +302,19 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
    request `UNSTABLE` — nine such runs failed outright before the ledger-cleaning record was scoped to its own
    timestamp, and the last two were never started at all. The audit on an agent-authored commit does run, and it
    is the check to read; the full suite was also re-run locally on every bot commit, and it passes.
+15. **The ingest's no-loop guard is a substring match on the whole commit message.** The merge commit for PR #9
+   quotes `[ci-data]` in its body, so the `ingest` run on `main` was suppressed by a false positive. Match a
+   dedicated trailer (for example `X-CI-Data: true`) instead of the message body, so describing the marker in prose
+   cannot switch collection off.
+16. **A fresh full ingest cannot be started from an agent session.** Collection now runs on `main` and on
+   `workflow_dispatch` only, and the token available here cannot dispatch (`403`). Refreshing
+   `data/ingest/games.csv` and `probe_report.json` mid-session therefore needs the Actions tab → `ingest` → *Run
+   workflow*; the 15-minute `ruling-watch` and 30-minute `live-refresh` schedules still refresh `main` unattended.
+17. **The sandbox's toolchain and git history are not durable across a workspace reset.** After one, both
+   `python3 -m pip install --break-system-packages -r requirements.txt` (the interpreter is PEP 668 externally
+   managed, and the pinned numpy/scipy/scikit-learn versions matter for `check_repro.py`) and
+   `git fetch --unshallow` were needed before anything could be verified — the clone came back shallow, which made
+   `git merge-base` report no common ancestor with `main` and GitHub report the PR as `DIRTY`. Check
+   `git rev-parse --is-shallow-repository` first if a merge suddenly looks conflicted for no reason.
 
-See `docs/roadmap.html` for the ordered backlog and evidence ledger. Next evidence and reliability work: extract and review the complete 2026 Rule 9.04 text; smoke-test the deployed Pages site in a real browser; monitor scheduled workflow delivery and feed failures; and expand external model validation before using the score beyond review triage.
+See `docs/roadmap.html` for the ordered backlog and evidence ledger. Next evidence and reliability work: smoke-test the deployed Pages site in a real browser (the 2026 Rule 9.04 text was extracted and verified verbatim against the official PDF in the previous session); probe every overturned review for video rather than only the 17 run-impact candidates (backlog item 9); make the ingest's no-loop guard match a dedicated trailer instead of the commit-message body; and expand external model validation before using the score beyond review triage.
