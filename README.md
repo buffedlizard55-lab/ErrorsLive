@@ -160,7 +160,7 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
 
 - **Pass 1 — implementation:** built the official-data collector, classifier, live score, replay/video index, pages, and scheduled workflows.
 - **Pass 2 — evidence and edge cases:** corrected scoring/RBI wording, separated feed-state observation from claims about a scorer queue, labelled run-impact rows as heuristic candidates, and published grouped OOF average precision/top-risk-band metrics.
-- **Pass 3 — final acceptance:** in progress until the rebuilt artifacts, complete offline audit suite, page-data contracts, workflow configuration, and PR/merge state are verified. Results and any blockers will be updated before finishing.
+- **Pass 3 — final acceptance:** completed after the offline rebuild, byte/numerical reproducibility gate, A–H audit, workflow YAML parse, JavaScript checks, static-route smoke test, and review of the latest endpoint-probe evidence. Remaining evidence limits are listed below; GitHub PR [#7](https://github.com/buffedlizard55-lab/LiveScoringErrors/pull/7) is the authoritative record for review and merge state.
 
 ## Limitations and next steps
 
@@ -172,6 +172,6 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
 6. **CORS and reachability are endpoint-specific.** The probe report generated 2026-09-30T03:07:45Z records HTTP 200 and `Access-Control-Allow-Origin: *` for one schedule request and one game-feed request sent with the GitHub Pages origin. Those sampled responses pass the header check; they are not a full browser test or a guarantee of future availability. The page keeps a timestamped static snapshot as fallback.
 7. **Refreshes are best-effort, not real time.** The browser polls live games about every two minutes; GitHub Actions refreshes the fallback every 30 minutes and observes active ruling feeds every 15 minutes, with a daily recent-final recheck. GitHub schedule delays, API changes, rate limits, or failed credentials/network can leave a stale snapshot; failures are written to status files.
 8. **Video is not universal and is not re-hosted.** The current 17 candidate rows have watch/download links from the video probe, but other plays and the 2014 archive may have missing, dead, or unresolved links. Link presence is not evidence that a run was removed.
-9. **PR/merge completion is not implied by this README.** The session branch is fixed by Arena. The pull request and merge status will be reported only after GitHub confirms those actions.
+9. **PR/merge state is recorded in GitHub, not inferred from local files.** The session branch is fixed by Arena; see [PR #7](https://github.com/buffedlizard55-lab/LiveScoringErrors/pull/7) for its checks and authoritative merge status.
 
 See `docs/roadmap.html` for the ordered backlog and evidence ledger. Next evidence and reliability work: extract and review the complete 2026 Rule 9.04 text; smoke-test the deployed Pages site in a real browser; monitor scheduled workflow delivery and feed failures; and expand external model validation before using the score beyond review triage.
