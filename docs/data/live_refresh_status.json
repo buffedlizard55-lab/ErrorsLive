@@ -1,6 +1,6 @@
 {
  "ok": false,
- "attempted_utc": "2026-09-30T16:11:09Z",
+ "attempted_utc": "2026-09-30T18:16:03Z",
  "exit_code": 1,
  "error": "One or more game feeds failed; the previous complete snapshot was retained.",
  "failure_count": 3,
@@ -18,6 +18,6 @@
    "error": "IndexError: list index out of range"
   }
  ],
- "previous_snapshot_utc": "2026-09-30T04:26:45Z",
+ "previous_snapshot_utc": "2026-09-30T05:36:33Z",
  "snapshot_retained": true
 }
