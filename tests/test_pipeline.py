@@ -389,6 +389,15 @@ check('an unruled ball in a live feed is carried as a PENDING decision, not drop
 check('the pending row still carries the model answers and the RBI stakes it can',
       prow['top_pick'] in ('hit', 'out', 'error', 'fielders_choice') and prow['risp'] == 1
       and prow['run_scored'] == 1 and prow['rbi_if_error'].startswith('NO RBI'))
+spec_wr = importlib.util.spec_from_file_location('watch_rulings', ROOT / 'tools/watch_rulings.py')
+wr = importlib.util.module_from_spec(spec_wr)
+spec_wr.loader.exec_module(wr)
+check('watch_rulings.team_abbr accepts the hydrated and un-hydrated schedule shapes',
+      wr.team_abbr({'abbreviation': 'NYY', 'name': 'New York Yankees'}) == 'NYY'
+      and wr.team_abbr({'name': 'Boston Red Sox'}) == 'Boston Red Sox'
+      and wr.team_abbr({}) == '' and wr.team_abbr(None) == '')
+check('watch_rulings requests hydrated teams (the un-hydrated shape caused a real CI crash)',
+      'hydrate=team' in (ROOT / 'tools/watch_rulings.py').read_text())
 check('watch_rulings.py always leaves a readable status file',
       'ruling_watch_status.json' in (ROOT / 'tools/watch_rulings.py').read_text()
       and 'run_safely' in (ROOT / 'tools/watch_rulings.py').read_text())

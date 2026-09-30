@@ -62,18 +62,32 @@ def get_json(url, timeout=45, retries=3):
     raise RuntimeError('unreachable')
 
 
+def team_abbr(team):
+    """Abbreviation if the payload hydrates it, else the club name.
+
+    The schedule endpoint only returns `abbreviation` when `hydrate=team` is requested; the first CI
+    run of this tool crashed on the un-hydrated shape (its own status file recorded the KeyError),
+    so both fields are accepted and the abbreviation is preferred when present.
+    """
+    if not isinstance(team, dict):
+        return ''
+    if team.get('abbreviation'):
+        return str(team['abbreviation'])
+    return str(team.get('name') or team.get('teamName') or '')
+
+
 def schedule(start, end):
     """Official schedule, one row per final game (postponed/suspended games are skipped and logged)."""
     url = (f'{STATS}/api/v1/schedule?sportId=1&startDate={start}&endDate={end}'
-           f'&gameType=R,F,D,L,W')
+           f'&gameType=R,F,D,L,W&hydrate=team')
     out = []
     for d in get_json(url).get('dates', []):
         for g in d['games']:
             if g['status']['abstractGameState'] != 'Final':
                 continue
             out.append({'pk': g['gamePk'], 'date': d['date'],
-                        'away': g['teams']['away']['team']['abbreviation'],
-                        'home': g['teams']['home']['team']['abbreviation'],
+                        'away': team_abbr(g['teams']['away']['team']),
+                        'home': team_abbr(g['teams']['home']['team']),
                         'gameType': g.get('gameType', 'R')})
     return out
 
