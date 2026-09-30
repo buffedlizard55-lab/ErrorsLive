@@ -115,8 +115,9 @@
     stood; do not treat the score's training-fit range as a theoretical ceiling.</li>
     <li><b>Context is partly modelled, not fully.</b> Base state, outs, inning and batter/pitcher handedness are
     in; score differential and leverage index are not.</li>
-    <li><b>The refresh is scheduled, not streaming.</b> The probe report records wildcard CORS for one MLB
-    schedule request, but the live game-feed endpoint must also be tested from a browser origin. The browser
+    <li><b>The refresh is scheduled, not streaming.</b> The 2026-09-30 probe report records HTTP 200 and wildcard
+    CORS for one MLB schedule request and one game-feed request sent with the GitHub Pages origin. This is a
+    header-level observation, not a full browser session or a guarantee of future availability. The browser
     attempts direct access and falls back to the last committed snapshot; GitHub schedules are best-effort.</li>
   </ul>
 
@@ -130,9 +131,9 @@
     <tr><td class="right">2</td><td>Find a trustworthy pre-review score source for each challenge and validate it against replay video</td>
       <td>a defensible count of runs removed rather than heuristic candidates</td>
       <td>the captured feed reports final review state; a pre-review record is not yet available</td></tr>
-    <tr><td class="right">3</td><td>Test MLB feed CORS from a browser-origin request, and retain the response evidence for both
-      schedule and game-feed endpoints</td><td>confirm direct live-board access vs. snapshot fallback</td>
-      <td>feed CORS has not been independently probed in this review</td></tr>
+    <tr><td class="right">3</td><td>Smoke-test the deployed GitHub Pages board in a real browser and retain console/network evidence
+      for schedule and game-feed reads</td><td>confirm direct live-board behavior vs. snapshot fallback</td>
+      <td>the probe confirms one wildcard-CORS response per endpoint; a real browser run and continued availability are not guaranteed</td></tr>
     <tr><td class="right">4</td><td>Add fielder alignment / hang time / sprint speed features</td>
       <td>the biggest single lever on error recall</td><td>a data source MLB does not publish publicly</td></tr>
     <tr><td class="right">5</td><td>Extend the modeling window to prior seasons only after checking feature and label coverage</td>
@@ -159,7 +160,7 @@
     returns, so the claims about videos and old seasons are checkable.</li>
   </ul>
 </main>
-<footer><div class="inner"><span>Pass log and backlog reviewed 2026-09-30. Rule 9.04 page 115 and game-feed CORS remain open verification items.</span>
+<footer><div class="inner"><span>Pass log and backlog reviewed 2026-09-30. Rule 9.04 page 115 and a real-browser Pages smoke test remain open.</span>
 <span>Own the Outcome</span></div></footer>
 <script src="site.js"></script>
 </body>

@@ -804,6 +804,13 @@ check('the reproducibility gate is wired to tools/check_repro.py',
 check('the reproducibility policy is stated in the README (byte-exact tables, tolerated model digits)',
       'byte-identical' in rd_early and '1e-6' in rd_early and 'BLAS' in rd_early)
 rd = (ROOT / 'README.md').read_text()
+probe_report = load_json(ROOT / 'data/ingest/probe_report.json')
+probed = {r.get('probe') for r in probe_report.get('records', [])}
+check('committed endpoint evidence distinguishes schedule and game-feed CORS probes',
+      {'cors_statsapi', 'cors_statsapi_feed'} <= probed)
+check('site copy treats the sampled CORS headers as evidence, not a guarantee or browser QA',
+      'one game-feed request' in rd and 'not a full browser test' in rd
+      and 'real-browser Pages smoke test remain open' in rdm)
 check('README restates the brief before any results (Section 0 rule)',
       'Section 0' in rd and 'VERBATIM' in rd)
 brief_opening = ("I want to investigate if there is a way to accurately predict the outcome of any scoring decision "
