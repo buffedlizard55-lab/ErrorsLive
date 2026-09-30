@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-29T23:40:03Z",
+ "generated_utc": "2026-09-30T00:46:09Z",
  "note": "Observed official-endpoint behaviour; committed by .github/workflows/probe.yml. Re-run: gh workflow run probe.yml",
  "records": [
   {
@@ -245,9 +245,9 @@
    "probe": "schedule_watcher_window",
    "url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-09-09&endDate=2026-09-29&gameType=R,F,D,L,W",
    "status": 200,
-   "bytes": 334669,
+   "bytes": 334712,
    "games": 255,
-   "final_games": 252
+   "final_games": 253
   },
   {
    "probe": "cors_statsapi",
