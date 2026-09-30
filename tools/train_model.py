@@ -8,19 +8,21 @@ Two models, both logistic (interpretable, calibrated, monotone where the rule is
              scorer chooses between, so the published bars always sum to 100%.
 
 DATASET
-  Prefers docs/data/bip_official.csv — every batted ball in every game of an ingested date window,
-  produced from the official feed by tools/ingest_official.py. That is a *whole-population window
-  sample*, so its error rate is the real in-season base rate.
+  Prefers docs/data/bip_official.csv — every captured batted ball in the configured model window
+  (`data/ingest/plan.json` -> `bip_window`), produced from the official feed by
+  tools/ingest_official.py. This is a whole-population sample for that selected window, not the
+  full collector window or all MLB seasons.
   Falls back to docs/data/bip.csv — the original 24-game error-ENRICHED audit sample (documented as
   enriched everywhere it is shown; never described as the population rate).
 
 VALIDATION (the part that decides whether any of this is worth reading)
-  * GroupKFold by game_pk. Plays inside one game share a park, a pitcher mix, a scorer and a weather
-    night; random-fold CV lets the model memorise those and inflates the score. The grouped number
-    is the one published as the headline; the random-fold number is printed beside it as the
-    optimistic bound, and the gap between them is published too.
+  * GroupKFold by game_pk. Plays inside one game share a park, pitcher mix, scorer and weather
+    night. Every StandardScaler is fitted on that fold's training games only. A stratified random-
+    fold score is shown as a comparator, not presumed to be an upper or lower bound.
   * Group bootstrap (resample whole games) for coefficient/AUC intervals.
-  * Calibration table + isotonic/Platt re-calibration check.
+  * Calibration table from grouped out-of-fold predictions. Isotonic Brier is nested by game: the
+    calibrator is trained on inner-fold predictions from outer-training games and evaluated only on
+    the outer held-out games.
   * Correlation block: point-biserial / Spearman per feature, plus mutual information, so a reader can
     see how much each input actually carries before trusting any coefficient.
   * Model-free empirical surface (trajectory x exit-velocity band error rate) with Wilson intervals,
@@ -44,7 +46,7 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.feature_selection import mutual_info_classif
 from sklearn.isotonic import IsotonicRegression
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (brier_score_loss, log_loss, roc_auc_score)
+from sklearn.metrics import (average_precision_score, brier_score_loss, log_loss, roc_auc_score)
 from sklearn.model_selection import GroupKFold, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import spearmanr
@@ -173,43 +175,66 @@ def main():
     base = LogisticRegression(max_iter=4000, C=1.0).fit(Xs, yb)
     multi = LogisticRegression(max_iter=5000, C=1.0).fit(Xs, yc)
 
-    # ---- cross-validation: grouped (headline) + random (optimistic bound) ----
-    def cv_oof(splitter, stratify_on=yb):
-        oof = np.zeros((len(yb), len(CLASSES))) if stratify_on is not None else None
-        return oof
-
+    # ---- cross-validation: grouped (headline) + stratified random (comparator) ----
     n_splits = 5
     gkf = GroupKFold(n_splits=n_splits)
     oof_g = np.zeros(len(yb))
     oof_g_m = np.zeros((len(yb), len(CLASSES)))
-    for tr, te in gkf.split(Xs, yb, groups):
-        m = LogisticRegression(max_iter=4000, C=1.0).fit(Xs[tr], yb[tr])
-        oof_g[te] = m.predict_proba(Xs[te])[:, 1]
-        mm = LogisticRegression(max_iter=5000, C=1.0).fit(Xs[tr], yc[tr])
-        oof_g_m[te] = mm.predict_proba(Xs[te])
+    for tr, te in gkf.split(X, yb, groups):
+        # Preprocessing is learned from training games only. Fitting the scaler above the CV loop
+        # would let held-out feature distributions influence every fold's coefficients.
+        fold_sc = StandardScaler().fit(X[tr])
+        xtr, xte = fold_sc.transform(X[tr]), fold_sc.transform(X[te])
+        m = LogisticRegression(max_iter=4000, C=1.0).fit(xtr, yb[tr])
+        oof_g[te] = m.predict_proba(xte)[:, 1]
+        mm = LogisticRegression(max_iter=5000, C=1.0).fit(xtr, yc[tr])
+        oof_g_m[te] = mm.predict_proba(xte)
+
     skf = StratifiedKFold(n_splits, shuffle=True, random_state=SEED)
     oof_r = np.zeros(len(yb))
     oof_r_m = np.zeros((len(yb), len(CLASSES)))
-    for tr, te in skf.split(Xs, yb):
-        m = LogisticRegression(max_iter=4000, C=1.0).fit(Xs[tr], yb[tr])
-        oof_r[te] = m.predict_proba(Xs[te])[:, 1]
-        mm = LogisticRegression(max_iter=5000, C=1.0).fit(Xs[tr], yc[tr])
-        oof_r_m[te] = mm.predict_proba(Xs[te])
+    for tr, te in skf.split(X, yb):
+        fold_sc = StandardScaler().fit(X[tr])
+        xtr, xte = fold_sc.transform(X[tr]), fold_sc.transform(X[te])
+        m = LogisticRegression(max_iter=4000, C=1.0).fit(xtr, yb[tr])
+        oof_r[te] = m.predict_proba(xte)[:, 1]
+        mm = LogisticRegression(max_iter=5000, C=1.0).fit(xtr, yc[tr])
+        oof_r_m[te] = mm.predict_proba(xte)
 
     auc_g = float(roc_auc_score(yb, oof_g))
     auc_r = float(roc_auc_score(yb, oof_r))
+    ap_g = float(average_precision_score(yb, oof_g))
+    ap_r = float(average_precision_score(yb, oof_r))
     ll_g = float(log_loss(yb, oof_g, labels=[0, 1]))
     br_g = float(brier_score_loss(yb, oof_g))
-    iso = IsotonicRegression(out_of_bounds='clip').fit(oof_g, yb)
-    br_iso = float(brier_score_loss(yb, iso.predict(oof_g)))
+
+    # Nested grouped calibration. Each outer test game's labels and features are absent from both
+    # the base-model fits and the isotonic calibrator that predicts that game's probabilities.
+    iso_oof = np.zeros(len(yb))
+    calibration_inner_splits = 4
+    for outer_tr, outer_te in gkf.split(X, yb, groups):
+        x_outer = X[outer_tr]
+        y_outer = yb[outer_tr]
+        g_outer = groups[outer_tr]
+        inner_oof = np.zeros(len(outer_tr))
+        inner_gkf = GroupKFold(n_splits=calibration_inner_splits)
+        for inner_tr, inner_te in inner_gkf.split(x_outer, y_outer, g_outer):
+            inner_sc = StandardScaler().fit(x_outer[inner_tr])
+            inner_model = LogisticRegression(max_iter=4000, C=1.0).fit(
+                inner_sc.transform(x_outer[inner_tr]), y_outer[inner_tr])
+            inner_oof[inner_te] = inner_model.predict_proba(
+                inner_sc.transform(x_outer[inner_te]))[:, 1]
+        calibrator = IsotonicRegression(out_of_bounds='clip').fit(inner_oof, y_outer)
+        iso_oof[outer_te] = calibrator.predict(oof_g[outer_te])
+    br_iso = float(brier_score_loss(yb, iso_oof))
 
     # gradient-boosted comparison, same grouped folds, to test whether nonlinearity earns its keep
     gb_oof = np.zeros(len(yb))
-    for tr, te in gkf.split(Xs, yb, groups):
+    for tr, te in gkf.split(X, yb, groups):
         gbm = HistGradientBoostingClassifier(max_iter=200, learning_rate=0.05, random_state=SEED,
                                              early_stopping=False)
-        gbm.fit(Xs[tr], yb[tr])
-        gb_oof[te] = gbm.predict_proba(Xs[te])[:, 1]
+        gbm.fit(X[tr], yb[tr])
+        gb_oof[te] = gbm.predict_proba(X[te])[:, 1]
     auc_gb = float(roc_auc_score(yb, gb_oof))
 
     # ---- group bootstrap ----
@@ -316,8 +341,25 @@ def main():
                         'recall': round(float((oof_g_m[sel].argmax(axis=1) == i).mean()), 4)}
     top1 = oof_g_m.argmax(axis=1)
     error_nominated = int((top1 == CLASSES.index('error')).sum())
+    top_risk = []
+    for pct in (1, 5, 10):
+        n_top = max(1, int(math.ceil(len(yb) * pct / 100)))
+        chosen = np.argsort(oof_g, kind='mergesort')[-n_top:]
+        found = int(yb[chosen].sum())
+        precision = found / n_top
+        top_risk.append({'top_percent': pct, 'n': n_top, 'errors_found': found,
+                         'precision': round(precision, 5),
+                         'recall': round(found / int(yb.sum()), 5),
+                         'lift_over_base_rate': round(precision / float(yb.mean()), 3)})
 
     p_all = 1 / (1 + np.exp(-(base.intercept_[0] + Xs @ base.coef_[0])))
+    plan_path = ROOT / 'data' / 'ingest' / 'plan.json'
+    try:
+        model_window = json.loads(plan_path.read_text()).get('bip_window') or {}
+    except (OSError, json.JSONDecodeError):
+        model_window = {}
+    window_label = (f"{model_window['start']} through {model_window['end']}"
+                    if model_window.get('start') and model_window.get('end') else 'configured model window')
     meta = {
         'dataset': dataset, 'dataset_kind': kind, 'n_bip': n_raw, 'n_model': len(rows),
         'n_quarantined': n_raw - len(rows),
@@ -326,16 +368,20 @@ def main():
         'games': int(len(set(groups))), 'features': feat_names,
         'design': ('Features are contact physics + pre-pitch context only. Nothing that exists only '
                    'because a ruling was made (fielding credits, error flags, hit/error column) is '
-                   'used as an input. Cross-validation is GroupKFold by game_pk; the random-fold '
-                   'number is reported beside it as the optimistic bound.'),
-        'dataset_note': ('Whole-population window sample: every batted ball in every game of the '
-                         'ingested window, so the error rate is the real in-season base rate.'
+                   'used as an input. Cross-validation is GroupKFold by game_pk with fold-local StandardScaler '
+                   'preprocessing; stratified random folds are shown as a comparator, with no '
+                   'assumed ordering.'),
+        'dataset_note': (f'Whole-population model-window sample ({window_label}): every captured '
+                         'batted ball in each selected game, so the error rate is the observed class '
+                         'rate for this window; it is not the full collector-window rate.'
                          if kind == 'official' else
                          'ERROR-ENRICHED stratified 24-game audit sample: the error rate here is NOT '
                          'the population rate (see data/TARGETS.json and docs/methods.html).'),
+        'target_scope': ('Predicts the final macro_class recorded in the captured official feed. This '
+                         'is not a model of whether an initial scorer decision will later be changed.'),
     }
     primary = {
-        'target': 'P(ruled a fielding error)',
+        'target': 'P(final feed macro_class = error)',
         'feature_names': feat_names,
         'feature_spec': spec,
         'scaler_mean': [round(float(v), 10) for v in sc.mean_],
@@ -347,9 +393,13 @@ def main():
                       for i, n in enumerate(feat_names)},
         'cv_auc': round(auc_g, 4), 'cv_auc_ci95': [round(v, 4) for v in auc_ci],
         'cv_auc_random_kfold': round(auc_r, 4),
+        'cv_average_precision_grouped': round(ap_g, 5),
+        'cv_average_precision_random_kfold': round(ap_r, 5),
         'cv_auc_gradient_boosting_grouped': round(auc_gb, 4),
         'cv_logloss': round(ll_g, 6), 'cv_brier_raw': round(br_g, 6),
         'cv_brier_isotonic': round(br_iso, 6),
+        'calibration_method': 'nested GroupKFold: inner-game OOF fit, outer-game holdout evaluation',
+        'calibration_inner_splits': calibration_inner_splits,
         'n_splits': n_splits, 'group': 'game_pk',
     }
     multiclass = {
@@ -361,14 +411,18 @@ def main():
         'per_class': per_class,
     }
     honesty = {
-        'what_this_is': ('A pre-ruling estimate of how likely a batted ball is to be charged as an '
-                         'error, plus the distribution over the four macro classes. It ranks; it '
+        'what_this_is': ('A pre-decision estimate for the final macro-class recorded in the feed, '
+                         'plus the distribution over four classes. It is not trained to predict '
+                         'whether an initial scoring call will later be reclassified. It ranks; it '
                          'does not decide.'),
         'oof_top1_accuracy': round(float((top1 == yc).mean()), 4),
         'oof_error_nominated_top1': error_nominated,
         'oof_error_recall': per_class['error']['recall'],
-        'p_error_observed_min_x100': round(float(100 * p_all.min()), 3),
-        'p_error_observed_max_x100': round(float(100 * p_all.max()), 3),
+        'p_error_training_min_x100': round(float(100 * p_all.min()), 3),
+        'p_error_training_max_x100': round(float(100 * p_all.max()), 3),
+        'top_error_risk_bands_oof': top_risk,
+        'cv_average_precision_grouped': round(ap_g, 5),
+        'cv_average_precision_random_kfold': round(ap_r, 5),
         'calibration_oof': cal, 'p_error_percentile_grid': grid,
         'grouped_vs_random_auc_gap': round(auc_r - auc_g, 4),
         'baseline_error_rate': round(float(yb.mean()), 5),
@@ -385,10 +439,12 @@ def main():
     OUT.write_text(json.dumps(out, indent=1))
     print(json.dumps({'auc_grouped': primary['cv_auc'], 'auc_ci': primary['cv_auc_ci95'],
                       'auc_random': primary['cv_auc_random_kfold'],
+                      'average_precision_grouped': primary['cv_average_precision_grouped'],
+                      'average_precision_baseline': round(float(yb.mean()), 5),
                       'auc_gbm_grouped': primary['cv_auc_gradient_boosting_grouped'],
                       'brier': primary['cv_brier_raw'], 'top1': honesty['oof_top1_accuracy'],
                       'error_nominated_top1': error_nominated,
-                      'p_error_max_x100': honesty['p_error_observed_max_x100'],
+                      'p_error_max_x100': honesty['p_error_training_max_x100'],
                       'features': len(feat_names)}, indent=1))
     return 0
 

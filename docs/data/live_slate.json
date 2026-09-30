@@ -25,9 +25,9 @@
   "errors": 1,
   "risp_runs_at_stake": 9,
   "overturned_reviews": 2,
-  "pending_rulings": 0,
   "top_pick_agreement": "85/110",
-  "failures": 0
+  "failures": 0,
+  "unresolved_in_feed": 0
  },
  "flags": [],
  "failures": [],
@@ -78,9 +78,9 @@
      "review_type": "",
      "play_id": "1101d66a-0061-3f91-bb19-42ed74b82b58",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=1101d66a-0061-3f91-bb19-42ed74b82b58",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849845/feed/live"
     },
     {
@@ -353,9 +353,9 @@
      "review_type": "",
      "play_id": "0011de1f-3071-3315-9219-7c347c0163a0",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=0011de1f-3071-3315-9219-7c347c0163a0",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849845/feed/live"
     },
     {
@@ -1070,9 +1070,9 @@
      "review_type": "",
      "play_id": "92b5d040-38b8-3812-8a74-af75eaf6617c",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=92b5d040-38b8-3812-8a74-af75eaf6617c",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849845/feed/live"
     },
     {
@@ -1379,9 +1379,9 @@
      "review_type": "",
      "play_id": "29f38552-151c-3d65-bdbd-3173fa3d6f3a",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=29f38552-151c-3d65-bdbd-3173fa3d6f3a",
-     "rbi_if_error": "no RBI (HR is never an error)",
-     "rbi_if_hit": "RBI (home run scores the batter)",
-     "rbi_if_fc": "RBI (home run scores the batter)",
+     "rbi_if_error": "not a valid alternative: the official play is a home run",
+     "rbi_if_hit": "home-run RBI if the batter and runners score",
+     "rbi_if_fc": "home-run RBI if the batter and runners score",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849845/feed/live"
     },
     {
@@ -1561,9 +1561,9 @@
      "review_type": "",
      "play_id": "1101d66a-0061-3f91-bb19-42ed74b82b58",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=1101d66a-0061-3f91-bb19-42ed74b82b58",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849845/feed/live"
     },
     {
@@ -1836,9 +1836,9 @@
      "review_type": "",
      "play_id": "0011de1f-3071-3315-9219-7c347c0163a0",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=0011de1f-3071-3315-9219-7c347c0163a0",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849845/feed/live"
     },
     {
@@ -2553,9 +2553,9 @@
      "review_type": "",
      "play_id": "92b5d040-38b8-3812-8a74-af75eaf6617c",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=92b5d040-38b8-3812-8a74-af75eaf6617c",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849845/feed/live"
     },
     {
@@ -2862,9 +2862,9 @@
      "review_type": "",
      "play_id": "29f38552-151c-3d65-bdbd-3173fa3d6f3a",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=29f38552-151c-3d65-bdbd-3173fa3d6f3a",
-     "rbi_if_error": "no RBI (HR is never an error)",
-     "rbi_if_hit": "RBI (home run scores the batter)",
-     "rbi_if_fc": "RBI (home run scores the batter)",
+     "rbi_if_error": "not a valid alternative: the official play is a home run",
+     "rbi_if_hit": "home-run RBI if the batter and runners score",
+     "rbi_if_fc": "home-run RBI if the batter and runners score",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849845/feed/live"
     },
     {
@@ -3007,12 +3007,12 @@
    "url": "https://statsapi.mlb.com/api/v1.1/game/849845/feed/live",
    "savant": "https://baseballsavant.mlb.com/gamefeed?gamePk=849845",
    "batted_balls": 43,
-   "pending_rulings": 0,
    "errors": 0,
    "top_pick_agrees": 36,
    "risp_runs_at_stake": 4,
    "overturned_reviews": 1,
-   "verified": 1
+   "verified": 1,
+   "unresolved_in_feed": 0
   },
   {
    "game_pk": 849849,
@@ -3094,9 +3094,9 @@
      "review_type": "",
      "play_id": "f398488f-8fa3-3aa2-a750-c3df19d7854d",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=f398488f-8fa3-3aa2-a750-c3df19d7854d",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849849/feed/live"
     },
     {
@@ -3335,9 +3335,9 @@
      "review_type": "",
      "play_id": "765d3836-4b4c-3cc5-958b-cfe0cdb8e123",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=765d3836-4b4c-3cc5-958b-cfe0cdb8e123",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849849/feed/live"
     },
     {
@@ -3959,9 +3959,9 @@
      "review_type": "",
      "play_id": "7c57dd69-467c-334e-a4c1-741eb2412f0a",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=7c57dd69-467c-334e-a4c1-741eb2412f0a",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849849/feed/live"
     },
     {
@@ -4744,9 +4744,9 @@
      "review_type": "MF",
      "play_id": "0c105549-433b-38c3-8aca-2cebb62897d3",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=0c105549-433b-38c3-8aca-2cebb62897d3",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849849/feed/live"
     },
     {
@@ -4960,9 +4960,9 @@
      "review_type": "",
      "play_id": "f398488f-8fa3-3aa2-a750-c3df19d7854d",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=f398488f-8fa3-3aa2-a750-c3df19d7854d",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849849/feed/live"
     },
     {
@@ -5201,9 +5201,9 @@
      "review_type": "",
      "play_id": "765d3836-4b4c-3cc5-958b-cfe0cdb8e123",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=765d3836-4b4c-3cc5-958b-cfe0cdb8e123",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849849/feed/live"
     },
     {
@@ -5825,9 +5825,9 @@
      "review_type": "",
      "play_id": "7c57dd69-467c-334e-a4c1-741eb2412f0a",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=7c57dd69-467c-334e-a4c1-741eb2412f0a",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849849/feed/live"
     },
     {
@@ -6610,9 +6610,9 @@
      "review_type": "MF",
      "play_id": "0c105549-433b-38c3-8aca-2cebb62897d3",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=0c105549-433b-38c3-8aca-2cebb62897d3",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849849/feed/live"
     },
     {
@@ -6755,12 +6755,12 @@
    "url": "https://statsapi.mlb.com/api/v1.1/game/849849/feed/live",
    "savant": "https://baseballsavant.mlb.com/gamefeed?gamePk=849849",
    "batted_balls": 54,
-   "pending_rulings": 0,
    "errors": 1,
    "top_pick_agrees": 38,
    "risp_runs_at_stake": 4,
    "overturned_reviews": 1,
-   "verified": 1
+   "verified": 1,
+   "unresolved_in_feed": 0
   },
   {
    "game_pk": 849851,
@@ -7114,9 +7114,9 @@
      "review_type": "",
      "play_id": "f12ef416-d7a6-35a9-b0ad-f9ec4d429642",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=f12ef416-d7a6-35a9-b0ad-f9ec4d429642",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849851/feed/live"
     },
     {
@@ -7568,9 +7568,9 @@
      "review_type": "",
      "play_id": "f12ef416-d7a6-35a9-b0ad-f9ec4d429642",
      "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=f12ef416-d7a6-35a9-b0ad-f9ec4d429642",
-     "rbi_if_error": "NO RBI (run exists only because of the error)",
-     "rbi_if_hit": "RBI",
-     "rbi_if_fc": "RBI possible (run-scoring fielder\u2019s choice; scorer\u2019s call under Rule 9.04)",
+     "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+     "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
+     "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
      "source": "https://statsapi.mlb.com/api/v1.1/game/849851/feed/live"
     },
     {
@@ -7679,12 +7679,12 @@
    "url": "https://statsapi.mlb.com/api/v1.1/game/849851/feed/live",
    "savant": "https://baseballsavant.mlb.com/gamefeed?gamePk=849851",
    "batted_balls": 13,
-   "pending_rulings": 0,
    "errors": 0,
    "top_pick_agrees": 11,
    "risp_runs_at_stake": 1,
    "overturned_reviews": 0,
-   "verified": 1
+   "verified": 1,
+   "unresolved_in_feed": 0
   },
   {
    "game_pk": 849843,
@@ -7711,12 +7711,12 @@
    "url": "https://statsapi.mlb.com/api/v1.1/game/849843/feed/live",
    "savant": "https://baseballsavant.mlb.com/gamefeed?gamePk=849843",
    "batted_balls": 0,
-   "pending_rulings": 0,
    "errors": 0,
    "top_pick_agrees": 0,
    "risp_runs_at_stake": 0,
    "overturned_reviews": 0,
-   "verified": 1
+   "verified": 1,
+   "unresolved_in_feed": 0
   }
  ]
 }

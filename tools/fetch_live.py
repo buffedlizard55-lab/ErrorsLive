@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Collect the current slate from the official feed and publish a live board artifact.
 
-The site's live page has two paths: it tries the official Stats API straight from the browser, and if
-that is blocked (a cross-origin rule, a locked-down network, or an offline reviewer) it falls back to
-`docs/data/live_now.json` — this file. The fallback is refreshed by CI, so the page is never blank and
-never invents a score.
+The Pages site reads a timestamped snapshot produced by this collector. GitHub Actions refreshes
+`docs/data/live_slate.json` on a best-effort schedule; `docs/data/live_now.json` is an explicitly
+labelled offline fixture, not a live fallback. If a refresh fails, the previous snapshot is retained
+and the failure is recorded separately rather than replacing real data with a fixture.
 
 Every number here comes from the same `tools/live_score.py` scorer the audit suite pins against
 `docs/site.js`, so the browser board and the CLI board cannot disagree.
@@ -12,12 +12,13 @@ Every number here comes from the same `tools/live_score.py` scorer the audit sui
 Usage
   python3 tools/fetch_live.py                          # today's slate (US Eastern game day)
   python3 tools/fetch_live.py --date 2026-09-28
-  python3 tools/fetch_live.py --pk 823441 --out docs/data/live_now.json
-Offline (fixture) mode, used by the audit suite and by reviewers without a network route:
-  python3 tools/fetch_live.py --feed data/source/feed_823441.json --out /tmp/live_now.json
+  python3 tools/fetch_live.py --pk 823441 --out /tmp/live.json
+Offline (fixture) mode, used by the audit suite; it is not a current-game fallback:
+  python3 tools/fetch_live.py --feed data/source/feed_823441.json --out /tmp/live_fixture.json
 """
 import argparse, csv, json, sys
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -28,12 +29,13 @@ STATS = 'https://statsapi.mlb.com'
 SAVANT = 'https://baseballsavant.mlb.com'
 
 
-def game_day(date_arg=None):
-    """MLB's game day is US Eastern; a UTC date is a day ahead after 8pm ET."""
+def game_day(date_arg=None, now=None):
+    """Return MLB's current calendar day in America/New_York, including DST transitions."""
     if date_arg:
         return date_arg
-    et = datetime.now(timezone.utc) - timedelta(hours=4)
-    return et.date().isoformat()
+    eastern = ZoneInfo('America/New_York')
+    current = now or datetime.now(timezone.utc)
+    return current.astimezone(eastern).date().isoformat()
 
 
 def slate(day):
@@ -76,8 +78,8 @@ def split_matchup(matchup):
 def game_stats(rows):
     """Per-game counts the pages print, derived only from the scored rows."""
     played = [r for r in rows if r.get('status') == 'scored']
-    pending = [r for r in rows if r.get('status') == 'pending_ruling']
-    return {'batted_balls': len(played), 'pending_rulings': len(pending),
+    unresolved = [r for r in rows if r.get('status') == 'no_event_type_yet']
+    return {'batted_balls': len(played), 'unresolved_in_feed': len(unresolved),
             'errors': sum(1 for r in played if r['official_call'] == 'error'),
             'top_pick_agrees': sum(r['model_agrees_with_call'] for r in played),
             'risp_runs_at_stake': sum(1 for r in played if r['risp'] and r['run_scored']),
@@ -91,8 +93,8 @@ def main(argv=None):
     ap.add_argument('--pk', type=int, action='append', help='specific gamePk(s)')
     ap.add_argument('--feed', action='append', help='offline fixture feed JSON (repeatable)')
     ap.add_argument('--max-games', type=int, default=20)
-    ap.add_argument('--out', default='docs/data/live_now.json')
-    ap.add_argument('--csv-out', default='docs/data/live_now.csv')
+    ap.add_argument('--out', default='docs/data/live_slate.json')
+    ap.add_argument('--csv-out', default='docs/data/live_slate.csv')
     a = ap.parse_args(argv)
 
     day = '' if a.feed else game_day(a.date)
@@ -169,10 +171,9 @@ def main(argv=None):
     doc = {
         'mode': 'offline-fixture' if offline else 'live-slate',
         'generated_utc': '' if offline else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
-        'note': ('Built by tools/run_all.py from the committed fixture feed: this is the labelled '
-                 'fallback the page shows when a browser cannot reach statsapi.mlb.com. CI replaces '
-                 'this file with the real slate (tools/fetch_live.py, mode live-slate).'
-                 if offline else 'Fetched from the official schedule + feed endpoints by CI.'),
+        'note': ('Built by tools/run_all.py from a committed historical fixture for offline '
+                 'reproducibility; it is not a current game or a live fallback.'
+                 if offline else 'Fetched from the official schedule + feed endpoints.'),
         'game_day': day, 'game_date': day,
         'source': (f'{STATS}/api/v1/schedule?sportId=1&startDate={day}&endDate={day}'
                    if not offline else 'data/source/feed_823441.json'),
@@ -189,8 +190,8 @@ def main(argv=None):
             'errors': sum(1 for r in played if r['official_call'] == 'error'),
             'risp_runs_at_stake': sum(1 for r in played if r['risp'] and r['run_scored']),
             'overturned_reviews': sum(1 for r in played if r.get('review_overturned') is True),
-            'pending_rulings': sum(1 for g in games for r in g.get('model_rows', [])
-                                   if r.get('status') == 'pending_ruling'),
+            'unresolved_in_feed': sum(1 for g in games for r in g.get('model_rows', [])
+                                     if r.get('status') == 'no_event_type_yet'),
             'top_pick_agreement': f'{agree}/{len(played)}' if played else '0/0',
             'failures': len(failures),
         },
@@ -205,16 +206,17 @@ def main(argv=None):
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(doc, indent=1))
     flat = [{k: v for k, v in r.items() if not isinstance(v, (list, dict))} for r in played]
-    if flat:
-        keys = []
-        for r in flat:
-            for k in r:
-                if k not in keys:
-                    keys.append(k)
-        with open(ROOT / a.csv_out, 'w', newline='') as f:
-            w = csv.DictWriter(f, fieldnames=keys)
-            w.writeheader()
-            w.writerows(flat)
+    keys = []
+    for r in flat:
+        for k in r:
+            if k not in keys:
+                keys.append(k)
+    if not keys:
+        keys = ['game_pk', 'at_bat', 'status', 'event_type', 'official_call', 'description']
+    with open(ROOT / a.csv_out, 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=keys)
+        w.writeheader()
+        w.writerows(flat)
     print(json.dumps(doc['summary'], indent=1))
     print(f'wrote {a.out} and {a.csv_out}')
     return 0

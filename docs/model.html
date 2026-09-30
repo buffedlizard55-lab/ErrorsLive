@@ -10,10 +10,12 @@
 <header class="nav"><div class="nav-inner"></div></header>
 <main>
   <h1>The model, and the evidence for it</h1>
-  <p class="lede">Everything on this page is recomputed from <code>docs/data/model.json</code>, which is itself built
-  by <code>tools/train_model.py</code> from the committed batted-ball CSV. The audit suite
-  (<code>tests/test_pipeline.py</code>) re-derives the headline numbers from the same CSV on every push, so a page
-  that drifts from the data fails CI instead of quietly misleading you.</p>
+  <p class="lede">Everything on this page is recomputed from <code>docs/data/model.json</code>, fitted by
+  <code>tools/train_model.py</code> from the committed batted-ball CSV. The model estimates whether a play's
+  <em>final captured feed label</em> is an error; it does not estimate the chance that an initial call will later
+  be changed. The audit suite re-derives the metrics on every push.</p>
+  <div class="note"><b>Scope:</b> this is a late-season 2026, single-season model. The reported cross-validation holds
+  out games from the same collected window; it is not a test on future seasons, unseen scorers or a complete season.</div>
 
   <div id="headline"><div class="card">Loading model.json…</div></div>
 
@@ -23,21 +25,28 @@
   <h2>How it is validated</h2>
   <div class="grid cols2">
     <div class="card"><h3>Grouped cross-validation (the headline)</h3><p class="muted">
-      Folds are split by <b>game</b>, not by play. Plays inside one game share a park, a pitching mix, a weather
-      night and a scorer; random folds let the model memorise those and inflate the score. The grouped number is
-      what this site quotes, and the random-fold number is shown beside it as the optimistic bound, with the gap
-      published (<span id="gap">–</span>).</p></div>
+      Folds are split by <b>game</b>, not by play. Each fold's <code>StandardScaler</code> is fitted on that
+      fold's training games only. A stratified random-fold score is shown as a comparator; it is not assumed to
+      be an upper or lower bound. The signed random-minus-grouped difference is published
+      (<span id="gap">–</span>).</p></div>
     <div class="card"><h3>Uncertainty</h3><p class="muted">
       Intervals come from a 1,000-draw <b>group bootstrap</b> (whole games resampled with replacement), so the
       interval reflects how much the estimate would move with a different set of games — the honest source of
       variance here, not the number of plays.</p></div>
   </div>
+  <h2>High-score review queue — grouped out-of-fold results</h2>
+  <p class="muted">If the score is used to prioritize a limited number of plays, this table shows the observed error
+  precision and recall among the highest-scored fraction of held-out games. The baseline precision is the model
+  window's error rate. These are retrospective same-window results, not a promise about future seasons.</p>
+  <div class="scroll"><table class="compact" id="topRisk"></table></div>
+
   <div class="grid cols2" style="margin-top:12px">
-    <div class="card"><h3>Calibration — is the number trustworthy where it is large?</h3>
+    <div class="card"><h3>Calibration — do predicted probabilities track observed rates?</h3>
       <div class="scroll"><table class="compact" id="cal"></table></div>
-      <p class="muted" style="margin-bottom:0">If the observed rate in a bin is far from the predicted mean, the
-      number is miscalibrated and must not be read as a probability. Isotonic re-calibration is fitted out-of-fold
-      and its Brier score published next to the raw one.</p></div>
+      <p class="muted" style="margin-bottom:0">The raw calibration table is grouped out-of-fold. A nested
+      GroupKFold isotonic Brier score is also reported: inner-fold predictions fit each calibrator, and the
+      outer held-out games evaluate it. <span id="calScores">Loading scores…</span> Isotonic calibration is a
+      diagnostic only; it is not applied to the deployed /100 score.</p></div>
     <div class="card"><h3>Does nonlinearity help?</h3>
       <p class="muted">A gradient-boosted tree model is trained on the same grouped folds purely as a check. If it
       cannot beat the logistic model, the extra machinery is not buying anything and the simpler, interpretable,
@@ -92,21 +101,28 @@ const $ = id => document.getElementById(id);
     (<b>${esc(m.n_quarantined)}</b> quarantined for an incomplete Statcast vector — never imputed), from
     <b>${esc(m.games)}</b> official games.
     Kept separate, and never mixed into the model, is the <b>24-game error-enriched audit sample</b>
-    (<code>docs/data/bip.csv</code>): it is <b>NOT self-weighting</b> — its 1.91% error rate is roughly double the
-    real rate — so it is used only as a hand-checkable audit set and for the historical verification ledger.
+    (<code>docs/data/bip.csv</code>): it is <b>NOT self-weighting</b> and its error rate is not a population
+    estimate, so it is used only as a hand-checkable audit set and historical verification ledger.
     ${K.ingested ? `The collector has ingested <b>${esc((K.ingested.games || 0).toLocaleString())}</b> games so far.` : ''}`;
   $('headline').innerHTML = `<div class="grid cols3">
-    ${kpiCard(p.cv_auc, `out-of-fold AUC — <b>GroupKFold by game</b> (${p.n_splits} folds)`) +
-      kpiCard(p.cv_auc_random_kfold, 'the same model under random folds — the optimistic bound') +
-      kpiCard(h.oof_top1_accuracy, 'out-of-fold top-1 accuracy over the four calls') +
+    ${kpiCard(p.cv_auc, `out-of-fold ROC AUC — <b>GroupKFold by game</b> (${p.n_splits} folds)`) +
+      kpiCard(p.cv_auc_random_kfold, 'stratified random-fold ROC AUC — comparator') +
+      kpiCard((100 * p.cv_average_precision_grouped).toFixed(3) + '%', `grouped out-of-fold average precision (prevalence baseline ${m.error_rate_pct}%)`) +
+      kpiCard((100 * h.oof_top1_accuracy).toFixed(2) + '%', 'out-of-fold top-1 accuracy over the four calls') +
       kpiCard(h.oof_error_nominated_top1, 'times the model named “error” as its top pick (out of ' + m.n_model.toLocaleString() + ')') +
       kpiCard(m.n_model.toLocaleString(), `batted balls modelled from ${m.games} games (${m.error_rate_pct}% ruled errors)`) +
       kpiCard(p.cv_auc_gradient_boosting_grouped, 'gradient-boosted trees on the same grouped folds')}
     </div>
     <p class="legend" style="margin-top:10px">Dataset: <code>${esc(m.dataset)}</code> — ${esc(m.dataset_note)}</p>`;
-  $('gap').innerHTML = `<b>${M.honesty.grouped_vs_random_auc_gap}</b> AUC points (random minus grouped) — a
-    negative number means the random-fold bound came out <i>lower</i>, so within-game leakage was not inflating the
-    headline. It is printed as it fell; nothing here was re-tuned to make the story tidier.`;
+  $('calScores').textContent = `Raw Brier ${p.cv_brier_raw}; nested isotonic Brier ${p.cv_brier_isotonic}.`;
+  $('topRisk').innerHTML = `<tr><th>Highest-score fraction</th><th class="right">held-out plays</th>
+    <th class="right">errors found</th><th class="right">precision</th><th class="right">recall</th><th class="right">lift vs prevalence</th></tr>` +
+    (h.top_error_risk_bands_oof || []).map(x => `<tr><td>top ${x.top_percent}%</td><td class="right">${x.n.toLocaleString()}</td>
+      <td class="right">${x.errors_found}</td><td class="right">${(100*x.precision).toFixed(2)}%</td>
+      <td class="right">${(100*x.recall).toFixed(1)}%</td><td class="right">${x.lift_over_base_rate}×</td></tr>`).join('');
+  $('gap').innerHTML = `<b>${M.honesty.grouped_vs_random_auc_gap}</b> AUC points (random minus grouped).
+    A negative value means the random split scored lower in this comparison; neither result is a formal bound,
+    and this difference alone does not establish whether within-game dependence inflated performance.`;
   $('gbm').innerHTML = `grouped AUC <b>${p.cv_auc_gradient_boosting_grouped}</b> for trees vs
     <b>${p.cv_auc}</b> for logistic regression.`;
   $('cal').innerHTML = `<tr><th>predicted P(error)</th><th class="right">n</th><th class="right">mean predicted</th><th class="right">observed rate</th></tr>` +
@@ -133,7 +149,7 @@ const $ = id => document.getElementById(id);
   $('ctx').innerHTML = `<tr><th>state</th><th class="right">n</th><th class="right">errors</th><th class="right">rate</th></tr>` +
     Object.entries(M.context_stats || {}).map(([k, v]) => `<tr><td>${esc(k)}</td><td class="right">${v.n.toLocaleString()}</td>
       <td class="right">${v.k}</td><td class="right">${v.p === null ? '–' : (100 * v.p).toFixed(2) + '%'}</td></tr>`).join('');
-  $('grid').innerHTML = `<tr><th>percentile of fitted balls</th><th class="right">P(error) ×100</th></tr>` +
+  $('grid').innerHTML = `<tr><th>percentile of grouped out-of-fold scores</th><th class="right">P(error) ×100</th></tr>` +
     h.p_error_percentile_grid.filter(g => g.percentile % 10 === 0).map(g =>
       `<tr><td>${g.percentile}th</td><td class="right">${(100 * g.p_error).toFixed(2)}</td></tr>`).join('');
   $('honesty').innerHTML = `<b>Honest summary.</b> ${esc(h.what_this_is)}

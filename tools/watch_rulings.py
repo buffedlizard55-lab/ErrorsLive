@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
-"""Watch official scoring decisions change — the 'pending scoring decision' half of the brief.
+"""Observe official play-by-play rulings and record changes between scheduled snapshots.
 
-A pending decision cannot be *seen*: MLB does not publish a queue of open scorer judgements. What can
-be seen, and what this tool records, is the moment a decision lands. Every run re-reads the official
-play-by-play for a rolling window of recent dates and compares each play's ruling against the last
-observation stored in `data/ingest/ruling_snapshot.csv`. When an eventType, its RBI or its description
-changes, the before/after pair is appended to `data/ingest/ruling_changes.csv` with the official URLs
-for the game, so the change is auditable by hand.
+MLB does not expose a queue of open scorer decisions, so this collector cannot claim to see whether
+a decision is officially pending. It can record a narrower, checkable fact: a batted-ball play had
+Statcast hitData while `result.eventType` was absent in one captured feed, and a later snapshot added
+or changed the eventType/RBI/description. The project labels that feed state `no_event_type_yet`; it
+is not proof of an internal scorer queue.
 
-That turns "was this decision still open?" into evidence: a ruling observed on day 1 and different on
-day 2 was, by definition, open in between — and the row shows exactly what the batter lost or gained
-under the official RBI rule (MLB Rules 9.04/9.12: a run that scores because of an error is not an RBI;
-the same run on a hit or a run-scoring fielder's choice can be).
+Each run reads current LIVE and FINAL games in a rolling date window, stores the feed state and
+contact/context fields, and appends a before/after observation when scoring fields change. It never
+infers a reason for the change; the official feed URL, RBI values, first-observation state and link to
+MLB's scoring-changes page are retained for review. RBI is a rule-dependent scoring judgement, not a
+categorical consequence of an error/hit/fielder's-choice label.
 
-The snapshot is a rolling window on purpose (default 21 days): a correction almost always lands within
-days of the game, and keeping only the live window stops the committed file from growing without bound.
-The changes table has no window — it is the permanent record.
+The snapshot itself is bounded to the configured rolling window. The change ledger is permanent.
 
 Usage
-  python3 tools/watch_rulings.py                     # rolling window around today, commit-ready output
+  python3 tools/watch_rulings.py                     # rolling window around today's Eastern date
   python3 tools/watch_rulings.py --days 30 --date 2026-09-29
 All endpoints are official MLB domains (statsapi.mlb.com).
 """
@@ -26,6 +24,7 @@ import argparse, csv, json, re
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
@@ -38,13 +37,25 @@ CHANGES = ROOT / 'data' / 'ingest' / 'ruling_changes.csv'
 FIELDS = ('liveData,plays,allPlays,result,eventType,event,rbi,description,about,inning,halfInning,'
           'atBatIndex,playEvents,playId,reviewDetails,isOverturned,reviewType,matchup,batter,pitcher,'
           'fullName,teams,away,home,abbreviation,gameData,datetime,officialDate,status,detailedState,'
-          'abstractGameState')
+          'abstractGameState,hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness,'
+          'hitCoordinates,coordX,coordY,count,outs')
 
 # Which plays are worth watching: the ones where a scorer's judgement decides whether the batter is
 # credited. A pitch-result or tag-up ruling cannot turn a hit into an error.
 BATTED = {'single', 'double', 'triple', 'home_run', 'field_out', 'force_out', 'field_error',
           'fielders_choice', 'fielders_choice_out', 'grounded_into_double_play', 'double_play',
           'sac_fly', 'sac_bunt', 'sac_fly_double_play', 'triple_play', 'fielders_choice_double_play'}
+
+
+WATCHABLE_STATES = {'Live', 'Final'}
+WATCH_FIELDS = ('event_type', 'rbi', 'description', 'status', 'reviewed', 'overturned', 'review_type')
+SCORING_CHANGES_URL = 'https://www.mlb.com/official-information/scoring-changes'
+
+
+def eastern_today(now=None):
+    """Return the official MLB calendar date in America/New_York, including DST transitions."""
+    current = now or datetime.now(timezone.utc)
+    return current.astimezone(ZoneInfo('America/New_York')).date()
 
 
 def get_json(url, timeout=45, retries=3):
@@ -76,50 +87,95 @@ def team_abbr(team):
     return str(team.get('name') or team.get('teamName') or '')
 
 
-def schedule(start, end):
-    """Official schedule, one row per final game (postponed/suspended games are skipped and logged)."""
+def schedule(start, end, active_only=False):
+    """Official schedule for live and final games; previews are not yet scoreable."""
     url = (f'{STATS}/api/v1/schedule?sportId=1&startDate={start}&endDate={end}'
            f'&gameType=R,F,D,L,W&hydrate=team')
     out = []
     for d in get_json(url).get('dates', []):
         for g in d['games']:
-            if g['status']['abstractGameState'] != 'Final':
+            status = g.get('status') or {}
+            abstract_state = status.get('abstractGameState', '')
+            if abstract_state not in WATCHABLE_STATES or (active_only and abstract_state != 'Live'):
                 continue
-            out.append({'pk': g['gamePk'], 'date': d['date'],
+            out.append({'pk': str(g['gamePk']), 'date': d['date'],
                         'away': team_abbr(g['teams']['away']['team']),
                         'home': team_abbr(g['teams']['home']['team']),
-                        'gameType': g.get('gameType', 'R')})
+                        'gameType': g.get('gameType', 'R'),
+                        'abstract_state': abstract_state,
+                        'state': status.get('detailedState', '')})
     return out
 
 
-def plays_of(game):
-    """Current official ruling for every scoring-relevant play in one game."""
-    pk = game['pk']
-    feed = get_json(f'{STATS}/api/v1.1/game/{pk}/feed/live?fields={FIELDS}')
+def review_of_play(play):
+    """Review metadata may live on the play or one of its playEvents."""
+    return (play.get('reviewDetails') or next(
+        (e['reviewDetails'] for e in (play.get('playEvents') or []) if e.get('reviewDetails')), {})) or {}
+
+
+def hit_data_of_play(play):
+    """Return the first Statcast hitData object present in the play's events."""
+    return next((e['hitData'] for e in (play.get('playEvents') or [])
+                 if isinstance(e, dict) and isinstance(e.get('hitData'), dict)), None)
+
+
+def plays_from_feed(game, feed):
+    """Parse a Stats API feed without network access, retaining feed-unresolved contact plays."""
     rows = []
-    for pi, p in enumerate(feed['liveData']['plays']['allPlays']):
-        et = p['result'].get('eventType', '')
-        rd = p.get('reviewDetails') or {}
-        if et not in BATTED and not rd:
+    for pi, p in enumerate(feed.get('liveData', {}).get('plays', {}).get('allPlays', [])):
+        result = p.get('result') or {}
+        event_type = result.get('eventType') or ''
+        review = review_of_play(p)
+        hit_data = hit_data_of_play(p)
+        if event_type not in BATTED and not review and hit_data is None:
             continue
-        pid = next((e.get('playId') for e in p.get('playEvents', []) if e.get('playId')), '')
+
+        about = p.get('about') or {}
+        matchup = p.get('matchup') or {}
+        bases = sorted({m.get('start') for r in p.get('runners', [])
+                        if isinstance(r, dict) and isinstance(r.get('movement'), dict)
+                        for m in [r['movement']] if m.get('start') in ('1B', '2B', '3B')})
+        outs = next((e.get('count', {}).get('outs') for e in (p.get('playEvents') or [])
+                     if isinstance(e, dict) and isinstance(e.get('count'), dict)
+                     and e['count'].get('outs') is not None), '')
+        play_id = next((e.get('playId') for e in (p.get('playEvents') or [])
+                        if isinstance(e, dict) and e.get('playId')), '')
+        status = ('scored' if event_type else
+                  'no_event_type_yet' if hit_data is not None else 'review_metadata_only')
         rows.append({
-            'game_pk': pk, 'date': game['date'], 'matchup': f"{game['away']} @ {game['home']}",
-            'at_bat': pi, 'play_id': pid, 'event_type': et,
-            'rbi': p['result'].get('rbi', ''), 'description': p['result'].get('description', '')[:400],
-            'batter': ((p.get('matchup') or {}).get('batter') or {}).get('fullName', ''),
-            'inning': (p.get('about') or {}).get('inning', ''),
-            'half': (p.get('about') or {}).get('halfInning', ''),
-            'reviewed': int(bool(rd)), 'overturned': int(bool(rd.get('isOverturned'))),
-            'review_type': rd.get('reviewType', ''),
+            'game_pk': str(game['pk']), 'date': game['date'],
+            'matchup': f"{game['away']} @ {game['home']}",
+            'game_state': game.get('abstract_state', ''),
+            'at_bat': str(about.get('atBatIndex', pi)), 'play_id': play_id,
+            'event_type': event_type, 'status': status,
+            'rbi': result.get('rbi', ''), 'description': result.get('description', '')[:400],
+            'batter': ((matchup.get('batter') or {}).get('fullName', '')),
+            'inning': about.get('inning', ''), 'half': about.get('halfInning', ''),
+            'reviewed': int(bool(review)),
+            'overturned': int(bool(review.get('isOverturned'))),
+            'review_type': review.get('reviewType', ''),
+            'launch_speed': (hit_data or {}).get('launchSpeed', ''),
+            'launch_angle': (hit_data or {}).get('launchAngle', ''),
+            'distance': (hit_data or {}).get('totalDistance', ''),
+            'trajectory': (hit_data or {}).get('trajectory', ''),
+            'hardness': (hit_data or {}).get('hardness', ''),
+            'bases_before': ','.join(bases) or '-', 'outs_before': outs,
         })
     return rows
+
+
+def plays_of(game):
+    """Fetch and parse the current official ruling state for one game."""
+    pk = game['pk']
+    feed = get_json(f'{STATS}/api/v1.1/game/{pk}/feed/live?fields={FIELDS}')
+    return plays_from_feed(game, feed)
 
 
 def load_snapshot():
     if not SNAP.exists() or not SNAP.stat().st_size:
         return {}
-    return {(r['game_pk'], r['at_bat']): r for r in csv.DictReader(open(SNAP))}
+    return {(str(r['game_pk']), str(r['at_bat'])): r
+            for r in csv.DictReader(open(SNAP, newline=''))}
 
 
 def write_csv(path, rows, keys):
@@ -130,25 +186,52 @@ def write_csv(path, rows, keys):
         w.writerows(rows)
 
 
+def transition_key(game_pk, at_bat, field, before, after, previous_change_utc=''):
+    """Deduplicate workflow retries without hiding a later recurrence of the same transition."""
+    return (str(game_pk), str(at_bat), field, before, after, previous_change_utc or '')
+
+
 CHANGE_KEYS = ['detected_utc', 'game_pk', 'date', 'matchup', 'inning', 'half', 'at_bat', 'play_id',
-               'batter', 'field', 'from', 'to', 'rbi_from', 'rbi_to', 'rbi_note', 'reviewed',
-               'overturned', 'review_type', 'feed_url', 'savant_url']
+               'batter', 'field', 'from', 'to', 'previous_last_changed_utc', 'first_observation_status',
+               'was_unresolved_in_feed', 'first_seen_utc', 'launch_speed', 'launch_angle', 'distance',
+               'trajectory', 'hardness', 'bases_before', 'outs_before', 'rbi_from', 'rbi_to',
+               'rbi_note', 'reviewed', 'overturned', 'review_type', 'feed_url', 'scoring_changes_url',
+               'savant_url']
+
+
+def append_changes(path, changes):
+    """Append new observations, creating the ledger on the first detected change."""
+    if not changes:
+        return
+    if path.exists() and path.stat().st_size:
+        with open(path, newline='') as f:
+            existing = list(csv.DictReader(f))
+    else:
+        existing = []
+    write_csv(path, existing + changes, CHANGE_KEYS)
+
+
+LAST_SUMMARY = {}
 
 
 def main(argv=None):
+    global LAST_SUMMARY
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--date', default=datetime.now(timezone.utc).date().isoformat(),
-                    help='anchor date (UTC today by default)')
+    ap.add_argument('--date', default=eastern_today().isoformat(),
+                    help='anchor date in America/New_York (Eastern today by default)')
     ap.add_argument('--days', type=int, default=21, help='rolling window length in days')
     ap.add_argument('--workers', type=int, default=12)
+    ap.add_argument('--active-only', action='store_true',
+                    help='fetch live games only (for frequent lightweight polling)')
     ap.add_argument('--dry-run', action='store_true', help='report without writing the snapshot')
     a = ap.parse_args(argv)
 
     anchor = date.fromisoformat(a.date)
     start = (anchor - timedelta(days=a.days - 1)).isoformat()
-    games = schedule(start, anchor.isoformat())
-    print(f'window {start}..{anchor}: {len(games)} final games', flush=True)
+    games = schedule(start, anchor.isoformat(), active_only=a.active_only)
+    mode = 'live-only' if a.active_only else 'live-and-final'
+    print(f'window {start}..{anchor}: {len(games)} games ({mode})', flush=True)
 
     rows, failures = [], []
     with ThreadPoolExecutor(max_workers=a.workers) as ex:
@@ -165,73 +248,100 @@ def main(argv=None):
     now_utc = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     print(f'fetched {len(rows)} scoring-relevant plays from {len(games)} games', flush=True)
     changes = []
-    changes_path = CHANGES if CHANGES.exists() else None
     seen = set()
-    if changes_path:
-        for r in csv.DictReader(open(changes_path)):
-            seen.add((r['game_pk'], r['at_bat'], r['field'], r['from'], r['to']))
+    if CHANGES.exists() and CHANGES.stat().st_size:
+        with open(CHANGES, newline='') as f:
+            for r in csv.DictReader(f):
+                seen.add(transition_key(r['game_pk'], r['at_bat'], r['field'], r['from'], r['to'],
+                                        r.get('previous_last_changed_utc', '')))
+
     for r in rows:
-        prev = old.get((r['game_pk'], r['at_bat']))
+        key = (str(r['game_pk']), str(r['at_bat']))
+        prev = old.get(key)
         if not prev:
             continue
-        for field in ('event_type', 'rbi', 'description'):
-            was, now = prev.get(field, ''), r.get(field, '')
-            if was == now:
+        for field in WATCH_FIELDS:
+            was, current = prev.get(field, ''), r.get(field, '')
+            if was == current:
                 continue
-            key = (r['game_pk'], r['at_bat'], field, was, now)
-            if key in seen:
+            previous_change_utc = (prev.get('last_changed_utc') or prev.get('last_seen_utc') or '')
+            change_key = transition_key(key[0], key[1], field, was, current, previous_change_utc)
+            if change_key in seen:
                 continue
+            first_status = prev.get('status') or (
+                'scored' if prev.get('event_type') else 'no_event_type_yet')
+            was_unresolved = int(first_status == 'no_event_type_yet')
             rbi_note = ''
             if field == 'event_type':
-                if was == 'field_error' and now in ('single', 'double', 'triple', 'home_run'):
-                    rbi_note = 'error -> hit: runs that an error alone produced now count for the batter'
-                elif now == 'field_error':
-                    rbi_note = 'hit/FC -> error: any run that depended on the misplay loses its RBI'
-                elif 'fielders_choice' in now and was == 'field_error':
-                    rbi_note = 'error -> fielder\u2019s choice: a run-scoring FC can carry an RBI'
+                rbi_note = ("The official feed eventType changed. Compare the recorded RBI values and "
+                            "check Rule 9.04 and MLB's scoring-changes log; this feed label alone does "
+                            'not decide the counterfactual RBI.')
+            elif field == 'rbi':
+                rbi_note = ("The official feed RBI field changed; verify the scoring rationale against "
+                            "the 2026 rulebook and MLB's scoring-changes log.")
             changes.append({
-                'detected_utc': now_utc, 'game_pk': r['game_pk'], 'date': r['date'],
+                'detected_utc': now_utc, 'game_pk': key[0], 'date': r['date'],
                 'matchup': r['matchup'], 'inning': r['inning'], 'half': r['half'],
-                'at_bat': r['at_bat'], 'play_id': r['play_id'], 'batter': r['batter'],
-                'field': field, 'from': was[:300], 'to': now[:300],
+                'at_bat': key[1], 'play_id': r['play_id'], 'batter': r['batter'],
+                'field': field, 'from': was[:300], 'to': current[:300],
+                'previous_last_changed_utc': previous_change_utc,
+                'first_observation_status': first_status,
+                'was_unresolved_in_feed': was_unresolved,
+                'first_seen_utc': prev.get('first_seen_utc', ''),
+                'launch_speed': prev.get('launch_speed', ''),
+                'launch_angle': prev.get('launch_angle', ''), 'distance': prev.get('distance', ''),
+                'trajectory': prev.get('trajectory', ''), 'hardness': prev.get('hardness', ''),
+                'bases_before': prev.get('bases_before', ''), 'outs_before': prev.get('outs_before', ''),
                 'rbi_from': prev.get('rbi', ''), 'rbi_to': r.get('rbi', ''), 'rbi_note': rbi_note,
                 'reviewed': r['reviewed'], 'overturned': r['overturned'],
                 'review_type': r['review_type'],
-                'feed_url': f'{STATS}/api/v1.1/game/{r["game_pk"]}/feed/live',
+                'feed_url': f'{STATS}/api/v1.1/game/{key[0]}/feed/live',
+                'scoring_changes_url': SCORING_CHANGES_URL,
                 'savant_url': (f'https://baseballsavant.mlb.com/sporty-videos?playId={r["play_id"]}'
                                if r['play_id'] else ''),
             })
-            print(f"CHANGE {r['date']} {r['matchup']} ab{r['at_bat']} {field}: {was!r} -> {now!r}",
+            seen.add(change_key)
+            print(f"CHANGE {r['date']} {r['matchup']} ab{key[1]} {field}: {was!r} -> {current!r}",
                   flush=True)
 
+    unresolved = sum(r['status'] == 'no_event_type_yet' for r in rows)
     print(f'observed {len(rows)} plays, {len(changes)} changes vs the stored snapshot, '
-          f'{len(failures)} fetch failures', flush=True)
+          f'{len(failures)} fetch failures; {unresolved} with hitData but no eventType', flush=True)
     if not a.dry_run:
         for r in rows:
-            prev = old.get((r['game_pk'], r['at_bat']))
+            key = (str(r['game_pk']), str(r['at_bat']))
+            prev = old.get(key)
             r['first_seen_utc'] = (prev or {}).get('first_seen_utc') or now_utc
-            # `last_seen_utc` only moves when the observation actually changes. Stamping it on every
-            # run would rewrite the whole multi-megabyte snapshot on each collection and bloat the
-            # repository with a new blob per run for no information gain.
-            unchanged = bool(prev) and all(prev.get(k, '') == r.get(k, '')
-                                           for k in ('event_type', 'rbi', 'description'))
-            r['last_seen_utc'] = (prev or {}).get('last_seen_utc') or now_utc if unchanged else now_utc
-        keep = [(r['game_pk'], r['at_bat']) for r in rows]
-        prev_only = [r for k, r in old.items() if k not in set(keep)]
+            unchanged = bool(prev) and all(prev.get(k, '') == r.get(k, '') for k in WATCH_FIELDS)
+            # This timestamp means last changed, not last fetched: restamping an unchanged historical
+            # window on each hourly run would create needless multi-megabyte Git blobs.
+            r['last_changed_utc'] = ((prev or {}).get('last_changed_utc')
+                                     or (prev or {}).get('last_seen_utc') or now_utc) if unchanged else now_utc
+        keep = {(str(r['game_pk']), str(r['at_bat'])) for r in rows}
+        prev_only = [r for key, r in old.items()
+                     if key not in keep and start <= r.get('date', '') <= anchor.isoformat()]
         write_csv(SNAP, rows + prev_only,
-                  ['game_pk', 'date', 'matchup', 'at_bat', 'play_id', 'event_type', 'rbi',
-                   'description', 'batter', 'inning', 'half', 'reviewed', 'overturned',
-                   'review_type', 'first_seen_utc', 'last_seen_utc'])
-        if changes:
-            existing = list(csv.DictReader(open(CHANGES))) if CHANGES.exists() else []
-            write_csv(CHANGES, existing + changes, CHANGE_KEYS)
+                  ['game_pk', 'date', 'matchup', 'game_state', 'at_bat', 'play_id', 'event_type',
+                   'status', 'rbi', 'description', 'batter', 'inning', 'half', 'reviewed',
+                   'overturned', 'review_type', 'launch_speed', 'launch_angle', 'distance',
+                   'trajectory', 'hardness', 'bases_before', 'outs_before', 'first_seen_utc',
+                   'last_changed_utc'])
+        append_changes(CHANGES, changes)
         print(f'wrote {SNAP.relative_to(ROOT)} ({len(rows) + len(prev_only)} rows) '
               f'and {CHANGES.relative_to(ROOT)} ({len(changes)} new)', flush=True)
-    summary = {'ok': True, 'window': [start, anchor.isoformat()], 'games': len(games),
-               'plays': len(rows), 'changes': len(changes), 'failures': failures[:20],
-               'detected_utc': now_utc}
+
+    summary = {'ok': not failures, 'mode': mode, 'window': [start, anchor.isoformat()],
+               'games': len(games), 'live_games': sum(g['abstract_state'] == 'Live' for g in games),
+               'final_games': sum(g['abstract_state'] == 'Final' for g in games),
+               'plays': len(rows), 'unresolved_in_feed': unresolved, 'changes': len(changes),
+               'failures': failures[:20], 'detected_utc': now_utc}
+    LAST_SUMMARY = summary
     print(json.dumps(summary))
-    return 0
+    return 1 if failures else 0
+
+
+def utc_now():
+    return datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 def run_safely(argv=None):
@@ -244,16 +354,25 @@ def run_safely(argv=None):
     status_path = ROOT / 'data' / 'ingest' / 'ruling_watch_status.json'
     try:
         rc = main(argv)
-        status = {'ok': rc == 0, 'exit_code': rc,
-                  'detected_utc': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}
+        status = {**LAST_SUMMARY, 'ok': rc == 0, 'exit_code': rc}
     except BaseException as e:                                   # noqa: BLE001 - report, never hide
-        status = {'ok': False, 'error': f'{type(e).__name__}: {e}'[:400],
-                  'detected_utc': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}
+        status = {'ok': False, 'exit_code': 1, 'error': f'{type(e).__name__}: {e}'[:400]}
         print('WATCH FAILED ' + json.dumps(status), flush=True)
     for name in ('ruling_snapshot.csv', 'ruling_changes.csv'):
         path = ROOT / 'data' / 'ingest' / name
         status[name] = {'rows': (sum(1 for _ in open(path)) - 1) if path.exists() else None,
                         'bytes': path.stat().st_size if path.exists() else 0}
+    previous = {}
+    if status_path.exists():
+        try:
+            previous = json.loads(status_path.read_text())
+        except json.JSONDecodeError:
+            previous = {}
+    stable = lambda value: {k: v for k, v in value.items() if k != 'detected_utc'}
+    if previous and stable(previous) == stable(status):
+        status['detected_utc'] = previous.get('detected_utc', utc_now())
+    else:
+        status['detected_utc'] = utc_now()
     status_path.parent.mkdir(parents=True, exist_ok=True)
     status_path.write_text(json.dumps(status, indent=1))
     print('WROTE ' + str(status_path.relative_to(ROOT)))

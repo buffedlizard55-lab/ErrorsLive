@@ -34,11 +34,12 @@
    "bat_L",
    "pitch_L"
   ],
-  "design": "Features are contact physics + pre-pitch context only. Nothing that exists only because a ruling was made (fielding credits, error flags, hit/error column) is used as an input. Cross-validation is GroupKFold by game_pk; the random-fold number is reported beside it as the optimistic bound.",
-  "dataset_note": "Whole-population window sample: every batted ball in every game of the ingested window, so the error rate is the real in-season base rate."
+  "design": "Features are contact physics + pre-pitch context only. Nothing that exists only because a ruling was made (fielding credits, error flags, hit/error column) is used as an input. Cross-validation is GroupKFold by game_pk with fold-local StandardScaler preprocessing; stratified random folds are shown as a comparator, with no assumed ordering.",
+  "dataset_note": "Whole-population model-window sample (2026-08-15 through 2026-09-27): every captured batted ball in each selected game, so the error rate is the observed class rate for this window; it is not the full collector-window rate.",
+  "target_scope": "Predicts the final macro_class recorded in the captured official feed. This is not a model of whether an initial scorer decision will later be changed."
  },
  "primary": {
-  "target": "P(ruled a fielding error)",
+  "target": "P(final feed macro_class = error)",
   "feature_names": [
    "EV_mph",
    "LA_deg",
@@ -268,16 +269,20 @@
     0.17988
    ]
   },
-  "cv_auc": 0.7809,
+  "cv_auc": 0.7808,
   "cv_auc_ci95": [
-   0.7543,
-   0.806
+   0.7542,
+   0.8056
   ],
-  "cv_auc_random_kfold": 0.7778,
+  "cv_auc_random_kfold": 0.7774,
+  "cv_average_precision_grouped": 0.02652,
+  "cv_average_precision_random_kfold": 0.02652,
   "cv_auc_gradient_boosting_grouped": 0.7757,
-  "cv_logloss": 0.042095,
+  "cv_logloss": 0.042093,
   "cv_brier_raw": 0.007837,
-  "cv_brier_isotonic": 0.007821,
+  "cv_brier_isotonic": 0.007867,
+  "calibration_method": "nested GroupKFold: inner-game OOF fit, outer-game holdout evaluation",
+  "calibration_inner_splits": 4,
   "n_splits": 5,
   "group": "game_pk"
  },
@@ -376,113 +381,141 @@
     "pitch_L": -0.0090490921
    }
   },
-  "cv_logloss": 0.543188,
+  "cv_logloss": 0.54315,
   "per_class": {
    "hit": {
     "n": 9735,
-    "auc": 0.8110880294488524,
-    "recall": 0.5148
+    "auc": 0.8111088287872477,
+    "recall": 0.5149
    },
    "error": {
     "n": 241,
-    "auc": 0.7816003871736944,
+    "auc": 0.7831130786747749,
     "recall": 0.0
    },
    "fielders_choice": {
     "n": 183,
-    "auc": 0.9641815591652957,
+    "auc": 0.9639848065481309,
     "recall": 0.0
    },
    "out": {
     "n": 20047,
-    "auc": 0.8086038414117022,
-    "recall": 0.8755
+    "auc": 0.808607799037161,
+    "recall": 0.8756
    }
   }
  },
  "honesty": {
-  "what_this_is": "A pre-ruling estimate of how likely a batted ball is to be charged as an error, plus the distribution over the four macro classes. It ranks; it does not decide.",
-  "oof_top1_accuracy": 0.747,
+  "what_this_is": "A pre-decision estimate for the final macro-class recorded in the feed, plus the distribution over four classes. It is not trained to predict whether an initial scoring call will later be reclassified. It ranks; it does not decide.",
+  "oof_top1_accuracy": 0.7471,
   "oof_error_nominated_top1": 0,
   "oof_error_recall": 0.0,
-  "p_error_observed_min_x100": 0.023,
-  "p_error_observed_max_x100": 9.326,
+  "p_error_training_min_x100": 0.023,
+  "p_error_training_max_x100": 9.326,
+  "top_error_risk_bands_oof": [
+   {
+    "top_percent": 1,
+    "n": 303,
+    "errors_found": 18,
+    "precision": 0.05941,
+    "recall": 0.07469,
+    "lift_over_base_rate": 7.446
+   },
+   {
+    "top_percent": 5,
+    "n": 1511,
+    "errors_found": 47,
+    "precision": 0.03111,
+    "recall": 0.19502,
+    "lift_over_base_rate": 3.899
+   },
+   {
+    "top_percent": 10,
+    "n": 3021,
+    "errors_found": 77,
+    "precision": 0.02549,
+    "recall": 0.3195,
+    "lift_over_base_rate": 3.195
+   }
+  ],
+  "cv_average_precision_grouped": 0.02652,
+  "cv_average_precision_random_kfold": 0.02652,
   "calibration_oof": [
    {
     "lo": 0,
     "hi": 0.005,
-    "n": 17565,
-    "mean_p": 0.00141,
+    "n": 17568,
+    "mean_p": 0.00139,
     "obs": 0.00165
    },
    {
     "lo": 0.005,
     "hi": 0.01,
-    "n": 2546,
-    "mean_p": 0.008,
-    "obs": 0.00628
+    "n": 2558,
+    "mean_p": 0.00799,
+    "obs": 0.00665
    },
    {
     "lo": 0.01,
     "hi": 0.015,
-    "n": 3948,
-    "mean_p": 0.01245,
-    "obs": 0.0152
+    "n": 3921,
+    "mean_p": 0.01244,
+    "obs": 0.01556
    },
    {
     "lo": 0.015,
     "hi": 0.02,
-    "n": 2686,
+    "n": 2700,
     "mean_p": 0.01725,
-    "obs": 0.01973
+    "obs": 0.01852
    },
    {
     "lo": 0.02,
     "hi": 0.03,
-    "n": 2382,
+    "n": 2369,
     "mean_p": 0.02403,
-    "obs": 0.02099
+    "obs": 0.02111
    },
    {
     "lo": 0.03,
     "hi": 0.04,
-    "n": 738,
-    "mean_p": 0.03389,
-    "obs": 0.01897
+    "n": 740,
+    "mean_p": 0.03382,
+    "obs": 0.02027
    },
    {
     "lo": 0.04,
     "hi": 0.05,
-    "n": 225,
-    "mean_p": 0.04431,
-    "obs": 0.05333
+    "n": 231,
+    "mean_p": 0.04422,
+    "obs": 0.05195
    },
    {
     "lo": 0.05,
     "hi": 0.07,
-    "n": 95,
-    "mean_p": 0.05715,
-    "obs": 0.06316
+    "n": 99,
+    "mean_p": 0.05728,
+    "obs": 0.06061
    },
    {
     "lo": 0.07,
     "hi": 0.1,
-    "n": 20,
-    "mean_p": 0.07621,
-    "obs": 0.05
+    "n": 19,
+    "mean_p": 0.07601,
+    "obs": 0.05263
    },
    {
     "lo": 0.1,
     "hi": 0.2,
     "n": 1,
-    "mean_p": 0.10324,
+    "mean_p": 0.10532,
     "obs": 0.0
    }
   ],
   "p_error_percentile_grid": [
    {
     "percentile": 0,
-    "p_error": 0.00014
+    "p_error": 0.00015
    },
    {
     "percentile": 5,
@@ -490,82 +523,82 @@
    },
    {
     "percentile": 10,
-    "p_error": 0.0007
+    "p_error": 0.00069
    },
    {
     "percentile": 15,
-    "p_error": 0.00082
+    "p_error": 0.00081
    },
    {
     "percentile": 20,
-    "p_error": 0.00094
+    "p_error": 0.00093
    },
    {
     "percentile": 25,
-    "p_error": 0.00107
+    "p_error": 0.00105
    },
    {
     "percentile": 30,
-    "p_error": 0.00121
+    "p_error": 0.00119
    },
    {
     "percentile": 35,
-    "p_error": 0.00136
+    "p_error": 0.00134
    },
    {
     "percentile": 40,
-    "p_error": 0.00155
+    "p_error": 0.00153
    },
    {
     "percentile": 45,
-    "p_error": 0.00184
+    "p_error": 0.0018
    },
    {
     "percentile": 50,
-    "p_error": 0.00227
+    "p_error": 0.00223
    },
    {
     "percentile": 55,
-    "p_error": 0.00321
+    "p_error": 0.00317
    },
    {
     "percentile": 60,
-    "p_error": 0.00681
+    "p_error": 0.00676
    },
    {
     "percentile": 65,
-    "p_error": 0.00938
+    "p_error": 0.00936
    },
    {
     "percentile": 70,
-    "p_error": 0.01129
+    "p_error": 0.01128
    },
    {
     "percentile": 75,
-    "p_error": 0.0131
+    "p_error": 0.01308
    },
    {
     "percentile": 80,
-    "p_error": 0.01515
+    "p_error": 0.01516
    },
    {
     "percentile": 85,
-    "p_error": 0.01762
+    "p_error": 0.01763
    },
    {
     "percentile": 90,
-    "p_error": 0.02116
+    "p_error": 0.02119
    },
    {
     "percentile": 95,
-    "p_error": 0.02711
+    "p_error": 0.02714
    },
    {
     "percentile": 100,
-    "p_error": 0.10324
+    "p_error": 0.10532
    }
   ],
-  "grouped_vs_random_auc_gap": -0.0031,
+  "grouped_vs_random_auc_gap": -0.0034,
   "baseline_error_rate": 0.00798,
   "note": "If the model's top pick is never \"error\" (see oof_error_nominated_top1), then the /100 score is only useful as a within-game ranking of where to look, and the honest headline is that ruling errors OUT is what this model does well."
  },
@@ -1286,7 +1319,7 @@
   "edges": [
    {
     "percentile": 0,
-    "p_error": 0.00014
+    "p_error": 0.00015
    },
    {
     "percentile": 5,
@@ -1294,79 +1327,79 @@
    },
    {
     "percentile": 10,
-    "p_error": 0.0007
+    "p_error": 0.00069
    },
    {
     "percentile": 15,
-    "p_error": 0.00082
+    "p_error": 0.00081
    },
    {
     "percentile": 20,
-    "p_error": 0.00094
+    "p_error": 0.00093
    },
    {
     "percentile": 25,
-    "p_error": 0.00107
+    "p_error": 0.00105
    },
    {
     "percentile": 30,
-    "p_error": 0.00121
+    "p_error": 0.00119
    },
    {
     "percentile": 35,
-    "p_error": 0.00136
+    "p_error": 0.00134
    },
    {
     "percentile": 40,
-    "p_error": 0.00155
+    "p_error": 0.00153
    },
    {
     "percentile": 45,
-    "p_error": 0.00184
+    "p_error": 0.0018
    },
    {
     "percentile": 50,
-    "p_error": 0.00227
+    "p_error": 0.00223
    },
    {
     "percentile": 55,
-    "p_error": 0.00321
+    "p_error": 0.00317
    },
    {
     "percentile": 60,
-    "p_error": 0.00681
+    "p_error": 0.00676
    },
    {
     "percentile": 65,
-    "p_error": 0.00938
+    "p_error": 0.00936
    },
    {
     "percentile": 70,
-    "p_error": 0.01129
+    "p_error": 0.01128
    },
    {
     "percentile": 75,
-    "p_error": 0.0131
+    "p_error": 0.01308
    },
    {
     "percentile": 80,
-    "p_error": 0.01515
+    "p_error": 0.01516
    },
    {
     "percentile": 85,
-    "p_error": 0.01762
+    "p_error": 0.01763
    },
    {
     "percentile": 90,
-    "p_error": 0.02116
+    "p_error": 0.02119
    },
    {
     "percentile": 95,
-    "p_error": 0.02711
+    "p_error": 0.02714
    },
    {
     "percentile": 100,
-    "p_error": 0.10324
+    "p_error": 0.10532
    }
   ]
  }

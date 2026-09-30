@@ -13,7 +13,7 @@ Design rules for this suite:
    assertions are written to FAIL if the old wording ever comes back.
  * No network. Everything here must run offline.
 """
-import csv, datetime, json, math, re, sys
+import csv, datetime, json, math, re, sys, tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -131,7 +131,8 @@ print('== C. model.json — recomputed from the dataset it names, not restated =
 sys.path.insert(0, str(ROOT / 'tools'))
 import numpy as np                                                   # noqa: E402
 from sklearn.linear_model import LogisticRegression                  # noqa: E402
-from sklearn.metrics import roc_auc_score, log_loss, brier_score_loss  # noqa: E402
+from sklearn.isotonic import IsotonicRegression                       # noqa: E402
+from sklearn.metrics import roc_auc_score, log_loss, brier_score_loss, average_precision_score  # noqa: E402
 from sklearn.model_selection import GroupKFold, StratifiedKFold      # noqa: E402
 from sklearn.preprocessing import StandardScaler                     # noqa: E402
 
@@ -215,20 +216,28 @@ base = LogisticRegression(max_iter=4000, C=1.0).fit(Xs, yb)
 gkf = GroupKFold(5)
 oof_g = np.zeros(len(yb))
 oof_gm = np.zeros((len(yc), len(CLASSES)))
-for tr, te in gkf.split(Xs, yb, groups):
-    oof_g[te] = LogisticRegression(max_iter=4000, C=1.0).fit(Xs[tr], yb[tr]).predict_proba(Xs[te])[:, 1]
-    oof_gm[te] = LogisticRegression(max_iter=5000, C=1.0).fit(Xs[tr], yc[tr]).predict_proba(Xs[te])
+for tr, te in gkf.split(X, yb, groups):
+    fold_sc = StandardScaler().fit(X[tr])
+    Xtr, Xte = fold_sc.transform(X[tr]), fold_sc.transform(X[te])
+    oof_g[te] = LogisticRegression(max_iter=4000, C=1.0).fit(Xtr, yb[tr]).predict_proba(Xte)[:, 1]
+    oof_gm[te] = LogisticRegression(max_iter=5000, C=1.0).fit(Xtr, yc[tr]).predict_proba(Xte)
 skf = StratifiedKFold(5, shuffle=True, random_state=20260929)
 oof_r = np.zeros(len(yb))
-for tr, te in skf.split(Xs, yb):
-    oof_r[te] = LogisticRegression(max_iter=4000, C=1.0).fit(Xs[tr], yb[tr]).predict_proba(Xs[te])[:, 1]
+for tr, te in skf.split(X, yb):
+    fold_sc = StandardScaler().fit(X[tr])
+    Xtr, Xte = fold_sc.transform(X[tr]), fold_sc.transform(X[te])
+    oof_r[te] = LogisticRegression(max_iter=4000, C=1.0).fit(Xtr, yb[tr]).predict_proba(Xte)[:, 1]
 
 auc_g = float(roc_auc_score(yb, oof_g))
 check('grouped OOF AUC recomputes to the published value',
       abs(auc_g - pp['cv_auc']) < 5e-4, f'{auc_g:.4f} vs {pp["cv_auc"]}')
-check('random-fold AUC recomputes to the published optimistic bound',
+check('random-fold AUC recomputes to the published comparator',
       abs(float(roc_auc_score(yb, oof_r)) - pp['cv_auc_random_kfold']) < 5e-4,
       f'{roc_auc_score(yb, oof_r):.4f} vs {pp["cv_auc_random_kfold"]}')
+check('grouped and random-fold average precision recompute',
+      abs(float(average_precision_score(yb, oof_g)) - pp['cv_average_precision_grouped']) < 5e-5
+      and abs(float(average_precision_score(yb, oof_r)) - pp['cv_average_precision_random_kfold']) < 5e-5,
+      f'{average_precision_score(yb, oof_g):.5f} vs {pp["cv_average_precision_grouped"]}')
 check('published CI widens honestly around the grouped AUC',
       pp['cv_auc_ci95'][0] < pp['cv_auc'] < pp['cv_auc_ci95'][1]
       and pp['cv_auc_ci95'][1] - pp['cv_auc_ci95'][0] > 0.05,
@@ -236,6 +245,21 @@ check('published CI widens honestly around the grouped AUC',
 check('OOF log-loss and Brier recompute',
       abs(log_loss(yb, oof_g, labels=[0, 1]) - pp['cv_logloss']) < 5e-4
       and abs(brier_score_loss(yb, oof_g) - pp['cv_brier_raw']) < 5e-5)
+iso_oof = np.zeros(len(yb))
+for outer_tr, outer_te in gkf.split(X, yb, groups):
+    x_outer, y_outer, g_outer = X[outer_tr], yb[outer_tr], groups[outer_tr]
+    inner_oof = np.zeros(len(outer_tr))
+    inner_gkf = GroupKFold(4)
+    for inner_tr, inner_te in inner_gkf.split(x_outer, y_outer, g_outer):
+        inner_sc = StandardScaler().fit(x_outer[inner_tr])
+        inner_model = LogisticRegression(max_iter=4000, C=1.0).fit(
+            inner_sc.transform(x_outer[inner_tr]), y_outer[inner_tr])
+        inner_oof[inner_te] = inner_model.predict_proba(inner_sc.transform(x_outer[inner_te]))[:, 1]
+    calibrator = IsotonicRegression(out_of_bounds='clip').fit(inner_oof, y_outer)
+    iso_oof[outer_te] = calibrator.predict(oof_g[outer_te])
+check('nested grouped isotonic Brier recomputes from inner OOF calibrators',
+      abs(brier_score_loss(yb, iso_oof) - pp['cv_brier_isotonic']) < 5e-5,
+      f'{brier_score_loss(yb, iso_oof):.6f} vs {pp["cv_brier_isotonic"]}')
 check('published coefficients match a refit on the named dataset',
       all(abs(float(base.coef_[0][i]) - pp['coef'][n]) < 5e-3 for i, n in enumerate(NAMES)),
       json.dumps({n: round(pp['coef'][n], 4) for n in NAMES[:4]}))
@@ -252,10 +276,25 @@ check('honesty block: the model never nominates "error" as its top call',
       hn['oof_error_nominated_top1'] == 0 and hn['oof_error_recall'] == 0.0
       and int((top1 == CLASSES.index('error')).sum()) == 0)
 p_all = 1 / (1 + np.exp(-(base.intercept_[0] + Xs @ base.coef_[0])))
-check('honesty block: observed P(error) range matches a fresh refit',
-      abs(100 * float(p_all.max()) - hn['p_error_observed_max_x100']) < 0.02
-      and abs(100 * float(p_all.min()) - hn['p_error_observed_min_x100']) < 0.005,
-      f'{100*float(p_all.max()):.3f} vs {hn["p_error_observed_max_x100"]}')
+check('honesty block: training-fit P(error) range matches a fresh refit',
+      abs(100 * float(p_all.max()) - hn['p_error_training_max_x100']) < 0.02
+      and abs(100 * float(p_all.min()) - hn['p_error_training_min_x100']) < 0.005,
+      f'{100*float(p_all.max()):.3f} vs {hn["p_error_training_max_x100"]}')
+expected_bands = []
+for pct in (1, 5, 10):
+    n_top = max(1, math.ceil(len(yb) * pct / 100))
+    chosen = np.argsort(oof_g, kind='mergesort')[-n_top:]
+    found = int(yb[chosen].sum())
+    expected_bands.append((pct, n_top, found, found / n_top, found / int(yb.sum()),
+                           (found / n_top) / float(yb.mean())))
+actual_bands = hn.get('top_error_risk_bands_oof', [])
+check('grouped OOF top-1/5/10% risk bands recompute from held-out probabilities',
+      [b.get('top_percent') for b in actual_bands] == [1, 5, 10]
+      and all(b.get('n') == n and b.get('errors_found') == found
+              and abs(b.get('precision', -1) - precision) < 2e-5
+              and abs(b.get('recall', -1) - recall) < 2e-5
+              and abs(b.get('lift_over_base_rate', -1) - lift) < 0.002
+              for b, (_, n, found, precision, recall, lift) in zip(actual_bands, expected_bands)))
 check('honesty block states the score is a ranking aid, not a decision',
       'does not decide' in hn['what_this_is'] and 'ranks' in hn['what_this_is'])
 check('percentile grid is monotone 0..100',
@@ -349,7 +388,11 @@ check('fixture has 75 plays and matches the independently archived feed exactly'
       len(fp) == 75 and len(arch) == 75 and mism == 0, f'{mism} mismatches')
 check('fixture final score == official 1-6',
       (fp[-1]['result']['awayScore'], fp[-1]['result']['homeScore']) == (1, 6))
-rows = [r for r in ls.score_feed(fixture, pk=823441, scorer=scorer) if r.get('status') == 'scored']
+live_rows = ls.score_feed(fixture, pk=823441, scorer=scorer)
+rows = [r for r in live_rows if r.get('status') == 'scored']
+check('every live scorer row carries a direct official MLB feed URL',
+      all(r.get('official_feed_url') == 'https://statsapi.mlb.com/api/v1.1/game/823441/feed/live'
+          for r in live_rows))
 check('live tool scores a batted ball for every play that has a Statcast vector',
       len(rows) == sum(1 for pl in fp for e in pl['playEvents']
                        if all(k in (e.get('hitData') or {})
@@ -362,9 +405,13 @@ check('live tool never nominates "error" as the top pick anywhere in the game',
       all(r['top_pick'] != 'error' for r in rows))
 risp = [r for r in rows if r['risp'] and r['run_scored']]
 check('live tool finds the 2 run-scoring plays with a runner on 2nd/3rd', len(risp) == 2, str(len(risp)))
-check('RBI-at-stake rows carry all three candidate-ruling answers',
-      all(r['rbi_if_error'].startswith('NO RBI') and r['rbi_if_hit'] == 'RBI'
-          and 'fielder' in r['rbi_if_fc'] for r in risp))
+check('RBI-at-stake rows carry conditional Rule 9.04 notes for all three candidate rulings',
+      all('Rule 9.04(a)(3)' in r['rbi_if_error'] and 'cannot establish' in r['rbi_if_error']
+          and 'Rule 9.04' in r['rbi_if_hit'] and 'Rule 9.04' in r['rbi_if_fc'] for r in risp))
+check('home-run RBI notes do not fabricate an error or fielder\'s-choice alternative',
+      'not a valid alternative' in ls.rbi_if_ruled('error', True, 'home_run')
+      and 'recorded RBI field' in ls.rbi_if_ruled('hit', True, 'home_run')
+      and 'not a valid alternative' in ls.rbi_if_ruled('fielders_choice', True, 'home_run'))
 err_ball = next((r for r in rows if r['official_call'] == 'error'), None)
 ranked = sorted(rows, key=lambda r: -r['score_100'])
 check('the fixture\'s ruled error is ranked in the top half by the live score',
@@ -374,21 +421,22 @@ check('published live board matches a fresh run of the tool',
       load_json(ROOT / 'docs/data/live_sample.json') == [
           {**r, 'source': 'data/source/feed_823441.json'} for r in ls.score_feed(
               fixture, pk=823441, scorer=scorer, meta={'source': 'data/source/feed_823441.json'})])
-pending_feed = {'liveData': {'plays': {'allPlays': [{
+unresolved_feed = {'liveData': {'plays': {'allPlays': [{
     'result': {'description': 'In play, run(s)', 'rbi': 0, 'awayScore': 1, 'homeScore': 0},
     'about': {'atBatIndex': 7, 'inning': 4, 'halfInning': 'top'},
     'matchup': {'batSide': {'code': 'R'}, 'pitchHand': {'code': 'L'}},
     'playEvents': [{'hitData': {'launchSpeed': 101.2, 'launchAngle': 12.0, 'totalDistance': 210.0,
                                 'trajectory': 'line_drive', 'hardness': 'hard'}, 'playId': 'p-1'}],
     'runners': [{'movement': {'start': '3B', 'end': 'score'}}]}]}}}
-prow = ls.score_feed(pending_feed, pk=1, scorer=scorer)[0]
-check('an unruled ball in a live feed is carried as a PENDING decision, not dropped or crashed',
-      prow['status'] == 'pending_ruling' and prow['official_call'] == 'pending'
+prow = ls.score_feed(unresolved_feed, pk=1, scorer=scorer)[0]
+check('a contact play without result.eventType is flagged as a feed state, not a scorer queue',
+      prow['status'] == 'no_event_type_yet' and prow['official_call'] == 'pending'
       and prow['model_agrees_with_call'] == 0 and 0 <= prow['score_100'] <= 100,
       json.dumps({k: prow[k] for k in ('status', 'official_call', 'score_100', 'top_pick')}))
-check('the pending row still carries the model answers and the RBI stakes it can',
+check('the no-eventType row still carries model answers and a conditional RBI reminder',
       prow['top_pick'] in ('hit', 'out', 'error', 'fielders_choice') and prow['risp'] == 1
-      and prow['run_scored'] == 1 and prow['rbi_if_error'].startswith('NO RBI'))
+      and prow['run_scored'] == 1 and 'Rule 9.04(a)(3)' in prow['rbi_if_error']
+      and 'cannot establish' in prow['rbi_if_error'])
 spec_wr = importlib.util.spec_from_file_location('watch_rulings', ROOT / 'tools/watch_rulings.py')
 wr = importlib.util.module_from_spec(spec_wr)
 spec_wr.loader.exec_module(wr)
@@ -399,12 +447,62 @@ check('watch_rulings.team_abbr accepts the hydrated and un-hydrated schedule sha
 wr_src = (ROOT / 'tools/watch_rulings.py').read_text()
 check('watch_rulings requests hydrated teams (the un-hydrated shape caused a real CI crash)',
       'hydrate=team' in wr_src)
+transition = wr.transition_key('1', '2', 'event_type', 'field_error', 'single', '2026-09-29T10:00:00Z')
+retry = wr.transition_key('1', '2', 'event_type', 'field_error', 'single', '2026-09-29T10:00:00Z')
+recurrence = wr.transition_key('1', '2', 'event_type', 'field_error', 'single', '2026-09-29T10:05:00Z')
+check('ruling-change dedupe suppresses retries but preserves a later repeat of the same transition',
+      transition == retry and transition != recurrence)
+with tempfile.TemporaryDirectory() as temp_dir:
+    first_change_path = Path(temp_dir) / 'first-change.csv'
+    first_change = {key: '' for key in wr.CHANGE_KEYS}
+    first_change.update({'game_pk': '1', 'at_bat': '2', 'field': 'event_type',
+                         'from': 'field_error', 'to': 'single'})
+    wr.append_changes(first_change_path, [first_change])
+    created = first_change_path.exists() and load_csv(first_change_path) == [first_change]
+check('the first detected ruling change creates its ledger instead of losing the observation', created)
 check('the ruling snapshot only rewrites rows whose observation actually changed '
       '(a per-run rewrite would bloat the repo with a multi-megabyte blob per collection)',
-      "unchanged = bool(prev)" in wr_src and "r['last_seen_utc']" in wr_src)
+      "unchanged = bool(prev)" in wr_src and "r['last_changed_utc']" in wr_src and "if unchanged else now_utc" in wr_src)
 check('watch_rulings.py always leaves a readable status file',
       'ruling_watch_status.json' in (ROOT / 'tools/watch_rulings.py').read_text()
       and 'run_safely' in (ROOT / 'tools/watch_rulings.py').read_text())
+spec_refresh = importlib.util.spec_from_file_location('refresh_live', ROOT / 'tools' / 'refresh_live.py')
+refresh_live = importlib.util.module_from_spec(spec_refresh)
+spec_refresh.loader.exec_module(refresh_live)
+with tempfile.TemporaryDirectory() as temp_dir:
+    temp = Path(temp_dir)
+    src_json, src_csv = temp / 'new.json', temp / 'new.csv'
+    out_json, out_csv = temp / 'live.json', temp / 'live.csv'
+    src_json.write_bytes(b'{"snapshot":"new"}')
+    src_csv.write_bytes(b'row\r\n')
+    out_json.write_bytes(b'{"snapshot":"old"}')
+    out_csv.write_bytes(b'old\r\n')
+    real_replace = refresh_live.os.replace
+    def fail_json_replace(source, target):
+        if Path(target) == out_json:
+            raise OSError('simulated JSON rename failure')
+        return real_replace(source, target)
+    refresh_live.os.replace = fail_json_replace
+    try:
+        refresh_live.install_snapshot(src_json, src_csv, out_json, out_csv)
+        install_failed_as_expected = False
+    except OSError:
+        install_failed_as_expected = True
+    finally:
+        refresh_live.os.replace = real_replace
+    retained_old_json = out_json.read_bytes() == b'{"snapshot":"old"}'
+    no_staged_files = not list(temp.glob('.*.tmp'))
+check('partial static promotion leaves the prior JSON snapshot intact and cleans temporary files',
+      install_failed_as_expected and retained_old_json and no_staged_files)
+with tempfile.TemporaryDirectory() as temp_dir:
+    temp = Path(temp_dir)
+    src_json, src_csv = temp / 'new.json', temp / 'new.csv'
+    out_json, out_csv = temp / 'live.json', temp / 'live.csv'
+    src_json.write_bytes(b'{"snapshot":"new"}')
+    src_csv.write_bytes(b'row\r\n')
+    refresh_live.install_snapshot(src_json, src_csv, out_json, out_csv)
+    complete_snapshot = out_json.read_bytes() == src_json.read_bytes() and out_csv.read_bytes() == src_csv.read_bytes()
+check('successful static promotion installs both prepared snapshot artifacts', complete_snapshot)
 ov = [r for r in rows if r['reviewed']]
 check('fixture challenges are surfaced (3 reviewed plays, 2 overturned)',
       len(ov) == 3 and sum(r['review_overturned'] is True for r in ov) == 2, str(len(ov)))
@@ -582,6 +680,22 @@ if shutil.which('node'):
             if r.returncode:
                 bad_js.append(f'{name} block {i+1}: {r.stderr.strip().splitlines()[-1][:120]}')
     check(f'every inline page script parses ({len(PAGES)} pages)', not bad_js, ' | '.join(bad_js))
+    js_contract = r'''const fs=require('fs'), vm=require('vm');
+const ctx={document:{querySelector:()=>null,querySelectorAll:()=>[]}};
+vm.runInNewContext(fs.readFileSync('docs/site.js','utf8'),ctx);
+const M={honesty:{p_error_percentile_grid:[
+  {percentile:0,p_error:0.2},{percentile:50,p_error:0.5},{percentile:100,p_error:0.8}]}};
+if(ctx.errorPercentile(M,0.1)!==0 || ctx.errorPercentile(M,0.5)!==50 ||
+   ctx.errorPercentile(M,0.9)!==100) throw new Error('percentile escaped 0..100 or interpolated incorrectly');
+if(!ctx.rbiRuleNote('error',true,'home_run').includes('not a valid alternative') ||
+   !ctx.rbiRuleNote('fielders_choice',true,'home_run').includes('not a valid alternative') ||
+   !ctx.rbiRuleNote('hit',true,'home_run').includes('recorded RBI field'))
+  throw new Error('home-run RBI counterfactual note is overconfident');'''
+    contract = subprocess.run(['node', '-e', js_contract], cwd=ROOT, capture_output=True, text=True)
+    check('browser percentile is clamped to the grouped-OOF 0–100 reference',
+          contract.returncode == 0, contract.stderr.strip()[-300:])
+    check('browser home-run RBI notes avoid impossible error/FC counterfactuals',
+          contract.returncode == 0, contract.stderr.strip()[-300:])
 else:
     print('  --   (node not installed: skipped the JavaScript syntax check)')
 
@@ -599,6 +713,13 @@ check('site_kpis.json counts match the collected tables',
       kpis['replays']['overturned'] == sum(1 for r in load_csv(ROOT / 'docs/data/replays.csv')
                                            if r['review_overturned'] == '1')
       and kpis['nydn']['rows'] == len(load_csv(ROOT / 'docs/data/overturned_calls.csv')))
+replay_rows = load_csv(ROOT / 'docs/data/replays.csv')
+hr_rbi_rows = [r for r in replay_rows if r['event_type'] == 'home_run' and r.get('rbi_if_fc')]
+check('home-run replay rows do not label an RBI as a counterfactual fielder\'s choice',
+      len(hr_rbi_rows) > 0
+      and all('not a valid alternative' in r['rbi_if_error']
+              and 'recorded RBI field' in r['rbi_if_hit']
+              and 'not a valid alternative' in r['rbi_if_fc'] for r in hr_rbi_rows))
 rep_site = load_json(ROOT / 'docs/data/replays_site.json')
 check('replays_site.json rows are exactly the run-affected reviews',
       len(rep_site['rows']) == sum(1 for r in load_csv(ROOT / 'docs/data/replays.csv')
@@ -637,10 +758,16 @@ check(f'every non-illustrative index preset is a real batted ball ({len(typed)} 
 check('the illustrative preset is labelled as such on the page',
       any('illustrative' in label.lower() for _, label in presets)
       and any(preset_is_real(p) for p, label in presets if 'illustrative' not in label.lower()))
-check('index shows an honest percentile alongside the raw score',
-      'percentile' in idx and 'errorPercentile' in idx)
+check('index labels percentile against grouped OOF scores, not in-sample fitted scores',
+      'grouped out-of-fold scores' in idx and 'errorPercentile' in idx
+      and 'every batted ball in the fitted set' not in idx)
 check('live page loads the live artifact and explains the refresh command',
-      'data/live_now.json' in liv and 'tools/fetch_live.py' in liv)
+      'data/live_slate.json' in liv and 'tools/fetch_live.py' in liv)
+check('live board links each play back to its official feed and watch page, including snapshots',
+      "linkOut(x.official_feed_url, 'official feed')" in liv
+      and "linkOut(x.savant_url, 'watch')" in liv
+      and 'official_feed_url: r.official_feed_url || g.official_feed_url' in liv
+      and 'official_feed_url' in (ROOT / 'docs/site.js').read_text())
 check('live page states the outbound-network limitation honestly',
       'outbound HTTPS' in liv and 'statsapi.mlb.com' in liv and 'fallback' in liv)
 check('model page publishes the honesty block + calibration',
@@ -651,9 +778,9 @@ check('model page explains the NOT-self-weighting enrichment of the audit sample
 check('overturned page flags the 404 source and offers the official fallback',
       '404' in ovt and 'mlb.com/video' in ovt and 'nydailynews' in ovt)
 check('overturned KPI ids present', all(f'id="{i}"' in ovt for i in ['kTot', 'kOv', 'kRr']))
-check('rules page cites the official rulebook and flags the 10.04 discrepancy',
-      '2025-official-baseball-rules.pdf' in rul and '9.04' in rul and '10.04' in rul
-      and 'no Rule 10.04' in rul)
+check('rules page cites the 2026 official rulebook and uses the correct 9.04 section',
+      '2026-official-baseball-rules.pdf' in rul and '9.04' in rul
+      and not re.search(r'Rule\s+10\.04', flat(rul), re.I))
 rules_txt = flat(rul)
 check('rules page carries both verbatim glossary quotations',
       'does not receive an RBI when the run scores as a result of an error or ground into double play'
@@ -679,16 +806,27 @@ check('the reproducibility policy is stated in the README (byte-exact tables, to
 rd = (ROOT / 'README.md').read_text()
 check('README restates the brief before any results (Section 0 rule)',
       'Section 0' in rd and 'VERBATIM' in rd)
+brief_opening = ("I want to investigate if there is a way to accurately predict the outcome of any scoring decision "
+                 "such as a pending scoring decision, or if we can tell if an error would be overturned into another "
+                 "play such as a fielders choice or a hit.  There's also the possibility of if the play is initially "
+                 "ruled an error that the batter gets no RBI if there is a runner on 2nd or 3rd.  However if they rule "
+                 "it as a fielders choice or a hit, there's a chance that the batter would be awarded an RBI.")
+check('README preserves the exact repeated opening paragraph twice', rd.count(brief_opening) == 2)
+raw_malformed_link = ('[[https://github.com/buffedlizard55-lab/MLB-overturned-calls]'
+                      '(https://github.com/buffedlizard55-lab/MLB-overturned-calls)]'
+                      '(https://github.com/buffedlizard55-lab/MLB-overturned-calls]'
+                      '(https://github.com/buffedlizard55-lab/MLB-overturned-calls))')
+check('README preserves the malformed GitHub link payload from the brief', raw_malformed_link in rd)
 nydn_sum = load_json(ROOT / 'docs/data/nydn_summary.json')
 for want in (f"{mm['n_model']:,}", f"{mm['n_bip']:,}", f"{nydn_sum['rows_total']:,}",
              f"{nydn_sum['overturned']:,}", f"{nydn_sum['run_removed_heuristic']:,}",
-             f"{pp['cv_auc']:.3f}"):
+             f"{pp['cv_auc']:.4f}"):
     check(f'README states the built number {want}', want in rd)
 
 # --- official links ---------------------------------------------------------
 OFFICIAL = ['https://statsapi.mlb.com/', 'https://www.mlb.com/glossary/standard-stats/error',
             'https://www.mlb.com/glossary/standard-stats/runs-batted-in',
-            'https://mktg.mlbstatic.com/mlb/official-information/2025-official-baseball-rules.pdf',
+            'https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf',
             'https://baseballsavant.mlb.com/', 'https://github.com/nydailynews/mlb-overturned-calls']
 all_html = ''.join(PAGES.values())
 for link in OFFICIAL:
@@ -705,11 +843,16 @@ live = load_json(ROOT / 'docs/data/live_now.json')
 slate_path = ROOT / 'docs/data/live_slate.json'
 if slate_path.exists():
     check('live_slate.json (CI output) has the same contract as the offline fallback',
-          all(all(k in g for k in ['model_rows', 'away_abbr', 'home_abbr', 'batted_balls', 'verified'])
+          all(all(k in g for k in ['model_rows', 'away_abbr', 'home_abbr', 'batted_balls', 'verified',
+                                    'official_feed_url'])
+              and g['official_feed_url'].startswith('https://statsapi.mlb.com/api/v1.1/game/')
               for g in load_json(slate_path)['games'])
-          and load_json(slate_path)['mode'] == 'live-slate')
+          and load_json(slate_path)['mode'] == 'live-slate'
+          and 'unresolved_in_feed' in load_json(slate_path)['summary']
+          and 'pending_rulings' not in load_json(slate_path)['summary'])
 GAME_KEYS = ['model_rows', 'pk', 'game_pk', 'away_abbr', 'home_abbr', 'state', 'batted_balls', 'errors',
-             'top_pick_agrees', 'risp_runs_at_stake', 'overturned_reviews', 'verified', 'url', 'savant']
+             'top_pick_agrees', 'risp_runs_at_stake', 'overturned_reviews', 'verified', 'url', 'savant',
+             'official_feed_url']
 spec_fl = importlib.util.spec_from_file_location('fetch_live', ROOT / 'tools/fetch_live.py')
 fl = importlib.util.module_from_spec(spec_fl)
 spec_fl.loader.exec_module(fl)
@@ -757,8 +900,12 @@ check('model.json: carries every block the site reads (feature spec, honesty, ca
                                             'cv_auc_gradient_boosting_grouped'))
       and all(k in MDL['honesty'] for k in ('what_this_is', 'oof_top1_accuracy',
                                             'oof_error_nominated_top1', 'oof_error_recall',
-                                            'p_error_percentile_grid', 'calibration_oof',
-                                            'grouped_vs_random_auc_gap')))
+                                            'p_error_training_min_x100', 'p_error_training_max_x100',
+                                            'top_error_risk_bands_oof', 'p_error_percentile_grid',
+                                            'calibration_oof', 'grouped_vs_random_auc_gap'))
+      and all(k in MDL['primary'] for k in ('cv_average_precision_grouped',
+                                            'cv_average_precision_random_kfold',
+                                            'cv_brier_isotonic')))
 check('model.json: the feature spec and the coefficient map agree, name for name',
       [f['name'] for f in MDL['primary']['feature_spec']] == MDL['primary']['feature_names']
       and all(n in MDL['primary']['coef'] for n in MDL['primary']['feature_names'])
@@ -766,7 +913,10 @@ check('model.json: the feature spec and the coefficient map agree, name for name
 check('site_kpis.json: every KPI the model page reads is present and non-null',
       all(kpis['model'][k] is not None for k in ('dataset', 'n_bip', 'n_model', 'n_error', 'games',
                                                  'auc_grouped', 'auc_ci95', 'top1', 'brier'))
-      and kpis['ingested']['bip'] == len(load_csv(ROOT / 'docs/data/bip_official.csv')))
+      and kpis['model_dataset']['bip'] == len(load_csv(ROOT / 'docs/data/bip_official.csv'))
+      and kpis['model_dataset']['games'] == M['meta']['games']
+      and kpis['model']['average_precision_grouped'] == pp['cv_average_precision_grouped']
+      and kpis['model']['top_error_risk_bands_oof'] == hn['top_error_risk_bands_oof'])
 
 print()
 if FAILED:

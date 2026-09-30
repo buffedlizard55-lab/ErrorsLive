@@ -1,0 +1,58 @@
+name: live-refresh
+
+# Browser clients poll the public MLB API directly while this job periodically refreshes the
+# committed fallback. GitHub's schedule is best-effort, so this is not a real-time guarantee.
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/fetch_live.py'
+      - 'tools/live_score.py'
+      - 'tools/refresh_live.py'
+      - 'docs/data/model.json'
+      - '.github/workflows/live-refresh.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-refresh-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+      - name: Fetch official schedule and game feeds; retain last complete snapshot on failure
+        id: refresh
+        run: python3 tools/refresh_live.py
+        continue-on-error: true
+      - name: Commit the refreshed snapshot and status
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/data/live_refresh_status.json
+          for f in docs/data/live_slate.json docs/data/live_slate.csv; do
+            if [ -f "$f" ]; then git add "$f"; fi
+          done
+          if git diff --cached --quiet; then echo 'no live data changes'; exit 0; fi
+          git commit -m "[ci-live] refresh official live snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          BRANCH="${GITHUB_REF_NAME}"
+          for i in 1 2 3 4 5; do
+            if git fetch origin "$BRANCH" && git rebase "origin/$BRANCH"; then
+              git push origin "HEAD:$BRANCH" && exit 0
+            fi
+            git rebase --abort || true
+            sleep 8
+          done
+          echo '::warning::could not push live data after retries'
+          exit 1

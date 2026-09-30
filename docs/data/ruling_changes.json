@@ -6,7 +6,12 @@
   "window": [
    "2026-09-10",
    "2026-09-29"
-  ]
+  ],
+  "unresolved_in_feed": 0,
+  "status_ok": true,
+  "status_updated_utc": "2026-09-30T01:14:02Z",
+  "mode": "",
+  "status_error": ""
  },
  "changes": 0,
  "rows": []

@@ -88,17 +88,115 @@ function evalModel(M, st) {
   return { pErr, probs, top, x, z };
 }
 
+/* The direct-browser live path mirrors tools/live_score.py. It uses only fields from the MLB
+   Stats API and the committed model; it does not call a local service or upload anything. */
+const HIT_TYPES = new Set(['single', 'double', 'triple', 'home_run']);
+const FC_TYPES = new Set(['fielders_choice', 'fielders_choice_out']);
+const OUT_TYPES = new Set(['field_out', 'force_out', 'grounded_into_double_play', 'double_play',
+  'sac_fly', 'sac_bunt', 'sac_fly_double_play', 'triple_play']);
+function macroClass(eventType) {
+  if (eventType === 'field_error') return 'error';
+  if (HIT_TYPES.has(eventType)) return 'hit';
+  if (FC_TYPES.has(eventType)) return 'fielders_choice';
+  if (OUT_TYPES.has(eventType)) return 'out';
+  return 'other';
+}
+function rbiRuleNote(cls, runScored, officialEvent, bases = [], outs = 0) {
+  if (!runScored) return null;
+  if (officialEvent === 'home_run')
+    return cls === 'hit'
+      ? 'The official play is a home run (a hit); check the recorded RBI field for the official result.'
+      : 'not a valid alternative: the official play is a home run; this feed row cannot model a counterfactual error or fielder\'s-choice ruling';
+  if (cls === 'error')
+    return 'No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.';
+  if (cls === 'fielders_choice')
+    return "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.";
+  if (cls === 'hit')
+    return 'An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.';
+  return 'RBI depends on the official scoring rule for this play.';
+}
+function scoreLiveFeed(feed, game, model) {
+  const plays = (((feed || {}).liveData || {}).plays || {}).allPlays || [];
+  const source = game.official_feed_url || '';
+  const pk = game.gamePk || game.pk || '';
+  const rows = [];
+  for (const play of plays) {
+    const result = play.result || {};
+    const eventType = result.eventType || '';
+    const events = play.playEvents || [];
+    const hitEvent = events.find(e => e && e.hitData && typeof e.hitData === 'object');
+    const hd = hitEvent && hitEvent.hitData;
+    if (!hd) continue;
+    const required = ['launchSpeed', 'launchAngle', 'totalDistance'];
+    const description = result.description || '';
+    const atBat = (play.about || {}).atBatIndex;
+    if (!required.every(k => hd[k] !== undefined && hd[k] !== null && hd[k] !== '')) {
+      rows.push({game_pk: pk, at_bat: atBat, event_type: eventType,
+        official_call: macroClass(eventType), status: 'no_vector', description, source,
+        official_feed_url: source});
+      continue;
+    }
+    const about = play.about || {};
+    const matchup = play.matchup || {};
+    const bases = [...new Set((play.runners || []).map(r => (r && r.movement || {}).start)
+      .filter(b => ['1B', '2B', '3B'].includes(b)))].sort();
+    const outs = events.map(e => e && e.count && e.count.outs).find(v => v !== undefined && v !== null);
+    const state = {
+      ev: Number(hd.launchSpeed), la: Number(hd.launchAngle), dist: Number(hd.totalDistance),
+      traj: hd.trajectory || '', hard: hd.hardness || '', bases,
+      outs: outs === undefined ? 0 : Number(outs), inning: about.inning || 5,
+      bat: (matchup.batSide || {}).code || '', pitch: (matchup.pitchHand || {}).code || '',
+    };
+    const score = evalModel(model, state);
+    const probs = score.probs;
+    const runScored = (play.runners || []).some(r => r && r.movement && r.movement.end === 'score');
+    const review = play.reviewDetails || (events.find(e => e && e.reviewDetails) || {}).reviewDetails || {};
+    const playId = events.map(e => e && e.playId).filter(Boolean).pop() || '';
+    const ruled = Boolean(eventType);
+    const row = {
+      game_pk: pk, official_feed_url: source, at_bat: atBat, inning: about.inning, half: about.halfInning,
+      event_type: eventType, official_call: ruled ? macroClass(eventType) : 'pending',
+      status: ruled ? 'scored' : 'no_event_type_yet', description,
+      launch_speed: hd.launchSpeed, launch_angle: hd.launchAngle, distance: hd.totalDistance,
+      trajectory: hd.trajectory || '', hardness: hd.hardness || '',
+      score_100: Math.round(score.pErr * 10000) / 100,
+      p_hit: Math.round(probs.hit * 10000) / 10000,
+      p_error: Math.round(score.pErr * 10000) / 10000,
+      p_fielders_choice: Math.round(probs.fielders_choice * 10000) / 10000,
+      p_out: Math.round(probs.out * 10000) / 10000,
+      top_pick: score.top, top_prob: Math.round(probs[score.top] * 10000) / 10000,
+      model_agrees_with_call: Number(ruled && score.top === macroClass(eventType)),
+      runners_on: bases.join(',') || '-', risp: Number(bases.some(b => b === '2B' || b === '3B')),
+      outs_before: state.outs, run_scored: Number(runScored), rbi_official: result.rbi ?? 0,
+      reviewed: Number(Boolean(review)),
+      review_overturned: Object.hasOwn(review, 'isOverturned') ? review.isOverturned : '',
+      review_type: review.reviewType || '', play_id: playId,
+      savant_url: playId ? `https://baseballsavant.mlb.com/sporty-videos?playId=${encodeURIComponent(playId)}` : '',
+      source,
+    };
+    if (row.risp && row.run_scored) {
+      row.rbi_if_error = rbiRuleNote('error', true, eventType, bases, state.outs);
+      row.rbi_if_hit = rbiRuleNote('hit', true, eventType, bases, state.outs);
+      row.rbi_if_fc = rbiRuleNote('fielders_choice', true, eventType, bases, state.outs);
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+
 /* Where does this ball sit among the fitted batted balls? A 0-100 dial on a probability that never
    leaves the low single digits is misleading; the percentile is the honest scale. */
 function errorPercentile(M, pErr) {
   const g = M.honesty && M.honesty.p_error_percentile_grid;
   if (!g || !g.length) return null;
+  if (pErr <= g[0].p_error) return g[0].percentile;
+  if (pErr >= g[g.length - 1].p_error) return g[g.length - 1].percentile;
   let lo = 0;
   for (let i = 0; i < g.length; i++) if (pErr >= g[i].p_error) lo = i;
   const a = g[lo], b = g[Math.min(lo + 1, g.length - 1)];
   if (a === b || b.p_error === a.p_error) return a.percentile;
   const t = (pErr - a.p_error) / (b.p_error - a.p_error);
-  return Math.round(a.percentile + t * (b.percentile - a.percentile));
+  return Math.max(0, Math.min(100, Math.round(a.percentile + t * (b.percentile - a.percentile))));
 }
 
 const fmtPct = (v, d = 1) => (100 * v).toFixed(d) + '%';
@@ -106,7 +204,7 @@ const num = (v, d = 2) => (v === null || v === undefined || v === '') ? '–' : 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const callName = c => ({ hit: 'hit', error: 'error', fielders_choice: "fielder's choice", out: 'out',
-  pending: 'awaiting the scorer' }[c] || c);
+  pending: 'no call in feed yet' }[c] || c);
 
 function downloadBlob(filename, text, type = 'text/csv') {
   const a = document.createElement('a');

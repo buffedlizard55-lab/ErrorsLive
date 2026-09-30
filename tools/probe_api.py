@@ -15,6 +15,7 @@ Questions this probe answers, all with sources:
   4. Does /api/v1/game/{pk}/content expose a direct .mp4 (the click-to-download half of the brief)?
   5. Which of those mp4s is attached to which playId? (join key for one-click video download)
   6. Does baseballsavant.mlb.com/sporty-videos?playId=... answer per play (click-to-watch half)?
+  7. Can a GitHub Pages browser read both schedule and game-feed endpoints under CORS?
 Everything is an official MLB domain; nothing is inferred.
 """
 import json
@@ -186,7 +187,7 @@ def main():
         ngames = finals = None
     record('schedule_watcher_window', wurl, status, body, games=ngames, final_games=finals)
 
-    # Can a browser call the official endpoint directly? The live page tries exactly this before
+    # Can a browser call the schedule endpoint directly? The live page tries exactly this before
     # falling back to the committed snapshot, so the answer belongs in the committed evidence.
     req = urllib.request.Request(
         'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=2026-09-27',
@@ -200,6 +201,20 @@ def main():
                    browser_bundle_cannot_read=not acao)
     except Exception as e:                                       # noqa: BLE001
         record('cors_statsapi', req.full_url, -1, str(e).encode(), error=str(e)[:160])
+
+    # The live page also fetches game feeds; schedule CORS alone is not evidence that feed CORS works.
+    feed_cors_url = 'https://statsapi.mlb.com/api/v1.1/game/822974/feed/live?fields=' + FEED_FIELDS
+    req = urllib.request.Request(feed_cors_url,
+        headers={**UA, 'Origin': 'https://buffedlizard55-lab.github.io'})
+    try:
+        with urllib.request.urlopen(req, timeout=45) as r:
+            acao = r.headers.get('Access-Control-Allow-Origin', '')
+            record('cors_statsapi_feed', req.full_url, r.status, r.read(),
+                   origin_sent='https://buffedlizard55-lab.github.io',
+                   access_control_allow_origin=acao or '(absent)',
+                   browser_bundle_cannot_read=not acao)
+    except Exception as e:                                       # noqa: BLE001
+        record('cors_statsapi_feed', req.full_url, -1, str(e).encode(), error=str(e)[:160])
 
     REPORT = {'generated_utc': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
               'note': 'Observed official-endpoint behaviour; committed by .github/workflows/probe.yml. '

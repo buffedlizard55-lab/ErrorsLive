@@ -6,16 +6,46 @@
   "n_error": 241,
   "error_rate_pct": 0.798,
   "games": 590,
-  "auc_grouped": 0.7809,
+  "auc_grouped": 0.7808,
   "auc_ci95": [
-   0.7543,
-   0.806
+   0.7542,
+   0.8056
   ],
-  "auc_random_kfold": 0.7778,
+  "auc_random_kfold": 0.7774,
+  "average_precision_grouped": 0.02652,
+  "average_precision_random_kfold": 0.02652,
   "auc_gbm_grouped": 0.7757,
   "brier": 0.007837,
-  "top1": 0.747,
-  "p_error_max_x100": 9.326,
+  "brier_isotonic_nested": 0.007867,
+  "top1": 0.7471,
+  "p_error_training_min_x100": 0.023,
+  "p_error_training_max_x100": 9.326,
+  "top_error_risk_bands_oof": [
+   {
+    "top_percent": 1,
+    "n": 303,
+    "errors_found": 18,
+    "precision": 0.05941,
+    "recall": 0.07469,
+    "lift_over_base_rate": 7.446
+   },
+   {
+    "top_percent": 5,
+    "n": 1511,
+    "errors_found": 47,
+    "precision": 0.03111,
+    "recall": 0.19502,
+    "lift_over_base_rate": 3.899
+   },
+   {
+    "top_percent": 10,
+    "n": 3021,
+    "errors_found": 77,
+    "precision": 0.02549,
+    "recall": 0.3195,
+    "lift_over_base_rate": 3.195
+   }
+  ],
   "error_recall": 0.0,
   "error_nominated_top1": 0
  },
@@ -25,8 +55,15 @@
   "errors": 24
  },
  "ingested": {
+  "games": 2430,
+  "games_verified_vs_linescore": 2429,
+  "games_unverified": [
+   823490
+  ]
+ },
+ "model_dataset": {
   "bip": 30298,
-  "games": 24,
+  "games": 590,
   "errors": 243,
   "fielders_choice": 183
  },

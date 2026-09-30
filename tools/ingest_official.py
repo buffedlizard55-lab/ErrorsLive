@@ -14,17 +14,16 @@ WHAT IT WRITES
   docs/data/bip_official.csv   one row per batted ball in play: Statcast vector + the pre-pitch
                                context that is knowable at contact (base state, outs, handedness).
   docs/data/replays.csv        one row per REVIEWED play: the official replay record with the
-                               final call, the review type, the score before/after, whether a run
-                               was removed (two independent flags, see below), the RBI each
-                               candidate ruling would award, and a per-play video link.
+                               final call, the review type, the score before/after, run-impact diagnostics,
+                               conditional RBI notes and a per-play video link.
   data/ingest/ingest_report.json  provenance: every request pattern, counts, flags, timings.
 
-RUN-REMOVAL EVIDENCE (never guessed — each row carries its own proof)
-  A) HARD: the feed records N runners whose movement ends at "score" but the scoreboard moved by
-     fewer than N runs. If that can happen at all it means a run was removed; the count is reported
-     either way, so the rule's real-world frequency is visible rather than assumed.
-  B) HEURISTIC: overturned review whose own text is about a run (home-run review turned into a
-     non-home-run, "out at home", scoring/timing play). Stored with the rule string verbatim.
+RUN-IMPACT DIAGNOSTICS (neither field is proof of a removed run)
+  A) `run_removed_hard` is a legacy field name for a runner-movement/scoreboard consistency
+     discrepancy. A nonzero value requires review; the corrected feed does not expose the pre-review
+     scoreboard, so this comparison cannot prove that a run was removed.
+  B) HEURISTIC: an overturned review whose subject/final text suggests a run was affected (e.g. a
+     home-run review ending in a non-home-run or a runner put out at home). It is an index aid only.
 
 USAGE
   python3 tools/ingest_official.py --plan data/ingest/plan.json
@@ -195,12 +194,11 @@ def final_call_text(desc):
 def run_removal_evidence(play, et, cls, desc, rd, runs_by_movement, score_delta, subject):
     """Two independent flags, each carrying the reason it fired.
 
-    HARD   #runners whose movement ends at "score" > runs added to the scoreboard. This is a
-           consistency test on the feed, not a detector of reviews: the feed publishes the CORRECTED
-           outcome, so it is expected to be consistent (and the report says how often it is not).
-    HEURISTIC  an overturned review whose own subject and final text mean a run left the board:
-           a home-run review overturned into a non-home-run (the batter's run is gone), or a
-           scoring/tag/force review whose corrected text puts a runner out at home.
+    CONSISTENCY  max(0, #runner movements ending at "score" - scoreboard delta). A nonzero value
+           flags disagreement in the corrected feed; it does not prove a prior run was removed.
+    HEURISTIC  an overturned review whose subject and final text suggest run impact (e.g. a
+           home-run review ending in a non-home-run or a scoring review whose text puts a runner out).
+           This rule is an index aid, not a determination that the scoreboard lost a run.
     """
     hard = max(0, runs_by_movement - score_delta)
     final_text, overturned = final_call_text(desc)
@@ -217,19 +215,31 @@ def run_removal_evidence(play, et, cls, desc, rd, runs_by_movement, score_delta,
     return hard, bool(reasons), '; '.join(reasons)
 
 
-def rbi_if_ruled(cls, run_scored, official_et):
-    """RBI consequence of each candidate ruling (MLB Rules 9.04 / 9.12 / 9.16 — see docs/rules.html)."""
+def rbi_if_ruled(cls, run_scored, official_et, bases=(), outs=0):
+    """Return a conditional RBI reminder, never a deterministic scorer decision.
+
+    The full operative text of 2026 Rule 9.04(a)(3) was not independently retrievable in this
+    review. Until that exact wording is verified, the tool deliberately does not encode a specific
+    runner/outs eligibility test; it points the reader to the official rule and scorer instead.
+    """
     if not run_scored:
         return None
     if official_et == 'home_run':
-        return 'RBI (home run scores the batter)' if cls != 'error' else 'no RBI (an HR cannot be an error)'
+        if cls == 'hit':
+            return 'The official play is a home run (a hit); check the recorded RBI field for the official result.'
+        return ('not a valid alternative: the official play is a home run; this feed row cannot model '
+                'a counterfactual error or fielder\'s-choice ruling')
     if cls == 'error':
-        return 'NO RBI (run scores only because of the error)'
-    if official_et in ('grounded_into_double_play', 'double_play'):
-        return 'no RBI (run comes on a double play)'
+        return ('No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide '
+                'an exception; consult the full 2026 rule and the official scorer. This feed row cannot '
+                'establish whether the exception applies.')
     if cls == 'fielders_choice':
-        return "RBI possible (run-scoring fielder's choice is a scorer's call)"
-    return 'RBI'
+        return ("A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's "
+                'decision control, and this feed row does not settle any exception.')
+    if cls == 'hit':
+        return ('An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer '
+                'control any exception or alternative-call counterfactual.')
+    return 'RBI depends on the official scoring rule for this play.'
 
 
 def points_of_interest(play):
@@ -367,9 +377,9 @@ def ingest_game(meta, want_videos=False):
             row['run_removed_rule'] = why
             run_scored = row['runs_by_movement'] > 0
             et = res.get('eventType', '')
-            row['rbi_if_error'] = rbi_if_ruled('error', run_scored, et) or ''
-            row['rbi_if_hit'] = rbi_if_ruled('hit', run_scored, et) or ''
-            row['rbi_if_fc'] = rbi_if_ruled('fielders_choice', run_scored, et) or ''
+            row['rbi_if_error'] = rbi_if_ruled('error', run_scored, et, row['bases_before'].split(',') if row['bases_before'] != '-' else (), row['outs_before'] or 0) or ''
+            row['rbi_if_hit'] = rbi_if_ruled('hit', run_scored, et, row['bases_before'].split(',') if row['bases_before'] != '-' else (), row['outs_before'] or 0) or ''
+            row['rbi_if_fc'] = rbi_if_ruled('fielders_choice', run_scored, et, row['bases_before'].split(',') if row['bases_before'] != '-' else (), row['outs_before'] or 0) or ''
             row['mlb_gameday'] = f'https://www.mlb.com/gameday/{pk}'
             reps.append(row)
     ledger = {
@@ -573,9 +583,9 @@ def main(argv=None):
                          'content': f'{STATS}/api/v1/game/{{pk}}/content'},
            'windows': [], 'schedule_failures': [], 'game_failures': [], 'flags': [],
            'hard_run_removal_examples': [], 'run_removal_rule': (
-               'hard = (#runners whose movement ends at "score") - (scoreboard delta); '
-               'heuristic = overturned review whose text/type concerns a run (HR review turned into '
-               'a non-HR, runner out at home, scoring/timing review with a runner at the plate)')}
+               'legacy run_removed_hard field = max(0, runner movements ending at score - scoreboard delta); '
+               'this is a feed consistency diagnostic, not proof of a run removal. Heuristic = an '
+               'overturned review whose subject/final text suggests a run was affected; it is an index aid only.')}
 
     metas, seen = [], set()
     for w in windows:
