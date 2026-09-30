@@ -952,6 +952,19 @@ check('watcher: a feed row that gains an eventType is recorded once with its fir
       and settled[0]['from'] == '' and settled[0]['to'] == 'field_error'
       and settled[0]['was_unresolved_in_feed'] == 1,
       json.dumps(settled)[:200])
+check('watcher: a column the stored snapshot never carried is not compared at all',
+      WR.detect_changes({('824872', '0'): {k: v for k, v in stored[('824872', '0')].items()
+                                           if k != 'status'}},
+                        [dict(fresh[0], status='scored')], set(), 'T1') == [])
+check('watcher: an unknown previous value (the old-format empty column) is not a change',
+      WR.detect_changes({('824872', '0'): dict(stored[('824872', '0')], status='',
+                                               reviewed='', overturned='')},
+                        [dict(fresh[0], status='scored', reviewed=1, overturned=1)],
+                        set(), 'T1') == [])
+check('watcher: a settled status on top of a known pre-decision status is still recorded',
+      [c['field'] for c in WR.detect_changes(
+          {('824872', '0'): dict(stored[('824872', '0')], status='no_event_type_yet')},
+          [dict(fresh[0], status='scored')], set(), 'T1')] == ['status'])
 seen_w = set()
 WR.detect_changes(stored, [dict(fresh[0], event_type='field_error')], seen_w, 'T1')
 check('watcher: a workflow retry of the same transition is deduplicated',
@@ -962,6 +975,24 @@ check('watcher: a later recurrence of the same transition is preserved, not swal
 check('watcher: every recorded change carries the official feed and scoring-changes links',
       all(c['feed_url'].startswith('https://statsapi.mlb.com/')
           and c['scoring_changes_url'].startswith('https://www.mlb.com/') for c in settled))
+
+_real_get_json = WR.get_json
+WR.get_json = lambda url, timeout=45, retries=3: {'dates': [
+    {'date': '2026-09-22', 'games': [{'gamePk': 824785, 'gameType': 'R', 'officialDate': '2026-09-22',
+                                      'status': {'abstractGameState': 'Final', 'detailedState': 'Final'},
+                                      'teams': {'away': {'team': {'abbreviation': 'TOR'}},
+                                                'home': {'team': {'abbreviation': 'BAL'}}}}]},
+    {'date': '2026-09-23', 'games': [{'gamePk': 824785, 'gameType': 'R', 'officialDate': '2026-09-22',
+                                      'status': {'abstractGameState': 'Final', 'detailedState': 'Final'},
+                                      'teams': {'away': {'team': {'abbreviation': 'TOR'}},
+                                                'home': {'team': {'abbreviation': 'BAL'}}}}]}]}
+try:
+    _sched = WR.schedule('2026-09-22', '2026-09-23')
+finally:
+    WR.get_json = _real_get_json
+check('watcher: a game the schedule lists on two dates is fetched once, at its official date',
+      len(_sched) == 1 and _sched[0]['date'] == '2026-09-22' and _sched[0]['pk'] == '824785',
+      json.dumps(_sched))
 
 ALERTS_JSON = load_json(ROOT / 'docs/data/alerts.json')
 check('alerts.json: the CI ledger exists with its provenance and honesty note',
@@ -976,8 +1007,36 @@ check('alerts.json: every row names its source and carries a checkable link',
       and all(a.get('note') for a in ALERTS_JSON['alerts']))
 check('alerts.json: counts agree with the rows they summarise',
       ALERTS_JSON['counts']['alerts'] == len(ALERTS_JSON['alerts'])
+      and ALERTS_JSON['counts']['alerts_available'] >= ALERTS_JSON['counts']['alerts']
       and ALERTS_JSON['counts']['run_affected_reviews']
       == sum(1 for a in ALERTS_JSON['alerts'] if a['source'] == 'ci-review'))
+check('alerts.json: the bounded ledger keeps every run-affected review row',
+      ALERTS_JSON['counts']['run_affected_reviews']
+      == sum(1 for a in ALERTS_JSON['alerts'] if a['type'] == 'run_at_stake')
+      and ALERTS_JSON['counts']['run_affected_reviews'] > 0)
+check('alerts.json: the watcher block names the tool revision and the compared fields',
+      ALERTS_JSON['watcher'].get('tool') == 'tools/watch_rulings.py'
+      and isinstance(ALERTS_JSON['watcher'].get('tool_version'), int)
+      and isinstance(ALERTS_JSON['watcher'].get('fields_compared'), list))
+check('alerts.json: redundant field rows are folded into one alert, and the count says so',
+      ALERTS_JSON['counts'].get('ci_alerts_folded_away', 0) >= 0
+      and ALERTS_JSON['counts']['ci_changes'] >= ALERTS_JSON['counts']['run_affected_reviews'])
+
+WATCH_LEDGER = ROOT / 'data' / 'ingest' / 'ruling_changes.csv'
+if WATCH_LEDGER.exists() and WATCH_LEDGER.stat().st_size:
+    LEDGER_ROWS = list(csv.DictReader(open(WATCH_LEDGER, newline='')))
+    check('watcher ledger: an unknown previous value was never published as an observed change',
+          not [r for r in LEDGER_ROWS
+               if r['from'] == '' and r['field'] in WR.UNKNOWN_FROM_IS_NOT_A_CHANGE],
+          f"{sum(1 for r in LEDGER_ROWS if r['from'] == '' and r['field'] in WR.UNKNOWN_FROM_IS_NOT_A_CHANGE)} "
+          'phantom rows')
+    check('watcher ledger: every row names the field, the transition and the official feed',
+          all(r['field'] and r['feed_url'].startswith('https://statsapi.mlb.com/') for r in LEDGER_ROWS))
+SNAP_ROWS = list(csv.DictReader(open(ROOT / 'data' / 'ingest' / 'ruling_snapshot.csv', newline='')))
+SNAP_KEYS = [(r['game_pk'], r['at_bat']) for r in SNAP_ROWS]
+check('watcher snapshot: one row per (game_pk, at_bat) — a game listed on two dates cannot duplicate plays',
+      len(SNAP_KEYS) == len(set(SNAP_KEYS)),
+      f'{len(SNAP_KEYS) - len(set(SNAP_KEYS))} duplicate rows')
 BROKEN_WATCH = (ALERTS_JSON['watcher'].get('status_ok') is False)
 check('alerts.json: a watcher failure is surfaced, never shown as a silent zero',
       (not BROKEN_WATCH) or bool(ALERTS_JSON['watcher'].get('error')))

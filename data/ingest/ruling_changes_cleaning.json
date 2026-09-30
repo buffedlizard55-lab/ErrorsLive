@@ -1,0 +1,24 @@
+{
+ "cleaned_utc": "2026-09-30T04:2x:00Z",
+ "file": "data/ingest/ruling_changes.csv",
+ "rows_before": 13456,
+ "rows_dropped": 12349,
+ "rows_after": 1107,
+ "dropped_rule": "field == 'status' and from == ''",
+ "reason": "The snapshot the run compared against was written before the `status` column existed, so every row read back as '' and its first re-observation was recorded as '' -> 'scored'. Those rows are unknown previous values, not observed changes; the comparison now skips columns the previous snapshot did not store (tools/watch_rulings.py UNKNOWN_FROM_IS_NOT_A_CHANGE). The untouched raw ledger of that first post-fix run is in git commit e81bb25 (git show e81bb25:data/ingest/ruling_changes.csv).",
+ "kept_rows_by_field": {
+  "reviewed": 426,
+  "review_type": 426,
+  "overturned": 255
+ },
+ "kept_rows_by_transition": {
+  "reviewed: 0 -> 1": 1,
+  "review_type:  -> MJ": 1,
+  "overturned: 0 -> 1": 1,
+  "review_type:  -> MA": 1,
+  "review_type:  -> NH": 1,
+  "review_type:  -> MF": 1,
+  "review_type:  -> NO": 1,
+  "review_type:  -> MI": 1
+ }
+}

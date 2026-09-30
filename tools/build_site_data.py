@@ -135,18 +135,39 @@ def write_alerts():
         else load_csv(ROOT / 'data' / 'ingest' / 'replays.csv')
     videos = {(v['game_pk'], v['play_id']): v for v in load_csv(DATA / 'replay_videos.csv')}
 
-    alerts = []
+    # Map a recorded field transition onto the alert vocabulary the browser engine uses. Several
+    # fields move together for one play (a review posts `reviewed`, `review_type` and often
+    # `overturned` in the same capture, and a settled ruling moves `status` with `event_type`), so
+    # the redundant members are folded away rather than published as three separate alerts.
+    by_play = {}
+    for r in changes:
+        by_play.setdefault((r.get('game_pk'), r.get('at_bat'), r.get('detected_utc')), set()).add(
+            r.get('field', ''))
+    alerts, suppressed = [], 0
     for r in changes:
         field = r.get('field', '')
-        alert_type = {'event_type': 'event_type_changed', 'rbi': 'rbi_changed'}.get(field,
-                                                                                     'feed_field_changed')
-        if r.get('from') == '' and field == 'event_type':
-            alert_type = 'decision_settled'
-        severity = {'event_type_changed': 'critical', 'decision_settled': 'high',
-                    'rbi_changed': 'critical'}.get(alert_type, 'medium')
+        group = by_play.get((r.get('game_pk'), r.get('at_bat'), r.get('detected_utc')), set())
+        if field == 'review_type' or (field == 'reviewed' and 'overturned' in group) \
+                or (field == 'status' and 'event_type' in group):
+            suppressed += 1
+            continue
+        if field == 'event_type':
+            alert_type = 'decision_settled' if r.get('from') == '' else 'event_type_changed'
+        elif field == 'rbi':
+            alert_type = 'rbi_changed'
+        elif field == 'overturned':
+            alert_type = 'review_overturned'
+        elif field == 'reviewed':
+            alert_type = 'review_added'
+        else:
+            alert_type = 'feed_field_changed'
+        severity = {'event_type_changed': 'critical', 'rbi_changed': 'critical',
+                    'decision_settled': 'high', 'review_overturned': 'high',
+                    'review_added': 'medium'}.get(alert_type, 'medium')
         alerts.append({
             'id': f"ci-watch|{r.get('game_pk')}|{r.get('at_bat')}|{field}|{r.get('detected_utc')}",
             'type': alert_type, 'severity': severity, 'at': r.get('detected_utc', ''),
+            'observed_field': field,
             'source': 'ci-watch', 'game_pk': r.get('game_pk', ''), 'date': r.get('date', ''),
             'matchup': r.get('matchup', ''), 'inning': r.get('inning', ''), 'half': r.get('half', ''),
             'batter': r.get('batter', ''), 'play_id': r.get('play_id', ''),
@@ -155,8 +176,10 @@ def write_alerts():
             'was_unresolved_in_feed': int(r.get('was_unresolved_in_feed') or 0),
             'first_observation_status': r.get('first_observation_status', ''),
             'description': r.get('description', '')[:300],
-            'note': r.get('rbi_note') or ('Captured field value changed between two scheduled '
-                                          'observations of the official feed.'),
+            'note': (r.get('rbi_note') or '') + (
+                ' The scheduled watcher saw this official-feed field differ between two captures; '
+                'that is what is recorded here, not a claim about when or why the league changed it. '
+                'A feed re-read can also carry backfilled metadata, so check the linked feed.'),
             'feed_url': r.get('feed_url', ''),
             'watch_url': r.get('savant_url', ''),
         })
@@ -190,9 +213,17 @@ def write_alerts():
         })
 
     alerts.sort(key=lambda a: (a['at'] or '', a['id']), reverse=True)
+    # The page shows a bounded ledger. Keep every run-affected review row (the brief's target list)
+    # and the most severe, most recent observations; never let a bulk backfill push the review rows
+    # out of the published file.
+    rank = {'critical': 0, 'high': 1, 'medium': 2, 'info': 3}
+    ranked = sorted(alerts, key=lambda a: (rank.get(a['severity'], 3), a['at'] or '', a['id']),
+                    reverse=False)
+    published = ranked[:400]
+    published.sort(key=lambda a: (a['at'] or a.get('observed_at') or '', a['id']), reverse=True)
     dates = [r.get('date', '') for r in snap if r.get('date')]
     unresolved = sum(r.get('status') == 'no_event_type_yet' for r in snap)
-    counts = Counter(a['type'] for a in alerts)
+    counts = Counter(a['type'] for a in published)
     (DATA / 'alerts.json').write_text(json.dumps({
         'available': True,
         'generated_from': ['data/ingest/ruling_changes.csv', 'data/ingest/ruling_snapshot.csv',
@@ -207,14 +238,18 @@ def write_alerts():
             'window': watch_status.get('window') or ([min(dates), max(dates)] if dates else []),
             'plays_observed': len(snap), 'unresolved_in_feed': unresolved,
             'games': watch_status.get('games'), 'changes_recorded': len(changes),
+            'tool': watch_status.get('tool', ''), 'tool_version': watch_status.get('tool_version'),
+            'fields_compared': watch_status.get('fields_compared') or [],
         },
         'counts': {
-            'alerts': len(alerts), 'ci_changes': len(changes), 'run_affected_reviews': len(affected),
-            'by_type': dict(sorted(counts.items())),
+            'alerts': len(published), 'alerts_available': len(alerts),
+            'ci_changes': len(changes), 'run_affected_reviews': len(affected),
+            'ci_alerts_folded_away': suppressed, 'by_type': dict(sorted(counts.items())),
         },
-        'alerts': alerts[:400],
+        'alerts': published,
     }, indent=1))
-    return {'alerts': len(alerts), 'ci_changes': len(changes), 'affected': len(affected)}
+    return {'alerts': len(alerts), 'published': len(published), 'ci_changes': len(changes),
+            'affected': len(affected)}
 
 
 def main():

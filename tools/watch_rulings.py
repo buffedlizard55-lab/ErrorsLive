@@ -53,6 +53,12 @@ WATCHABLE_STATES = {'Live', 'Final'}
 # stamped. Bump it whenever the comparison or the stored shape changes.
 TOOL_VERSION = 2
 WATCH_FIELDS = ('event_type', 'rbi', 'description', 'status', 'reviewed', 'overturned', 'review_type')
+# `status` is derived here from eventType + hitData, and `reviewed`/`overturned` are booleans: a stored
+# empty value therefore means "the snapshot that produced this row predates the column", not "the play
+# had no ruling". The first run after the 2026-09-30 fix recorded 12,349 of exactly those phantom
+# transitions (`'' -> 'scored'` against a snapshot written before `status` existed) and published them
+# as alerts; an unknown previous value must never be reported as an observed change.
+UNKNOWN_FROM_IS_NOT_A_CHANGE = ('status', 'reviewed', 'overturned')
 SCORING_CHANGES_URL = 'https://www.mlb.com/official-information/scoring-changes'
 
 
@@ -95,14 +101,21 @@ def schedule(start, end, active_only=False):
     """Official schedule for live and final games; previews are not yet scoreable."""
     url = (f'{STATS}/api/v1/schedule?sportId=1&startDate={start}&endDate={end}'
            f'&gameType=R,F,D,L,W&hydrate=team')
-    out = []
+    out, seen_pks = [], set()
     for d in get_json(url).get('dates', []):
         for g in d['games']:
             status = g.get('status') or {}
             abstract_state = status.get('abstractGameState', '')
             if abstract_state not in WATCHABLE_STATES or (active_only and abstract_state != 'Live'):
                 continue
-            out.append({'pk': str(g['gamePk']), 'date': d['date'],
+            pk = str(g['gamePk'])
+            if pk in seen_pks:
+                # A game that runs past midnight is listed under both dates; the same gamePk would
+                # otherwise be fetched twice and every play would be stored twice under two dates
+                # (the 2026-09-30 snapshot had 12,402 such phantom rows).
+                continue
+            seen_pks.add(pk)
+            out.append({'pk': pk, 'date': str(g.get('officialDate') or d['date']),
                         'away': team_abbr(g['teams']['away']['team']),
                         'home': team_abbr(g['teams']['home']['team']),
                         'gameType': g.get('gameType', 'R'),
@@ -182,6 +195,19 @@ def load_snapshot():
             for r in csv.DictReader(open(SNAP, newline=''))}
 
 
+def stored_fields():
+    """The watched fields the stored snapshot actually carries a column for.
+
+    Comparing a column the previous snapshot never stored produces a phantom change on its first run
+    (the 2026-09-30 flood), so the previous format gates what can be compared.
+    """
+    if not SNAP.exists() or not SNAP.stat().st_size:
+        return ()
+    with open(SNAP, newline='') as f:
+        header = next(csv.reader(f), [])
+    return tuple(f for f in WATCH_FIELDS if f in header)
+
+
 def write_csv(path, rows, keys):
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'w', newline='') as f:
@@ -212,7 +238,7 @@ def normalize(value):
     return str(value)
 
 
-def detect_changes(previous, current_rows, seen, now_utc, feed_url_for=None):
+def detect_changes(previous, current_rows, seen, now_utc, feed_url_for=None, fields=None):
     """Diff the stored feed state against one fresh observation.
 
     Pure function on purpose: `tests/test_pipeline.py` feeds it a stored shape and a fresh shape
@@ -225,10 +251,12 @@ def detect_changes(previous, current_rows, seen, now_utc, feed_url_for=None):
         prev = previous.get(key)
         if not prev:
             continue
-        for field in WATCH_FIELDS:
+        for field in (fields or WATCH_FIELDS):
             was, current = normalize(prev.get(field, '')), normalize(r.get(field, ''))
             if was == current:
                 continue
+            if was == '' and field in UNKNOWN_FROM_IS_NOT_A_CHANGE:
+                continue                     # the previous format never stored this column
             previous_change_utc = normalize(prev.get('last_changed_utc') or prev.get('last_seen_utc'))
             change_key = transition_key(key[0], key[1], field, was, current, previous_change_utc)
             if change_key in seen:
@@ -328,7 +356,19 @@ def main(argv=None):
             if (i + 1) % 40 == 0:
                 print(f'  {i+1}/{len(games)} games, {len(rows)} scoring-relevant plays', flush=True)
 
+    deduped, seen_keys = [], set()
+    for r in rows:
+        key = (str(r['game_pk']), str(r['at_bat']))
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+        deduped.append(r)
+    if len(deduped) != len(rows):
+        print(f'dropped {len(rows) - len(deduped)} duplicate (game_pk, at_bat) rows before comparing')
+    rows = deduped
+
     old = load_snapshot()
+    fields = stored_fields()
     now_utc = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     print(f'fetched {len(rows)} scoring-relevant plays from {len(games)} games', flush=True)
     changes = []
@@ -339,7 +379,7 @@ def main(argv=None):
                 seen.add(transition_key(r['game_pk'], r['at_bat'], r['field'], r['from'], r['to'],
                                         r.get('previous_last_changed_utc', '')))
 
-    changes = detect_changes(old, rows, seen, now_utc)
+    changes = detect_changes(old, rows, seen, now_utc, fields=fields)
     for c in changes:
         print(f"CHANGE {c['date']} {c['matchup']} ab{c['at_bat']} {c['field']}: "
               f"{c['from']!r} -> {c['to']!r}", flush=True)
@@ -372,6 +412,7 @@ def main(argv=None):
               f'and {CHANGES.relative_to(ROOT)} ({len(changes)} new)', flush=True)
 
     summary = {'ok': not failures, 'mode': mode, 'window': [start, anchor.isoformat()],
+               'fields_compared': list(fields),
                'games': len(games), 'live_games': sum(g['abstract_state'] == 'Live' for g in games),
                'final_games': sum(g['abstract_state'] == 'Final' for g in games),
                'plays': len(rows), 'unresolved_in_feed': unresolved, 'changes': len(changes),

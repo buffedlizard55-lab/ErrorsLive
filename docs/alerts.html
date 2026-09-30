@@ -348,7 +348,12 @@ function renderCi() {
     Window <b>${esc((w.window || []).join(' → ') || 'unknown')}</b> · plays observed <b>${esc(w.plays_observed || 0)}</b> ·
     with contact data but no <code>result.eventType</code> in the stored snapshot <b>${esc(w.unresolved_in_feed || 0)}</b> ·
     field changes recorded <b>${esc(w.changes_recorded || 0)}</b> · mode <b>${esc(w.mode || 'not reported')}</b> ·
-    status updated <b>${esc(w.updated_utc || 'unknown')}</b>.</div>
+    status updated <b>${esc(w.updated_utc || 'unknown')}</b> ·
+    watcher revision <b>${esc(w.tool || 'unrecorded')}${w.tool_version ? ' v' + esc(w.tool_version) : ''}</b>
+    ${w.fields_compared && w.fields_compared.length ? `· compared fields <code>${esc(w.fields_compared.join(', '))}</code>` : ''}
+    ${(CI.counts && CI.counts.ci_alerts_folded_away) ? `· ${esc(CI.counts.ci_alerts_folded_away)} redundant field rows
+      (a review posts reviewed + review_type + overturned together; a settled ruling moves status with
+      event_type) are folded into one alert each and are still in the downloadable ledger` : ''}.</div>
     <div class="scroll"><table class="compact">
       <tr><th>Observed</th><th>Type</th><th>Game / date</th><th>Play</th><th>Change</th><th>Why it is listed</th><th>Source / video</th></tr>` +
     (alerts.length ? alerts.map(a => `<tr>
