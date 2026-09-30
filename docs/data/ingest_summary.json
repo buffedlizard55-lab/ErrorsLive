@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-30T05:34:48+00:00",
+ "generated_utc": "2026-09-30T18:25:02+00:00",
  "windows": [
   {
    "start": "2026-03-25",
@@ -112,7 +112,7 @@
    "": 1792,
    "404": 321
   },
-  "elapsed_s": 100.5
+  "elapsed_s": 136.2
  },
  "endpoints": {
   "feed": "https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live?fields=liveData,plays,allPlays,about,atBatIndex...",
