@@ -396,8 +396,12 @@ check('watch_rulings.team_abbr accepts the hydrated and un-hydrated schedule sha
       wr.team_abbr({'abbreviation': 'NYY', 'name': 'New York Yankees'}) == 'NYY'
       and wr.team_abbr({'name': 'Boston Red Sox'}) == 'Boston Red Sox'
       and wr.team_abbr({}) == '' and wr.team_abbr(None) == '')
+wr_src = (ROOT / 'tools/watch_rulings.py').read_text()
 check('watch_rulings requests hydrated teams (the un-hydrated shape caused a real CI crash)',
-      'hydrate=team' in (ROOT / 'tools/watch_rulings.py').read_text())
+      'hydrate=team' in wr_src)
+check('the ruling snapshot only rewrites rows whose observation actually changed '
+      '(a per-run rewrite would bloat the repo with a multi-megabyte blob per collection)',
+      "unchanged = bool(prev)" in wr_src and "r['last_seen_utc']" in wr_src)
 check('watch_rulings.py always leaves a readable status file',
       'ruling_watch_status.json' in (ROOT / 'tools/watch_rulings.py').read_text()
       and 'run_safely' in (ROOT / 'tools/watch_rulings.py').read_text())

@@ -210,7 +210,12 @@ def main(argv=None):
         for r in rows:
             prev = old.get((r['game_pk'], r['at_bat']))
             r['first_seen_utc'] = (prev or {}).get('first_seen_utc') or now_utc
-            r['last_seen_utc'] = now_utc
+            # `last_seen_utc` only moves when the observation actually changes. Stamping it on every
+            # run would rewrite the whole multi-megabyte snapshot on each collection and bloat the
+            # repository with a new blob per run for no information gain.
+            unchanged = bool(prev) and all(prev.get(k, '') == r.get(k, '')
+                                           for k in ('event_type', 'rbi', 'description'))
+            r['last_seen_utc'] = (prev or {}).get('last_seen_utc') or now_utc if unchanged else now_utc
         keep = [(r['game_pk'], r['at_bat']) for r in rows]
         prev_only = [r for k, r in old.items() if k not in set(keep)]
         write_csv(SNAP, rows + prev_only,
