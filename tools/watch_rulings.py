@@ -48,6 +48,10 @@ BATTED = {'single', 'double', 'triple', 'home_run', 'field_out', 'force_out', 'f
 
 
 WATCHABLE_STATES = {'Live', 'Final'}
+# Recorded in the status file: a run's status is only as trustworthy as the revision of this tool
+# that produced it, and the 2026-09-30 TypeError fix was invisible from the outside until this was
+# stamped. Bump it whenever the comparison or the stored shape changes.
+TOOL_VERSION = 2
 WATCH_FIELDS = ('event_type', 'rbi', 'description', 'status', 'reviewed', 'overturned', 'review_type')
 SCORING_CHANGES_URL = 'https://www.mlb.com/official-information/scoring-changes'
 
@@ -395,6 +399,9 @@ def run_safely(argv=None):
     except BaseException as e:                                   # noqa: BLE001 - report, never hide
         status = {'ok': False, 'exit_code': 1, 'error': f'{type(e).__name__}: {e}'[:400]}
         print('WATCH FAILED ' + json.dumps(status), flush=True)
+    status['tool'] = 'tools/watch_rulings.py'
+    status['tool_version'] = TOOL_VERSION
+    status['python'] = sys.version.split()[0]
     for name in ('ruling_snapshot.csv', 'ruling_changes.csv'):
         path = ROOT / 'data' / 'ingest' / name
         status[name] = {'rows': (sum(1 for _ in open(path)) - 1) if path.exists() else None,

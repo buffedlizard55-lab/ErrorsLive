@@ -1104,6 +1104,67 @@ check('model page renders the new diagnostics from the JSON, not from literals',
       all(k in (ROOT / 'docs/model.html').read_text()
           for k in ('review_queue_oof', 'permutation_importance')))
 
+# ---------------------------------------------------------------- M. watcher, end to end, offline
+print('== M. watcher end to end on the cached official feeds ==')
+import copy as _copy, pathlib as _pathlib, tempfile as _tempfile
+RAW_FEEDS = {f.stem: json.loads(f.read_text()) for f in sorted((ROOT / 'data/raw').glob('*.json'))}
+check('watcher e2e: the repository keeps cached official feeds to replay the collector against',
+      len(RAW_FEEDS) >= 20, f'{len(RAW_FEEDS)} feed files')
+GAMES = [{'pk': pk, 'date': '2026-09-29', 'away': 'AWY', 'home': 'HME', 'abstract_state': 'Final',
+          'gameType': 'R', 'state': 'Final'} for pk in sorted(RAW_FEEDS)]
+_save = (WR.schedule, WR.get_json, WR.ROOT, WR.SNAP, WR.CHANGES)
+with _tempfile.TemporaryDirectory() as _td:
+    _tmp = _pathlib.Path(_td)
+    WR.ROOT, WR.SNAP, WR.CHANGES = _tmp, _tmp / 'snap.csv', _tmp / 'changes.csv'
+    WR.schedule = lambda start, end, active_only=False: list(GAMES)
+    WR.get_json = lambda url, timeout=45, retries=3: RAW_FEEDS[url.split('/game/')[1].split('/')[0]]
+    try:
+        rc1 = WR.run_safely(['--days', '21', '--date', '2026-09-29'])
+        st = json.loads((WR.ROOT / 'data' / 'ingest' / 'ruling_watch_status.json').read_text())
+        n_plays = st.get('plays', 0)
+        rc2 = WR.run_safely(['--days', '21', '--date', '2026-09-29'])
+        st2 = json.loads((WR.ROOT / 'data' / 'ingest' / 'ruling_watch_status.json').read_text())
+        check('watcher e2e: a full run over 24 cached official feeds completes and reports its state',
+              rc1 == 0 and st.get('ok') is True and n_plays > 1000 and not st.get('failures'),
+              json.dumps(st)[:200])
+        check('watcher e2e: the status file names the tool revision that produced it',
+              st.get('tool') == 'tools/watch_rulings.py' and st.get('tool_version') == WR.TOOL_VERSION)
+        check('watcher e2e: re-reading the same feeds raises no changes and no duplicate ledger rows',
+              rc2 == 0 and st2.get('changes') == 0
+              and (not WR.CHANGES.exists() or WR.CHANGES.stat().st_size == 0))
+
+        # Simulate the brief's core case end to end: a batted ball captured before the ruling, then the
+        # same feed re-read after the scorer's call lands.
+        pk0 = sorted(RAW_FEEDS)[0]
+        pi0, play = next((i, p) for i, p in enumerate(RAW_FEEDS[pk0]['liveData']['plays']['allPlays'])
+                         if (p.get('result') or {}).get('eventType') in WR.BATTED
+                         and next((e for e in p.get('playEvents') or [] if e.get('hitData')), None))
+        ab0 = str(pi0)
+        ruling = play['result']['eventType']
+        pending_feed = _copy.deepcopy(RAW_FEEDS[pk0])
+        pending_play = pending_feed['liveData']['plays']['allPlays'][pi0]
+        pending_play['result']['eventType'] = ''
+        pending_play['result'].pop('rbi', None)
+        RAW_FEEDS[pk0] = pending_feed
+        WR.run_safely(['--days', '21', '--date', '2026-09-29'])
+        st3 = json.loads((WR.ROOT / 'data' / 'ingest' / 'ruling_watch_status.json').read_text())
+        RAW_FEEDS[pk0] = _copy.deepcopy(pending_feed)
+        RAW_FEEDS[pk0]['liveData']['plays']['allPlays'][pi0]['result']['eventType'] = ruling
+        WR.run_safely(['--days', '21', '--date', '2026-09-29'])
+        ledger = list(csv.DictReader(open(WR.CHANGES, newline='')))
+        settled_rows = [c for c in ledger if c['game_pk'] == pk0 and c['at_bat'] == ab0
+                        and c['field'] == 'event_type' and c['to'] == ruling]
+        check('watcher e2e: a ruling that lands after a pre-decision capture is recorded as such',
+              len(settled_rows) == 1 and settled_rows[0]['was_unresolved_in_feed'] == '1'
+              and settled_rows[0]['first_observation_status'] == 'no_event_type_yet'
+              and settled_rows[0]['feed_url'].endswith(f'/game/{pk0}/feed/live'),
+              json.dumps(settled_rows[:1])[:220])
+        check('watcher e2e: the pre-decision capture and the settled state are both in the change ledger',
+              st3.get('unresolved_in_feed', 0) >= 1
+              and any(c['field'] == 'status' and c['to'] == 'no_event_type_yet' for c in ledger))
+    finally:
+        WR.schedule, WR.get_json, WR.ROOT, WR.SNAP, WR.CHANGES = _save
+
 print()
 if FAILED:
     print(f'{len(FAILED)} FAILURE(S):')
