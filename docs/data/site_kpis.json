@@ -55,9 +55,9 @@
    "2017",
    "2018"
   ],
-  "links_checked": 6078,
-  "links_ok": 1716,
-  "links_dead": 2570,
+  "links_checked": 6276,
+  "links_ok": 1712,
+  "links_dead": 2772,
   "links_unknown": 1792
  },
  "ingest": {
@@ -148,18 +148,18 @@
   ],
   "videos_attached": 17,
   "video_rows": 17,
-  "link_rows": 6078,
+  "link_rows": 6276,
   "link_status": {
    "520": 2426,
    "403": 25,
-   "200": 1716,
+   "200": 1712,
    "": 1792,
-   "404": 119
+   "404": 321
   },
-  "elapsed_s": 193.0
+  "elapsed_s": 134.9
  },
  "ingest_meta": {
-  "generated_utc": "2026-09-30T00:46:09+00:00",
+  "generated_utc": "2026-09-30T00:51:53+00:00",
   "windows": [
    {
     "start": "2026-03-25",
