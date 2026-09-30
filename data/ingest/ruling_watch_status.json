@@ -1,6 +1,6 @@
 {
  "ok": true,
- "mode": "live-only",
+ "mode": "live-and-final",
  "window": [
   "2026-09-10",
   "2026-09-30"
@@ -14,24 +14,24 @@
   "overturned",
   "review_type"
  ],
- "games": 0,
+ "games": 239,
  "live_games": 0,
- "final_games": 0,
- "plays": 0,
+ "final_games": 239,
+ "plays": 12810,
  "unresolved_in_feed": 0,
- "changes": 0,
+ "changes": 1,
  "failures": [],
- "detected_utc": "2026-09-30T09:46:35Z",
+ "detected_utc": "2026-09-30T11:12:17Z",
  "exit_code": 0,
  "tool": "tools/watch_rulings.py",
  "tool_version": 2,
  "python": "3.12.3",
  "ruling_snapshot.csv": {
-  "rows": 12801,
-  "bytes": 3576211
+  "rows": 12810,
+  "bytes": 3578867
  },
  "ruling_changes.csv": {
-  "rows": 1107,
-  "bytes": 440715
+  "rows": 1108,
+  "bytes": 441318
  }
 }
