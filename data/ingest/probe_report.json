@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-30T04:27:39Z",
+ "generated_utc": "2026-09-30T05:25:59Z",
  "note": "Observed official-endpoint behaviour; committed by .github/workflows/probe.yml. Re-run: gh workflow run probe.yml",
  "records": [
   {
@@ -239,15 +239,15 @@
    "probe": "film_room_search",
    "url": "https://www.mlb.com/video/?q=overturned+call",
    "status": 200,
-   "bytes": 411174
+   "bytes": 411164
   },
   {
    "probe": "schedule_watcher_window",
    "url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-09-09&endDate=2026-09-29&gameType=R,F,D,L,W",
    "status": 200,
-   "bytes": 334755,
+   "bytes": 334798,
    "games": 255,
-   "final_games": 254
+   "final_games": 255
   },
   {
    "probe": "cors_statsapi",
