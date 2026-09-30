@@ -1,0 +1,132 @@
+{
+ "generated_utc": "2026-09-30T00:51:53+00:00",
+ "windows": [
+  {
+   "start": "2026-03-25",
+   "end": "2026-09-27",
+   "game_types": [
+    "D",
+    "F",
+    "L",
+    "R",
+    "W"
+   ],
+   "days_with_games": 184,
+   "final_games_found": 2459,
+   "cumulative_unique_games": 2430
+  }
+ ],
+ "summary": {
+  "games": 2430,
+  "plays": 184328,
+  "bip": 124620,
+  "errors": 1042,
+  "fc": 727,
+  "numeric_ok": 123978,
+  "class_counts": {
+   "out": 82994,
+   "hit": 39848,
+   "error": 1042,
+   "fielders_choice": 727,
+   "other": 9
+  },
+  "reviews": 11528,
+  "overturned": 6149,
+  "run_removed_hard_rows": 0,
+  "run_removed_heuristic_rows": 17,
+  "games_verified_vs_linescore": 2429,
+  "games_unverified": [
+   823490
+  ],
+  "review_types": {
+   "MJ": 10134,
+   "NH": 122,
+   "MF": 398,
+   "MA": 491,
+   "MD": 18,
+   "MC": 75,
+   "MI": 127,
+   "NF": 12,
+   "MB": 4,
+   "NI": 6,
+   "MW": 2,
+   "NA": 24,
+   "MV": 30,
+   "NE": 1,
+   "ME": 5,
+   "MO": 21,
+   "NB": 1,
+   "MP": 11,
+   "MM": 4,
+   "NQ": 4,
+   "NC": 4,
+   "NV": 2,
+   "MS": 10,
+   "NS": 2,
+   "MR": 1,
+   "MG": 1,
+   "MT": 5,
+   "NP": 1,
+   "NK": 2,
+   "ND": 2,
+   "MN": 3,
+   "MU": 2,
+   "NN": 1,
+   "NO": 2
+  },
+  "review_subjects": {
+   "unstated": 7929,
+   "pitch result": 2661,
+   "play at 1st": 392,
+   "tag play": 296,
+   "catch or drop": 18,
+   "force play": 75,
+   "hit by pitch": 80,
+   "touching a base": 4,
+   "shift violation": 2,
+   "catcher interference": 25,
+   "slide interference": 5,
+   "home-plate collision": 11,
+   "timing play": 4,
+   "fair or foul in outfield": 8,
+   "stadium boundary call": 8,
+   "passing runners": 1,
+   "grounds rule": 1,
+   "trap play": 5,
+   "tag-up play": 2,
+   "fan interference": 1
+  },
+  "pitch_challenges": 2661,
+  "replay_reviews": 8867,
+  "dates": [
+   "2026-03-25",
+   "2026-09-27"
+  ],
+  "videos_attached": 17,
+  "video_rows": 17,
+  "link_rows": 6276,
+  "link_status": {
+   "520": 2426,
+   "403": 25,
+   "200": 1712,
+   "": 1792,
+   "404": 321
+  },
+  "elapsed_s": 134.9
+ },
+ "endpoints": {
+  "feed": "https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live?fields=liveData,plays,allPlays,about,atBatIndex...",
+  "linescore": "https://statsapi.mlb.com/api/v1/game/{pk}/linescore",
+  "schedule": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date}",
+  "content": "https://statsapi.mlb.com/api/v1/game/{pk}/content"
+ },
+ "run_removal_rule": "hard = (#runners whose movement ends at \"score\") - (scoreboard delta); heuristic = overturned review whose text/type concerns a run (HR review turned into a non-HR, runner out at home, scoring/timing review with a runner at the plate)",
+ "flags": [
+  "823490: feed contains no plays"
+ ],
+ "flag_count": 1,
+ "game_failures": [],
+ "game_failure_count": 0,
+ "hard_run_removal_examples": [],
+ "source": "data/ingest/ingest_report.json (written by tools/ingest_official.py in CI)"
+}

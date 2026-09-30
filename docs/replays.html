@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Overturned calls &amp; runs removed — LiveScoringErrors</title>
+<link rel="stylesheet" href="site.css">
+<meta name="description" content="Every reviewed play pulled from the official MLB feed, the subset where a run left the scoreboard, and a click-to-watch / click-to-download video link for each one.">
+</head>
+<body>
+<header class="nav"><div class="nav-inner"></div></header>
+<main>
+  <h1>Overturned calls — and the runs they took off the board</h1>
+  <p class="lede">A challenge can erase a run that is already on the scoreboard. This page is built from two
+  independent, machine-read sources and keeps them labelled: the <b>modern ledger</b> straight from the league's
+  own play-by-play, and the <b>2014–18 archive</b> of replay rulings.</p>
+
+  <div class="grid cols2">
+    <div class="card"><h3>1 · Modern ledger — official MLB feed</h3><p class="muted">
+      Every reviewed play in every ingested game, straight from
+      <a href="https://statsapi.mlb.com/api/v1.1/game/823441/feed/live" target="_blank" rel="noopener">statsapi.mlb.com</a>
+      (<code>reviewDetails</code>): review type, challenge subject, the final call, the score before and after, and
+      two independent run-removal flags. Each row carries the play id the league itself publishes — that is what makes
+      a per-play video link possible.</p></div>
+    <div class="card"><h3>2 · Archive — 2014–18 replay rulings</h3><p class="muted">
+      The NY Daily News <a href="https://github.com/nydailynews/mlb-overturned-calls" target="_blank" rel="noopener">mlb-overturned-calls</a>
+      archive with its own run-removal field. Its video links are 12-year-old short links, so instead of pretending they
+      work, the pipeline <b>resolves every one and records what comes back</b> —
+      see <a href="overturned.html">the archive page</a>. Note: the repository named in the brief,
+      <code>github.com/buffedlizard55-lab/MLB-overturned-calls</code>, returns HTTP 404 (checked 2026-09-29).</p></div>
+  </div>
+
+  <h2>Run-removal, stated as evidence rather than a claim</h2>
+  <div class="note">
+    <p style="margin:0 0 6px"><b>HARD flag.</b> The feed's own runner movements say N runners reached the plate but the
+    scoreboard moved by fewer than N runs. That is only possible if a run came off — no interpretation involved. It is
+    published even when it is zero: on the current window it never fires, which says the league's feed keeps the
+    corrected movement and the corrected score consistent.</p>
+    <p style="margin:0"><b>HEURISTIC flag.</b> An overturned review whose own text or type is about a run: a home-run
+    review overturned into a non-home-run, a runner put out at home, or a scoring/timing review on a play where a
+    runner reached the plate. The exact reason is stored on the row and printed below, so every flag can be checked
+    against the video. Both flags carry their real counts — including when they are zero.</p>
+  </div>
+
+  <div class="grid cols3" id="kpis"><div class="card">Loading <code>data/replays_site.json</code>…</div></div>
+  <div id="flags"></div>
+
+  <h2>The list: overturned calls that removed a run</h2>
+  <p class="lede" style="font-size:.95rem">Each row has a <b>watch</b> link (Baseball Savant's per-play video page,
+  the league's own video host) and, when a file rendition is exposed for that play id, a <b>download</b> link straight
+  to the mp4. Rows with no file rendition say so — the pipeline never substitutes a different play's video. The
+  official feed for the game and the Baseball Savant game page are on every row for manual checking.</p>
+  <div class="rowflex" style="margin:10px 0">
+    <button class="btn" id="dlRuns">Download this list (CSV)</button>
+    <button class="btn" id="dlIdx">Download the overturned index (CSV)</button>
+    <a class="chip" href="data/replays.csv" download>Full audit ledger (CSV, every reviewed play) ↓</a>
+    <a class="chip" href="data/replay_videos.csv" download>Video ledger (CSV) ↓</a>
+  </div>
+  <div class="scroll"><table class="compact" id="tbl"></table></div>
+
+  <h2>Every overturned review in the window</h2>
+  <p class="lede" style="font-size:.95rem">The compact index of all overturned reviews (the table above is the
+  run-affected subset). Filter by anything in the row; the play id opens the per-play video page.</p>
+  <div class="filterbar">
+    <div><label>Review subject</label><select id="fSub"><option value="">any</option></select></div>
+    <div><label>Final call</label><select id="fCall"><option value="">any</option></select></div>
+    <div><label>Search date / game / batter</label><input id="fQ" placeholder="e.g. NYM @ PHI or Judge"></div>
+  </div>
+  <p class="legend" id="count"></p>
+  <div class="scroll"><table class="compact" id="idx"></table></div>
+
+  <h2>How to re-check any row by hand</h2>
+  <ol>
+    <li>Open the row's <b>official feed</b> link — that is <code>statsapi.mlb.com/api/v1.1/game/&lt;gamePk&gt;/feed/live</code>,
+      the league's own JSON. Search the page for the play id; <code>reviewDetails</code> on that play holds
+      <code>isOverturned</code> and <code>reviewType</code>.</li>
+    <li>Open the <b>watch</b> link. If the league has a clip for that play id it plays there; if not, the page says
+      "No Video Found" — that is an honest dead end, and the row is labelled.</li>
+    <li>For the RBI consequence, read the rule quotations on <a href="rules.html">Rules &amp; RBI</a>; they are copied
+      verbatim from MLB's own glossary, with the source links.</li>
+  </ol>
+</main>
+<footer><div class="inner">
+  <span>Sources: <a href="https://statsapi.mlb.com/api/v1.1/game/823441/feed/live" target="_blank" rel="noopener">MLB Stats API feed</a> ·
+    <a href="https://baseballsavant.mlb.com/" target="_blank" rel="noopener">baseballsavant.mlb.com</a> ·
+    <a href="https://github.com/nydailynews/mlb-overturned-calls" target="_blank" rel="noopener">NYDN archive</a></span>
+  <span>Not affiliated with MLB</span>
+</div></footer>
+<script src="site.js"></script>
+<script>
+let SITE = null, ROWS = [], IDX = [];
+const $ = id => document.getElementById(id);
+
+(async function () {
+  SITE = await loadMaybe('data/replays_site.json');
+  if (!SITE || !SITE.available) {
+    $('kpis').innerHTML = '<div class="warn">No <code>data/replays_site.json</code> yet — the CI ingest has not published a window.</div>';
+    return;
+  }
+  ROWS = SITE.rows || []; IDX = SITE.overturned_index || [];
+  const c = SITE.counts || {};
+  $('kpis').innerHTML =
+    kpiCard((c.reviewed_plays || 0).toLocaleString(), 'reviewed plays in the window (official feed)') +
+    kpiCard((c.overturned || 0).toLocaleString(), 'overturned on review') +
+    kpiCard((c.run_removed_hard || 0).toLocaleString(), 'run removals the feed itself proves (hard flag)') +
+    kpiCard((c.run_removed_heuristic || 0).toLocaleString(), 'run-affected by the labelled heuristic') +
+    kpiCard((c.with_watch_link || 0).toLocaleString(), 'run-affected rows with a per-play video page') +
+    kpiCard((c.with_mp4 || 0).toLocaleString(), 'run-affected rows with a direct mp4');
+  $('flags').innerHTML = `<div class="note" style="margin-top:10px">Window: <b>${esc((c.window || []).join(' → '))}</b> ·
+    pitch-result challenges <b>${esc(c.pitch_challenges)}</b> · replay reviews <b>${esc(c.replay_reviews)}</b>.
+    Review subjects found in the data: ${esc(Object.entries(SITE.subjects || {}).map(([k, v]) => k + ' ' + v).join(' · '))}.</div>`;
+  renderRuns(); renderIndex();
+  ['fSub', 'fCall', 'fQ'].forEach(id => $(id).addEventListener('input', renderIndex));
+})();
+
+function renderRuns() {
+  $('tbl').innerHTML =
+    `<tr><th>Date</th><th>Game</th><th>Inn</th><th>Batter</th><th>Review</th><th>What the official feed says</th>
+      <th>Runs / scoreboard</th><th>Why it is flagged</th><th>Watch / download</th></tr>` +
+    (ROWS.length ? ROWS.map(x => `<tr>
+        <td class="nowrap">${esc(x.date)}</td><td class="nowrap">${esc(x.matchup)}</td>
+        <td class="nowrap">${esc((x.half || '').charAt(0).toUpperCase())}${esc(x.inning)}</td>
+        <td>${esc(x.batter)}<br><span class="muted">${esc(x.event_type)}</span></td>
+        <td class="nowrap">${esc(x.review_type)}<br><span class="pill on">${esc(x.review_subject || 'subject unstated')}</span></td>
+        <td style="max-width:340px">${esc(x.description)}</td>
+        <td class="nowrap">runners scored: ${esc(x.runs_by_movement)}<br>scoreboard moved: ${esc(x.score_delta)}</td>
+        <td class="muted" style="max-width:260px">${esc(x.rule)}<br><span class="muted">RBI now: ${esc(x.rbi_official)}</span></td>
+        <td class="nowrap">
+          ${linkOut(x.watch_url, 'watch')}
+          ${x.mp4 ? `<a class="chip" href="${esc(x.mp4)}" download target="_blank" rel="noopener">download mp4 ↓</a>` : '<span class="muted">no mp4 rendition</span>'}
+          ${linkOut(x.feed_url, 'official feed')}
+          ${linkOut(x.savant_game_url, 'savant game')}
+        </td></tr>`).join('') :
+      '<tr><td colspan="9" class="muted">No run-affected overturned review in the current window — the honest answer is an empty list, not a padded one.</td></tr>');
+
+  $('dlRuns').addEventListener('click', () => downloadCSV('run_removed_overturns.csv',
+    ROWS.map(({ date, matchup, inning, half, batter, review_type, review_subject, event_type, runs_by_movement,
+                score_delta, run_removed_hard, run_removed_heuristic, rule, description, watch_url, mp4,
+                feed_url, play_id }) => ({ date, matchup, inning, half, batter, review_type, review_subject,
+                event_type, runs_by_movement, score_delta, run_removed_hard, run_removed_heuristic, rule,
+                description, watch_url, mp4, feed_url, play_id }))));
+  $('dlIdx').addEventListener('click', () => downloadCSV('overturned_index.csv', IDX.map(r => ({
+    date: r.d, game: r.m, game_pk: r.g, inning: r.n, half: r.h, batter: r.b, review_type: r.t,
+    review_subject: r.s, final_call: r.c, play_id: r.p,
+    video_page: r.p ? 'https://baseballsavant.mlb.com/sporty-videos?playId=' + r.p : '',
+    official_feed: 'https://statsapi.mlb.com/api/v1.1/game/' + r.g + '/feed/live' }))));
+}
+
+function idxFiltered() {
+  const sub = $('fSub').value, call = $('fCall').value, q = $('fQ').value.toLowerCase();
+  let r = IDX.slice();
+  if (sub) r = r.filter(x => (x.s || 'unstated') === sub);
+  if (call) r = r.filter(x => x.c === call);
+  if (q) r = r.filter(x => `${x.d} ${x.m} ${x.b}`.toLowerCase().includes(q));
+  return r;
+}
+
+function renderIndex() {
+  const subs = [...new Set(IDX.map(x => x.s || 'unstated'))].sort();
+  if ($('fSub').options.length === 1)
+    $('fSub').insertAdjacentHTML('beforeend', subs.map(s => `<option>${esc(s)}</option>`).join(''));
+  const calls = [...new Set(IDX.map(x => x.c))].sort();
+  if ($('fCall').options.length === 1)
+    $('fCall').insertAdjacentHTML('beforeend', calls.map(s => `<option>${esc(s)}</option>`).join(''));
+  const r = idxFiltered().slice(0, 500);
+  $('count').textContent = `${idxFiltered().length.toLocaleString()} overturned reviews match — showing the most recent 500. ` +
+    `These are grouped by review subject: ${subs.map(s => s + ' (' + IDX.filter(x => (x.s || 'unstated') === s).length + ')').join(', ')}.`;
+  $('idx').innerHTML =
+    `<tr><th>Date</th><th>Game</th><th>Inn</th><th>Batter</th><th>Review subject</th><th>Final call</th><th>Video / source</th></tr>` +
+    r.sort((a, b) => (b.d + b.g).localeCompare(a.d + a.g)).map(x => `<tr>
+        <td class="nowrap">${esc(x.d)}</td><td class="nowrap">${esc(x.m)}</td>
+        <td class="nowrap">${esc((x.h || '').charAt(0).toUpperCase())}${esc(x.n)}</td><td>${esc(x.b)}</td>
+        <td>${esc(x.s || 'unstated')}${x.v ? ' <span class="pill on">run flagged</span>' : ''}</td>
+        <td>${esc(x.c)}</td>
+        <td class="nowrap">${linkOut(x.p ? 'https://baseballsavant.mlb.com/sporty-videos?playId=' + x.p : '', 'watch')}
+          ${linkOut('https://statsapi.mlb.com/api/v1.1/game/' + x.g + '/feed/live', 'official feed')}</td>
+      </tr>`).join('');
+}
+</script>
+</body>
+</html>

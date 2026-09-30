@@ -1,0 +1,88 @@
+name: ingest
+
+# The build sandbox has no route to statsapi.mlb.com / baseballsavant.mlb.com, but a GitHub-hosted
+# runner does. This workflow is therefore the project's data-collection half: it fetches from the
+# official endpoints, derives the published artifacts, and commits them back to the branch so the
+# sandbox (and the repo) get verifiable, timestamped data instead of hand-typed numbers.
+#
+# Triggers
+#   * push to an arena/* branch  -> collect + commit (this is how data enters the repo)
+#   * workflow_dispatch          -> same, on demand
+# Guard: a commit whose message contains [ci-data] does not re-trigger collection (no loops).
+
+on:
+  push:
+    branches: ['arena/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    if: "!(github.event_name == 'push' && contains(github.event.head_commit.message, '[ci-data]'))"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Probe the official endpoints (reachability, CORS, era coverage, short-links)
+        run: python3 tools/probe_api.py --json data/ingest/probe_report.json
+        continue-on-error: true
+      - name: Ingest games from the official Stats API
+        run: python3 tools/ingest_official.py --plan data/ingest/plan.json
+        continue-on-error: true
+      - name: Watch official rulings change (the 'pending decision' evidence table)
+        # run_safely() writes data/ingest/ruling_watch_status.json either way, so a failure here is
+        # committed and readable instead of vanishing into a log.
+        run: python3 tools/watch_rulings.py --days 21
+        continue-on-error: true
+      - name: Publish today's slate for the live board
+        run: python3 tools/fetch_live.py --out docs/data/live_slate.json --csv-out docs/data/live_slate.csv
+        continue-on-error: true
+      - name: Rebuild the derived page data from the freshly collected tables
+        run: python3 tools/build_site_data.py
+        continue-on-error: true
+      - name: Show what was produced
+        run: |
+          ls -l data/ingest docs/data | head -40
+          python3 - <<'PY'
+          import json, pathlib
+          for p in ('data/ingest/ingest_report.json', 'data/ingest/probe_report.json'):
+              f = pathlib.Path(p)
+              if f.exists():
+                  d = json.loads(f.read_text())
+                  print('==', p, '==')
+                  print(json.dumps(d.get('summary', d), indent=1)[:4000])
+          PY
+      - name: Commit the derived data back to the branch
+        run: |
+          git config user.name "LiveScoringErrors ingest"
+          git config user.email "ingest@users.noreply.github.com"
+          git add -A data/ingest docs/data
+          if git diff --cached --quiet; then echo "no data changes to commit"; exit 0; fi
+          git commit -m "[ci-data] official ingest $(date -u +%FT%TZ) from $GITHUB_SHA"
+          # The agent's sandbox also pushes to this branch, so re-apply this commit on top of
+          # whatever landed while we were fetching, then push. Data files are disjoint from the
+          # source files edited by hand, so this normally rebases cleanly.
+          BRANCH="${{ github.ref_name }}"
+          for i in 1 2 3; do
+            if git fetch origin "$BRANCH" && git rebase "origin/$BRANCH"; then
+              git push origin HEAD:"$BRANCH" && exit 0
+            fi
+            git rebase --abort || true
+            sleep 10
+          done
+          echo "::warning::could not push the ingested data after 3 attempts"
+          exit 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ingest-report
+          path: |
+            data/ingest/probe_report.json
+            data/ingest/ingest_report.json
+          if-no-files-found: warn

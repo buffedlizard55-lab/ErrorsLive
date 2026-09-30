@@ -1,0 +1,13 @@
+{
+ "available": true,
+ "source": "data/ingest/ruling_changes.csv + ruling_snapshot.csv (tools/watch_rulings.py, CI)",
+ "watched": {
+  "plays": 24751,
+  "window": [
+   "2026-09-10",
+   "2026-09-29"
+  ]
+ },
+ "changes": 0,
+ "rows": []
+}

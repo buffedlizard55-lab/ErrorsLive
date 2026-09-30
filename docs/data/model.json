@@ -1,75 +1,44 @@
 {
  "meta": {
-  "unit": "batted ball in play with Statcast hitData (launch speed/angle/distance)",
-  "n_games": 24,
-  "n_bip": 1271,
-  "n_model": 1258,
-  "n_error": 24,
-  "error_rate_pct": 1.91,
+  "dataset": "docs/data/bip_official.csv",
+  "dataset_kind": "official",
+  "n_bip": 30298,
+  "n_model": 30206,
+  "n_quarantined": 92,
+  "n_error": 241,
+  "error_rate_pct": 0.798,
   "class_counts": {
-   "hit": 428,
-   "error": 24,
-   "fielders_choice": 10,
-   "out": 796
+   "hit": 9735,
+   "error": 241,
+   "fielders_choice": 183,
+   "out": 20047
   },
-  "design": "error-ENRICHED stratified 24-game sample of a 222-game June-2026 pool: fractions A(>=3 team errors) 10/20=0.500, B(==2) 10/51=0.196, C(<=1) 4/151=0.026. NOT self-weighting: pool-representative rates need raking weights A=2.0, B=5.1, C=37.75 (validated: weighted mean team-errors/game 1.258 vs pool 1.113). The fitted objects model P(class | batted-ball features) WITHIN play, far less distorted than the game-level error rate; the 1.91% base rate is the SAMPLE rate, not the pool rate.",
-  "trained": "2026-09-29"
+  "games": 590,
+  "features": [
+   "EV_mph",
+   "LA_deg",
+   "dist_ft",
+   "traj_ground_ball",
+   "traj_line_drive",
+   "traj_fly_ball",
+   "traj_popup",
+   "traj_bunt_grounder",
+   "hard_soft",
+   "hard_medium",
+   "hard_hard",
+   "on_1b",
+   "on_2b",
+   "on_3b",
+   "outs_before",
+   "inning_c",
+   "bat_L",
+   "pitch_L"
+  ],
+  "design": "Features are contact physics + pre-pitch context only. Nothing that exists only because a ruling was made (fielding credits, error flags, hit/error column) is used as an input. Cross-validation is GroupKFold by game_pk; the random-fold number is reported beside it as the optimistic bound.",
+  "dataset_note": "Whole-population window sample: every batted ball in every game of the ingested window, so the error rate is the real in-season base rate."
  },
  "primary": {
-  "kind": "binary logistic regression P(error | EV, LA, distance, trajectory, hardness)",
-  "cv_auc": 0.641,
-  "cv_auc_ci95": [
-   0.518,
-   0.748
-  ],
-  "cv_logloss": 0.0949,
-  "cv_brier_raw": 0.0186,
-  "oof_brier_isotonic": 0.0184,
-  "ev_coef_std": 0.004,
-  "ev_coef_ci95": [
-   -0.549,
-   0.59
-  ],
-  "intercept": -4.468,
-  "coef": {
-   "EV_mph": 0.004,
-   "LA_deg": 0.357,
-   "dist_ft": -0.22,
-   "traj_ground_ball": 0.692,
-   "traj_line_drive": -0.184,
-   "traj_fly_ball": -0.472,
-   "traj_popup": -0.156,
-   "traj_bunt_grounder": -0.15,
-   "hard_soft": -0.449,
-   "hard_medium": 0.06,
-   "hard_hard": 0.209
-  },
-  "scaler_mean": [
-   87.531,
-   12.785,
-   161.138,
-   0.425,
-   0.237,
-   0.247,
-   0.076,
-   0.014,
-   0.042,
-   0.837,
-   0.121
-  ],
-  "scaler_scale": [
-   15.737,
-   30.028,
-   134.98,
-   0.494,
-   0.425,
-   0.431,
-   0.264,
-   0.119,
-   0.201,
-   0.369,
-   0.326
-  ],
+  "target": "P(ruled a fielding error)",
   "feature_names": [
    "EV_mph",
    "LA_deg",
@@ -81,1175 +50,1324 @@
    "traj_bunt_grounder",
    "hard_soft",
    "hard_medium",
-   "hard_hard"
+   "hard_hard",
+   "on_1b",
+   "on_2b",
+   "on_3b",
+   "outs_before",
+   "inning_c",
+   "bat_L",
+   "pitch_L"
   ],
-  "platt_oof_grid": null
+  "feature_spec": [
+   {
+    "name": "EV_mph",
+    "type": "ev"
+   },
+   {
+    "name": "LA_deg",
+    "type": "la"
+   },
+   {
+    "name": "dist_ft",
+    "type": "dist"
+   },
+   {
+    "name": "traj_ground_ball",
+    "type": "traj:ground_ball"
+   },
+   {
+    "name": "traj_line_drive",
+    "type": "traj:line_drive"
+   },
+   {
+    "name": "traj_fly_ball",
+    "type": "traj:fly_ball"
+   },
+   {
+    "name": "traj_popup",
+    "type": "traj:popup"
+   },
+   {
+    "name": "traj_bunt_grounder",
+    "type": "traj:bunt_grounder"
+   },
+   {
+    "name": "hard_soft",
+    "type": "hard:soft"
+   },
+   {
+    "name": "hard_medium",
+    "type": "hard:medium"
+   },
+   {
+    "name": "hard_hard",
+    "type": "hard:hard"
+   },
+   {
+    "name": "on_1b",
+    "type": "base:1B"
+   },
+   {
+    "name": "on_2b",
+    "type": "base:2B"
+   },
+   {
+    "name": "on_3b",
+    "type": "base:3B"
+   },
+   {
+    "name": "outs_before",
+    "type": "outs"
+   },
+   {
+    "name": "inning_c",
+    "type": "inning"
+   },
+   {
+    "name": "bat_L",
+    "type": "bat:L"
+   },
+   {
+    "name": "pitch_L",
+    "type": "pitch:L"
+   }
+  ],
+  "scaler_mean": [
+   87.8243229822,
+   13.5744223002,
+   167.0446268953,
+   0.408660531,
+   0.2355823346,
+   0.2691518241,
+   0.0727007879,
+   0.0126133881,
+   0.0300933589,
+   0.8526120638,
+   0.1172945772,
+   0.20744223,
+   0.1261338807,
+   0.079454413,
+   0.957094617,
+   4.920843541,
+   0.4809971529,
+   0.3324174005
+  ],
+  "scaler_scale": [
+   15.3076226737,
+   28.9668431888,
+   134.3429588209,
+   0.4915863112,
+   0.4243622253,
+   0.4435190184,
+   0.2596447253,
+   0.1115987926,
+   0.1708442234,
+   0.3544922177,
+   0.3217709735,
+   0.4054749699,
+   0.332000188,
+   0.2704466847,
+   0.8168018645,
+   2.5324859916,
+   0.4996387613,
+   0.4710796879
+  ],
+  "intercept": -5.6519642635,
+  "coef": {
+   "EV_mph": -0.2095641223,
+   "LA_deg": 0.1013208503,
+   "dist_ft": -0.2902117249,
+   "traj_ground_ball": 0.6745638412,
+   "traj_line_drive": -0.3121505627,
+   "traj_fly_ball": -0.2945845718,
+   "traj_popup": -0.1650276309,
+   "traj_bunt_grounder": -0.0664997397,
+   "hard_soft": -0.0049684954,
+   "hard_medium": 0.0379006614,
+   "hard_hard": -0.0391167999,
+   "on_1b": 0.1885848763,
+   "on_2b": 0.177774134,
+   "on_3b": -0.0799151654,
+   "outs_before": 0.1472273628,
+   "inning_c": 0.1732949377,
+   "bat_L": -0.1591902292,
+   "pitch_L": 0.0591798693
+  },
+  "coef_ci95": {
+   "EV_mph": [
+    -0.33123,
+    -0.08883
+   ],
+   "LA_deg": [
+    -0.13086,
+    0.33429
+   ],
+   "dist_ft": [
+    -0.57601,
+    0.07065
+   ],
+   "traj_ground_ball": [
+    0.51571,
+    0.92127
+   ],
+   "traj_line_drive": [
+    -0.55082,
+    -0.07297
+   ],
+   "traj_fly_ball": [
+    -0.59793,
+    -0.07559
+   ],
+   "traj_popup": [
+    -0.48034,
+    0.06172
+   ],
+   "traj_bunt_grounder": [
+    -0.56316,
+    0.05647
+   ],
+   "hard_soft": [
+    -0.11543,
+    0.09311
+   ],
+   "hard_medium": [
+    -0.03932,
+    0.17169
+   ],
+   "hard_hard": [
+    -0.20736,
+    0.07349
+   ],
+   "on_1b": [
+    0.0721,
+    0.31262
+   ],
+   "on_2b": [
+    0.05567,
+    0.29324
+   ],
+   "on_3b": [
+    -0.22299,
+    0.03598
+   ],
+   "outs_before": [
+    0.00147,
+    0.28747
+   ],
+   "inning_c": [
+    0.03045,
+    0.30666
+   ],
+   "bat_L": [
+    -0.30029,
+    -0.01906
+   ],
+   "pitch_L": [
+    -0.07284,
+    0.17988
+   ]
+  },
+  "cv_auc": 0.7809,
+  "cv_auc_ci95": [
+   0.7543,
+   0.806
+  ],
+  "cv_auc_random_kfold": 0.7778,
+  "cv_auc_gradient_boosting_grouped": 0.7757,
+  "cv_logloss": 0.042095,
+  "cv_brier_raw": 0.007837,
+  "cv_brier_isotonic": 0.007821,
+  "n_splits": 5,
+  "group": "game_pk"
  },
- "surface": {
-  "ground_ball|0-70": {
-   "n": 86,
-   "k": 3,
-   "p": 0.0349,
-   "lo": 0.0119,
-   "hi": 0.0976
+ "multiclass": {
+  "classes": [
+   "hit",
+   "error",
+   "fielders_choice",
+   "out"
+  ],
+  "intercept": {
+   "hit": 2.5914767781,
+   "error": -1.557063141,
+   "fielders_choice": -4.6181129215,
+   "out": 3.5836992844
   },
-  "ground_ball|70-80": {
-   "n": 81,
-   "k": 2,
-   "p": 0.0247,
-   "lo": 0.0068,
-   "hi": 0.0856
-  },
-  "ground_ball|80-90": {
-   "n": 118,
-   "k": 3,
-   "p": 0.0254,
-   "lo": 0.0087,
-   "hi": 0.0721
-  },
-  "ground_ball|90-95": {
-   "n": 67,
-   "k": 1,
-   "p": 0.0149,
-   "lo": 0.0026,
-   "hi": 0.0798
-  },
-  "ground_ball|95-100": {
-   "n": 92,
-   "k": 8,
-   "p": 0.087,
-   "lo": 0.0447,
-   "hi": 0.1623
-  },
-  "ground_ball|100-105": {
-   "n": 52,
-   "k": 1,
-   "p": 0.0192,
-   "lo": 0.0034,
-   "hi": 0.1012
-  },
-  "ground_ball|105-200": {
-   "n": 39,
-   "k": 2,
-   "p": 0.0513,
-   "lo": 0.0142,
-   "hi": 0.1689
-  },
-  "line_drive|0-70": {
-   "n": 10,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.2775
-  },
-  "line_drive|70-80": {
-   "n": 23,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.1431
-  },
-  "line_drive|80-90": {
-   "n": 67,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.0542
-  },
-  "line_drive|90-95": {
-   "n": 44,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0.0,
-   "hi": 0.0803
-  },
-  "line_drive|95-100": {
-   "n": 42,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.0838
-  },
-  "line_drive|100-105": {
-   "n": 65,
-   "k": 1,
-   "p": 0.0154,
-   "lo": 0.0027,
-   "hi": 0.0821
-  },
-  "line_drive|105-200": {
-   "n": 47,
-   "k": 1,
-   "p": 0.0213,
-   "lo": 0.0038,
-   "hi": 0.1111
-  },
-  "fly_ball|70-80": {
-   "n": 27,
-   "k": 1,
-   "p": 0.037,
-   "lo": 0.0066,
-   "hi": 0.1828
-  },
-  "fly_ball|80-90": {
-   "n": 88,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0.0,
-   "hi": 0.0418
-  },
-  "fly_ball|90-95": {
-   "n": 59,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.0611
-  },
-  "fly_ball|95-100": {
-   "n": 58,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.0621
-  },
-  "fly_ball|100-105": {
-   "n": 49,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.0727
-  },
-  "fly_ball|105-200": {
-   "n": 23,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.1431
-  },
-  "popup|0-70": {
-   "n": 29,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.117
-  },
-  "popup|70-80": {
-   "n": 27,
-   "k": 1,
-   "p": 0.037,
-   "lo": 0.0066,
-   "hi": 0.1828
-  },
-  "popup|80-90": {
-   "n": 31,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.1103
-  },
-  "bunt_grounder|0-70": {
-   "n": 18,
-   "k": 0,
-   "p": 0.0,
-   "lo": 0,
-   "hi": 0.1759
-  }
- },
- "curve": {
-  "ground_ball": {
-   "la_med": -8.0,
-   "ev": [
-    50,
-    52,
-    54,
-    56,
-    58,
-    60,
-    62,
-    64,
-    66,
-    68,
-    70,
-    72,
-    74,
-    76,
-    78,
-    80,
-    82,
-    84,
-    86,
-    88,
-    90,
-    92,
-    94,
-    96,
-    98,
-    100,
-    102,
-    104,
-    106,
-    108,
-    110,
-    112,
-    114,
-    116,
-    118
-   ],
-   "p_err_x100": [
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    3.9,
-    4.0,
-    4.0,
-    4.0,
-    4.0,
-    4.0,
-    4.0,
-    4.0,
-    4.0
-   ]
-  },
-  "line_drive": {
-   "la_med": 16.0,
-   "ev": [
-    50,
-    52,
-    54,
-    56,
-    58,
-    60,
-    62,
-    64,
-    66,
-    68,
-    70,
-    72,
-    74,
-    76,
-    78,
-    80,
-    82,
-    84,
-    86,
-    88,
-    90,
-    92,
-    94,
-    96,
-    98,
-    100,
-    102,
-    104,
-    106,
-    108,
-    110,
-    112,
-    114,
-    116,
-    118
-   ],
-   "p_err_x100": [
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6,
-    0.6
-   ]
-  },
-  "fly_ball": {
-   "la_med": 37.0,
-   "ev": [
-    50,
-    52,
-    54,
-    56,
-    58,
-    60,
-    62,
-    64,
-    66,
-    68,
-    70,
-    72,
-    74,
-    76,
-    78,
-    80,
-    82,
-    84,
-    86,
-    88,
-    90,
-    92,
-    94,
-    96,
-    98,
-    100,
-    102,
-    104,
-    106,
-    108,
-    110,
-    112,
-    114,
-    116,
-    118
-   ],
-   "p_err_x100": [
-    0.3,
-    0.3,
-    0.3,
-    0.3,
-    0.3,
-    0.3,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4,
-    0.4
-   ]
-  },
-  "popup": {
-   "la_med": 68.0,
-   "ev": [
-    50,
-    52,
-    54,
-    56,
-    58,
-    60,
-    62,
-    64,
-    66,
-    68,
-    70,
-    72,
-    74,
-    76,
-    78,
-    80,
-    82,
-    84,
-    86,
-    88,
-    90,
-    92,
-    94,
-    96,
-    98,
-    100,
-    102,
-    104,
-    106,
-    108,
-    110,
-    112,
-    114,
-    116,
-    118
-   ],
-   "p_err_x100": [
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.1,
-    1.2,
-    1.2,
-    1.2,
-    1.2,
-    1.2,
-    1.2,
-    1.2,
-    1.2,
-    1.2,
-    1.2,
-    1.2,
-    1.2,
-    1.2
-   ]
-  },
-  "bunt_grounder": {
-   "la_med": -54.5,
-   "ev": [
-    50,
-    52,
-    54,
-    56,
-    58,
-    60,
-    62,
-    64,
-    66,
-    68,
-    70,
-    72,
-    74,
-    76,
-    78,
-    80,
-    82,
-    84,
-    86,
-    88,
-    90,
-    92,
-    94,
-    96,
-    98,
-    100,
-    102,
-    104,
-    106,
-    108,
-    110,
-    112,
-    114,
-    116,
-    118
-   ],
-   "p_err_x100": [
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2,
-    0.2
-   ]
-  }
- },
- "honesty": {
-  "headline": "READ THIS BEFORE TRUSTING THE /100 DIAL. Across the 1258 modelling batted balls the fitted P(error) never exceeds 6.5/100 and never falls below 0.0/100, and out-of-fold the 4-class model nominates \"error\" as its most likely call 0 times out of 1258. The score is a real ranking signal (OOF AUC 0.641) but it is NOT a calibrated 0-100 confidence, and it will essentially never tell you \"this is an error\".",
-  "oof_top1_accuracy": 0.7281,
-  "oof_top1_recall_by_class": {
+  "coef": {
    "hit": {
-    "n": 428,
-    "correct": 216,
-    "recall": 0.505
+    "EV_mph": 0.3807930333,
+    "LA_deg": -0.2154940255,
+    "dist_ft": 0.9134555332,
+    "traj_ground_ball": -0.4070387139,
+    "traj_line_drive": 0.4054152696,
+    "traj_fly_ball": -0.2462390965,
+    "traj_popup": -0.2670835143,
+    "traj_bunt_grounder": 0.0549088101,
+    "hard_soft": -0.0009907948,
+    "hard_medium": -0.1495160488,
+    "hard_hard": 0.1652465626,
+    "on_1b": 0.1135821107,
+    "on_2b": 0.0192391651,
+    "on_3b": 0.0004646073,
+    "outs_before": 0.0181771337,
+    "inning_c": -0.0806545192,
+    "bat_L": 0.0648739068,
+    "pitch_L": 0.0052062418
    },
    "error": {
-    "n": 24,
-    "correct": 0,
+    "EV_mph": -0.2005989066,
+    "LA_deg": 0.0237767085,
+    "dist_ft": 0.1653076906,
+    "traj_ground_ball": 0.2912144729,
+    "traj_line_drive": -0.0349522529,
+    "traj_fly_ball": -0.1956475725,
+    "traj_popup": 0.143227106,
+    "traj_bunt_grounder": -0.1037769475,
+    "hard_soft": -0.1027656264,
+    "hard_medium": -0.0992216658,
+    "hard_hard": 0.1638750116,
+    "on_1b": 0.0226996849,
+    "on_2b": 0.0212986873,
+    "on_3b": -0.1809719397,
+    "outs_before": 0.2030855667,
+    "inning_c": 0.1165307257,
+    "bat_L": -0.0853693815,
+    "pitch_L": 0.0534676975
+   },
+   "fielders_choice": {
+    "EV_mph": -0.0494154861,
+    "LA_deg": 0.2581720125,
+    "dist_ft": -1.4757778626,
+    "traj_ground_ball": 0.3930064578,
+    "traj_line_drive": -0.4916177118,
+    "traj_fly_ball": 0.2252870771,
+    "traj_popup": -0.2914567278,
+    "traj_bunt_grounder": 0.0778441412,
+    "hard_soft": 0.2380496277,
+    "hard_medium": 0.3678239874,
+    "hard_hard": -0.5316208076,
+    "on_1b": 0.157577123,
+    "on_2b": 0.2622810387,
+    "on_3b": 0.4590541509,
+    "outs_before": -0.2867293907,
+    "inning_c": 0.0219651429,
+    "bat_L": -0.061820698,
+    "pitch_L": -0.0496248473
+   },
+   "out": {
+    "EV_mph": -0.1307786406,
+    "LA_deg": -0.0664546955,
+    "dist_ft": 0.3970146389,
+    "traj_ground_ball": -0.2771822168,
+    "traj_line_drive": 0.1211546951,
+    "traj_fly_ball": 0.2165995919,
+    "traj_popup": 0.4153131361,
+    "traj_bunt_grounder": -0.0289760039,
+    "hard_soft": -0.1342932064,
+    "hard_medium": -0.1190862727,
+    "hard_hard": 0.2024992334,
+    "on_1b": -0.2938589186,
+    "on_2b": -0.3028188911,
+    "on_3b": -0.2785468186,
+    "outs_before": 0.0654666903,
+    "inning_c": -0.0578413494,
+    "bat_L": 0.0823161727,
+    "pitch_L": -0.0090490921
+   }
+  },
+  "cv_logloss": 0.543188,
+  "per_class": {
+   "hit": {
+    "n": 9735,
+    "auc": 0.8110880294488524,
+    "recall": 0.5148
+   },
+   "error": {
+    "n": 241,
+    "auc": 0.7816003871736944,
     "recall": 0.0
    },
    "fielders_choice": {
-    "n": 10,
-    "correct": 0,
+    "n": 183,
+    "auc": 0.9641815591652957,
     "recall": 0.0
    },
    "out": {
-    "n": 796,
-    "correct": 700,
-    "recall": 0.879
+    "n": 20047,
+    "auc": 0.8086038414117022,
+    "recall": 0.8755
    }
-  },
+  }
+ },
+ "honesty": {
+  "what_this_is": "A pre-ruling estimate of how likely a batted ball is to be charged as an error, plus the distribution over the four macro classes. It ranks; it does not decide.",
+  "oof_top1_accuracy": 0.747,
   "oof_error_nominated_top1": 0,
   "oof_error_recall": 0.0,
-  "p_error_observed_min_x100": 0.01,
-  "p_error_observed_max_x100": 6.48,
-  "p_error_percentile_grid": [
-   {
-    "p_error": 0.00011,
-    "percentile": 0
-   },
-   {
-    "p_error": 0.00069,
-    "percentile": 1
-   },
-   {
-    "p_error": 0.00167,
-    "percentile": 2
-   },
-   {
-    "p_error": 0.00215,
-    "percentile": 3
-   },
-   {
-    "p_error": 0.00259,
-    "percentile": 4
-   },
-   {
-    "p_error": 0.00273,
-    "percentile": 5
-   },
-   {
-    "p_error": 0.00281,
-    "percentile": 6
-   },
-   {
-    "p_error": 0.00288,
-    "percentile": 7
-   },
-   {
-    "p_error": 0.00295,
-    "percentile": 8
-   },
-   {
-    "p_error": 0.00301,
-    "percentile": 9
-   },
-   {
-    "p_error": 0.00311,
-    "percentile": 10
-   },
-   {
-    "p_error": 0.00321,
-    "percentile": 11
-   },
-   {
-    "p_error": 0.00328,
-    "percentile": 12
-   },
-   {
-    "p_error": 0.00336,
-    "percentile": 13
-   },
-   {
-    "p_error": 0.00343,
-    "percentile": 14
-   },
-   {
-    "p_error": 0.00351,
-    "percentile": 15
-   },
-   {
-    "p_error": 0.00356,
-    "percentile": 16
-   },
-   {
-    "p_error": 0.00366,
-    "percentile": 17
-   },
-   {
-    "p_error": 0.00378,
-    "percentile": 18
-   },
-   {
-    "p_error": 0.00388,
-    "percentile": 19
-   },
-   {
-    "p_error": 0.00408,
-    "percentile": 20
-   },
-   {
-    "p_error": 0.00419,
-    "percentile": 21
-   },
-   {
-    "p_error": 0.00428,
-    "percentile": 22
-   },
-   {
-    "p_error": 0.00442,
-    "percentile": 23
-   },
-   {
-    "p_error": 0.00453,
-    "percentile": 24
-   },
-   {
-    "p_error": 0.00467,
-    "percentile": 25
-   },
-   {
-    "p_error": 0.00491,
-    "percentile": 26
-   },
-   {
-    "p_error": 0.00504,
-    "percentile": 27
-   },
-   {
-    "p_error": 0.0052,
-    "percentile": 28
-   },
-   {
-    "p_error": 0.00536,
-    "percentile": 29
-   },
-   {
-    "p_error": 0.0055,
-    "percentile": 30
-   },
-   {
-    "p_error": 0.00559,
-    "percentile": 31
-   },
-   {
-    "p_error": 0.00566,
-    "percentile": 32
-   },
-   {
-    "p_error": 0.00579,
-    "percentile": 33
-   },
-   {
-    "p_error": 0.00586,
-    "percentile": 34
-   },
-   {
-    "p_error": 0.00596,
-    "percentile": 35
-   },
-   {
-    "p_error": 0.00605,
-    "percentile": 36
-   },
-   {
-    "p_error": 0.00613,
-    "percentile": 37
-   },
-   {
-    "p_error": 0.00619,
-    "percentile": 38
-   },
-   {
-    "p_error": 0.00625,
-    "percentile": 39
-   },
-   {
-    "p_error": 0.00633,
-    "percentile": 40
-   },
-   {
-    "p_error": 0.00638,
-    "percentile": 41
-   },
-   {
-    "p_error": 0.00646,
-    "percentile": 42
-   },
-   {
-    "p_error": 0.00655,
-    "percentile": 43
-   },
-   {
-    "p_error": 0.00666,
-    "percentile": 44
-   },
-   {
-    "p_error": 0.00709,
-    "percentile": 45
-   },
-   {
-    "p_error": 0.0081,
-    "percentile": 46
-   },
-   {
-    "p_error": 0.00847,
-    "percentile": 47
-   },
-   {
-    "p_error": 0.00864,
-    "percentile": 48
-   },
-   {
-    "p_error": 0.00882,
-    "percentile": 49
-   },
-   {
-    "p_error": 0.00902,
-    "percentile": 50
-   },
-   {
-    "p_error": 0.00921,
-    "percentile": 51
-   },
-   {
-    "p_error": 0.00944,
-    "percentile": 52
-   },
-   {
-    "p_error": 0.00971,
-    "percentile": 53
-   },
-   {
-    "p_error": 0.00992,
-    "percentile": 54
-   },
-   {
-    "p_error": 0.0102,
-    "percentile": 55
-   },
-   {
-    "p_error": 0.01137,
-    "percentile": 56
-   },
-   {
-    "p_error": 0.01199,
-    "percentile": 57
-   },
-   {
-    "p_error": 0.01335,
-    "percentile": 58
-   },
-   {
-    "p_error": 0.01491,
-    "percentile": 59
-   },
-   {
-    "p_error": 0.01918,
-    "percentile": 60
-   },
-   {
-    "p_error": 0.02608,
-    "percentile": 61
-   },
-   {
-    "p_error": 0.02773,
-    "percentile": 62
-   },
-   {
-    "p_error": 0.02871,
-    "percentile": 63
-   },
-   {
-    "p_error": 0.03006,
-    "percentile": 64
-   },
-   {
-    "p_error": 0.03136,
-    "percentile": 65
-   },
-   {
-    "p_error": 0.03243,
-    "percentile": 66
-   },
-   {
-    "p_error": 0.03309,
-    "percentile": 67
-   },
-   {
-    "p_error": 0.03405,
-    "percentile": 68
-   },
-   {
-    "p_error": 0.03484,
-    "percentile": 69
-   },
-   {
-    "p_error": 0.03545,
-    "percentile": 70
-   },
-   {
-    "p_error": 0.03577,
-    "percentile": 71
-   },
-   {
-    "p_error": 0.03637,
-    "percentile": 72
-   },
-   {
-    "p_error": 0.0369,
-    "percentile": 73
-   },
-   {
-    "p_error": 0.03764,
-    "percentile": 74
-   },
-   {
-    "p_error": 0.03793,
-    "percentile": 75
-   },
-   {
-    "p_error": 0.03821,
-    "percentile": 76
-   },
-   {
-    "p_error": 0.03861,
-    "percentile": 77
-   },
-   {
-    "p_error": 0.03896,
-    "percentile": 78
-   },
-   {
-    "p_error": 0.0392,
-    "percentile": 79
-   },
-   {
-    "p_error": 0.0394,
-    "percentile": 80
-   },
-   {
-    "p_error": 0.03953,
-    "percentile": 81
-   },
-   {
-    "p_error": 0.03972,
-    "percentile": 82
-   },
-   {
-    "p_error": 0.03999,
-    "percentile": 83
-   },
-   {
-    "p_error": 0.0402,
-    "percentile": 84
-   },
-   {
-    "p_error": 0.04042,
-    "percentile": 85
-   },
-   {
-    "p_error": 0.04049,
-    "percentile": 86
-   },
-   {
-    "p_error": 0.04059,
-    "percentile": 87
-   },
-   {
-    "p_error": 0.04071,
-    "percentile": 88
-   },
-   {
-    "p_error": 0.04085,
-    "percentile": 89
-   },
-   {
-    "p_error": 0.04091,
-    "percentile": 90
-   },
-   {
-    "p_error": 0.04099,
-    "percentile": 91
-   },
-   {
-    "p_error": 0.04112,
-    "percentile": 92
-   },
-   {
-    "p_error": 0.04124,
-    "percentile": 93
-   },
-   {
-    "p_error": 0.04139,
-    "percentile": 94
-   },
-   {
-    "p_error": 0.04162,
-    "percentile": 95
-   },
-   {
-    "p_error": 0.04195,
-    "percentile": 96
-   },
-   {
-    "p_error": 0.04242,
-    "percentile": 97
-   },
-   {
-    "p_error": 0.06056,
-    "percentile": 98
-   },
-   {
-    "p_error": 0.06339,
-    "percentile": 99
-   },
-   {
-    "p_error": 0.06484,
-    "percentile": 100
-   }
-  ],
+  "p_error_observed_min_x100": 0.023,
+  "p_error_observed_max_x100": 9.326,
   "calibration_oof": [
    {
     "lo": 0,
+    "hi": 0.005,
+    "n": 17565,
+    "mean_p": 0.00141,
+    "obs": 0.00165
+   },
+   {
+    "lo": 0.005,
     "hi": 0.01,
-    "n": 618,
-    "mean_pred": 0.0043,
-    "observed": 0.0065
+    "n": 2546,
+    "mean_p": 0.008,
+    "obs": 0.00628
    },
    {
     "lo": 0.01,
+    "hi": 0.015,
+    "n": 3948,
+    "mean_p": 0.01245,
+    "obs": 0.0152
+   },
+   {
+    "lo": 0.015,
     "hi": 0.02,
-    "n": 133,
-    "mean_pred": 0.0139,
-    "observed": 0.0075
+    "n": 2686,
+    "mean_p": 0.01725,
+    "obs": 0.01973
    },
    {
     "lo": 0.02,
     "hi": 0.03,
-    "n": 80,
-    "mean_pred": 0.0261,
-    "observed": 0.0625
+    "n": 2382,
+    "mean_p": 0.02403,
+    "obs": 0.02099
    },
    {
     "lo": 0.03,
     "hi": 0.04,
-    "n": 246,
-    "mean_pred": 0.0354,
-    "observed": 0.0366
+    "n": 738,
+    "mean_p": 0.03389,
+    "obs": 0.01897
    },
    {
     "lo": 0.04,
     "hi": 0.05,
-    "n": 146,
-    "mean_pred": 0.0445,
-    "observed": 0.0274
+    "n": 225,
+    "mean_p": 0.04431,
+    "obs": 0.05333
    },
    {
     "lo": 0.05,
     "hi": 0.07,
-    "n": 26,
-    "mean_pred": 0.0576,
-    "observed": 0.0385
+    "n": 95,
+    "mean_p": 0.05715,
+    "obs": 0.06316
    },
    {
     "lo": 0.07,
     "hi": 0.1,
-    "n": 9,
-    "mean_pred": 0.0761,
-    "observed": 0.0
+    "n": 20,
+    "mean_p": 0.07621,
+    "obs": 0.05
+   },
+   {
+    "lo": 0.1,
+    "hi": 0.2,
+    "n": 1,
+    "mean_p": 0.10324,
+    "obs": 0.0
    }
   ],
-  "what_it_is_good_for": "ranking batted balls against each other and flagging the rare top-decile \"this one deserves a second look\" case",
-  "what_it_is_not_good_for": "declaring a call an error, settling a scoring decision, or replacing the official scorer - it never nominates error as the top call and its absolute level is uncalibrated"
- },
- "multiclass": {
-  "cv_logloss": 0.6549,
-  "per_class_cv_auc": {
-   "hit": 0.781,
-   "error": 0.65,
-   "fielders_choice": 0.78,
-   "out": 0.772
-  },
-  "coef": {
-   "hit": {
-    "EV_mph": 0.295,
-    "LA_deg": -0.076,
-    "dist_ft": 0.591,
-    "traj_ground_ball": -0.114,
-    "traj_line_drive": 0.438,
-    "traj_fly_ball": 0.108,
-    "traj_popup": -0.664,
-    "traj_bunt_grounder": 0.207,
-    "hard_soft": 0.325,
-    "hard_medium": -0.151,
-    "hard_hard": -0.03
+  "p_error_percentile_grid": [
+   {
+    "percentile": 0,
+    "p_error": 0.00014
    },
-   "error": {
-    "EV_mph": -0.082,
-    "LA_deg": 0.453,
-    "dist_ft": -0.108,
-    "traj_ground_ball": 0.287,
-    "traj_line_drive": -0.09,
-    "traj_fly_ball": -0.312,
-    "traj_popup": 0.217,
-    "traj_bunt_grounder": -0.218,
-    "hard_soft": -0.268,
-    "hard_medium": -0.065,
-    "hard_hard": 0.238
+   {
+    "percentile": 5,
+    "p_error": 0.00055
    },
-   "fielders_choice": {
-    "EV_mph": -0.002,
-    "LA_deg": -0.495,
-    "dist_ft": -0.25,
-    "traj_ground_ball": 0.338,
-    "traj_line_drive": -0.292,
-    "traj_fly_ball": -0.18,
-    "traj_popup": -0.004,
-    "traj_bunt_grounder": 0.299,
-    "hard_soft": -0.277,
-    "hard_medium": 0.354,
-    "hard_hard": -0.23
+   {
+    "percentile": 10,
+    "p_error": 0.0007
    },
-   "out": {
-    "EV_mph": -0.212,
-    "LA_deg": 0.119,
-    "dist_ft": -0.233,
-    "traj_ground_ball": -0.511,
-    "traj_line_drive": -0.056,
-    "traj_fly_ball": 0.384,
-    "traj_popup": 0.451,
-    "traj_bunt_grounder": -0.289,
-    "hard_soft": 0.22,
-    "hard_medium": -0.139,
-    "hard_hard": 0.022
+   {
+    "percentile": 15,
+    "p_error": 0.00082
+   },
+   {
+    "percentile": 20,
+    "p_error": 0.00094
+   },
+   {
+    "percentile": 25,
+    "p_error": 0.00107
+   },
+   {
+    "percentile": 30,
+    "p_error": 0.00121
+   },
+   {
+    "percentile": 35,
+    "p_error": 0.00136
+   },
+   {
+    "percentile": 40,
+    "p_error": 0.00155
+   },
+   {
+    "percentile": 45,
+    "p_error": 0.00184
+   },
+   {
+    "percentile": 50,
+    "p_error": 0.00227
+   },
+   {
+    "percentile": 55,
+    "p_error": 0.00321
+   },
+   {
+    "percentile": 60,
+    "p_error": 0.00681
+   },
+   {
+    "percentile": 65,
+    "p_error": 0.00938
+   },
+   {
+    "percentile": 70,
+    "p_error": 0.01129
+   },
+   {
+    "percentile": 75,
+    "p_error": 0.0131
+   },
+   {
+    "percentile": 80,
+    "p_error": 0.01515
+   },
+   {
+    "percentile": 85,
+    "p_error": 0.01762
+   },
+   {
+    "percentile": 90,
+    "p_error": 0.02116
+   },
+   {
+    "percentile": 95,
+    "p_error": 0.02711
+   },
+   {
+    "percentile": 100,
+    "p_error": 0.10324
    }
+  ],
+  "grouped_vs_random_auc_gap": -0.0031,
+  "baseline_error_rate": 0.00798,
+  "note": "If the model's top pick is never \"error\" (see oof_error_nominated_top1), then the /100 score is only useful as a within-game ranking of where to look, and the honest headline is that ruling errors OUT is what this model does well."
+ },
+ "surface": {
+  "ground_ball|0-70": {
+   "n": 2048,
+   "k": 46,
+   "p": 0.0225,
+   "lo": 0.0169,
+   "hi": 0.0298
   },
-  "intercept": {
-   "hit": 1.75,
-   "error": -1.221,
-   "fielders_choice": -3.301,
-   "out": 2.772
+  "ground_ball|70-80": {
+   "n": 1996,
+   "k": 36,
+   "p": 0.018,
+   "lo": 0.0131,
+   "hi": 0.0249
+  },
+  "ground_ball|80-90": {
+   "n": 2426,
+   "k": 57,
+   "p": 0.0235,
+   "lo": 0.0182,
+   "hi": 0.0303
+  },
+  "ground_ball|90-95": {
+   "n": 1607,
+   "k": 19,
+   "p": 0.0118,
+   "lo": 0.0076,
+   "hi": 0.0184
+  },
+  "ground_ball|95-100": {
+   "n": 1860,
+   "k": 30,
+   "p": 0.0161,
+   "lo": 0.0113,
+   "hi": 0.0229
+  },
+  "ground_ball|100-105": {
+   "n": 1564,
+   "k": 20,
+   "p": 0.0128,
+   "lo": 0.0083,
+   "hi": 0.0197
+  },
+  "ground_ball|105-200": {
+   "n": 843,
+   "k": 6,
+   "p": 0.0071,
+   "lo": 0.0033,
+   "hi": 0.0154
+  },
+  "line_drive|0-70": {
+   "n": 271,
+   "k": 1,
+   "p": 0.0037,
+   "lo": 0.0007,
+   "hi": 0.0206
+  },
+  "line_drive|70-80": {
+   "n": 700,
+   "k": 1,
+   "p": 0.0014,
+   "lo": 0.0003,
+   "hi": 0.008
+  },
+  "line_drive|80-90": {
+   "n": 1324,
+   "k": 3,
+   "p": 0.0023,
+   "lo": 0.0008,
+   "hi": 0.0066
+  },
+  "line_drive|90-95": {
+   "n": 1086,
+   "k": 2,
+   "p": 0.0018,
+   "lo": 0.0005,
+   "hi": 0.0067
+  },
+  "line_drive|95-100": {
+   "n": 1278,
+   "k": 0,
+   "p": 0.0,
+   "lo": 0.0,
+   "hi": 0.003
+  },
+  "line_drive|100-105": {
+   "n": 1429,
+   "k": 2,
+   "p": 0.0014,
+   "lo": 0.0004,
+   "hi": 0.0051
+  },
+  "line_drive|105-200": {
+   "n": 1028,
+   "k": 1,
+   "p": 0.001,
+   "lo": 0.0002,
+   "hi": 0.0055
+  },
+  "fly_ball|0-70": {
+   "n": 245,
+   "k": 0,
+   "p": 0.0,
+   "lo": 0.0,
+   "hi": 0.0154
+  },
+  "fly_ball|70-80": {
+   "n": 882,
+   "k": 1,
+   "p": 0.0011,
+   "lo": 0.0002,
+   "hi": 0.0064
+  },
+  "fly_ball|80-90": {
+   "n": 1988,
+   "k": 3,
+   "p": 0.0015,
+   "lo": 0.0005,
+   "hi": 0.0044
+  },
+  "fly_ball|90-95": {
+   "n": 1593,
+   "k": 3,
+   "p": 0.0019,
+   "lo": 0.0006,
+   "hi": 0.0055
+  },
+  "fly_ball|95-100": {
+   "n": 1598,
+   "k": 2,
+   "p": 0.0013,
+   "lo": 0.0003,
+   "hi": 0.0046
+  },
+  "fly_ball|100-105": {
+   "n": 1250,
+   "k": 1,
+   "p": 0.0008,
+   "lo": 0.0001,
+   "hi": 0.0045
+  },
+  "fly_ball|105-200": {
+   "n": 574,
+   "k": 0,
+   "p": 0.0,
+   "lo": 0.0,
+   "hi": 0.0066
+  },
+  "popup|0-70": {
+   "n": 593,
+   "k": 1,
+   "p": 0.0017,
+   "lo": 0.0003,
+   "hi": 0.0095
+  },
+  "popup|70-80": {
+   "n": 595,
+   "k": 4,
+   "p": 0.0067,
+   "lo": 0.0026,
+   "hi": 0.0172
+  },
+  "popup|80-90": {
+   "n": 721,
+   "k": 0,
+   "p": 0.0,
+   "lo": 0.0,
+   "hi": 0.0053
+  },
+  "popup|90-95": {
+   "n": 215,
+   "k": 0,
+   "p": 0.0,
+   "lo": 0.0,
+   "hi": 0.0176
+  },
+  "popup|95-100": {
+   "n": 67,
+   "k": 0,
+   "p": 0.0,
+   "lo": 0.0,
+   "hi": 0.0542
+  },
+  "bunt_grounder|0-70": {
+   "n": 380,
+   "k": 2,
+   "p": 0.0053,
+   "lo": 0.0014,
+   "hi": 0.019
   }
  },
- "correlations_pointbiserial": {
+ "curve": {
+  "ground_ball": {
+   "la_med": -7.0,
+   "dist_med": 17.0,
+   "ev": [
+    50,
+    52,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    74,
+    76,
+    78,
+    80,
+    82,
+    84,
+    86,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    104,
+    106,
+    108,
+    110,
+    112,
+    114,
+    116,
+    118,
+    120
+   ],
+   "p_err_x100": [
+    2.12,
+    2.07,
+    2.01,
+    1.96,
+    1.91,
+    1.86,
+    1.81,
+    1.76,
+    1.71,
+    1.67,
+    1.62,
+    1.58,
+    1.54,
+    1.5,
+    1.46,
+    1.42,
+    1.38,
+    1.34,
+    1.31,
+    1.27,
+    1.24,
+    1.21,
+    1.17,
+    1.14,
+    1.11,
+    1.08,
+    1.05,
+    1.03,
+    1.0,
+    0.97,
+    0.95,
+    0.92,
+    0.9,
+    0.87,
+    0.85,
+    0.83
+   ]
+  },
+  "line_drive": {
+   "la_med": 16.0,
+   "dist_med": 250.0,
+   "ev": [
+    50,
+    52,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    74,
+    76,
+    78,
+    80,
+    82,
+    84,
+    86,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    104,
+    106,
+    108,
+    110,
+    112,
+    114,
+    116,
+    118,
+    120
+   ],
+   "p_err_x100": [
+    0.17,
+    0.17,
+    0.16,
+    0.16,
+    0.15,
+    0.15,
+    0.15,
+    0.14,
+    0.14,
+    0.13,
+    0.13,
+    0.13,
+    0.12,
+    0.12,
+    0.12,
+    0.11,
+    0.11,
+    0.11,
+    0.11,
+    0.1,
+    0.1,
+    0.1,
+    0.09,
+    0.09,
+    0.09,
+    0.09,
+    0.08,
+    0.08,
+    0.08,
+    0.08,
+    0.08,
+    0.07,
+    0.07,
+    0.07,
+    0.07,
+    0.07
+   ]
+  },
+  "fly_ball": {
+   "la_med": 36.0,
+   "dist_med": 319.0,
+   "ev": [
+    50,
+    52,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    74,
+    76,
+    78,
+    80,
+    82,
+    84,
+    86,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    104,
+    106,
+    108,
+    110,
+    112,
+    114,
+    116,
+    118,
+    120
+   ],
+   "p_err_x100": [
+    0.17,
+    0.17,
+    0.16,
+    0.16,
+    0.15,
+    0.15,
+    0.15,
+    0.14,
+    0.14,
+    0.13,
+    0.13,
+    0.13,
+    0.12,
+    0.12,
+    0.12,
+    0.11,
+    0.11,
+    0.11,
+    0.1,
+    0.1,
+    0.1,
+    0.1,
+    0.09,
+    0.09,
+    0.09,
+    0.09,
+    0.08,
+    0.08,
+    0.08,
+    0.08,
+    0.08,
+    0.07,
+    0.07,
+    0.07,
+    0.07,
+    0.07
+   ]
+  },
+  "popup": {
+   "la_med": 67.0,
+   "dist_med": 131.0,
+   "ev": [
+    50,
+    52,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    74,
+    76,
+    78,
+    80,
+    82,
+    84,
+    86,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    104,
+    106,
+    108,
+    110,
+    112,
+    114,
+    116,
+    118,
+    120
+   ],
+   "p_err_x100": [
+    0.29,
+    0.29,
+    0.28,
+    0.27,
+    0.26,
+    0.26,
+    0.25,
+    0.24,
+    0.24,
+    0.23,
+    0.22,
+    0.22,
+    0.21,
+    0.21,
+    0.2,
+    0.2,
+    0.19,
+    0.19,
+    0.18,
+    0.18,
+    0.17,
+    0.17,
+    0.16,
+    0.16,
+    0.15,
+    0.15,
+    0.14,
+    0.14,
+    0.14,
+    0.13,
+    0.13,
+    0.13,
+    0.12,
+    0.12,
+    0.12,
+    0.11
+   ]
+  },
+  "bunt_grounder": {
+   "la_med": -32.0,
+   "dist_med": 6.0,
+   "ev": [
+    50,
+    52,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    74,
+    76,
+    78,
+    80,
+    82,
+    84,
+    86,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    104,
+    106,
+    108,
+    110,
+    112,
+    114,
+    116,
+    118,
+    120
+   ],
+   "p_err_x100": [
+    0.28,
+    0.28,
+    0.27,
+    0.26,
+    0.25,
+    0.25,
+    0.24,
+    0.23,
+    0.23,
+    0.22,
+    0.22,
+    0.21,
+    0.2,
+    0.2,
+    0.19,
+    0.19,
+    0.18,
+    0.18,
+    0.17,
+    0.17,
+    0.16,
+    0.16,
+    0.16,
+    0.15,
+    0.15,
+    0.14,
+    0.14,
+    0.14,
+    0.13,
+    0.13,
+    0.13,
+    0.12,
+    0.12,
+    0.12,
+    0.11,
+    0.11
+   ]
+  }
+ },
+ "correlations": {
   "EV_mph": {
-   "r": 0.01,
-   "p": 0.723
+   "type": "spearman",
+   "r": -0.0328,
+   "mi": 0.00077
   },
   "LA_deg": {
-   "r": -0.06,
-   "p": 0.0335
+   "type": "spearman",
+   "r": -0.0722,
+   "mi": 0.00405
   },
   "dist_ft": {
-   "r": -0.092,
-   "p": 0.00104
+   "type": "spearman",
+   "r": -0.0753,
+   "mi": 0.00401
   },
   "traj_ground_ball": {
-   "r": 0.115,
-   "p": 4.27e-05
+   "type": "point-biserial",
+   "r": 0.0874,
+   "mi": 0.00404
   },
   "traj_line_drive": {
-   "r": -0.05,
-   "p": 0.0741
+   "type": "point-biserial",
+   "r": -0.041,
+   "mi": 0.00116
   },
   "traj_fly_ball": {
-   "r": -0.066,
-   "p": 0.0184
+   "type": "point-biserial",
+   "r": -0.046,
+   "mi": 0.00146
   },
   "traj_popup": {
-   "r": -0.018,
-   "p": 0.527
+   "type": "point-biserial",
+   "r": -0.0179,
+   "mi": 0.00022
   },
   "traj_bunt_grounder": {
-   "r": -0.017,
-   "p": 0.552
+   "type": "point-biserial",
+   "r": -0.0035,
+   "mi": 1e-05
   },
   "hard_soft": {
-   "r": -0.029,
-   "p": 0.3
+   "type": "point-biserial",
+   "r": 0.0169,
+   "mi": 0.00011
   },
   "hard_medium": {
-   "r": 0.014,
-   "p": 0.612
+   "type": "point-biserial",
+   "r": 0.011,
+   "mi": 7e-05
   },
   "hard_hard": {
-   "r": 0.002,
-   "p": 0.95
+   "type": "point-biserial",
+   "r": -0.0211,
+   "mi": 0.00029
+  },
+  "on_1b": {
+   "type": "point-biserial",
+   "r": 0.0386,
+   "mi": 0.00064
+  },
+  "on_2b": {
+   "type": "point-biserial",
+   "r": 0.0276,
+   "mi": 0.00032
+  },
+  "on_3b": {
+   "type": "point-biserial",
+   "r": 0.0025,
+   "mi": 0.0
+  },
+  "outs_before": {
+   "type": "point-biserial",
+   "r": 0.0125,
+   "mi": 8e-05
+  },
+  "inning_c": {
+   "type": "point-biserial",
+   "r": 0.0159,
+   "mi": 0.00016
+  },
+  "bat_L": {
+   "type": "point-biserial",
+   "r": -0.0156,
+   "mi": 0.00012
+  },
+  "pitch_L": {
+   "type": "point-biserial",
+   "r": 0.007,
+   "mi": 2e-05
   }
  },
- "caveats": [
-  "Labels = official play-result eventType; errors charged on non-error eventTypes (e.g. throwing errors after a hit) are counted under that call - error rate is a lower bound (see data_quality.json).",
-  "No fielder positioning / DEF shift, no hang time, no fielder identity - the model answers \"given the batted ball as tracked\"",
-  "Pool = 15 dates in June 2026; generalization beyond is an extrapolation.",
-  "Live use: probabilities are pre-call priors; the official result remains the source of record."
- ]
+ "context_stats": {
+  "bases_empty": {
+   "n": 21945,
+   "k": 130,
+   "p": 0.00592
+  },
+  "outs_0": {
+   "n": 10752,
+   "k": 73,
+   "p": 0.00679
+  },
+  "outs_1": {
+   "n": 9998,
+   "k": 78,
+   "p": 0.0078
+  },
+  "outs_2": {
+   "n": 9456,
+   "k": 90,
+   "p": 0.00952
+  },
+  "runner_on": {
+   "n": 8261,
+   "k": 111,
+   "p": 0.01344
+  }
+ },
+ "risk_bands": {
+  "description": "error-likelihood bands from the grouped OOF distribution",
+  "edges": [
+   {
+    "percentile": 0,
+    "p_error": 0.00014
+   },
+   {
+    "percentile": 5,
+    "p_error": 0.00055
+   },
+   {
+    "percentile": 10,
+    "p_error": 0.0007
+   },
+   {
+    "percentile": 15,
+    "p_error": 0.00082
+   },
+   {
+    "percentile": 20,
+    "p_error": 0.00094
+   },
+   {
+    "percentile": 25,
+    "p_error": 0.00107
+   },
+   {
+    "percentile": 30,
+    "p_error": 0.00121
+   },
+   {
+    "percentile": 35,
+    "p_error": 0.00136
+   },
+   {
+    "percentile": 40,
+    "p_error": 0.00155
+   },
+   {
+    "percentile": 45,
+    "p_error": 0.00184
+   },
+   {
+    "percentile": 50,
+    "p_error": 0.00227
+   },
+   {
+    "percentile": 55,
+    "p_error": 0.00321
+   },
+   {
+    "percentile": 60,
+    "p_error": 0.00681
+   },
+   {
+    "percentile": 65,
+    "p_error": 0.00938
+   },
+   {
+    "percentile": 70,
+    "p_error": 0.01129
+   },
+   {
+    "percentile": 75,
+    "p_error": 0.0131
+   },
+   {
+    "percentile": 80,
+    "p_error": 0.01515
+   },
+   {
+    "percentile": 85,
+    "p_error": 0.01762
+   },
+   {
+    "percentile": 90,
+    "p_error": 0.02116
+   },
+   {
+    "percentile": 95,
+    "p_error": 0.02711
+   },
+   {
+    "percentile": 100,
+    "p_error": 0.10324
+   }
+  ]
+ }
 }

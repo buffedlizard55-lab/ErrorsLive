@@ -24,6 +24,13 @@ for step in ('build_dataset.py', 'train_model.py', 'build_nydn.py'):
     print(f'--- {step} ---')
     run(str(TOOLS / step))
 
+print('--- fetch_live.py (offline live-board fallback, labelled) ---')
+run(str(TOOLS / 'fetch_live.py'), '--feed', 'data/source/feed_823441.json',
+    '--out', 'docs/data/live_now.json', '--csv-out', 'docs/data/live_now.csv')
+
+print('--- build_site_data.py (compact page data, derived offline) ---')
+run(str(TOOLS / 'build_site_data.py'))
+
 print('--- live_score.py (site demo board) ---')
 # relative paths, so the committed artifact is identical on every machine
 run(str(TOOLS / 'live_score.py'), '--feed', 'data/source/feed_823441.json', '--quiet',
