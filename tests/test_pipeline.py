@@ -1130,6 +1130,10 @@ check('rules page: the stale "page was not independently extracted" caveat is go
 check('rules page: every quoted rule links the official PDF at its printed page',
       rules_page.count('2026-official-baseball-rules.pdf#page=') >= 3
       and 'page=115' in rules_page and 'page=106' in rules_page and 'page=127' in rules_page)
+check('rules page: the interior page attributions were corrected against the PDF text, not inferred',
+      'page 118' in rules_flat and 'page=118' in rules_page
+      and 'printed page 108' in rules_flat and 'pages 128\u2013129' in rules_flat
+      and 'pages 115\u2013116' in rules_flat)
 check('site copy states the RBI consequence of an error play is conditional, not automatic',
       'error ⇒ no RBI' in rules_page or 'error means no RBI' in rules_flat.replace('\u2019', "'"))
 check('methods page records the watcher defect that was found and fixed',

@@ -156,7 +156,23 @@
   (all text) against freshly parsed API values (integers) for <code>reviewed</code>, <code>overturned</code> and
   <code>rbi</code>, so an unchanged play looked changed and the ledger then sliced an integer. The comparison now
   normalises both sides, the diff is a pure function with an offline regression test, and the change ledger can
-  populate again.</div>
+  populate again. <b>Two further defects showed up the moment the watcher first ran successfully</b>, and both are
+  fixed as well. (1) The stored snapshot predated the <code>status</code> column, so every row read back as an empty
+  string and its first re-observation was recorded as <code>'' → 'scored'</code>: 12,349 rows of pure format noise
+  were published as changes. The comparison now covers only the fields the stored snapshot actually carries a column
+  for, and an empty previous value for a derived field (<code>status</code>, <code>reviewed</code>,
+  <code>overturned</code>) is treated as unknown rather than as an observation. The 12,349 artifact rows were removed
+  from <code>data/ingest/ruling_changes.csv</code>; the untouched raw file is preserved in git commit
+  <code>e81bb25</code> and the removal is documented in
+  <code>data/ingest/ruling_changes_cleaning.json</code>. (2) A game that runs past midnight is listed by the schedule
+  endpoint under two dates, so the same game was fetched twice and every play stored twice: the snapshot held 12,402
+  duplicated rows. The schedule is now de-duplicated by <code>gamePk</code> at its official date, and rows are
+  de-duplicated by <code>(game_pk, at_bat)</code> before comparison. With both fixes the same window reports
+  <b>0</b> changes, and the ledger holds its first real observations: <b>1,107</b> field differences between two
+  captures of the official feed (<code>reviewed 0→1</code> ×426, <code>review_type</code> appearing ×426,
+  <code>overturned 0→1</code> ×255). A difference is evidence that the captured field changed between two
+  observations — the feed can also backfill metadata — so every published row carries its official feed URL for
+  verification.</div>
 
   <h2>Provenance files</h2>
   <div class="scroll">

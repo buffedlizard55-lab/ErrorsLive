@@ -124,7 +124,11 @@
     the scheduled watcher only sees games inside its rolling window. A fast decision made and never changed between
     two captures is invisible to both — the rule text on <a href="rules.html">Rules &amp; RBI</a> explains why the
     feed cannot be more than that. The watcher's own failure mode (a status file reporting
-    <code>ok: false</code>) is surfaced on the alert page rather than shown as an empty list.</li>
+    <code>ok: false</code>) is surfaced on the alert page rather than shown as an empty list, and the status file
+    now records the tool revision and the compared fields, so a stored observation says which code produced it.
+    A related limit: a value can also change because the league backfilled metadata (a review's
+    <code>reviewed</code>/<code>overturned</code> fields can appear in a later read of an older game), so each row
+    links its official feed rather than asserting a decision time.</li>
     <li><b>The published error rate is the observed target-label rate.</b> The model class is derived from
     <code>result.eventType == field_error</code>, not every kind of defensive misplay that may appear alongside
     another scoring classification. Post-game feed revisions can only be noticed if a scheduled capture observes

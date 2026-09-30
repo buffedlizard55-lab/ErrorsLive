@@ -80,7 +80,7 @@ statistical model, and the public site.
 | d | Can users inspect overturned calls and watch/download video for run-impact cases? | `docs/replays.html` indexes the ingested 2026 review window (**11,528** reviews, **6,149** marked overturned). **17** overturned rows are heuristic run-impact candidates; **0** passed the separate movement/score consistency diagnostic. Every candidate row now has an **inline player** (the mp4 streams from the league's own `sporty-clips.mlb.com` host, nothing is re-hosted) plus a download control; rows whose play id exposes no file rendition say so and open Baseball Savant instead. Neither count is a verified list of runs removed — and the site says so on the row. The 2014–2018 archive is on `docs/overturned.html`. |
 | e | Is there a GitHub Pages site? | Yes: `/docs`, published at <https://buffedlizard55-lab.github.io/ErrorsLive/>. |
 | f | Is “Own the Outcome” a focal point? | The home page and methods page state it; in practice the pipeline records flags and failed fetches instead of silently smoothing them over, and the site surfaces model limits beside headline metrics. |
-| g | Can collection run with minimal manual checking? | Best-effort automation is configured: browser refresh about every 2 minutes while live, static fallback refresh on a 30-minute schedule, active ruling observations every 15 minutes, and a daily recheck of recent games. `docs/alerts.html` turns those observations into a change feed — polls in the browser, diffs each capture against the previous one, raises typed alerts (ruling appeared, ruling changed, RBI moved, review overturned, run scored with a runner in scoring position), optionally notifies and beeps, and exports the ledger; the CI-side ledger in `docs/data/alerts.json` is the fallback when a browser cannot reach the league. A watcher defect found in this session (`TypeError` from comparing CSV text to API integers) is fixed and regression-tested. GitHub schedules are not guaranteed real-time delivery; see the workflows and limitations below. |
+| g | Can collection run with minimal manual checking? | Best-effort automation is configured: browser refresh about every 2 minutes while live, static fallback refresh on a 30-minute schedule, active ruling observations every 15 minutes, and a daily recheck of recent games. `docs/alerts.html` turns those observations into a change feed — polls in the browser, diffs each capture against the previous one, raises typed alerts (ruling appeared, ruling changed, RBI moved, review overturned, run scored with a runner in scoring position), optionally notifies and beeps, and exports the ledger; the CI-side ledger in `docs/data/alerts.json` is the fallback when a browser cannot reach the league. The watcher defects found in this session (`TypeError` from comparing CSV text to API integers; a format-change flood of 12,349 phantom rows; duplicated plays from a game listed under two dates) are fixed, regression-tested, and verified in production — the status file reports `ok: true` and a re-run of the same window reports 0 changes. GitHub schedules are not guaranteed real-time delivery; see the workflows and limitations below. |
 | h | What remains? | See `docs/roadmap.html` and “Limitations and next steps” below. |
 
 ## Data provenance — scope is explicit
@@ -177,8 +177,24 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
   cross-realm `instanceof Set` bug in the alert engine and the timestamp-in-alert-id bug that would have defeated
   de-duplication across a reload; both now have node regression checks.
 - **Pass 3 — verification.** `tools/run_all.py` rebuilds byte-identically, `tools/check_repro.py` passes,
-  `tests/test_pipeline.py` passes with the new sections I (watcher + alert engine), J (site wiring) and
-  K (verified rule text) and the new model-diagnostic contracts. Remaining limits are listed below.
+  `tests/test_pipeline.py` passes with the new sections I (watcher + alert engine), J (site wiring),
+  K (verified rule text), L (model diagnostics) and M (the watcher run end to end against the 24 cached
+  official feeds), plus the new model-diagnostic contracts. Remaining limits are listed below.
+- **Pass 4 — production verification, and two more defects the first successful CI run exposed.** Pushing the fix
+  made the scheduled collector run for real. `data/ingest/ruling_watch_status.json` now reports
+  `ok: true`, `tool_version: 2`, window 2026-09-10 → 2026-09-30, 239 games, 12,797 scoring-relevant plays, 0 fetch
+  failures, and — on the next run with the same window — **0 changes**, i.e. no phantom churn. The first
+  successful run recorded 13,456 "changes", of which 12,349 were one artifact: the stored snapshot predated the
+  `status` column, so every value read back empty and its first re-observation was logged as `'' → 'scored'`. A
+  second defect: the schedule endpoint lists a game that runs past midnight under two dates, so the same gamePk was
+  fetched twice and every play stored twice (12,402 duplicated snapshot rows). Both are fixed — the comparison is
+  gated to the columns the stored snapshot actually carries and never treats an unknown previous value as an
+  observation, and the schedule is de-duplicated by `gamePk` at its official date — and the artifact rows are
+  removed from `data/ingest/ruling_changes.csv` with the untouched raw file preserved in commit `e81bb25` and the
+  removal documented in `data/ingest/ruling_changes_cleaning.json`. What remains in the ledger is its first real
+  content: **1,107** observed field differences between two captures of the official feed (`reviewed 0→1` ×426,
+  `review_type` appearing ×426, `overturned 0→1` ×255), each carrying the official feed URL. These are the rows
+  behind `docs/data/alerts.json` and the alert console's CI ledger.
 
 ## Limitations and next steps
 
@@ -195,8 +211,14 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
    9.01(a) explains why: the official record is a preliminary call, a final-or-revised call within 24 hours, and a
    72-hour appeal window — none of which the public feed announces. Alert counts are therefore a floor on change,
    never a count of decisions.
-10. **The video probe is scoped to the run-impact candidates.** Each probe is a Savant page fetch, so the collector
+10. **A captured difference is not proof of a live decision.** The ledger records that a field differed between two
+   reads of the official feed. The feed can also backfill metadata (a review's `reviewed`/`overturned`/`review_type`
+   fields can appear in a later read of an older game), so a row is evidence of a change in what the league
+   publishes, not of when a scorer acted; every published row links its official feed and the watcher's raw fields.
+   `data/ingest/ruling_changes_cleaning.json` records the one bulk removal this rule forced (12,349 format-artifact
+   rows from the first post-fix run) and points at the untouched raw file in commit `e81bb25`.
+11. **The video probe is scoped to the run-impact candidates.** Each probe is a Savant page fetch, so the collector
    does not yet probe all 6,149 overturned reviews; the roadmap carries that as backlog item 9 with the reason.
-11. **PR/merge state is recorded in GitHub, not inferred from local files.** The session branch is fixed by Arena; see [PR #7](https://github.com/buffedlizard55-lab/ErrorsLive/pull/7) for its checks and authoritative merge status.
+12. **PR/merge state is recorded in GitHub, not inferred from local files.** The session branch is fixed by Arena; see [PR #7](https://github.com/buffedlizard55-lab/ErrorsLive/pull/7) for its checks and authoritative merge status.
 
 See `docs/roadmap.html` for the ordered backlog and evidence ledger. Next evidence and reliability work: extract and review the complete 2026 Rule 9.04 text; smoke-test the deployed Pages site in a real browser; monitor scheduled workflow delivery and feed failures; and expand external model validation before using the score beyond review triage.
