@@ -360,7 +360,7 @@ function render() {
         <td class="nowrap">${x.runners_on === '-' || !x.runners_on ? '—' : esc(x.runners_on)}${x.risp ? ' <span class="mid">RISP</span>' : ''}</td>
         <td class="right">${esc(x.outs_before ?? '')}</td>
         <td>${esc(x.description || '')}
-          ${x.risp && x.run_scored && x.rbi_if_error ? `<br><span class="muted">Conditional Rule 9.04 notes — error: ${esc(x.rbi_if_error)} · hit: ${esc(x.rbi_if_hit || '')} · FC: ${esc(x.rbi_if_fc || '')}</span>` : ''}
+          ${x.run_scored && x.rbi_if_error ? `<br><span class="muted">Conditional Rule 9.04 notes — error: ${esc(x.rbi_if_error)} · hit: ${esc(x.rbi_if_hit || '')} · FC: ${esc(x.rbi_if_fc || '')}</span>` : ''}
           ${x.reviewed ? `<br><span class="mid">reviewed (${esc(x.review_type || '')}) — overturned: ${esc(String(x.review_overturned))}</span>` : ''}</td>
         <td class="nowrap">${x.official_feed_url ? linkOut(x.official_feed_url, 'official feed') : ''}
           ${x.savant_url ? linkOut(x.savant_url, 'watch') : ''}</td>

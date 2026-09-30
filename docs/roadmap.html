@@ -40,6 +40,27 @@
     field-level contracts between each page and the JSON it loads. A hand-typed number cannot survive.</li>
   </ul>
 
+  <h2>2026-09-30 (2): the RBI question answered by measurement</h2>
+  <ul>
+    <li><b><a href="rbi.html">RBI stakes, measured</a> is new.</b> <code>tools/rbi_evidence.py</code> derives
+    <code>docs/data/rbi_evidence.json</code> from the same batted-ball table the model uses: the observed RBI rate
+    per final call and per base/out state with Wilson intervals, the Rule 9.04(a)(3) gate test, and every
+    error-ruled play in the window that still earned an RBI — each with its play id, Gameday link and official
+    feed URL. The audit suite recomputes every cell from <code>docs/data/bip_official.csv</code>.</li>
+    <li><b>The review profile is published.</b> <code>docs/data/replays_site.json</code> now carries, per final
+    call, how many plays were reviewed, how many of those the feed marks overturned, and how many show a runner
+    scoring (428 overturned reviews in total). It is a description of the captured final record, explicitly not an
+    overturn probability and not a count of runs removed.</li>
+    <li><b>The conditional RBI notes now apply the rule's observable gate.</b> With a runner on third and fewer
+    than two outs the note says Rule 9.04(a)(3) <i>can</i> apply and quotes its counterfactual; otherwise it says
+    the exception cannot apply and cites 9.04(a)(1)'s "unaided by an error". The same wording is used by the
+    collector, the CLI and the browser, and the audit suite compares all three.</li>
+    <li><b>The review ledger's note columns are re-derived, not re-fetched.</b>
+    <code>tools/refresh_rbi_notes.py</code> recomputes the three <code>rbi_if_*</code> columns of
+    <code>docs/data/replays.csv</code> from the row's own fields, so the committed ledger always matches the code
+    that writes it.</li>
+  </ul>
+
   <h2>Corrections made to previously published pages</h2>
   <p class="muted">Each of these was a claim on the site that the repository's own data did not support. All
   were found by re-deriving every published number from source, not by reading for style.</p>
@@ -81,6 +102,24 @@
     <tr><td><code>README.md</code></td>
         <td>“all 222 games played on 15 dates <b>in June 2026</b>”</td>
         <td>the pool spans 2026-06-13 to 2026-09-26. Corrected.</td></tr>
+    <tr><td><code>roadmap.html</code> (this page)</td>
+      <td>"the top 10% found 47 (19.5% recall)"</td>
+      <td><b>Corrected:</b> those are the top <b>5%</b> figures. The top 10% row is <b>77</b> errors at
+      <b>31.9%</b> recall.
+      The number was wrong on a published page and nothing checked it; a new audit check now re-derives every
+      review-queue figure quoted in prose from <code>data/model.json</code>.</td></tr>
+    <tr><td><code>index.html</code>, <code>tools/ingest_official.py</code></td>
+      <td>"the complete 2026 subsection is not reproduced here" / "the full operative text of 2026
+      Rule 9.04(a)(3) was not independently retrievable"</td>
+      <td>both contradicted the verbatim Rule 9.04 quotations the same session published on
+      <a href="rules.html"><code>rules.html</code></a>. The caveats are gone, a cross-page check now fails the
+      build if that wording returns, and the RBI notes apply the rule's observable conditions instead of pointing
+      at it vaguely.</td></tr>
+    <tr><td><code>tools/live_score.py</code>, <code>docs/site.js</code></td>
+      <td>the conditional RBI note was attached only to run-scoring plays with a runner in scoring position</td>
+      <td>Rule 9.04 governs every RBI, so run-scoring plays with the bases empty or a runner on first were
+      shown no note at all. The gate is now <code>run_scored</code> in all three implementations, and the audit
+      suite compares the browser and the CLI row for row — call, score, base/out state and notes.</td></tr>
     <tr><td><code>data/TARGETS.json</code></td>
         <td>“sampling fraction 0.5 in every stratum; inverse-selection weight = 2.0 uniform”</td>
         <td>the same stale self-weighting fiction, left behind in the machine-readable manifest after it had
@@ -98,8 +137,11 @@
     against the 0.00798 prevalence baseline. The published queue table states the
     cost instead of implying a verdict: reviewing the highest-scored 0.5% (152 held-out plays)
     found 11 of 241 errors at 7.24% precision
-    (9.07× the base rate); the top 10% found 47
-    (19.5% recall). Use it to sort plays for a second look, never to make a ruling.</li>
+    (9.07× the base rate); the top 5% found 47
+    (19.5% recall); the top 10% found 77
+    (31.9% recall). Use it to sort plays for a second look, never to make a ruling.
+    Every one of those figures is recomputed from <code>data/model.json</code> by the audit suite, so a
+    mis-typed queue number now fails the build.</li>
     <li><b>Feature experiments did not beat the shipped model, and say so.</b> Hand-built interactions and
     bins (hard-hit flag, exit-velocity and launch-angle bands, EV×LA, ground-ball×hardness) scored grouped AUC
     0.7788 / average precision
@@ -189,7 +231,10 @@
   <h2>How to check any of this yourself</h2>
   <ul>
     <li><code>python3 tests/test_pipeline.py</code> — 200+ assertions, exit 0 on green; sections C, D and H
-    recompute the published numbers and the page/data contracts.</li>
+    recompute the published numbers and the page/data contracts; section O recomputes every measured RBI cell;
+    section P checks that the numbers quoted in prose match the artifacts the pages load, that every internal
+    link resolves and that every external link points at an official host; section Q proves the browser and the
+    CLI agree row for row.</li>
     <li><code>python3 tools/run_all.py</code> — rebuilds every committed artifact offline; CI fails if a single
     byte changes.</li>
     <li><code>data/ingest/ingest_report.json</code> — the collector's own run report, including every flagged
@@ -198,7 +243,7 @@
     returns, so the claims about videos and old seasons are checkable.</li>
   </ul>
 </main>
-<footer><div class="inner"><span>Pass log and backlog reviewed 2026-09-30. Rule 9.04 page 115 and a real-browser Pages smoke test remain open.</span>
+<footer><div class="inner"><span>Pass log and backlog reviewed 2026-09-30. A real-browser Pages smoke test of the live board, the alert console and the new <a href="rbi.html" style="color:inherit">RBI stakes</a> page remains open.</span>
 <span>Own the Outcome</span></div></footer>
 <script src="site.js"></script>
 </body>

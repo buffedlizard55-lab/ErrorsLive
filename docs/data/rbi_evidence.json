@@ -1,0 +1,412 @@
+{
+ "available": true,
+ "source": "docs/data/bip_official.csv (tools/ingest_official.py, CI collector output)",
+ "window": [
+  "2026-08-15",
+  "2026-09-27"
+ ],
+ "window_source": "docs/data/model.json meta.dataset_note",
+ "n_rows": 30206,
+ "n_quarantined_excluded": "rows without a complete Statcast vector are excluded, exactly as the model excludes them (see docs/data/data_quality.json)",
+ "question": "Does an error-ruled play cost the batter an RBI, and would a hit or a fielder's choice have earned one?",
+ "by_class": [
+  {
+   "n": 9735,
+   "rbi_plays": 3279,
+   "rate": 0.336826,
+   "rate_pct": 33.68,
+   "ci95": [
+    0.327503,
+    0.346277
+   ],
+   "macro_class": "hit",
+   "label": "Hit"
+  },
+  {
+   "n": 241,
+   "rbi_plays": 3,
+   "rate": 0.012448,
+   "rate_pct": 1.24,
+   "ci95": [
+    0.004242,
+    0.035953
+   ],
+   "macro_class": "error",
+   "label": "Error"
+  },
+  {
+   "n": 183,
+   "rbi_plays": 19,
+   "rate": 0.103825,
+   "rate_pct": 10.38,
+   "ci95": [
+    0.06748,
+    0.15646
+   ],
+   "macro_class": "fielders_choice",
+   "label": "Fielder's choice"
+  },
+  {
+   "n": 20047,
+   "rbi_plays": 495,
+   "rate": 0.024692,
+   "rate_pct": 2.47,
+   "ci95": [
+    0.022633,
+    0.026933
+   ],
+   "macro_class": "out",
+   "label": "Out (includes sac flies / infield outs)"
+  }
+ ],
+ "by_state": [
+  {
+   "n": 891,
+   "rbi_plays": 878,
+   "rate": 0.98541,
+   "rate_pct": 98.54,
+   "ci95": [
+    0.975198,
+    0.991454
+   ],
+   "state": "third_fewer_than_two_outs",
+   "state_label": "Runner on 3rd, fewer than 2 outs",
+   "macro_class": "hit",
+   "label": "Hit"
+  },
+  {
+   "n": 5,
+   "rbi_plays": 3,
+   "rate": 0.6,
+   "rate_pct": 60.0,
+   "ci95": [
+    0.230724,
+    0.882379
+   ],
+   "state": "third_fewer_than_two_outs",
+   "state_label": "Runner on 3rd, fewer than 2 outs",
+   "macro_class": "error",
+   "label": "Error"
+  },
+  {
+   "n": 99,
+   "rbi_plays": 19,
+   "rate": 0.191919,
+   "rate_pct": 19.19,
+   "ci95": [
+    0.12645,
+    0.280404
+   ],
+   "state": "third_fewer_than_two_outs",
+   "state_label": "Runner on 3rd, fewer than 2 outs",
+   "macro_class": "fielders_choice",
+   "label": "Fielder's choice"
+  },
+  {
+   "n": 587,
+   "rbi_plays": 494,
+   "rate": 0.841567,
+   "rate_pct": 84.16,
+   "ci95": [
+    0.80982,
+    0.868873
+   ],
+   "state": "third_fewer_than_two_outs",
+   "state_label": "Runner on 3rd, fewer than 2 outs",
+   "macro_class": "out",
+   "label": "Out (includes sac flies / infield outs)"
+  },
+  {
+   "n": 785,
+   "rbi_plays": 765,
+   "rate": 0.974522,
+   "rate_pct": 97.45,
+   "ci95": [
+    0.960975,
+    0.983448
+   ],
+   "state": "third_two_outs",
+   "state_label": "Runner on 3rd, 2 outs",
+   "macro_class": "hit",
+   "label": "Hit"
+  },
+  {
+   "n": 16,
+   "rbi_plays": 0,
+   "rate": 0.0,
+   "rate_pct": 0.0,
+   "ci95": [
+    0.0,
+    0.193608
+   ],
+   "state": "third_two_outs",
+   "state_label": "Runner on 3rd, 2 outs",
+   "macro_class": "error",
+   "label": "Error"
+  },
+  {
+   "n": 4,
+   "rbi_plays": 0,
+   "rate": 0.0,
+   "rate_pct": 0.0,
+   "ci95": [
+    0.0,
+    0.489891
+   ],
+   "state": "third_two_outs",
+   "state_label": "Runner on 3rd, 2 outs",
+   "macro_class": "fielders_choice",
+   "label": "Fielder's choice"
+  },
+  {
+   "n": 13,
+   "rbi_plays": 0,
+   "rate": 0.0,
+   "rate_pct": 0.0,
+   "ci95": [
+    0.0,
+    0.228095
+   ],
+   "state": "third_two_outs",
+   "state_label": "Runner on 3rd, 2 outs",
+   "macro_class": "out",
+   "label": "Out (includes sac flies / infield outs)"
+  },
+  {
+   "n": 1366,
+   "rbi_plays": 596,
+   "rate": 0.43631,
+   "rate_pct": 43.63,
+   "ci95": [
+    0.410226,
+    0.462752
+   ],
+   "state": "second_only",
+   "state_label": "Runner on 2nd only (no runner on 3rd)",
+   "macro_class": "hit",
+   "label": "Hit"
+  },
+  {
+   "n": 39,
+   "rbi_plays": 0,
+   "rate": 0.0,
+   "rate_pct": 0.0,
+   "ci95": [
+    0.0,
+    0.089667
+   ],
+   "state": "second_only",
+   "state_label": "Runner on 2nd only (no runner on 3rd)",
+   "macro_class": "error",
+   "label": "Error"
+  },
+  {
+   "n": 54,
+   "rbi_plays": 0,
+   "rate": 0.0,
+   "rate_pct": 0.0,
+   "ci95": [
+    0.0,
+    0.066414
+   ],
+   "state": "second_only",
+   "state_label": "Runner on 2nd only (no runner on 3rd)",
+   "macro_class": "fielders_choice",
+   "label": "Fielder's choice"
+  },
+  {
+   "n": 982,
+   "rbi_plays": 1,
+   "rate": 0.001018,
+   "rate_pct": 0.1,
+   "ci95": [
+    0.00018,
+    0.005746
+   ],
+   "state": "second_only",
+   "state_label": "Runner on 2nd only (no runner on 3rd)",
+   "macro_class": "out",
+   "label": "Out (includes sac flies / infield outs)"
+  },
+  {
+   "n": 6693,
+   "rbi_plays": 1040,
+   "rate": 0.155386,
+   "rate_pct": 15.54,
+   "ci95": [
+    0.146905,
+    0.164263
+   ],
+   "state": "no_risp",
+   "state_label": "No runner in scoring position",
+   "macro_class": "hit",
+   "label": "Hit"
+  },
+  {
+   "n": 181,
+   "rbi_plays": 0,
+   "rate": 0.0,
+   "rate_pct": 0.0,
+   "ci95": [
+    0.0,
+    0.020782
+   ],
+   "state": "no_risp",
+   "state_label": "No runner in scoring position",
+   "macro_class": "error",
+   "label": "Error"
+  },
+  {
+   "n": 26,
+   "rbi_plays": 0,
+   "rate": 0.0,
+   "rate_pct": 0.0,
+   "ci95": [
+    0.0,
+    0.128729
+   ],
+   "state": "no_risp",
+   "state_label": "No runner in scoring position",
+   "macro_class": "fielders_choice",
+   "label": "Fielder's choice"
+  },
+  {
+   "n": 18465,
+   "rbi_plays": 0,
+   "rate": 0.0,
+   "rate_pct": 0.0,
+   "ci95": [
+    0.0,
+    0.000208
+   ],
+   "state": "no_risp",
+   "state_label": "No runner in scoring position",
+   "macro_class": "out",
+   "label": "Out (includes sac flies / infield outs)"
+  }
+ ],
+ "rule_checks": {
+  "a3_conditions_met": {
+   "label": "Error-ruled plays with a runner on 3rd and fewer than 2 outs (Rule 9.04(a)(3) conditions observable)",
+   "n": 5,
+   "rbi_plays": 3,
+   "rate": 0.6,
+   "rate_pct": 60.0,
+   "ci95": [
+    0.230724,
+    0.882379
+   ]
+  },
+  "two_outs": {
+   "label": "Error-ruled plays with a runner on 3rd and 2 outs (9.04(a)(3) requires \"before two are out\")",
+   "n": 16,
+   "rbi_plays": 0,
+   "rate": 0.0,
+   "rate_pct": 0.0,
+   "ci95": [
+    0.0,
+    0.193608
+   ]
+  },
+  "no_runner_on_third": {
+   "label": "Error-ruled plays with no runner on third base (9.04(a)(3) names third base)",
+   "n": 220,
+   "rbi_plays": 0,
+   "rate": 0.0,
+   "rate_pct": 0.0,
+   "ci95": [
+    0.0,
+    0.017162
+   ]
+  }
+ },
+ "error_rbi_cases": [
+  {
+   "game_pk": "822933",
+   "at_bat": "85",
+   "play_id": "fc5670ac-e581-3660-b4da-688899b7803f",
+   "event_type": "field_error",
+   "rbi": 1,
+   "outs_before": 1,
+   "on_1b": 1,
+   "on_2b": 1,
+   "on_3b": 1,
+   "risp": 1,
+   "launch_speed": "70.4",
+   "launch_angle": "-40.0",
+   "trajectory": "ground_ball",
+   "feed_url": "https://statsapi.mlb.com/api/v1.1/game/822933/feed/live",
+   "gameday_url": "https://www.mlb.com/gameday/822933",
+   "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=fc5670ac-e581-3660-b4da-688899b7803f"
+  },
+  {
+   "game_pk": "823506",
+   "at_bat": "50",
+   "play_id": "3dd6d28f-d5a0-3e99-a632-8dc4e3dc5618",
+   "event_type": "field_error",
+   "rbi": 1,
+   "outs_before": 0,
+   "on_1b": 0,
+   "on_2b": 1,
+   "on_3b": 1,
+   "risp": 1,
+   "launch_speed": "105.2",
+   "launch_angle": "-10.0",
+   "trajectory": "ground_ball",
+   "feed_url": "https://statsapi.mlb.com/api/v1.1/game/823506/feed/live",
+   "gameday_url": "https://www.mlb.com/gameday/823506",
+   "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=3dd6d28f-d5a0-3e99-a632-8dc4e3dc5618"
+  },
+  {
+   "game_pk": "825032",
+   "at_bat": "53",
+   "play_id": "535d76c2-5cc2-3ee2-85ce-ace69bcfd5cb",
+   "event_type": "field_error",
+   "rbi": 1,
+   "outs_before": 1,
+   "on_1b": 1,
+   "on_2b": 1,
+   "on_3b": 1,
+   "risp": 1,
+   "launch_speed": "93.1",
+   "launch_angle": "-3.0",
+   "trajectory": "ground_ball",
+   "feed_url": "https://statsapi.mlb.com/api/v1.1/game/825032/feed/live",
+   "gameday_url": "https://www.mlb.com/gameday/825032",
+   "savant_url": "https://baseballsavant.mlb.com/sporty-videos?playId=535d76c2-5cc2-3ee2-85ce-ace69bcfd5cb"
+  }
+ ],
+ "rule_basis": {
+  "source": "2026 Official Baseball Rules (official PDF)",
+  "pdf": "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf",
+  "rule_9_04_page": 115,
+  "a1_quote": "unaided by an error and as part of a play begun by the batter's safe hit (including the batter's home run), sacrifice bunt, sacrifice fly, infield out or fielder's choice",
+  "a3_quote": "when, before two are out, an error is made on a play on which a runner from third base ordinarily would score",
+  "b1_quote": "when the batter grounds into a force double play or a reverse-force double play",
+  "verbatim_on_page": "docs/rules.html"
+ },
+ "limits": [
+  "These are observed rates inside one late-season window, not a forecast. They describe what the official scorer credited, not what a future scorer will credit.",
+  "Rule 9.04(a)(3) also requires that the runner from third \"ordinarily would score\". That counterfactual is the scorer's judgment and is not in the feed, which is why only part of the eligible group earned an RBI.",
+  "Small cells: the error class has 241 plays in the whole window, so its state-level rates carry wide Wilson intervals and are printed with them.",
+  "An RBI credited on an error-ruled play is evidence about the rule, not evidence that the ruling was wrong or later changed."
+ ],
+ "official_sources": [
+  {
+   "label": "2026 Official Baseball Rules (Rule 9.04, printed page 115)",
+   "url": "https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf#page=115"
+  },
+  {
+   "label": "MLB glossary: Error",
+   "url": "https://www.mlb.com/glossary/standard-stats/error"
+  },
+  {
+   "label": "MLB glossary: Runs Batted In",
+   "url": "https://www.mlb.com/glossary/standard-stats/runs-batted-in"
+  },
+  {
+   "label": "MLB Official Scoring Changes",
+   "url": "https://www.mlb.com/official-information/scoring-changes"
+  }
+ ]
+}

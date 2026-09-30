@@ -42,6 +42,17 @@
     and video. These rows are not a manually confirmed list of removed runs.</p>
   </div>
 
+  <h2>What the feed exposes about reviews — by the final call</h2>
+  <p class="muted">The brief asks whether an error can be told apart from a hit or a fielder's choice <i>after</i>
+  a review. The honest answer starts with what the league publishes: the captured feed shows each play's
+  <b>final</b> reviewed state and never the ruling that preceded it, so a rate below describes the record, not a
+  pending decision. Every row links the official feed for that game.</p>
+  <div class="scroll"><table class="compact" id="profile">
+    <tr><th>Final call in the feed</th><th class="right">Reviewed</th><th class="right">Overturned</th>
+        <th class="right">Overturned rate</th><th class="right">Overturned &amp; a runner scored</th></tr>
+  </table></div>
+  <p class="note" id="profilenote"></p>
+
   <div class="grid cols3" id="kpis"><div class="card">Loading <code>data/replays_site.json</code>…</div></div>
   <div id="flags"></div>
 
@@ -107,10 +118,23 @@ const $ = id => document.getElementById(id);
     kpiCard((c.run_removed_hard || 0).toLocaleString(), 'runner-movement / score inconsistencies (not proof of a removal)') +
     kpiCard((c.run_removed_heuristic || 0).toLocaleString(), 'run-affected by the labelled heuristic') +
     kpiCard((c.with_watch_link || 0).toLocaleString(), 'run-affected rows with a per-play video page') +
-    kpiCard((c.with_mp4 || 0).toLocaleString(), 'run-affected rows with a direct mp4');
+    kpiCard((c.with_mp4 || 0).toLocaleString(), 'run-affected rows with a direct mp4') +
+    kpiCard((c.overturned_with_runner_scoring || 0).toLocaleString(),
+            'overturned reviews on which a runner is recorded scoring (final feed state)');
   $('flags').innerHTML = `<div class="note" style="margin-top:10px">Window: <b>${esc((c.window || []).join(' → '))}</b> ·
     pitch-result challenges <b>${esc(c.pitch_challenges)}</b> · replay reviews <b>${esc(c.replay_reviews)}</b>.
     Review subjects found in the data: ${esc(Object.entries(SITE.subjects || {}).map(([k, v]) => k + ' ' + v).join(' · '))}.</div>`;
+  $('profilenote').textContent = SITE.review_profile_note || '';
+  $('profile').insertAdjacentHTML('beforeend',
+    (SITE.review_profile || []).map(r => `<tr><td>${esc(r.macro_class)}</td>` +
+      `<td class="right">${r.reviewed.toLocaleString()}</td>` +
+      `<td class="right">${r.overturned.toLocaleString()}</td>` +
+      `<td class="right"><b>${(100 * r.overturned_rate).toFixed(2)}%</b></td>` +
+      `<td class="right">${r.overturned_with_runner_scoring.toLocaleString()}</td></tr>`).join('') +
+    `<tr><td><b>all reviewed plays</b></td><td class="right"><b>${(c.reviewed_plays || 0).toLocaleString()}</b></td>` +
+    `<td class="right"><b>${(c.overturned || 0).toLocaleString()}</b></td>` +
+    `<td class="right"><b>${(100 * (c.overturned || 0) / (c.reviewed_plays || 1)).toFixed(2)}%</b></td>` +
+    `<td class="right"><b>${(c.overturned_with_runner_scoring || 0).toLocaleString()}</b></td></tr>`);
   renderRuns(); renderIndex();
   ['fSub', 'fCall', 'fQ'].forEach(id => $(id).addEventListener('input', renderIndex));
 })();

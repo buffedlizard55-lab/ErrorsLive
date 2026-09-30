@@ -6,13 +6,20 @@ name: ingest
 # sandbox (and the repo) get verifiable, timestamped data instead of hand-typed numbers.
 #
 # Triggers
-#   * push to an arena/* branch  -> collect + commit (this is how data enters the repo)
-#   * workflow_dispatch          -> same, on demand
-# Guard: a commit whose message contains [ci-data] does not re-trigger collection (no loops).
+#   * push to main              -> collect + commit (this is how data enters the repo)
+#   * workflow_dispatch         -> same, on demand (Actions tab -> ingest -> Run workflow), on any branch
+#
+# Why the published branch and not a branch under review: a workflow started by a push from this
+# workflow's own bot has to be approved by a human before it will run, so every [ci-data] commit
+# landed on an arena/* branch left that branch's `audit` run permanently `action_required` and the
+# pull request UNSTABLE -- nine such runs failed and two were never started, so nothing could be
+# merged. Collecting on main keeps a pull request's head an authored commit whose audit does run,
+# and puts the data where GitHub Pages builds the site from. The [ci-data] guard below still stops
+# the loop, and workflow_dispatch refreshes any other branch on demand.
 
 on:
   push:
-    branches: ['arena/**']
+    branches: [main]
   workflow_dispatch:
 
 permissions:

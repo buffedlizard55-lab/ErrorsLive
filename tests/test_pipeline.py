@@ -14,6 +14,7 @@ Design rules for this suite:
  * No network. Everything here must run offline.
 """
 import csv, datetime, json, math, re, sys, tempfile
+from urllib.parse import urlparse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -49,7 +50,7 @@ def flat(html):
 # A legacy phrase is acceptable only when the page is explicitly quoting it in order to correct it.
 CORRECTION_MARKERS = ('was wrong', 'wrong', 'correction', 'corrected', 'removed', 'incorrect',
                       'unsupported', 'fabricated', 'contradicted', 'stale', 'no longer',
-                      'case-sensitive', 'used to say')
+                      'case-sensitive', 'used to say', 'replaced')
 
 
 # ---------------------------------------------------------------- A. archives
@@ -406,8 +407,11 @@ check('live tool never nominates "error" as the top pick anywhere in the game',
 risp = [r for r in rows if r['risp'] and r['run_scored']]
 check('live tool finds the 2 run-scoring plays with a runner on 2nd/3rd', len(risp) == 2, str(len(risp)))
 check('RBI-at-stake rows carry conditional Rule 9.04 notes for all three candidate rulings',
-      all('Rule 9.04(a)(3)' in r['rbi_if_error'] and 'cannot establish' in r['rbi_if_error']
-          and 'Rule 9.04' in r['rbi_if_hit'] and 'Rule 9.04' in r['rbi_if_fc'] for r in risp))
+      all('Rule 9.04' in r['rbi_if_error'] and 'Rule 9.04' in r['rbi_if_hit']
+          and 'Rule 9.04' in r['rbi_if_fc'] for r in risp)
+      and all(('can apply' in r['rbi_if_error']) == (r['outs_before'] < 2 and '3B' in
+                                                     (r['runners_on'] or '').split(','))
+              for r in risp))
 check('home-run RBI notes do not fabricate an error or fielder\'s-choice alternative',
       'not a valid alternative' in ls.rbi_if_ruled('error', True, 'home_run')
       and 'recorded RBI field' in ls.rbi_if_ruled('hit', True, 'home_run')
@@ -435,8 +439,9 @@ check('a contact play without result.eventType is flagged as a feed state, not a
       json.dumps({k: prow[k] for k in ('status', 'official_call', 'score_100', 'top_pick')}))
 check('the no-eventType row still carries model answers and a conditional RBI reminder',
       prow['top_pick'] in ('hit', 'out', 'error', 'fielders_choice') and prow['risp'] == 1
-      and prow['run_scored'] == 1 and 'Rule 9.04(a)(3)' in prow['rbi_if_error']
-      and 'cannot establish' in prow['rbi_if_error'])
+      and prow['run_scored'] == 1 and 'Rule 9.04' in prow['rbi_if_error']
+      and ('can apply' in prow['rbi_if_error']) ==
+      (prow['outs_before'] < 2 and '3B' in (prow['runners_on'] or '').split(',')))
 spec_wr = importlib.util.spec_from_file_location('watch_rulings', ROOT / 'tools/watch_rulings.py')
 wr = importlib.util.module_from_spec(spec_wr)
 spec_wr.loader.exec_module(wr)
@@ -810,7 +815,7 @@ check('committed endpoint evidence distinguishes schedule and game-feed CORS pro
       {'cors_statsapi', 'cors_statsapi_feed'} <= probed)
 check('site copy treats the sampled CORS headers as evidence, not a guarantee or browser QA',
       'one game-feed request' in rd and 'not a full browser test' in rd
-      and 'real-browser Pages smoke test remain open' in rdm)
+      and 'real-browser Pages smoke test' in rdm)
 check('README restates the brief before any results (Section 0 rule)',
       'Section 0' in rd and 'VERBATIM' in rd)
 brief_opening = ("I want to investigate if there is a way to accurately predict the outcome of any scoring decision "
@@ -1233,18 +1238,33 @@ print('== N. the change-ledger cleaning record and the duplicate-row attribution
 import collections as _collections
 _clean = load_json(ROOT / 'data' / 'ingest' / 'ruling_changes_cleaning.json')
 _ledger = load_csv(ROOT / 'data' / 'ingest' / 'ruling_changes.csv')
-check('cleaning record: the arithmetic closes against the committed ledger',
-      _clean['rows_before'] - _clean['rows_dropped'] == _clean['rows_after'] == len(_ledger)
+# The record describes the ledger as it stood when the cleaning ran. The scheduled watcher keeps
+# appending observations, so the record is checked against that slice and later rows are checked as
+# new observations. Comparing against the whole ledger made the suite fail the first time the live
+# watcher appended one legitimate row — which is exactly what a live feed is supposed to do.
+_at_clean = [r for r in _ledger if r['detected_utc'] <= _clean['cleaned_utc']]
+_since = [r for r in _ledger if r['detected_utc'] > _clean['cleaned_utc']]
+check('cleaning record: the arithmetic closes against the ledger as it stood at cleaning time',
+      _clean['rows_before'] - _clean['rows_dropped'] == _clean['rows_after'] == len(_at_clean)
       and sum(_clean['dropped_rows_by_transition'].values()) == _clean['rows_dropped'],
-      f"before {_clean['rows_before']} - dropped {_clean['rows_dropped']} != ledger {len(_ledger)}")
-check('cleaning record: kept rows by field and by transition match the ledger it describes',
-      _clean['kept_rows_by_field'] == dict(_collections.Counter(r['field'] for r in _ledger))
+      f"before {_clean['rows_before']} - dropped {_clean['rows_dropped']} != "
+      f"ledger-at-clean {len(_at_clean)} (ledger now {len(_ledger)}, {len(_since)} observed since)")
+check('cleaning record: kept rows by field and by transition match the ledger at cleaning time',
+      _clean['kept_rows_by_field'] == dict(_collections.Counter(r['field'] for r in _at_clean))
       and _clean['kept_rows_by_transition']
-      == dict(_collections.Counter(f"{r['field']}: {r['from']} -> {r['to']}" for r in _ledger)),
+      == dict(_collections.Counter(f"{r['field']}: {r['from']} -> {r['to']}" for r in _at_clean)),
       f"json {_clean['kept_rows_by_transition']}")
-check('cleaning record: the distinct-play count matches the ledger',
-      _clean['kept_distinct_plays'] == len({(r['game_pk'], r['at_bat']) for r in _ledger})
-      and _clean['kept_detected_utc'] == min(r['detected_utc'] for r in _ledger))
+check('cleaning record: the distinct-play count matches the ledger at cleaning time',
+      _clean['kept_distinct_plays'] == len({(r['game_pk'], r['at_bat']) for r in _at_clean})
+      and _clean['kept_detected_utc'] == min(r['detected_utc'] for r in _at_clean))
+check('the cleaned artifact has not come back: no post-clean row repeats the dropped transition',
+      not [r for r in _since if r['field'] == 'status' and r['from'] == '']
+      and all(re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z', r['detected_utc'])
+              for r in _since),
+      f"{len(_since)} row(s) recorded after the cleaning")
+check('the ledger is still live: post-clean rows carry their own official evidence',
+      all(r.get('feed_url', '').startswith('https://statsapi.mlb.com/') and r.get('play_id')
+          and r.get('feed_url') for r in _since))
 check('cleaning record: the timestamp is a real ISO-8601 instant, not a placeholder',
       re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z', _clean['cleaned_utc']) is not None
       and _clean.get('cleaned_utc_basis'), _clean['cleaned_utc'])
@@ -1257,6 +1277,303 @@ check('duplicate-row attribution: the old "all 12,402 rows were the dual-date de
       'every play stored twice (12,402' not in flat(_readme)
       and 'the snapshot held 12,402 duplicated rows' not in flat(_methods)
       and '12,402 such phantom rows' not in _watcher_src)
+
+
+# ---------------------------------------------------------------- O. measured RBI evidence
+print('== O. the measured RBI stake, recomputed from the batted-ball table ==')
+RBI_PATH = ROOT / 'docs/data/rbi_evidence.json'
+check('docs/data/rbi_evidence.json is committed', RBI_PATH.exists())
+RB = load_json(RBI_PATH) if RBI_PATH.exists() else {}
+check('rbi_evidence.json declares itself available with its source', RB.get('available') is True
+      and 'bip_official.csv' in (RB.get('source') or ''))
+
+
+def _wilson(k, n, z=1.959963985):
+    if n == 0:
+        return [0.0, 0.0]
+    p = k / n
+    d = 1 + z * z / n
+    c = (p + z * z / (2 * n)) / d
+    h = z * (p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5 / d
+    return [round(max(0.0, c - h), 6), round(min(1.0, c + h), 6)]
+
+
+def _rate(pred):
+    sub = [r for r in num if pred(r)]
+    n = len(sub)
+    k = sum(1 for r in sub if int(r['rbi'] or 0) > 0)
+    return {'n': n, 'rbi_plays': k, 'rate': round(k / n, 6) if n else 0.0,
+            'rate_pct': round(100 * k / n, 2) if n else 0.0, 'ci95': _wilson(k, n)}
+
+
+def _same(a, b):
+    return (a['n'], a['rbi_plays'], a['rate'], a['rate_pct'], a['ci95']) == \
+           (b['n'], b['rbi_plays'], b['rate'], b['rate_pct'], b['ci95'])
+
+
+check('rbi_evidence.json covers exactly the model rows (no quarantine, no extra)',
+      RB.get('n_rows') == len(num), f"json {RB.get('n_rows')} vs {len(num)}")
+for row in RB.get('by_class', []):
+    check(f"RBI rate by class recomputed: {row['macro_class']}",
+          _same(row, _rate(lambda r, c=row['macro_class']: r['macro_class'] == c)))
+STATE_PRED = {
+    'third_fewer_than_two_outs': lambda r: r['on_3b'] == '1' and int(r['outs_before']) < 2,
+    'third_two_outs': lambda r: r['on_3b'] == '1' and int(r['outs_before']) == 2,
+    'second_only': lambda r: r['on_3b'] == '0' and r['on_2b'] == '1',
+    'no_risp': lambda r: r['on_3b'] == '0' and r['on_2b'] == '0',
+}
+check('the state table covers every class in every published state',
+      {(r['state'], r['macro_class']) for r in RB.get('by_state', [])} ==
+      {(s, c) for s in STATE_PRED for c in CLASSES})
+for row in RB.get('by_state', []):
+    pred = STATE_PRED[row['state']]
+    check(f"RBI rate recomputed: {row['macro_class']} / {row['state']}",
+          _same(row, _rate(lambda r, pred=pred, c=row['macro_class']: pred(r) and r['macro_class'] == c)))
+for key, pred in (('a3_conditions_met', lambda r: r['on_3b'] == '1' and int(r['outs_before']) < 2),
+                  ('two_outs', lambda r: r['on_3b'] == '1' and int(r['outs_before']) == 2),
+                  ('no_runner_on_third', lambda r: r['on_3b'] == '0')):
+    check(f"the Rule 9.04(a)(3) gate recomputed: {key}",
+          _same(RB['rule_checks'][key],
+                _rate(lambda r, pred=pred: r['macro_class'] == 'error' and pred(r))))
+
+# the empirical claim the page makes: an RBI on an error-ruled play is only ever observed where the
+# rule's two observable conditions hold
+err_rbi = [r for r in num if r['macro_class'] == 'error' and int(r['rbi'] or 0) > 0]
+check("every error-ruled play credited an RBI met 9.04(a)(3)'s observable conditions",
+      all(r['on_3b'] == '1' and int(r['outs_before']) < 2 for r in err_rbi),
+      f'{len(err_rbi)} cases, {sum(1 for r in err_rbi if r["on_3b"] != "1" or int(r["outs_before"]) >= 2)} outside')
+check('rbi_evidence.json lists every one of those cases and nothing else',
+      {(c['game_pk'], c['at_bat']) for c in RB.get('error_rbi_cases', [])} ==
+      {(r['game_pk'], r['at_bat']) for r in err_rbi})
+OFFICIAL = ('https://statsapi.mlb.com/', 'https://www.mlb.com/',
+            'https://baseballsavant.mlb.com/', 'https://mktg.mlbstatic.com/')
+for c in RB.get('error_rbi_cases', []):
+    ok = (c['feed_url'] == f"https://statsapi.mlb.com/api/v1.1/game/{c['game_pk']}/feed/live"
+          and c['gameday_url'] == f"https://www.mlb.com/gameday/{c['game_pk']}"
+          and c['savant_url'].startswith('https://baseballsavant.mlb.com/sporty-videos?playId=')
+          and c['on_3b'] == 1 and c['outs_before'] < 2 and c['rbi'] > 0
+          and c['event_type'] == 'field_error')
+    src = next((r for r in num if r['game_pk'] == c['game_pk'] and r['at_bat'] == c['at_bat']), None)
+    check(f"RBI case {c['game_pk']} ab{c['at_bat']}: official links, play id and state all check out",
+          ok and src is not None and src['play_id'] == c['play_id'] and src['rbi'] == str(c['rbi']))
+check('every published source URL is an official MLB host',
+      all(s['url'].startswith(OFFICIAL) for s in RB.get('official_sources', []))
+      and RB['rule_basis']['pdf'].startswith('https://mktg.mlbstatic.com/'))
+_mw = re.search(r'(\d{4}-\d{2}-\d{2})\s+through\s+(\d{4}-\d{2}-\d{2})', mm.get('dataset_note', ''))
+check('the measured window is the window the model itself declares',
+      RB.get('window') == ([_mw.group(1), _mw.group(2)] if _mw else None), str(RB.get('window')))
+_rb = RB.get('rule_basis', {})
+check('the rule quotations in rbi_evidence.json are the ones rules.html prints verbatim',
+      all(q in rules_flat for q in (_rb.get('a1_quote', ''), _rb.get('a3_quote', ''),
+                                    _rb.get('b1_quote', ''))))
+check('the page states what it does not claim (counterfactual, window, small cells)',
+      len(RB.get('limits', [])) >= 3
+      and any('ordinarily would score' in l for l in RB.get('limits', []))
+      and any('Wilson' in l or 'wide' in l for l in RB.get('limits', [])))
+
+# --- what the feed exposes about reviews, per final call --------------------------------
+REP_SITE = load_json(ROOT / 'docs/data/replays_site.json')
+reps_csv = load_csv(ROOT / 'docs/data/replays.csv')
+check('replays_site.json publishes the review profile with its honesty note',
+      bool(REP_SITE.get('review_profile')) and 'not a count of runs removed' in
+      (REP_SITE.get('review_profile_note') or ''))
+bad = []
+for row in REP_SITE.get('review_profile', []):
+    sub = [r for r in reps_csv if r['macro_class'] == row['macro_class']]
+    ov = sum(1 for r in sub if r['review_overturned'] == '1')
+    want = {'reviewed': len(sub), 'overturned': ov,
+            'overturned_rate': round(ov / len(sub), 6) if sub else 0,
+            'with_runner_scoring': sum(1 for r in sub if int(r['runs_by_movement'] or 0) > 0),
+            'overturned_with_runner_scoring': sum(1 for r in sub if r['review_overturned'] == '1'
+                                                  and int(r['runs_by_movement'] or 0) > 0)}
+    if any(row.get(k) != v for k, v in want.items()):
+        bad.append(f"{row['macro_class']}: {row} != {want}")
+check(f'the review profile recomputes from replays.csv ({len(reps_csv):,} rows)', not bad,
+      ' | '.join(bad[:2]))
+check('the profile covers every final call present in the ledger',
+      {r['macro_class'] for r in REP_SITE.get('review_profile', [])} ==
+      {r['macro_class'] for r in reps_csv})
+check('the overturned-with-runner-scoring count is the sum of the profile rows',
+      REP_SITE['counts']['overturned_with_runner_scoring'] ==
+      sum(r['overturned_with_runner_scoring'] for r in REP_SITE['review_profile'])
+      and REP_SITE['counts']['overturned_with_runner_scoring'] ==
+      sum(1 for r in reps_csv if r['review_overturned'] == '1' and int(r['runs_by_movement'] or 0) > 0))
+check('replays page renders the review profile from the JSON, not from literals',
+      "SITE.review_profile" in rpl and 'id="profile"' in rpl and 'profilenote' in rpl
+      and not re.search(r'\b(53\.34|54\.06|57\.78|6,149|11,528)\b', rpl))
+
+# ---------------------------------------------------------------- P. page claims vs the data
+print('== P. every number a page claims must match the artifact it loads ==')
+rbi_page = (ROOT / 'docs/rbi.html').read_text()
+PAGES['rbi'] = rbi_page
+check('rbi page: loads the shared nav and stylesheet', 'site.js' in rbi_page and 'site.css' in rbi_page)
+check('rbi page: is in the shared navigation',
+      "['rbi.html', 'RBI stakes, measured']" in (ROOT / 'docs/site.js').read_text())
+check('rbi page: renders from data/rbi_evidence.json instead of typed numbers',
+      "loadMaybe('data/rbi_evidence.json')" in rbi_page
+      and not re.search(r'\b(33\.68|1\.24|10\.38|98\.54|60\.00|30,206|241)\b', rbi_page))
+check('rbi page: links the verbatim rule text, the live board and the model page',
+      all(x in rbi_page for x in ('href="rules.html"', 'href="live.html"', 'href="model.html"')))
+check('rbi page: says the measured table is not a forecast',
+      'not a forecast' in flat(rbi_page) or 'does not claim' in flat(rbi_page).lower())
+check('rules page: renders the measured figures from the same artifact, not from literals',
+      "loadMaybe('data/rbi_evidence.json')" in rules_page and 'rbi-measured' in rules_page)
+check('home page links the measured RBI page and the verbatim rule text',
+      'href="rbi.html"' in idx and 'href="rules.html"' in idx)
+check('methods page names the measured RBI page as the evidence path',
+      'rbi.html' in met or 'rbi_evidence.json' in met)
+
+# --- link integrity: every internal link resolves, every external host is official ----------
+ALLOWED_HOSTS = ('statsapi.mlb.com', 'www.mlb.com', 'baseballsavant.mlb.com', 'mktg.mlbstatic.com',
+                 'sporty-clips.mlb.com', 'github.com', 'buffedlizard55-lab.github.io')
+for n, pg in list(PAGES.items()) + [('root redirect', (ROOT / 'index.html').read_text())]:
+    local = [u for u in re.findall(r'(?:href|src)="([^"${]+)"', pg)
+             if not u.startswith(('http:', 'https:', '#', 'data:', 'mailto:'))]
+    missing = [u for u in local if not (ROOT / 'docs' / u.split('#')[0]).exists()]
+    check(f'{n}: every internal link resolves ({len(local)} checked)', not missing, ', '.join(missing))
+    hosts_used = sorted({urlparse(u).netloc for u in re.findall(r'(?:href|src)="(https?://[^"${]+)"', pg)})
+    unknown = [h for h in hosts_used if h not in ALLOWED_HOSTS]
+    check(f'{n}: every external link points at an official or repo host', not unknown,
+          ', '.join(unknown))
+
+# --- wording that must never come back: the rule text IS verified and published now ----------
+STALE = ['not reproduced here', 'not independently retrievable', 'not independently extracted',
+         'without trying to encode', 'remains an open verification item', 'may provide an exception',
+         'consult the full 2026 rule', 'complete exception text must be checked']
+for n, pg in list(PAGES.items()) + [('README', (ROOT / 'README.md').read_text())]:
+    txt = flat(pg).lower()
+    bad = []
+    for ph in STALE:
+        at = txt.find(ph)
+        if at < 0:
+            continue
+        window = txt[max(0, at - 400):at + 400]
+        if not any(mk in window for mk in CORRECTION_MARKERS):
+            bad.append(ph)
+    check(f'{n}: no stale Rule 9.04 verification caveat', not bad, ', '.join(bad) if bad else '')
+
+# --- the review-queue numbers quoted in prose must be the ones in model.json ------------------
+QUEUE = {row['top_percent']: row for row in hn['review_queue_oof']}
+BANDS = {row['top_percent']: row for row in hn['top_error_risk_bands_oof']}
+for label, text in (('README', (ROOT / 'README.md').read_text()), ('roadmap.html', rdm),
+                    ('model.html', mod), ('methods.html', met)):
+    bad = []
+    for clause in re.split(r'[;]|\.(?=\s)', flat(text)):   # never split inside 0.5%
+        m = re.search(r'(\d+(?:\.\d+)?)%', clause)
+        if not m or not any(w in clause for w in ('top', 'held-out', 'highest-scoring')):
+            continue
+        row = QUEUE.get(float(m.group(1))) or BANDS.get(float(m.group(1)))
+        if row is None or any(mk in clause.lower() for mk in CORRECTION_MARKERS):
+            continue                      # the clause is quoting an older figure in order to fix it
+        if str(row['errors_found']) not in clause:
+            bad.append(f"top {m.group(1)}% omits {row['errors_found']} errors found")
+        if 'precision' in clause and f"{100 * row['precision']:.2f}" not in clause:
+            bad.append(f"top {m.group(1)}% precision != {100 * row['precision']:.2f}")
+        if 'recall' in clause and f"{100 * row['recall']:.1f}" not in clause:
+            bad.append(f"top {m.group(1)}% recall != {100 * row['recall']:.1f}")
+    check(f'{label}: every review-queue figure matches model.json', not bad, ' | '.join(bad))
+
+# ---------------------------------------------------------------- Q. the RBI note, one wording
+print('== Q. the conditional RBI note is identical in the tool, the collector and the browser ==')
+spec_ing = importlib.util.spec_from_file_location('ingest_official',
+                                                 ROOT / 'tools' / 'ingest_official.py')
+ing = importlib.util.module_from_spec(spec_ing)
+spec_ing.loader.exec_module(ing)
+
+GRID = [(cls, scored, et, bases, outs)
+        for cls in ('hit', 'error', 'fielders_choice', 'out')
+        for scored in (True, False)
+        for et in ('single', 'field_error', 'fielders_choice_out', 'home_run', 'sac_fly')
+        for bases in ((), ('2B',), ('3B',), ('1B', '2B', '3B'))
+        for outs in (0, 1, 2)]
+bad = [g for g in GRID if ls.rbi_if_ruled(*g) != ing.rbi_if_ruled(*g)]
+check(f'tools/live_score.py and tools/ingest_official.py agree on all {len(GRID)} note cases',
+      not bad, str(bad[:3]))
+check("the note encodes 9.04(a)(3)'s observable gate, not a vague pointer",
+      'can apply' in ls.rbi_if_ruled('error', True, 'single', ('3B',), 1)
+      and 'cannot apply' in ls.rbi_if_ruled('error', True, 'single', ('2B',), 1)
+      and 'cannot apply' in ls.rbi_if_ruled('error', True, 'single', ('3B',), 2)
+      and 'unaided by an error' in ls.rbi_if_ruled('error', True, 'single', ('2B',), 0)
+      and '9.04(a)(1)' in ls.rbi_if_ruled('hit', True, 'single', ('2B',), 1)
+      and '9.04(a)(1)' in ls.rbi_if_ruled('fielders_choice', True, 'fielders_choice_out', ('3B',), 0))
+if shutil.which('node'):
+    js_note = r"""const fs=require('fs'), vm=require('vm');
+const ctx=vm.createContext({document:{querySelector:()=>null,querySelectorAll:()=>[]}});
+vm.runInContext(fs.readFileSync('docs/site.js','utf8'),ctx);
+const grid=[];
+for (const cls of ['hit','error','fielders_choice','out'])
+ for (const scored of [true,false])
+  for (const et of ['single','field_error','fielders_choice_out','home_run','sac_fly'])
+   for (const bases of [[],['2B'],['3B'],['1B','2B','3B']])
+    for (const outs of [0,1,2])
+     grid.push([cls,scored,et,bases,outs,ctx.rbiRuleNote(cls,scored,et,bases,outs)]);
+console.log(JSON.stringify(grid));"""
+    r = subprocess.run(['node', '-e', js_note], cwd=ROOT, capture_output=True, text=True)
+    check('the browser note function runs in node', r.returncode == 0, r.stderr.strip()[-200:])
+    if r.returncode == 0:
+        js_rows = json.loads(r.stdout)
+        bad = [row for row in js_rows if row[5] != ls.rbi_if_ruled(row[0], row[1], row[2],
+                                                                    tuple(row[3]), row[4])]
+        check(f'docs/site.js rbiRuleNote matches the tool on all {len(js_rows)} note cases',
+              not bad, str(bad[:2]))
+
+# --- the browser live scorer and the CLI must agree row for row, notes included -------------
+if shutil.which('node'):
+    js_rows = r"""const fs=require('fs'), vm=require('vm');
+const ctx=vm.createContext({document:{querySelector:()=>null,querySelectorAll:()=>[]}});
+vm.runInContext(fs.readFileSync('docs/site.js','utf8'),ctx);
+const feed=JSON.parse(fs.readFileSync('data/source/feed_823441.json','utf8'));
+const model=JSON.parse(fs.readFileSync('docs/data/model.json','utf8'));
+const rows=ctx.scoreLiveFeed(feed,{gamePk:823441,official_feed_url:
+  'https://statsapi.mlb.com/api/v1.1/game/823441/feed/live'},model);
+console.log(JSON.stringify(rows.map(r=>({at_bat:r.at_bat,event_type:r.event_type,status:r.status,
+  score_100:r.score_100,top_pick:r.top_pick,official_call:r.official_call,run_scored:r.run_scored,
+  risp:r.risp,outs_before:r.outs_before,runners_on:r.runners_on,rbi_official:r.rbi_official,
+  rbi_if_error:r.rbi_if_error||'',rbi_if_hit:r.rbi_if_hit||'',rbi_if_fc:r.rbi_if_fc||''}))));"""
+    r = subprocess.run(['node', '-e', js_rows], cwd=ROOT, capture_output=True, text=True)
+    check('the browser live scorer runs the committed fixture in node', r.returncode == 0,
+          r.stderr.strip()[-200:])
+    if r.returncode == 0:
+        js = {str(x['at_bat']): x for x in json.loads(r.stdout)}
+        py = {str(x['at_bat']): x for x in ls.score_feed(fixture, pk=823441, scorer=scorer)}
+        diffs = []
+        for ab, row in py.items():
+            j = js.get(ab)
+            if j is None:
+                diffs.append(f'ab {ab} missing in browser')
+                continue
+            for k in ('event_type', 'status', 'score_100', 'top_pick', 'official_call', 'run_scored',
+                      'risp', 'outs_before', 'runners_on', 'rbi_if_error', 'rbi_if_hit', 'rbi_if_fc'):
+                if str(row.get(k, '')) != str(j.get(k, '')):
+                    diffs.append(f'ab {ab} {k}: tool={row.get(k)!r} browser={j.get(k)!r}')
+        check(f'the browser and the CLI agree row for row on all {len(py)} scored plays '
+              '(call, score, base/out state and RBI notes)', not diffs, ' | '.join(diffs[:3]))
+        noted = [row for row in py.values() if row.get('rbi_if_error')]
+        check('every run-scoring play carries the conditional note, with or without a runner in '
+              'scoring position',
+              all(row['run_scored'] for row in noted)
+              and sum(1 for row in py.values() if row['run_scored']) == len(noted),
+              f'{len(noted)} noted of {sum(1 for row in py.values() if row["run_scored"])} run-scoring')
+
+# --- the committed review ledger carries exactly the current wording ------------------------
+reps = load_csv(ROOT / 'docs/data/replays.csv')
+bad = []
+for r in reps:
+    run_scored = int(r.get('runs_by_movement') or 0) > 0
+    bases = (r.get('bases_before') or '-').split(',') if r.get('bases_before') != '-' else ()
+    outs = int(r.get('outs_before') or 0)
+    for cls, col in (('error', 'rbi_if_error'), ('hit', 'rbi_if_hit'),
+                     ('fielders_choice', 'rbi_if_fc')):
+        want = ls.rbi_if_ruled(cls, run_scored, r.get('event_type') or '', bases, outs) or ''
+        if r.get(col, '') != want:
+            bad.append(f"{r['game_pk']}/{r['at_bat']}/{col}")
+check(f'all {len(reps):,} review-ledger rows carry the current Rule 9.04 note wording',
+      not bad, ', '.join(bad[:4]))
+LEGACY_NOTE = 'No automatic RBI is assumed for an error-dependent run'
+for f in ('docs/data/replays.csv', 'docs/data/replays_site.json', 'docs/data/alerts.json',
+          'docs/data/live_now.json', 'docs/data/live_sample.json'):
+    check(f'{f}: no row still carries the pre-verification note wording',
+          LEGACY_NOTE not in (ROOT / f).read_text())
 
 print()
 if FAILED:

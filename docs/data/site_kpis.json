@@ -70,6 +70,7 @@
  "replays": {
   "reviewed_plays": 11528,
   "overturned": 6149,
+  "overturned_with_runner_scoring": 428,
   "run_removed_hard": 0,
   "run_removed_heuristic": 17,
   "with_watch_link": 17,
@@ -193,10 +194,10 @@
    "": 1792,
    "404": 321
   },
-  "elapsed_s": 109.0
+  "elapsed_s": 100.5
  },
  "ingest_meta": {
-  "generated_utc": "2026-09-30T04:24:51+00:00",
+  "generated_utc": "2026-09-30T05:34:48+00:00",
   "windows": [
    {
     "start": "2026-03-25",

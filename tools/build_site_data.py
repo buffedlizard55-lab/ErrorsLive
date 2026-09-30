@@ -272,12 +272,32 @@ def main():
               'p': r['play_id'], 'v': int(r['run_removed_heuristic'] or 0)}
              for r in overt]
 
+    # What the feed actually exposes about reviews, per final call. These are umpire replay
+    # reviews (and automated pitch-result challenges, counted separately above) as recorded in the
+    # FINAL feed state; the feed publishes no pre-review ruling, so a rate here describes what the
+    # league's own record shows, not a scorer's pending decision.
+    profile = []
+    for c in ('hit', 'error', 'fielders_choice', 'out', 'other'):
+        sub = [r for r in reps if r['macro_class'] == c]
+        if not sub:
+            continue
+        ov = sum(1 for r in sub if r['review_overturned'] == '1')
+        profile.append({'macro_class': c, 'reviewed': len(sub), 'overturned': ov,
+                        'overturned_rate': round(ov / len(sub), 6),
+                        'with_runner_scoring': sum(1 for r in sub
+                                                   if int(r['runs_by_movement'] or 0) > 0),
+                        'overturned_with_runner_scoring': sum(
+                            1 for r in sub if r['review_overturned'] == '1'
+                            and int(r['runs_by_movement'] or 0) > 0)})
+
     replays_site = {
         'available': bool(reps),
         'source': 'docs/data/replays.csv (tools/ingest_official.py, CI)',
         'counts': {
             'reviewed_plays': len(reps),
             'overturned': len(overt),
+            'overturned_with_runner_scoring': sum(1 for r in reps if r['review_overturned'] == '1'
+                                                  and int(r['runs_by_movement'] or 0) > 0),
             'run_removed_hard': sum(1 for r in reps if r['run_removed_hard'] == '1'),
             'run_removed_heuristic': sum(1 for r in reps if r['run_removed_heuristic'] == '1'),
             'with_watch_link': sum(1 for x in rows if x['watch_url']),
@@ -293,6 +313,12 @@ def main():
                                   's=subject c=final call p=play id v=run-removed heuristic'),
         'review_types': dict(Counter(r['review_type'] for r in reps if r['review_type']).most_common()),
         'rows': rows,
+        'review_profile': profile,
+        'review_profile_note': ('Per final call, as recorded in the captured final feed: how many '
+                                'plays were reviewed, how many of those reviews the feed marks '
+                                'overturned, and how many show a runner scoring. The feed carries no '
+                                'pre-review ruling, so these are not overturn probabilities and not '
+                                'a count of runs removed.'),
     }
     (OUT_DIR / 'replays_site.json').write_text(json.dumps(replays_site, separators=(',', ':')))
 

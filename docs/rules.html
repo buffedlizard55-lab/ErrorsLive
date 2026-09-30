@@ -144,12 +144,30 @@
   the site never prints a probability as though it were a ruling.</p>
 
   <h2>How to read the site's candidate RBI notes</h2>
-  <p class="muted">On the <a href="live.html">Live Board</a>, a note appears for a scored run with a runner on second or third. These are conditional prompts based on available feed context; the feed does not establish the counterfactual required to settle an RBI.</p>
+  <p class="muted">On the <a href="live.html">Live Board</a>, a note appears for a scored run with a runner on second or third.
+  The note now applies the two conditions of Rule 9.04(a)(3) that the feed <i>can</i> see — fewer than two outs, and a runner on
+  third base — and says plainly when the exception cannot apply. What it never claims is the third condition: that the runner
+  from third “ordinarily would score”. That is the scorer's judgment, the feed does not record it, and no model here can
+  supply it. <a href="rbi.html">RBI stakes, measured</a> tabulates what the league actually credited in the collected window.</p>
   <div class="grid cols3">
-    <div class="card"><h3>Error candidate</h3><p class="muted">No automatic RBI is assumed for an error-dependent run. The note points to Rule 9.04(a)(3) without trying to encode its full eligibility test; consult the official text and scorer. The model cannot determine a counterfactual RBI.</p></div>
-    <div class="card"><h3>Hit candidate</h3><p class="muted">A hit that causes a run can receive an RBI, subject to Rule 9.04. The displayed note is not a guarantee about the official stat line.</p></div>
-    <div class="card"><h3>Fielder's-choice candidate</h3><p class="muted">A run-scoring fielder's choice may receive an RBI, subject to Rule 9.04 and the scorer's decision. The candidate note does not convert a hypothetical ruling into a definite RBI.</p></div>
+    <div class="card"><h3>Error candidate</h3><p class="muted">With a runner on third and fewer than two outs, the note says Rule 9.04(a)(3) <i>can</i> apply and quotes its counterfactual; otherwise it says the exception cannot apply and cites 9.04(a)(1)'s “unaided by an error”. Either way it is not a ruling.</p></div>
+    <div class="card"><h3>Hit candidate</h3><p class="muted">A hit that causes a run is credited an RBI under Rule 9.04(a)(1), subject to the 9.04(b) exceptions. The displayed note is not a guarantee about the official stat line.</p></div>
+    <div class="card"><h3>Fielder's-choice candidate</h3><p class="muted">A fielder's choice is one of the plays 9.04(a)(1) lists, so a run-scoring one can receive an RBI, subject to 9.04(b) and the scorer's decision. The candidate note does not convert a hypothetical ruling into a definite RBI.</p></div>
   </div>
+  <p class="note">Measured, not asserted: in the collected model window the league credited an RBI on
+  <span id="rbi-measured">–</span> of error-ruled plays overall, and on <span id="rbi-measured-eligible">–</span>
+  of the error-ruled plays that met 9.04(a)(3)'s two observable conditions. Those figures are rendered from
+  <code>data/rbi_evidence.json</code> and recomputed by the audit suite, so this paragraph cannot drift from the data.</p>
+  <script>
+  loadMaybe('data/rbi_evidence.json').then(D => {
+    if (!D || !D.available) return;
+    const by = {}, gate = D.rule_checks || {};
+    (D.by_class || []).forEach(r => { by[r.macro_class] = r; });
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('rbi-measured', `${(by.error || {}).rbi_plays || 0} of ${(by.error || {}).n || 0}`);
+    set('rbi-measured-eligible', `${(gate.a3_conditions_met || {}).rbi_plays || 0} of ${(gate.a3_conditions_met || {}).n || 0}`);
+  });
+  </script>
 
   <h2>Official scoring changes are distinct from umpire replay reviews</h2>
   <p class="lede" style="font-size:.95rem">MLB's <a href="https://www.mlb.com/official-information/scoring-changes" target="_blank" rel="noopener">Official Scoring Changes</a> page says changes may be made by the Official Scorer, Elias Sports Bureau, or following player/club review. Its current 2026 examples include an error changed to a single with an RBI change, and a fielder's-choice/error reclassification with no RBI. Those examples show why a category alone is not enough; they are not labels used to train the current model.</p>
