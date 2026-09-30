@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-30T04:07:09+00:00",
+ "generated_utc": "2026-09-30T04:13:38+00:00",
  "endpoints": {
   "feed": "https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live?fields=liveData,plays,allPlays,about,atBatIndex...",
   "linescore": "https://statsapi.mlb.com/api/v1/game/{pk}/linescore",
@@ -30,88 +30,9 @@
  "hard_run_removal_examples": [],
  "run_removal_rule": "legacy run_removed_hard field = max(0, runner movements ending at score - scoreboard delta); this is a feed consistency diagnostic, not proof of a run removal. Heuristic = an overturned review whose subject/final text suggests a run was affected; it is an index aid only.",
  "content_api_schema_probe": {
-  "done": true,
-  "schema": [
-   {
-    "keys": [
-     "blurb",
-     "cclocationVtt",
-     "date",
-     "description",
-     "duration",
-     "headline",
-     "id",
-     "image",
-     "keywordsAll",
-     "keywordsDisplay",
-     "kicker",
-     "mediaPlaybackId",
-     "mediaPlaybackUrl",
-     "noIndex",
-     "playbacks",
-     "seoTitle",
-     "slug",
-     "state",
-     "title",
-     "type"
-    ],
-    "keyword_types": [
-     "game",
-     "game_pk",
-     "mlbtax",
-     "subject",
-     "taxonomy",
-     "team",
-     "team_id"
-    ],
-    "playback_keys": [
-     "height",
-     "name",
-     "url",
-     "width"
-    ]
-   },
-   {
-    "keys": [
-     "blurb",
-     "cclocationVtt",
-     "date",
-     "description",
-     "duration",
-     "headline",
-     "id",
-     "image",
-     "keywordsAll",
-     "keywordsDisplay",
-     "kicker",
-     "mediaPlaybackId",
-     "mediaPlaybackUrl",
-     "noIndex",
-     "playbacks",
-     "seoTitle",
-     "slug",
-     "state",
-     "title",
-     "type"
-    ],
-    "keyword_types": [
-     "game",
-     "game_pk",
-     "mlbtax",
-     "subject",
-     "taxonomy",
-     "team",
-     "team_id"
-    ],
-    "playback_keys": [
-     "height",
-     "name",
-     "url",
-     "width"
-    ]
-   }
-  ],
-  "game_pk": 823099
+  "done": false,
+  "schema": null,
+  "game_pk": null
  },
  "summary": {
   "games": 2430,
@@ -209,6 +130,6 @@
    "": 1792,
    "404": 321
   },
-  "elapsed_s": 93.6
+  "elapsed_s": 95.8
  }
 }

@@ -5,24 +5,33 @@
   "2026-09-10",
   "2026-09-30"
  ],
- "games": 240,
+ "fields_compared": [
+  "event_type",
+  "rbi",
+  "description",
+  "status",
+  "reviewed",
+  "overturned",
+  "review_type"
+ ],
+ "games": 239,
  "live_games": 1,
- "final_games": 239,
- "plays": 12849,
+ "final_games": 238,
+ "plays": 12797,
  "unresolved_in_feed": 0,
- "changes": 13456,
+ "changes": 0,
  "failures": [],
- "detected_utc": "2026-09-30T04:08:47Z",
+ "detected_utc": "2026-09-30T04:15:18Z",
  "exit_code": 0,
  "tool": "tools/watch_rulings.py",
  "tool_version": 2,
  "python": "3.11.16",
  "ruling_snapshot.csv": {
-  "rows": 12849,
-  "bytes": 3589872
+  "rows": 12797,
+  "bytes": 3575174
  },
  "ruling_changes.csv": {
-  "rows": 13456,
-  "bytes": 5331834
+  "rows": 1107,
+  "bytes": 440715
  }
 }
