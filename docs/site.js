@@ -11,6 +11,7 @@ const NAV = [
   ['model.html', 'Model & validation'],
   ['overturned.html', 'Archive 2014–18'],
   ['rules.html', 'Rules & RBI'],
+  ['rbi.html', 'RBI stakes, measured'],
   ['methods.html', 'Methods & audit'],
   ['roadmap.html', 'Limitations'],
 ];
@@ -102,20 +103,35 @@ function macroClass(eventType) {
   if (OUT_TYPES.has(eventType)) return 'out';
   return 'other';
 }
+/* Conditional Rule 9.04 reminder for a run that scored. String-for-string identical to
+   tools/live_score.py rbi_if_ruled(); tests/test_pipeline.py asserts the two agree, and
+   docs/rules.html carries the verbatim 2026 rule text the notes cite. */
 function rbiRuleNote(cls, runScored, officialEvent, bases = [], outs = 0) {
   if (!runScored) return null;
   if (officialEvent === 'home_run')
     return cls === 'hit'
       ? 'The official play is a home run (a hit); check the recorded RBI field for the official result.'
       : 'not a valid alternative: the official play is a home run; this feed row cannot model a counterfactual error or fielder\'s-choice ruling';
-  if (cls === 'error')
-    return 'No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.';
+  if (cls === 'error') {
+    if (outs < 2 && bases.includes('3B'))
+      return 'Rule 9.04(a)(3) can apply: fewer than two outs with a runner on third base. It ' +
+             'credits an RBI when that runner "ordinarily would score" - a counterfactual the ' +
+             'feed does not record, so this is not a ruling.';
+    return 'Rule 9.04(a)(3) cannot apply: it requires fewer than two outs and a runner on third ' +
+           'base. Rule 9.04(a)(1) requires the run to be "unaided by an error", so no RBI is ' +
+           'credited for this error-dependent run.';
+  }
   if (cls === 'fielders_choice')
-    return "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.";
+    return "A run-scoring fielder's choice is one of the plays Rule 9.04(a)(1) lists, so an RBI " +
+           "can be credited, subject to the Rule 9.04(b) exceptions and the scorer's judgment; " +
+           'this feed row does not settle any exception.';
   if (cls === 'hit')
-    return 'An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.';
+    return 'A run that scores on a hit is credited an RBI under Rule 9.04(a)(1), subject to the ' +
+           "Rule 9.04(b) exceptions and the scorer's judgment; this feed row does not settle any " +
+           'exception.';
   return 'RBI depends on the official scoring rule for this play.';
 }
+
 function scoreLiveFeed(feed, game, model) {
   const plays = (((feed || {}).liveData || {}).plays || {}).allPlays || [];
   const source = game.official_feed_url || '';
@@ -175,7 +191,8 @@ function scoreLiveFeed(feed, game, model) {
       savant_url: playId ? `https://baseballsavant.mlb.com/sporty-videos?playId=${encodeURIComponent(playId)}` : '',
       source,
     };
-    if (row.risp && row.run_scored) {
+    if (row.run_scored) {
+      /* Rule 9.04 governs every RBI, so the note goes on every run-scoring play. */
       row.rbi_if_error = rbiRuleNote('error', true, eventType, bases, state.outs);
       row.rbi_if_hit = rbiRuleNote('hit', true, eventType, bases, state.outs);
       row.rbi_if_fc = rbiRuleNote('fielders_choice', true, eventType, bases, state.outs);

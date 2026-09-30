@@ -181,7 +181,7 @@
    "score_delta": "1",
    "description": "Orioles challenged (tag play), call on the field was overturned: Jake McCarthy triples (8) on a line drive to center fielder Colton Cowser. Adael Amador scores. Jake McCarthy out at home, pitcher Trevor Rogers to catcher Samuel Basallo.",
    "note": "Collector heuristic: an overturned review whose subject/text concerns a run. Candidate, not a confirmed removed run. tag play review overturned with the runner put out at home",
-   "rbi_rule_note": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+   "rbi_rule_note": "Rule 9.04(a)(3) cannot apply: it requires fewer than two outs and a runner on third base. Rule 9.04(a)(1) requires the run to be \"unaided by an error\", so no RBI is credited for this error-dependent run.",
    "feed_url": "https://statsapi.mlb.com/api/v1.1/game/824312/feed/live",
    "watch_url": "https://baseballsavant.mlb.com/sporty-videos?playId=a34a05ed-58b8-390c-a686-67b88e12e89f",
    "video_url": "https://sporty-clips.mlb.com/ek13S3hfWGw0TUFRPT1fVndKVkJWUUJBMVlBRFZwUVhnQUhDQVlGQUFBRFcxY0FCRkpYQ0F0UUFBRUFDQXNB.mp4"
@@ -321,7 +321,7 @@
    "score_delta": "2",
    "description": "Dodgers challenged (tag play), call on the field was overturned: Rockies challenged (home-plate collision), call on the field was upheld: Cole Carrigg doubles (5) on a line drive to center fielder Andy Pages. Willi Castro scores. Brett Sullivan scores. Hunter Goodman out at home on the throw, center",
    "note": "Collector heuristic: an overturned review whose subject/text concerns a run. Candidate, not a confirmed removed run. tag play review overturned with the runner put out at home",
-   "rbi_rule_note": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
+   "rbi_rule_note": "Rule 9.04(a)(3) cannot apply: it requires fewer than two outs and a runner on third base. Rule 9.04(a)(1) requires the run to be \"unaided by an error\", so no RBI is credited for this error-dependent run.",
    "feed_url": "https://statsapi.mlb.com/api/v1.1/game/823930/feed/live",
    "watch_url": "https://baseballsavant.mlb.com/sporty-videos?playId=e9a72832-b117-385a-9ee7-887090c53a3d",
    "video_url": "https://sporty-clips.mlb.com/ZzZ3WGxfWGw0TUFRPT1fVXdnQVUxWU1WUUFBV2xNRFVRQUhDUU1IQUZoUUJsWUFDbDBDQUFvRlVnWldVUUVD.mp4"

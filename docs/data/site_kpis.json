@@ -70,6 +70,7 @@
  "replays": {
   "reviewed_plays": 11528,
   "overturned": 6149,
+  "overturned_with_runner_scoring": 428,
   "run_removed_hard": 0,
   "run_removed_heuristic": 17,
   "with_watch_link": 17,

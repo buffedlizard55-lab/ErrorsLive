@@ -93,6 +93,14 @@
       independent unit here.</li>
     <li><b>Model-free surface</b> (trajectory × exit-velocity error rates with Wilson intervals) is published so
       the key relationship can be checked without trusting any model.</li>
+    <li><b>The RBI stake is measured, not asserted.</b> The brief's RBI question is a question about the official
+      statistic, so <code>tools/rbi_evidence.py</code> tabulates the feed's own <code>result.rbi</code> by final
+      call and by base/out state, with Wilson intervals, and lists every error-ruled play in the window that still
+      earned an RBI — each with its play id and official feed URL. That table is published on
+      <a href="rbi.html">RBI stakes, measured</a> from <code>docs/data/rbi_evidence.json</code>, and the audit suite
+      recomputes every cell from <code>docs/data/bip_official.csv</code>. The same script quotes Rule 9.04 verbatim
+      from the rule text already published on <a href="rules.html">Rules &amp; RBI</a>, and a check asserts the two
+      copies of the quotation are identical.</li>
     <li><b>Calibration</b> is shown bin by bin from grouped out-of-fold predictions. The isotonic Brier check
       uses nested GroupKFold: inner-fold predictions fit the calibrator, and each outer game fold is held out
       from both base-model fitting and calibration evaluation.</li>
@@ -187,7 +195,9 @@
     <tr><td><code>data/ingest/ruling_watch_status.json</code></td><td>Watcher status, window, observed games/plays, unresolved-in-feed count and fetch failures.</td></tr>
     <tr><td><code>docs/data/live_refresh_status.json</code></td><td>Latest committed status for the scheduled static live-snapshot refresh; failed runs retain the previous complete snapshot.</td></tr>
     <tr><td><code>data/ingest/probe_report.json</code></td><td>Read-only probe of the official endpoints: status codes, CORS headers, byte sizes, per-era <code>reviewDetails</code> coverage.</td></tr>
-    <tr><td><code>data/verified_linescores.json</code></td><td>The 24-game official verification ledger (one official URL per game).</td></tr>
+    <tr><td><code>docs/data/rbi_evidence.json</code></td><td>Measured RBI rates by final call and base/out state, the Rule 9.04(a)(3) gate test, and every error-ruled play in the window that earned an RBI — rebuilt by <code>tools/rbi_evidence.py</code>.</td></tr>
+  <tr><td><code>docs/data/replays.csv</code></td><td>Review ledger whose three <code>rbi_if_*</code> columns are re-derived by <code>tools/refresh_rbi_notes.py</code> whenever the Rule 9.04 wording changes, so the committed ledger always matches the code that would write it.</td></tr>
+  <tr><td><code>data/verified_linescores.json</code></td><td>The 24-game official verification ledger (one official URL per game).</td></tr>
     <tr><td><code>data/nydn_quality.json</code></td><td>Every source irregularity in the 2014–18 archive, with counts; nothing repaired silently.</td></tr>
   </table>
   </div>

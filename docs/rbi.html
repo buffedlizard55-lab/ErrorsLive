@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RBI stakes, measured — LiveScoringErrors</title>
+<link rel="stylesheet" href="site.css">
+<meta name="description" content="Measured RBI consequences of a hit, error or fielder's-choice ruling from the official MLB feed, with Rule 9.04 citations.">
+</head>
+<body>
+<header class="nav"><div class="nav-inner"></div></header>
+<main>
+  <h1>RBI stakes, measured — does an error cost the batter an RBI?</h1>
+  <p class="lede">The brief asks a question with a checkable answer: if a play is ruled an <b>error</b>, does the
+  batter lose the RBI he would have had on a <b>hit</b> or a <b>fielder's choice</b>? That is a question about the
+  official statistic, so it can be <b>measured</b> rather than modelled. Every batted ball in the collected window
+  carries the feed's own <code>result.rbi</code> together with the base/out state the scorer already knew.</p>
+
+  <div class="truth gold" id="rulebox"><b>Loading the rule basis and the measured tables…</b></div>
+
+  <div class="grid cols3" id="kpis"></div>
+
+  <h2>1 · What the official feed credits, by the final call</h2>
+  <p class="muted">Every batted ball with a complete Statcast vector in the model window
+  (<span id="nrows">–</span> plays, <span id="window">–</span>). “RBI plays” are the plays where the feed
+  credited the <i>batter</i> with at least one run batted in. The interval is a 95% Wilson interval.</p>
+  <div class="scroll"><table class="compact" id="byclass">
+    <tr><th>Final call in the feed</th><th class="right">Plays</th><th class="right">RBI plays</th>
+        <th class="right">RBI rate</th><th class="right">95% interval</th></tr>
+  </table></div>
+  <p class="note" id="classnote"></p>
+
+  <h2>2 · The same plays, split by the base/out state the scorer knew</h2>
+  <p class="muted">Rule 9.04(a)(3) is gated on two conditions the feed <i>does</i> record — a runner on third
+  base and fewer than two outs — plus one judgment it does not. Splitting the table that way shows where an
+  error-ruled play can still earn an RBI, and where it cannot.</p>
+  <div class="scroll"><table class="compact" id="bystate">
+    <tr><th>Base/out state before the pitch</th><th class="right">Hit</th><th class="right">Error</th>
+        <th class="right">Fielder's choice</th><th class="right">Out</th></tr>
+  </table></div>
+  <p class="note">Each cell is the RBI rate for that call in that state: <b>rate%</b> (RBI plays / plays,
+  Wilson interval). Empty cells mean no play in the window fell in that combination.</p>
+
+  <h2>3 · The rule's own gate, tested against the data</h2>
+  <p class="muted">Rule 9.04(a)(3) credits an RBI “<span id="a3quote">–</span>”. If that is the only route to an
+  RBI on an error-ruled play, then an error-ruled play with two outs, or with no runner on third, should never
+  show one. The table below is that test, on <span id="nerr">–</span> error-ruled plays.</p>
+  <div class="scroll"><table class="compact" id="gate">
+    <tr><th>Group of error-ruled plays</th><th class="right">Plays</th><th class="right">With an RBI</th>
+        <th class="right">Rate</th><th>What it means</th></tr>
+  </table></div>
+
+  <h2>4 · Every error-ruled play in the window that still earned an RBI</h2>
+  <p class="muted">Each row is a play the official feed scored as <code>field_error</code> <i>and</i> credited with
+  a run batted in. The links are the league's own records for that exact play, so any row can be checked by hand.</p>
+  <div class="scroll"><table class="compact" id="cases">
+    <tr><th>Game</th><th>Play</th><th>Final call</th><th>State</th><th class="right">RBI</th><th>Contact</th><th>Official links</th></tr>
+  </table></div>
+  <p class="note">These are plays the scorer ruled an error and still credited an RBI. They are evidence about how
+  Rule 9.04(a)(3) is applied — not evidence that the ruling was wrong, and not evidence that a ruling later changed.</p>
+
+  <h2>5 · What this page does not claim</h2>
+  <ul id="limits" class="muted"></ul>
+
+  <div class="rowflex" style="margin-top:18px">
+    <a class="btn" id="dl" href="#" download>Download the measured tables (CSV)</a>
+    <a class="btn" href="rules.html">Read the verbatim Rule 9.04 text</a>
+    <a class="btn" href="live.html">Open the live board</a>
+    <a class="btn" href="model.html">Model &amp; validation</a>
+  </div>
+</main>
+<footer><div class="inner"><span id="src">Sources: MLB Stats API · 2026 Official Baseball Rules (Rule 9.04)</span>
+<span>Own the Outcome: measured from the feed, every row checkable against the league's own record</span></div></footer>
+<script src="site.js"></script>
+<script>
+const CLASS_ORDER = ['hit', 'error', 'fielders_choice', 'out'];
+const CLASS_NAME = { hit: 'Hit', error: 'Error', fielders_choice: "Fielder's choice",
+                     out: 'Out (incl. sac fly / infield out)' };
+const STATE_ORDER = ['third_fewer_than_two_outs', 'third_two_outs', 'second_only', 'no_risp'];
+const STATE_NAME = { third_fewer_than_two_outs: 'Runner on 3rd, fewer than 2 outs',
+                     third_two_outs: 'Runner on 3rd, 2 outs',
+                     second_only: 'Runner on 2nd only',
+                     no_risp: 'No runner in scoring position' };
+
+function pct(x) { return (100 * x).toFixed(2) + '%'; }
+function cell(st) {
+  if (!st || !st.n) return '<span class="muted">–</span>';
+  return `<b>${st.rate_pct.toFixed(2)}%</b><br><span class="muted">${st.rbi_plays}/${st.n}` +
+         ` · ${(100 * st.ci95[0]).toFixed(1)}–${(100 * st.ci95[1]).toFixed(1)}%</span>`;
+}
+function rowsFor(id, list) {
+  const host = document.getElementById(id);
+  host.insertAdjacentHTML('beforeend', list.join(''));
+}
+
+function render(D) {
+  const rb = D.rule_basis || {};
+  document.getElementById('rulebox').innerHTML =
+    `<b>The controlling text.</b> 2026 Official Baseball Rules, Rule 9.04 (<i>Runs Batted In</i>), ` +
+    `printed page ${rb.rule_9_04_page || 115}: the scorer credits an RBI for a run that scores ` +
+    `“${esc(rb.a1_quote || '')}”, <b>and</b> “${esc(rb.a3_quote || '')}”. The same rule withholds an RBI ` +
+    `“${esc(rb.b1_quote || '')}”. Quoted verbatim on <a href="rules.html">Rules &amp; RBI</a>, which links the ` +
+    `official PDF at its printed page.`;
+
+  const by = {};
+  (D.by_class || []).forEach(r => { by[r.macro_class] = r; });
+  const st = {};
+  (D.by_state || []).forEach(r => { st[r.state + '|' + r.macro_class] = r; });
+  const errA3 = (D.rule_checks || {}).a3_conditions_met || {};
+
+  document.getElementById('kpis').innerHTML = [
+    kpiCard(pct((by.error || {}).rate || 0), 'of error-ruled plays earned the batter an RBI ' +
+           `(${(by.error || {}).rbi_plays || 0} of ${(by.error || {}).n || 0})`),
+    kpiCard(pct((errA3.rate || 0)), 'of error-ruled plays with a runner on 3rd and fewer than 2 outs ' +
+           `earned one (${errA3.rbi_plays || 0} of ${errA3.n || 0})`),
+    kpiCard(pct((by.hit || {}).rate || 0), 'of hits earned an RBI — a hit is the ruling that pays ' +
+           `(${(by.hit || {}).rbi_plays || 0} of ${(by.hit || {}).n || 0})`),
+    kpiCard(pct((by.fielders_choice || {}).rate || 0), "of fielder's choices earned an RBI " +
+           `(${(by.fielders_choice || {}).rbi_plays || 0} of ${(by.fielders_choice || {}).n || 0})`),
+  ].join('');
+
+  document.getElementById('nrows').textContent = (D.n_rows || 0).toLocaleString();
+  document.getElementById('window').textContent = (D.window || []).join(' through ') || 'the model window';
+  document.getElementById('nerr').textContent = (by.error || {}).n || 0;
+  document.getElementById('a3quote').textContent = rb.a3_quote || '';
+  const like = st['third_fewer_than_two_outs|hit'] || {};
+  const likeErr = st['third_fewer_than_two_outs|error'] || {};
+  document.getElementById('classnote').innerHTML =
+    `The honest comparison is like-for-like. In the one state where both calls are common — a runner on ` +
+    `third with fewer than two outs — a hit earned an RBI in <b>${like.rbi_plays || 0} of ${like.n || 0}</b> ` +
+    `plays (${pct(like.rate || 0)}) while an error-ruled play earned one in <b>${likeErr.rbi_plays || 0} of ` +
+    `${likeErr.n || 0}</b> (${pct(likeErr.rate || 0)}). That gap is the stake the brief describes, and Rule ` +
+    `9.04(a)(3) is the exception that keeps part of it alive.`;
+
+  rowsFor('byclass', CLASS_ORDER.map(c => {
+    const r = by[c] || {};
+    return `<tr><td>${esc(CLASS_NAME[c])}</td><td class="right">${r.n || 0}</td>` +
+           `<td class="right">${r.rbi_plays || 0}</td><td class="right"><b>${pct(r.rate || 0)}</b></td>` +
+           `<td class="right muted">${(100 * (r.ci95 || [0, 0])[0]).toFixed(1)}–` +
+           `${(100 * (r.ci95 || [0, 0])[1]).toFixed(1)}%</td></tr>`;
+  }));
+
+  rowsFor('bystate', STATE_ORDER.map(s =>
+    `<tr><td>${esc(STATE_NAME[s])}</td>` +
+    CLASS_ORDER.map(c => `<td class="right">${cell(st[s + '|' + c])}</td>`).join('') + '</tr>'));
+
+  const gate = D.rule_checks || {};
+  const gateNote = {
+    a3_conditions_met: 'The only group where the rule permits an RBI on an error-ruled play — and only some of ' +
+                       'them earned one, because the rule also requires that the runner from third ' +
+                       '“ordinarily would score”.',
+    two_outs: 'Rule 9.04(a)(3) applies only “before two are out”, so no RBI is possible here.',
+    no_runner_on_third: 'Rule 9.04(a)(3) names a runner from third base, so no RBI is possible here either.',
+  };
+  rowsFor('gate', Object.keys(gate).map(k => {
+    const g = gate[k] || {};
+    return `<tr><td>${esc(g.label || k)}</td><td class="right">${g.n || 0}</td>` +
+           `<td class="right">${g.rbi_plays || 0}</td><td class="right"><b>${pct(g.rate || 0)}</b></td>` +
+           `<td class="muted">${esc(gateNote[k] || '')}</td></tr>`;
+  }));
+
+  rowsFor('cases', (D.error_rbi_cases || []).map(c => {
+    const bases = ['1B', '2B', '3B'].filter(b => c['on_' + b[0].toLowerCase() + 'b'] === 1);
+    const state = `${c.outs_before} out${c.outs_before === 1 ? '' : 's'}, ` +
+                  (bases.length ? bases.join(',') + ' occupied' : 'bases empty');
+    const links = [
+      c.feed_url ? linkOut(c.feed_url, 'official feed') : '',
+      c.gameday_url ? linkOut(c.gameday_url, 'Gameday') : '',
+      c.savant_url ? linkOut(c.savant_url, 'video') : '',
+    ].filter(Boolean).join(' ');
+    return `<tr><td class="nowrap"><a href="${esc(c.gameday_url)}" target="_blank" rel="noopener">` +
+           `${esc(c.game_pk)}</a><br><span class="muted">ab ${esc(c.at_bat)}</span></td>` +
+           `<td class="nowrap"><code>${esc(c.event_type)}</code></td>` +
+           `<td>${esc(state)}</td><td class="right"><b>${c.rbi}</b></td>` +
+           `<td class="muted">${esc(c.launch_speed)} mph, ${esc(c.launch_angle)}°, ${esc(c.trajectory)}</td>` +
+           `<td class="nowrap">${links}</td></tr>`;
+  }));
+  if (!(D.error_rbi_cases || []).length) {
+    rowsFor('cases', ['<tr><td colspan="7" class="muted">No error-ruled play in the committed window ' +
+                      'carries an RBI.</td></tr>']);
+  }
+
+  document.getElementById('limits').innerHTML = (D.limits || [])
+    .map(l => `<li>${esc(l)}</li>`).join('');
+  document.getElementById('src').innerHTML =
+    'Sources: ' + (D.official_sources || [])
+      .map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a>`).join(' · ');
+
+  const csv = []
+    .concat((D.by_class || []).map(r => ({ group: 'all states', final_call: r.macro_class, plays: r.n,
+                                           rbi_plays: r.rbi_plays, rbi_rate: r.rate,
+                                           wilson_lo: r.ci95[0], wilson_hi: r.ci95[1] })))
+    .concat((D.by_state || []).map(r => ({ group: r.state, final_call: r.macro_class, plays: r.n,
+                                           rbi_plays: r.rbi_plays, rbi_rate: r.rate,
+                                           wilson_lo: r.ci95[0], wilson_hi: r.ci95[1] })))
+    .concat(Object.keys(gate).map(k => ({ group: k, final_call: 'error', plays: gate[k].n,
+                                          rbi_plays: gate[k].rbi_plays, rbi_rate: gate[k].rate,
+                                          wilson_lo: gate[k].ci95[0], wilson_hi: gate[k].ci95[1] })));
+  document.getElementById('dl').addEventListener('click', ev => {
+    ev.preventDefault();
+    downloadCSV('rbi_evidence.csv', csv);
+  });
+}
+
+loadMaybe('data/rbi_evidence.json').then(D => {
+  if (!D || !D.available) {
+    document.getElementById('rulebox').innerHTML =
+      '<b>Not available in this checkout.</b> The measured RBI table is derived from ' +
+      '<code>docs/data/bip_official.csv</code>, the CI collector output. Run ' +
+      '<code>python3 tools/rbi_evidence.py</code> after a collection, or read the rule text on ' +
+      '<a href="rules.html">Rules &amp; RBI</a>.';
+    return;
+  }
+  render(D);
+});
+</script>
+</body>
+</html>

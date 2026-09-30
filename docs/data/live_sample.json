@@ -137,6 +137,9 @@
   "review_type": "",
   "play_id": "",
   "savant_url": "",
+  "rbi_if_error": "not a valid alternative: the official play is a home run; this feed row cannot model a counterfactual error or fielder's-choice ruling",
+  "rbi_if_hit": "The official play is a home run (a hit); check the recorded RBI field for the official result.",
+  "rbi_if_fc": "not a valid alternative: the official play is a home run; this feed row cannot model a counterfactual error or fielder's-choice ruling",
   "source": "data/source/feed_823441.json"
  },
  {
@@ -242,6 +245,9 @@
   "review_type": "",
   "play_id": "",
   "savant_url": "",
+  "rbi_if_error": "not a valid alternative: the official play is a home run; this feed row cannot model a counterfactual error or fielder's-choice ruling",
+  "rbi_if_hit": "The official play is a home run (a hit); check the recorded RBI field for the official result.",
+  "rbi_if_fc": "not a valid alternative: the official play is a home run; this feed row cannot model a counterfactual error or fielder's-choice ruling",
   "source": "data/source/feed_823441.json"
  },
  {
@@ -767,6 +773,9 @@
   "review_type": "",
   "play_id": "",
   "savant_url": "",
+  "rbi_if_error": "not a valid alternative: the official play is a home run; this feed row cannot model a counterfactual error or fielder's-choice ruling",
+  "rbi_if_hit": "The official play is a home run (a hit); check the recorded RBI field for the official result.",
+  "rbi_if_fc": "not a valid alternative: the official play is a home run; this feed row cannot model a counterfactual error or fielder's-choice ruling",
   "source": "data/source/feed_823441.json"
  },
  {
@@ -837,9 +846,9 @@
   "review_type": "",
   "play_id": "",
   "savant_url": "",
-  "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
-  "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
-  "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
+  "rbi_if_error": "Rule 9.04(a)(3) can apply: fewer than two outs with a runner on third base. It credits an RBI when that runner \"ordinarily would score\" - a counterfactual the feed does not record, so this is not a ruling.",
+  "rbi_if_hit": "A run that scores on a hit is credited an RBI under Rule 9.04(a)(1), subject to the Rule 9.04(b) exceptions and the scorer's judgment; this feed row does not settle any exception.",
+  "rbi_if_fc": "A run-scoring fielder's choice is one of the plays Rule 9.04(a)(1) lists, so an RBI can be credited, subject to the Rule 9.04(b) exceptions and the scorer's judgment; this feed row does not settle any exception.",
   "source": "data/source/feed_823441.json"
  },
  {
@@ -1015,9 +1024,9 @@
   "review_type": "",
   "play_id": "",
   "savant_url": "",
-  "rbi_if_error": "No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide an exception; consult the full 2026 rule and the official scorer. This feed row cannot establish whether the exception applies.",
-  "rbi_if_hit": "An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer control any exception or alternative-call counterfactual.",
-  "rbi_if_fc": "A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's decision control, and this feed row does not settle any exception.",
+  "rbi_if_error": "Rule 9.04(a)(3) can apply: fewer than two outs with a runner on third base. It credits an RBI when that runner \"ordinarily would score\" - a counterfactual the feed does not record, so this is not a ruling.",
+  "rbi_if_hit": "A run that scores on a hit is credited an RBI under Rule 9.04(a)(1), subject to the Rule 9.04(b) exceptions and the scorer's judgment; this feed row does not settle any exception.",
+  "rbi_if_fc": "A run-scoring fielder's choice is one of the plays Rule 9.04(a)(1) lists, so an RBI can be credited, subject to the Rule 9.04(b) exceptions and the scorer's judgment; this feed row does not settle any exception.",
   "source": "data/source/feed_823441.json"
  },
  {

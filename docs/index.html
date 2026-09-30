@@ -82,11 +82,13 @@
   <div id="slate">Loading <code>data/live_slate.json</code>…</div>
 
   <h2>Why a hit-vs-error ruling matters — the RBI stakes</h2>
-  <p class="lede">A run with a runner on 2nd or 3rd does not settle the batter's RBI by itself. The RBI usually depends
-  on the official play classification and the scorer's counterfactual. Rule 9.04 contains exceptions, but the
-  complete 2026 subsection is not reproduced here; consult the linked rulebook and scorer. A hit or a
-  run-scoring fielder's choice may receive an RBI, subject to the rule's exceptions. The site therefore shows conditional
-  notes, not automatic answers. See the official <a href="rules.html">Rule 9.04 walkthrough and citations →</a></p>
+  <p class="lede">A run with a runner on 2nd or 3rd does not settle the batter's RBI by itself. Rule 9.04 of the
+  2026 Official Baseball Rules decides it, and its text is quoted verbatim on <a href="rules.html">Rules &amp; RBI</a>:
+  an error-dependent run earns <b>no</b> RBI under 9.04(a)(1) — <i>unless</i> 9.04(a)(3) applies, which credits one
+  “when, before two are out, an error is made on a play on which a runner from third base ordinarily would score”.
+  That “ordinarily would score” is the scorer's counterfactual and is not in the feed, so the site shows conditional
+  notes, never automatic answers. <a href="rbi.html">RBI stakes, measured</a> tabulates what the feed actually
+  credited for each final call and base/out state.</p>
 
   <h2>What the model actually found</h2>
   <div class="grid cols3" id="kpis"><div class="card">Loading model.json…</div></div>
@@ -100,6 +102,10 @@
     <div class="card"><h3><a class="plain" href="replays.html">Replays &amp; runs removed</a></h3>
       <p class="muted">Reviewed plays plus rows flagged as run-affected by a documented heuristic; open each official
       feed record and the available per-play watch/download links.</p></div>
+    <div class="card"><h3><a class="plain" href="rbi.html">RBI stakes, measured</a></h3>
+      <p class="muted">What the official feed actually credits for a hit, an error and a fielder's choice, by
+      base/out state — with Wilson intervals, the Rule 9.04 gate test, and every error-ruled play in the window
+      that still earned an RBI.</p></div>
     <div class="card"><h3><a class="plain" href="methods.html">Methods &amp; audit</a></h3>
       <p class="muted">Where every number comes from, how the CI ingest verifies each game against the league's
       own linescore, and what is flagged as unverified.</p></div>
@@ -156,11 +162,12 @@ function render() {
     <div class="v">${n}</div><div class="k">ruled errors in that set (${MODEL.meta.error_rate_pct}% base rate)</div>`;
   const risp = st.bases.includes('2B') || st.bases.includes('3B');
   $('rbi').innerHTML = risp
-    ? `Runner on 2nd/3rd. RBI depends on the final scoring and Rule 9.04; an error-dependent run is not
-       assigned an automatic RBI, and the complete exception text must be checked in the official rulebook.
-       A hit or fielder's choice can receive an RBI, subject to exceptions. This model cannot decide that
-       counterfactual. See <a href="rules.html">the rule notes</a>. P(final feed label = error):
-       <b>${(100 * pErr).toFixed(2)}%</b>.`
+    ? `Runner on 2nd/3rd. RBI depends on the final scoring and Rule 9.04. An error-dependent run earns no
+       RBI under 9.04(a)(1), but 9.04(a)(3) credits one when, before two are out, a runner from third
+       ordinarily would score - a counterfactual the feed does not record. A hit or fielder's choice can
+       receive an RBI, subject to the rule's exceptions. This model cannot decide that counterfactual.
+       See <a href="rules.html">the verbatim rule text</a> and <a href="rbi.html">the measured RBI stakes</a>.
+       P(final feed label = error): <b>${(100 * pErr).toFixed(2)}%</b>.`
     : `No runner on 2nd/3rd in the selected state; this calculator does not infer an RBI counterfactual.`;
 }
 

@@ -148,9 +148,20 @@ def state_from_play(play, hd):
 def rbi_if_ruled(cls, run_scored, official_et, bases=(), outs=0):
     """Return a conditional RBI reminder, never a deterministic scorer decision.
 
-    The full operative text of 2026 Rule 9.04(a)(3) was not independently retrievable in this
-    review. Until that exact wording is verified, the tool deliberately does not encode a specific
-    runner/outs eligibility test; it points the reader to the official rule and scorer instead.
+    The eligibility tests below are the verbatim 2026 text of Rule 9.04 (Official Baseball Rules,
+    printed page 115), quoted on docs/rules.html and linked to the official PDF there:
+
+      (a)(1) the scorer credits an RBI for a run that scores "unaided by an error and as part of a
+             play begun by the batter's safe hit ... sacrifice bunt, sacrifice fly, infield out or
+             fielder's choice";
+      (a)(3) and "when, before two are out, an error is made on a play on which a runner from third
+             base ordinarily would score";
+      (b)(1) no RBI "when the batter grounds into a force double play or a reverse-force double play".
+
+    Two of (a)(3)'s conditions are observable in the feed (the out count and a runner on third).
+    The third - that the runner "ordinarily would score" - is the scorer's counterfactual and is
+    never in the feed, which is why this function states which rule applies and stops there.
+    docs/rbi.html publishes the measured outcome of exactly this test on the collected window.
     """
     if not run_scored:
         return None
@@ -160,15 +171,21 @@ def rbi_if_ruled(cls, run_scored, official_et, bases=(), outs=0):
         return ('not a valid alternative: the official play is a home run; this feed row cannot model '
                 'a counterfactual error or fielder\'s-choice ruling')
     if cls == 'error':
-        return ('No automatic RBI is assumed for an error-dependent run. Rule 9.04(a)(3) may provide '
-                'an exception; consult the full 2026 rule and the official scorer. This feed row cannot '
-                'establish whether the exception applies.')
+        if outs < 2 and '3B' in bases:
+            return ('Rule 9.04(a)(3) can apply: fewer than two outs with a runner on third base. It '
+                    'credits an RBI when that runner "ordinarily would score" - a counterfactual the '
+                    'feed does not record, so this is not a ruling.')
+        return ('Rule 9.04(a)(3) cannot apply: it requires fewer than two outs and a runner on third '
+                'base. Rule 9.04(a)(1) requires the run to be "unaided by an error", so no RBI is '
+                'credited for this error-dependent run.')
     if cls == 'fielders_choice':
-        return ("A run-scoring fielder's choice may receive an RBI; Rule 9.04 and the official scorer's "
-                'decision control, and this feed row does not settle any exception.')
+        return ("A run-scoring fielder's choice is one of the plays Rule 9.04(a)(1) lists, so an RBI "
+                'can be credited, subject to the Rule 9.04(b) exceptions and the scorer\'s judgment; '
+                'this feed row does not settle any exception.')
     if cls == 'hit':
-        return ('An RBI can be credited when a hit causes a run; Rule 9.04 and the official scorer '
-                'control any exception or alternative-call counterfactual.')
+        return ('A run that scores on a hit is credited an RBI under Rule 9.04(a)(1), subject to the '
+                "Rule 9.04(b) exceptions and the scorer's judgment; this feed row does not settle any "
+                'exception.')
     return 'RBI depends on the official scoring rule for this play.'
 
 
@@ -228,7 +245,9 @@ def score_feed(feed, pk=None, scorer=None, meta=None):
             'play_id': pid,
             'savant_url': f'https://baseballsavant.mlb.com/sporty-videos?playId={pid}' if pid else '',
         }
-        if row['risp'] and row['run_scored']:
+        if row['run_scored']:
+            # Rule 9.04 governs every run batted in, so the conditional note belongs on every
+            # run-scoring play — not only the ones with a runner in scoring position.
             row['rbi_if_error'] = rbi_if_ruled('error', True, et, st['bases'], st['outs'])
             row['rbi_if_hit'] = rbi_if_ruled('hit', True, et, st['bases'], st['outs'])
             row['rbi_if_fc'] = rbi_if_ruled('fielders_choice', True, et, st['bases'], st['outs'])
