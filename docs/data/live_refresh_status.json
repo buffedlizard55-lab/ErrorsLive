@@ -1,6 +1,6 @@
 {
  "ok": false,
- "attempted_utc": "2026-10-01T13:39:06Z",
+ "attempted_utc": "2026-10-01T19:10:14Z",
  "exit_code": 1,
  "error": "One or more game feeds failed; the previous complete snapshot was retained.",
  "failure_count": 1,
