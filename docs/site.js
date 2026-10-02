@@ -5,6 +5,8 @@
    to the features cannot silently desynchronise the page from the tool. */
 const NAV = [
   ['index.html', 'Score a batted ball'],
+  ['pbp/index.html', 'PBP scoreboard'],
+  ['pbp/reviews.html', 'Replay + scoring'],
   ['scoreboard.html', 'Scoreboard'],
   ['allgames.html', 'Scoring feed'],
   ['live.html', 'Live board'],

@@ -358,3 +358,18 @@ Serving the site locally: `cd docs && python3 -m http.server 8080` → <http://l
    `git rev-parse --is-shallow-repository` first if a merge suddenly looks conflicted for no reason.
 
 See `docs/roadmap.html` for the ordered backlog and evidence ledger. Next evidence and reliability work: smoke-test the deployed Pages site in a real browser (the 2026 Rule 9.04 text was extracted and verified verbatim against the official PDF in the previous session); probe every overturned review for video rather than only the 17 run-impact candidates (backlog item 9); make the ingest's no-loop guard match a dedicated trailer instead of the commit-message body; and expand external model validation before using the score beyond review triage.
+
+## 2026-10-02 — copied PBP scoreboard + model integration
+
+The MIT-licensed MLB-Live-PBP UI is now vendored under `docs/pbp/`, pinned to
+`7eac3717fa1feea1053591e3a961b809728c373e`. Open `docs/pbp/index.html` for the
+scoreboard or `docs/pbp/reviews.html` for replay events and scored batted balls.
+Existing pages are retained. See [the integration verification report](docs/pbp-integration.md)
+and [source attribution](docs/pbp/UPSTREAM.md).
+
+**Audit warning:** the untouched baseline and this working tree both produce 26
+model/data/RBI audit failures. The new UI explicitly flags estimates as experimental;
+this integration does not validate the model or predict ruling-change probabilities.
+`npm ci && npm test` runs the new DOM integration tests and copied official-scoring
+regression tests. The new pages are static and use browser-local observation logs,
+not the upstream server's cross-browser collector.

@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/pbp-integration.test.cjs && node tests/pbp/scoring-change-test.mjs && node tests/pbp/official-scoring-test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}
