@@ -87,7 +87,22 @@ function evalModel(M, st) {
   const tot = exps.reduce((a, b) => a + b, 0);
   const probs = Object.fromEntries(classes.map((c, i) => [c, exps[i] / tot]));
   const top = classes.reduce((a, b) => probs[a] >= probs[b] ? a : b);
-  return { pErr, probs, top, x, z };
+  const eventModel = M.event_type_model;
+  let eventProbs = {}, eventTop = null;
+  if (eventModel && eventModel.classes && eventModel.classes.length) {
+    const ex = featureVector({ primary: eventModel }, st);
+    const ez = eventModel.feature_names.map((_, i) =>
+      (ex[i] - eventModel.scaler_mean[i]) / (eventModel.scaler_scale[i] || 1));
+    const logits = Object.fromEntries(eventModel.classes.map(c => [c,
+      eventModel.intercept[c] + ez.reduce((sum, value, i) =>
+        sum + value * eventModel.coef[c][eventModel.feature_names[i]], 0)]));
+    const maxLogit = Math.max(...Object.values(logits));
+    const exps = eventModel.classes.map(c => Math.exp(logits[c] - maxLogit));
+    const eventTotal = exps.reduce((sum, value) => sum + value, 0) || 1;
+    eventProbs = Object.fromEntries(eventModel.classes.map((c, i) => [c, exps[i] / eventTotal]));
+    eventTop = eventModel.classes.reduce((a, b) => eventProbs[a] >= eventProbs[b] ? a : b);
+  }
+  return { pErr, probs, top, eventProbs, eventTop, x, z };
 }
 
 /* The direct-browser live path mirrors tools/live_score.py. It uses only fields from the MLB
@@ -136,25 +151,85 @@ function scoreLiveFeed(feed, game, model) {
   const plays = (((feed || {}).liveData || {}).plays || {}).allPlays || [];
   const source = game.official_feed_url || '';
   const pk = game.gamePk || game.pk || '';
+  const groups = (model.event_type_model || {}).event_type_groups || {};
+  const eventTypeToClass = new Set(Object.values(groups).flat());
   const rows = [];
   for (const play of plays) {
+    if (!play || typeof play !== 'object') continue;
     const result = play.result || {};
     const eventType = result.eventType || '';
-    const events = play.playEvents || [];
+    const pending = typeof ScoringFeed !== 'undefined'
+      ? ScoringFeed.findOfficialScoringPendingPlay(play) : null;
+    const pendingCodes = pending ? pending.pendingCodes : [];
+    const pendingPrimary = Boolean(pending && pending.primary);
+    const pendingPrior = Boolean(pending && pending.prior);
+    const events = Array.isArray(play.playEvents) ? play.playEvents : [];
     const hitEvent = events.find(e => e && e.hitData && typeof e.hitData === 'object');
     const hd = hitEvent && hitEvent.hitData;
-    if (!hd) continue;
-    const required = ['launchSpeed', 'launchAngle', 'totalDistance'];
-    const description = result.description || '';
-    const atBat = (play.about || {}).atBatIndex;
-    if (!required.every(k => hd[k] !== undefined && hd[k] !== null && hd[k] !== '')) {
-      rows.push({game_pk: pk, at_bat: atBat, event_type: eventType,
-        official_call: macroClass(eventType), status: 'no_vector', description, source,
-        official_feed_url: source});
-      continue;
-    }
+    const knownType = eventTypeToClass.size ? eventTypeToClass.has(eventType)
+      : macroClass(eventType) !== 'other';
+    if (!hd && !pending && !knownType) continue;
     const about = play.about || {};
     const matchup = play.matchup || {};
+    const batter = matchup.batter || {};
+    const pitcher = matchup.pitcher || {};
+    const atBat = about.atBatIndex ?? null;
+    const playId = events.map(e => e && e.playId).filter(Boolean).pop() || '';
+    let pendingText = 'Official Scorer Ruling Pending';
+    if (pending) {
+      const marker = pending.pendingEvents[0];
+      const details = marker && marker.details || {};
+      pendingText = details.description || details.event ||
+        (pending.atResult ? result.description || result.event : '') || pendingText;
+    }
+    const row = {
+      game_pk: pk, official_feed_url: source, at_bat: atBat,
+      inning: about.inning, half: about.halfInning,
+      event_type: eventType,
+      official_call: pending || !eventType ? 'pending' : macroClass(eventType),
+      status: pending ? 'official_scoring_pending' : eventType ? 'no_vector' : 'no_event_type_yet',
+      official_scoring_pending: Boolean(pending),
+      scoring_pending_kind: pending && pending.primary && pending.prior ? 'both'
+        : pendingPrimary ? 'primary' : pendingPrior ? 'prior'
+        : pending ? 'description_only' : '',
+      scoring_pending_codes: pendingCodes.join(','),
+      scoring_pending_text: pending ? pendingText : '',
+      prediction_available: false, prediction_unavailable_reason: '',
+      description: result.description || result.event || pendingText,
+      batter: batter.fullName || '', pitcher: pitcher.fullName || '',
+      away_score: result.awayScore ?? null, home_score: result.homeScore ?? null,
+      play_id: playId,
+      savant_url: playId ? `https://baseballsavant.mlb.com/sporty-videos?playId=${encodeURIComponent(playId)}` : '',
+      source,
+    };
+    const eventModelEligible = !pending || pendingPrimary;
+    if (!hd) {
+      if (pending && pendingPrior && !pendingPrimary) {
+        row.prediction_unavailable_reason = 'The exact pending marker is for a prior base-running event, not a plate-appearance ruling.';
+      } else if (!pending && !eventType) {
+        continue;
+      } else {
+        row.prediction_unavailable_reason = 'The feed has not supplied a Statcast hitData vector.';
+      }
+      rows.push(row);
+      continue;
+    }
+    const required = ['launchSpeed', 'launchAngle', 'totalDistance'];
+    if (!required.every(k => hd[k] !== undefined && hd[k] !== null && hd[k] !== '')) {
+      row.prediction_unavailable_reason = 'The Statcast hitData vector is incomplete.';
+      rows.push(row);
+      continue;
+    }
+    if (eventType && !pending && !knownType) {
+      row.prediction_unavailable_reason = 'This result.eventType is outside the represented training categories.';
+      rows.push(row);
+      continue;
+    }
+    if (!eventModelEligible) {
+      row.prediction_unavailable_reason = 'The exact pending marker is for a prior base-running event, not a plate-appearance ruling.';
+      rows.push(row);
+      continue;
+    }
     const bases = [...new Set((play.runners || []).map(r => (r && r.movement || {}).start)
       .filter(b => ['1B', '2B', '3B'].includes(b)))].sort();
     const outs = events.map(e => e && e.count && e.count.outs).find(v => v !== undefined && v !== null);
@@ -166,33 +241,37 @@ function scoreLiveFeed(feed, game, model) {
     };
     const score = evalModel(model, state);
     const probs = score.probs;
+    const eventProbs = score.eventProbs || {};
     const runScored = (play.runners || []).some(r => r && r.movement && r.movement.end === 'score');
     const review = play.reviewDetails || (events.find(e => e && e.reviewDetails) || {}).reviewDetails || {};
-    const playId = events.map(e => e && e.playId).filter(Boolean).pop() || '';
-    const ruled = Boolean(eventType);
-    const row = {
-      game_pk: pk, official_feed_url: source, at_bat: atBat, inning: about.inning, half: about.halfInning,
-      event_type: eventType, official_call: ruled ? macroClass(eventType) : 'pending',
-      status: ruled ? 'scored' : 'no_event_type_yet', description,
+    const ruled = Boolean(eventType) && !pending;
+    row.status = pending ? 'official_scoring_pending' : ruled ? 'scored' : 'no_event_type_yet';
+    Object.assign(row, {
+      prediction_available: true, prediction_unavailable_reason: '',
       launch_speed: hd.launchSpeed, launch_angle: hd.launchAngle, distance: hd.totalDistance,
       trajectory: hd.trajectory || '', hardness: hd.hardness || '',
       score_100: Math.round(score.pErr * 10000) / 100,
       p_hit: Math.round(probs.hit * 10000) / 10000,
       p_error: Math.round(score.pErr * 10000) / 10000,
+      p_error_binary: Math.round(score.pErr * 10000) / 10000,
+      p_error_macro: Math.round(probs.error * 10000) / 10000,
       p_fielders_choice: Math.round(probs.fielders_choice * 10000) / 10000,
       p_out: Math.round(probs.out * 10000) / 10000,
       top_pick: score.top, top_prob: Math.round(probs[score.top] * 10000) / 10000,
-      model_agrees_with_call: Number(ruled && score.top === macroClass(eventType)),
+      event_top_pick: score.eventTop,
+      event_top_prob: score.eventTop ? Math.round(eventProbs[score.eventTop] * 10000) / 10000 : null,
+      model_agrees_with_call: Number(ruled && ['hit', 'error', 'fielders_choice', 'out'].includes(macroClass(eventType))
+        && score.top === macroClass(eventType)),
       runners_on: bases.join(',') || '-', risp: Number(bases.some(b => b === '2B' || b === '3B')),
       outs_before: state.outs, run_scored: Number(runScored), rbi_official: result.rbi ?? 0,
       reviewed: Number(Boolean(review)),
       review_overturned: Object.hasOwn(review, 'isOverturned') ? review.isOverturned : '',
-      review_type: review.reviewType || '', play_id: playId,
-      savant_url: playId ? `https://baseballsavant.mlb.com/sporty-videos?playId=${encodeURIComponent(playId)}` : '',
-      source,
-    };
+      review_type: review.reviewType || '',
+    });
+    Object.entries(eventProbs).forEach(([category, probability]) => {
+      row[`event_p_${category}`] = Math.round(probability * 10000) / 10000;
+    });
     if (row.run_scored) {
-      /* Rule 9.04 governs every RBI, so the note goes on every run-scoring play. */
       row.rbi_if_error = rbiRuleNote('error', true, eventType, bases, state.outs);
       row.rbi_if_hit = rbiRuleNote('hit', true, eventType, bases, state.outs);
       row.rbi_if_fc = rbiRuleNote('fielders_choice', true, eventType, bases, state.outs);

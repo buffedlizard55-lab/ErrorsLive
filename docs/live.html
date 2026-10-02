@@ -2,42 +2,65 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Live board — LiveScoringErrors</title>
+<title>Live scoring feed — LiveScoringErrors</title>
 <link rel="stylesheet" href="site.css">
-<meta name="description" content="An automatically refreshed MLB live board that scores batted balls before a feed ruling, with base/out state, conditional RBI notes, and official video links.">
+<meta name="description" content="Live MLB scoring feed with verified official-scorer pending markers and model probabilities for error, hit, fielder's choice, outs, sacrifice bunts and other represented outcomes.">
 </head>
 <body>
 <header class="nav"><div class="nav-inner"></div></header>
 <main>
-  <h1>Live board — the model on the official feed, ball by ball</h1>
-  <p class="lede">When MLB's Stats API permits cross-origin reads, this page fetches today's schedule and game feeds
-  directly in your browser, then re-polls live games every two minutes. If browser access is blocked, it falls back
-  to the last committed snapshot produced by GitHub Actions. Refreshes are best-effort, not a real-time guarantee.</p>
+  <h1>Live scoring feed — what might this play be scored as?</h1>
+  <p class="lede">The page reads today's official MLB schedule and game feeds in your browser, then refreshes live
+  games about every 30 seconds. It keeps observed official-scorer pending rulings, their final feed result when
+  captured, and batted-ball model scores together. If browser access is blocked, it shows the latest committed
+  snapshot. Polling and scheduled refreshes are best-effort, not real-time guarantees.</p>
 
   <div id="meta"></div>
   <div id="refreshState" class="note" role="status" aria-live="polite">Loading the model and latest feed…</div>
-  <div class="truth gold"><b>What SCORE/100 means.</b> It is 100 × P(the final feed label is “error”), using contact physics
-  and pre-pitch context. The model is not trained to predict whether an initial scorer call will later be changed. It
-  never nominates “error” as its most likely class in grouped out-of-fold evaluation; use the score to prioritize
-  review, not as a verdict. The official scorer's feed label remains the record of the play.</div>
+  <div class="truth gold"><b>Three distinct model outputs — do not read them as one verdict.</b>
+    <b>SCORE/100</b> is 100 × the binary model's estimated probability that the final captured macro-class is
+    <em>error</em>. A separate four-class macro head reports a normalized hit / error / fielder's choice / out
+    distribution; its error probability is independently fitted and can differ from SCORE/100. A third,
+    11-category model adds outcomes such as single, double, triple, home run, field out, force out, double play,
+    sac fly and sac bunt. Its raw softmax probabilities are not post-calibrated. All three estimate final feed
+    categories; none predicts whether an initial scorer call will later be changed. Grouped held-out top-1 accuracy for the
+    detailed model is <b><span id="eventModelAccuracy">—</span></b> in the same-season dataset. Use these as estimates,
+    not official rulings; the official feed remains the record.</div>
+  <div class="note"><b>Official scorer pending is not guessed from missing data.</b> The pending badge is shown only for
+    exact MLB StatsAPI event-type registry values <code>os_ruling_pending_primary</code> or
+    <code>os_ruling_pending_prior</code>, or the registry description <code>Official Scorer Ruling Pending</code>
+    at verified event/result fields. A contact play with no <code>result.eventType</code> but no such marker is shown
+    separately as “no event type in this capture”; it does <b>not</b> prove a scorer decision is pending.
+    <a href="https://statsapi.mlb.com/api/v1/eventTypes" target="_blank" rel="noopener">Official event-type registry ↗</a></div>
   <p class="note" style="margin-top:10px"><b>Watching for a decision?</b> The
   <a href="alerts.html">alert console</a> polls the same endpoints and tells you what changed between polls —
   a ruling appearing, a ruling changing (error → hit or fielder's choice), an RBI field moving, a review being
   overturned — with sound, optional browser notifications and an exportable ledger.</p>
-  <p class="legend">“No call in feed yet” means Statcast <code>hitData</code> is present but the current feed has no
-  <code>result.eventType</code>. MLB does not publish an open-decision queue, so this feed state does not prove a scorer
-  has a decision pending. RBI notes are conditional reminders under <a href="rules.html">Rule 9.04</a>, not automatic
-  counterfactual rulings.</p>
+  <p class="legend">A complete Statcast vector is required for a model score. When it is absent or incomplete, the row
+  stays visible but the page prints no score. The four-class /100 model is limited to its training classes; the
+  detailed model covers only the 11 event categories listed on <a href="model.html">Model &amp; validation</a>.
+  RBI notes are conditional reminders under <a href="rules.html">Rule 9.04</a>, never automatic counterfactual rulings.</p>
 
   <div class="grid cols3" id="kpis"><div class="card">Loading…</div></div>
   <div id="flags"></div>
 
+  <h2>Observed official-scorer rulings and feed changes</h2>
+  <p class="legend">Pending rows are retained in this browser's local log. “Resolved” requires a later,
+  component-specific event type: <code>result.eventType</code> for a primary plate-appearance marker, or a
+  non-pending <code>playEvents[].details.eventType</code> on the same identified event for a prior base-running
+  marker. A cleared marker by itself is not a resolution. Feed reclassifications are labelled as changes between
+  observations; the public feed does not identify who made the change or why.</p>
+  <div id="scoringEvents" class="stack"><div class="note">Loading observed scoring events…</div></div>
+
+  <h2>Batted-ball predictions</h2>
   <div class="filterbar">
     <div><label for="fGame">Game</label><select id="fGame"><option value="">every game on the slate</option></select></div>
     <div><label for="fShow">Show</label><select id="fShow">
-      <option value="all">Every batted ball in play</option>
-      <option value="top">Top 20 by score</option>
-      <option value="err">Ruled ERROR</option>
+      <option value="all">All scoring/model rows</option>
+      <option value="pending">Official scorer pending (exact marker)</option>
+      <option value="unresolved">No result.eventType yet (not confirmed pending)</option>
+      <option value="top">Top 20 by error score</option>
+      <option value="err">Official feed says ERROR</option>
       <option value="risp">Runner on 2nd/3rd</option>
       <option value="stake">A run scored with a runner on 2nd/3rd (RBI at stake)</option>
       <option value="rev">Reviewed / challenged</option>
@@ -71,16 +94,20 @@ python3 tools/fetch_live.py --out docs/data/live_slate.json --csv-out docs/data/
     <code>docs/data/model.json</code></span><span>Not affiliated with MLB</span>
 </div></footer>
 <script src="site.js"></script>
+<script src="scoring-feed.js"></script>
 <script>
 let LIVE = null, ROWS = [], MODEL = null, SNAPSHOT = null, REFRESH_STATUS = null;
+let SCORING_LOG = ScoringFeed.emptyDateState();
 let scheduleCache = null, scheduleDay = '', scheduleFetchedAt = 0;
 let pollBusy = false, pollTimer = null;
 const feedCache = new Map();
 const $ = id => document.getElementById(id);
 const MLB = 'https://statsapi.mlb.com';
-const LIVE_POLL_MS = 2 * 60 * 1000;
+const LIVE_POLL_MS = 30 * 1000;
 const SCHEDULE_POLL_MS = 5 * 60 * 1000;
-const FEED_FIELDS = 'liveData,plays,allPlays,result,eventType,event,rbi,description,about,inning,halfInning,atBatIndex,playEvents,playId,reviewDetails,isOverturned,reviewType,matchup,batter,pitcher,fullName,batSide,pitchHand,runners,movement,start,end,count,outs,hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness';
+const FINAL_RESCAN_WINDOW_MS = 30 * 60 * 1000;
+const FINAL_RESCAN_POLL_MS = 30 * 1000;
+const FEED_FIELDS = 'liveData,plays,allPlays,result,eventType,event,rbi,description,about,inning,halfInning,atBatIndex,playEvents,playId,details,type,reviewDetails,isOverturned,reviewType,matchup,batter,pitcher,fullName,batSide,pitchHand,runners,movement,start,end,count,outs,hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness';
 
 (async function init() {
   const [model, current, fixture, refreshStatus] = await Promise.all([
@@ -88,6 +115,9 @@ const FEED_FIELDS = 'liveData,plays,allPlays,result,eventType,event,rbi,descript
     loadMaybe('data/live_now.json'), loadMaybe('data/live_refresh_status.json')
   ]);
   MODEL = model;
+  const eventModel = MODEL && MODEL.event_type_model;
+  if (eventModel && Number.isFinite(eventModel.cv_accuracy_grouped))
+    $('eventModelAccuracy').textContent = `${(100 * eventModel.cv_accuracy_grouped).toFixed(1)}% top-1 across ${eventModel.classes.length} categories`;
   SNAPSHOT = current || fixture;
   REFRESH_STATUS = refreshStatus;
   if (SNAPSHOT) renderBoard(SNAPSHOT, 'snapshot');
@@ -166,7 +196,12 @@ async function pollOfficial(forceSchedule = false) {
     const toFetch = games.filter(g => {
       const key = String(g.gamePk), cached = feedCache.get(key);
       const state = (g.status || {}).abstractGameState;
-      return state === 'Live' || !cached || (state === 'Final' && cached.state !== 'Final');
+      if (state === 'Live' || !cached) return true;
+      if (state !== 'Final') return false;
+      if (cached.state !== 'Final') return true;
+      return Number.isFinite(cached.firstFinalAt) &&
+        now - cached.firstFinalAt < FINAL_RESCAN_WINDOW_MS &&
+        now - (cached.lastFetchedMs || 0) >= FINAL_RESCAN_POLL_MS;
     });
     const fetched = await mapLimit(toFetch, 4, async g => {
       const url = `${MLB}/api/v1.1/game/${g.gamePk}/feed/live?fields=${encodeURIComponent(FEED_FIELDS)}`;
@@ -177,8 +212,15 @@ async function pollOfficial(forceSchedule = false) {
     fetched.forEach(result => {
       if (result.ok) {
         const {game, feed, url} = result.value;
-        feedCache.set(String(game.gamePk), {feed, url,
-          state: (game.status || {}).abstractGameState, fetchedAt: new Date().toISOString()});
+        const key = String(game.gamePk);
+        const previous = feedCache.get(key);
+        const fetchedAtMs = Date.now();
+        const state = (game.status || {}).abstractGameState;
+        const firstFinalAt = state === 'Final'
+          ? (previous && previous.state === 'Final' ? previous.firstFinalAt || fetchedAtMs : fetchedAtMs)
+          : null;
+        feedCache.set(key, {feed, url, state, firstFinalAt, lastFetchedMs: fetchedAtMs,
+          fetchedAt: new Date(fetchedAtMs).toISOString()});
       } else {
         const failedGame = toFetch[fetched.indexOf(result)];
         failures.push(`${failedGame ? failedGame.gamePk : 'unknown game'}: ${result.error.message || result.error}`);
@@ -196,18 +238,22 @@ async function pollOfficial(forceSchedule = false) {
       }
       const teams = game.teams || {};
       const away = (teams.away || {}).team || {}, home = (teams.home || {}).team || {};
+      const matchup = `${away.abbreviation || away.name || ''} @ ${home.abbreviation || home.name || ''}`;
       const linescore = game.linescore || {};
       const plays = (((cached.feed || {}).liveData || {}).plays || {}).allPlays || [];
       const lastResult = plays.length ? (plays[plays.length - 1].result || {}) : {};
       const modelRows = scoreLiveFeed(cached.feed, {
-        gamePk: pk, official_feed_url: cached.url
+        gamePk: pk, official_feed_url: cached.url, matchup
       }, MODEL);
+      const scoringObservations = ScoringFeed.extractObservations(cached.feed, {
+        gamePk: pk, pk, matchup, official_feed_url: cached.url
+      });
       const played = modelRows.filter(r => r.status === 'scored');
       const awayScore = (linescore.teams || {}).away || {};
       const homeScore = (linescore.teams || {}).home || {};
       const state = (game.status || {}).detailedState || (game.status || {}).abstractGameState || '';
       const gameRow = {
-        game_pk: pk, pk, matchup: `${away.abbreviation || away.name || ''} @ ${home.abbreviation || home.name || ''}`,
+        game_pk: pk, pk, matchup,
         away: away.name || '', home: home.name || '', away_abbr: away.abbreviation || '',
         home_abbr: home.abbreviation || '', game_type: game.gameType || '', state,
         abstract_state: (game.status || {}).abstractGameState || '',
@@ -215,7 +261,7 @@ async function pollOfficial(forceSchedule = false) {
         linescore_away: awayScore.runs ?? null, linescore_home: homeScore.runs ?? null,
         final_away: lastResult.awayScore ?? null, final_home: lastResult.homeScore ?? null,
         official_feed_url: cached.url, savant_url: `https://baseballsavant.mlb.com/gamefeed?gamePk=${pk}`,
-        model_rows: modelRows, plays: modelRows, source: cached.url,
+        model_rows: modelRows, plays: modelRows, scoring_observations: scoringObservations, source: cached.url,
         verified: Number(awayScore.runs != null && homeScore.runs != null &&
           lastResult.awayScore === awayScore.runs && lastResult.homeScore === homeScore.runs),
       };
@@ -223,12 +269,17 @@ async function pollOfficial(forceSchedule = false) {
       gameRow.errors = played.filter(r => r.official_call === 'error').length;
       gameRow.risp_runs_at_stake = played.filter(r => r.risp && r.run_scored).length;
       gameRow.overturned_reviews = played.filter(r => r.review_overturned === true).length;
+      gameRow.official_scoring_pending = scoringObservations.filter(o => o.official_scoring_pending).length;
+      gameRow.scoring_pending_primary = scoringObservations.filter(o => ['primary', 'both'].includes(o.pending_kind)).length;
+      gameRow.scoring_pending_prior = scoringObservations.filter(o => ['prior', 'both'].includes(o.pending_kind)).length;
+      gameRow.predictions_available = modelRows.filter(r => r.prediction_available).length;
       gameRow.unresolved_in_feed = modelRows.filter(r => r.status === 'no_event_type_yet').length;
       gameRow.top_pick_agreement = `${played.reduce((n, r) => n + r.model_agrees_with_call, 0)}/${played.length}`;
       outputGames.push(gameRow);
     }
 
     const allRows = outputGames.flatMap(g => g.model_rows || []);
+    const allObservations = outputGames.flatMap(g => g.scoring_observations || []);
     const playedRows = allRows.filter(r => r.status === 'scored');
     const verified = outputGames.filter(g => g.verified).length;
     const liveDoc = {
@@ -239,9 +290,13 @@ async function pollOfficial(forceSchedule = false) {
       summary: {
         games: outputGames.length, games_verified_vs_linescore: verified,
         batted_balls: playedRows.length,
+        predictions_available: allRows.filter(r => r.prediction_available).length,
         errors: playedRows.filter(r => r.official_call === 'error').length,
         risp_runs_at_stake: playedRows.filter(r => r.risp && r.run_scored).length,
         overturned_reviews: playedRows.filter(r => r.review_overturned === true).length,
+        official_scoring_pending: allObservations.filter(o => o.official_scoring_pending).length,
+        scoring_pending_primary: allObservations.filter(o => ['primary', 'both'].includes(o.pending_kind)).length,
+        scoring_pending_prior: allObservations.filter(o => ['prior', 'both'].includes(o.pending_kind)).length,
         unresolved_in_feed: allRows.filter(r => r.status === 'no_event_type_yet').length,
         top_pick_agreement: `${playedRows.reduce((n, r) => n + r.model_agrees_with_call, 0)}/${playedRows.length}`,
         failures: failures.length,
@@ -252,7 +307,7 @@ async function pollOfficial(forceSchedule = false) {
     renderBoard(LIVE, 'direct');
     $('corsOut').textContent = ` connected; ${games.length} live/final games in the schedule`;
     setRefresh(`Direct browser feed received ${new Date(liveDoc.generated_utc).toLocaleTimeString()} · ` +
-      `next live-game poll in about ${Math.round(LIVE_POLL_MS / 60000)} minutes. ` +
+      `live games and recently final games are rechecked about every ${Math.round(LIVE_POLL_MS / 1000)} seconds. ` +
       (failures.length ? `${failures.length} feed request(s) failed; fallback rows are retained where available.` : ''),
       failures.length > 0);
   } catch (error) {
@@ -273,8 +328,11 @@ async function pollOfficial(forceSchedule = false) {
 
 function scheduleNextPoll() {
   clearTimeout(pollTimer);
+  const now = Date.now();
   const active = LIVE && (LIVE.games || []).some(g => g.abstract_state === 'Live' || /^In Progress/i.test(g.state || ''));
-  const wait = active ? LIVE_POLL_MS : SCHEDULE_POLL_MS;
+  const recentlyFinal = Array.from(feedCache.values()).some(c => c.state === 'Final' &&
+    Number.isFinite(c.firstFinalAt) && now - c.firstFinalAt < FINAL_RESCAN_WINDOW_MS);
+  const wait = active || recentlyFinal ? LIVE_POLL_MS : SCHEDULE_POLL_MS;
   pollTimer = setTimeout(async () => {
     if (document.visibilityState === 'visible') await pollOfficial(false);
     scheduleNextPoll();
@@ -286,10 +344,105 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
+function refreshScoringLedger(doc) {
+  const candidateDate = String(doc.game_date || doc.game_day || '');
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(candidateDate) ? candidateDate : easternDateString();
+  const observations = (doc.games || []).flatMap(game => game.scoring_observations || []);
+  const modelRows = (doc.games || []).flatMap(game => game.model_rows || []);
+  try {
+    const update = ScoringFeed.updateState(window.localStorage, date, observations,
+      modelRows, doc.generated_utc || '');
+    SCORING_LOG = update.dates[date] || ScoringFeed.emptyDateState();
+    return [...(update.flags || []), ...(update.saved === false
+      ? ['Browser storage rejected this log; scoring-event history is only retained for this page visit.'] : [])];
+  } catch (error) {
+    const update = ScoringFeed.mergeDateState(SCORING_LOG, observations, modelRows, doc.generated_utc || '');
+    SCORING_LOG = update.state;
+    return [...(update.flags || []), `Browser storage is unavailable; event history lasts only for this page visit (${error.message || error}).`];
+  }
+}
+
+const EVENT_TYPE_LABELS = {
+  single: 'Single', double: 'Double', triple: 'Triple', home_run: 'Home run', field_error: 'Error',
+  fielders_choice: "Fielder's choice", fielders_choice_out: "Fielder's choice out",
+  field_out: 'Field out', force_out: 'Force out', grounded_into_double_play: 'Grounded into double play',
+  double_play: 'Double play', sac_fly: 'Sacrifice fly', sac_bunt: 'Sacrifice bunt',
+  sac_fly_double_play: 'Sacrifice-fly double play', triple_play: 'Triple play',
+  os_ruling_pending_primary: 'Official scorer pending · plate appearance',
+  os_ruling_pending_prior: 'Official scorer pending · prior base-running event',
+};
+function eventTypeLabel(value) {
+  if (!value) return 'No result.eventType';
+  return EVENT_TYPE_LABELS[value] || String(value).replace(/_/g, ' ');
+}
+function eventCategoryLabel(value) {
+  return ({error: 'Error', hit: 'Hit (macro)', fielders_choice: "Fielder's choice",
+    out: 'Out (macro)', double_play: 'Double play', field_out: 'Field out',
+    force_out: 'Force out', sac_fly: 'Sacrifice fly', sac_bunt: 'Sacrifice bunt',
+    home_run: 'Home run'}[value] || eventTypeLabel(value));
+}
+function showTime(value) {
+  if (!value) return 'time not recorded';
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? String(value) : parsed.toLocaleString();
+}
+function renderScoringEvents() {
+  const pendingRows = (SCORING_LOG.pending || []).slice().sort((a, b) =>
+    String(b.resolved_utc || b.last_seen_utc || b.first_seen_utc || '').localeCompare(
+      String(a.resolved_utc || a.last_seen_utc || a.first_seen_utc || ''))).slice(0, 20);
+  const changes = (SCORING_LOG.changes || []).slice().sort((a, b) =>
+    String(b.changed_observed_utc || '').localeCompare(String(a.changed_observed_utc || ''))).slice(0, 20);
+  if (!pendingRows.length && !changes.length)
+    return '<div class="note">No exact pending marker or between-capture classification change has been observed for this date. An empty local log is not proof that no scorer decision is pending.</div>';
+  const pendingHtml = pendingRows.map(row => {
+    const score = row.prediction_snapshot || {};
+    const status = row.status === 'resolved' ? 'Resolved in a later capture'
+      : row.status === 'awaiting_result' ? 'Marker absent; resolution not confirmed'
+      : 'Last captured with exact pending marker';
+    const tag = row.pending_codes && row.pending_codes.length ? row.pending_codes.map(eventTypeLabel).join(' + ')
+      : row.pending_kind === 'description_only' ? 'Exact registry description' : row.pending_kind;
+    const resolvedParts = [];
+    if (row.resolved_primary_event_type)
+      resolvedParts.push(`Plate appearance: ${eventTypeLabel(row.resolved_primary_event_type)}`);
+    if (row.resolved_prior_event_type)
+      resolvedParts.push(`Prior base-running event: ${eventTypeLabel(row.resolved_prior_event_type)}`);
+    const partial = resolvedParts.length
+      ? `<b>Resolved component(s):</b> ${resolvedParts.map(esc).join(' · ')}` : '';
+    const outcome = row.status === 'resolved'
+      ? `${partial || `<b>Final feed result:</b> ${esc(eventTypeLabel(row.resolved_event_type))}`}${row.resolved_description ? ` — ${esc(row.resolved_description)}` : ''}`
+      : row.status === 'awaiting_result'
+        ? `${partial ? `${partial}<br>` : ''}<span class="mid">${esc(row.latest_note || 'No component-specific final eventType was captured; no ruling inferred.')}</span>`
+        : `${partial ? `${partial}<br>` : ''}<span class="mid">No final ruling has been captured yet; disappearance from the feed is not treated as a resolution.</span>`;
+    const prediction = score.score_100 === undefined ? 'No complete model prediction was available when pending was observed.'
+      : `At the observed contact: SCORE/100 ${Number(score.score_100).toFixed(2)} · macro top ${esc(eventCategoryLabel(score.top_pick))} (${fmtPct(Number(score.top_prob) || 0)})` +
+        (score.event_top_pick ? ` · detailed top ${esc(eventCategoryLabel(score.event_top_pick))} (${fmtPct(Number(score.event_top_prob) || 0)})` : '');
+    const scoreLine = row.resolved_score && (row.resolved_score.away !== null || row.resolved_score.home !== null)
+      ? `<br><span class="muted">Captured score: away ${esc(row.resolved_score.away ?? '—')} – home ${esc(row.resolved_score.home ?? '—')}</span>` : '';
+    return `<article class="card eventlog-card"><div class="rowflex"><b>${esc(row.matchup || `Game ${row.game_pk}`)}</b>
+      <span class="pill ${row.status === 'resolved' ? 'on' : 'mid'}">${esc(status)}</span>
+      <span class="muted">${esc(row.half || '')} ${esc(row.inning ?? '')}${row.at_bat !== null && row.at_bat !== undefined ? ` · PA ${esc(row.at_bat)}` : ''}</span></div>
+      <div class="muted">Marker: ${esc(tag)} · first captured ${esc(showTime(row.first_seen_utc))}${row.last_seen_utc ? ` · last ${esc(showTime(row.last_seen_utc))}` : ''}</div>
+      <div>${outcome}${scoreLine}</div>
+      <div class="muted">Initial feed text: ${esc(row.initial_description || row.pending_text || 'no description supplied')} · ${esc(row.batter || 'batter not supplied')}</div>
+      <div class="legend">${esc(prediction)}</div>
+      ${row.official_feed_url ? `<div>${linkOut(row.resolved_feed_url || row.official_feed_url, 'official feed')}</div>` : ''}</article>`;
+  }).join('');
+  const changeHtml = changes.map(change => `<article class="card eventlog-card"><div class="rowflex"><b>${esc(change.matchup || `Game ${change.game_pk}`)}</b>
+    <span class="pill">Feed classification changed between captures</span>
+    <span class="muted">${esc(change.half || '')} ${esc(change.inning ?? '')}${change.at_bat !== null && change.at_bat !== undefined ? ` · PA ${esc(change.at_bat)}` : ''}</span></div>
+    <div><b>${esc(eventTypeLabel(change.from_event_type))}</b> → <b>${esc(eventTypeLabel(change.to_event_type))}</b></div>
+    <div class="muted">Observed ${esc(showTime(change.changed_observed_utc))}; earlier capture ${esc(showTime(change.first_observed_utc))}.</div>
+    <div class="muted">${esc(change.initial_description || 'No earlier description captured')} → ${esc(change.final_description || 'No later description captured')}</div>
+    <div class="legend">${esc(change.note || 'Only the two observed feed classifications are known; cause and author are not supplied.')}</div>
+    ${change.official_feed_url ? `<div>${linkOut(change.official_feed_url, 'official feed')}</div>` : ''}</article>`).join('');
+  return `<div class="stack">${pendingHtml}${changeHtml}</div>`;
+}
+
 function renderBoard(doc, sourceMode) {
   LIVE = doc;
+  const logFlags = refreshScoringLedger(doc);
   ROWS = (doc.games || []).flatMap(g => (g.model_rows || []).map(r => ({
-    ...r, matchup: `${g.away_abbr || g.away || ''} @ ${g.home_abbr || g.home || ''}`,
+    ...r, matchup: r.matchup || g.matchup || `${g.away_abbr || g.away || ''} @ ${g.home_abbr || g.home || ''}`,
     game_state: g.state || '', game_pk: r.game_pk || g.pk || g.game_pk,
     official_feed_url: r.official_feed_url || g.official_feed_url || ''
   })));
@@ -307,61 +460,124 @@ function renderBoard(doc, sourceMode) {
   $('meta').innerHTML = `<div class="note">${modeNote}<br>Snapshot/feed received <b>${esc(generated)}</b>
     for MLB game date <b>${esc(doc.game_date || 'unknown')}</b>. ${esc(doc.source || '')}
     <br>${Number(s.games_verified_vs_linescore || 0)}/${Number(s.games || 0)} games currently match the official linescore.${staticStatus}</div>`;
-  $('flags').innerHTML = flagBox(doc.flags || []);
+  $('flags').innerHTML = flagBox([...(doc.flags || []), ...logFlags]);
+  $('scoringEvents').innerHTML = renderScoringEvents();
+  const exactPending = s.official_scoring_pending ?? ROWS.filter(row => row.official_scoring_pending).length;
+  const availablePredictions = s.predictions_available ?? ROWS.filter(row => row.prediction_available).length;
   $('kpis').innerHTML =
     kpiCard(Number(s.games || 0), 'live/final games on this date') +
-    kpiCard(Number(s.batted_balls || 0).toLocaleString(), 'batted balls with a feed ruling') +
-    kpiCard(Number(s.errors || 0), 'ruled errors in captured rows') +
+    kpiCard(Number(availablePredictions || 0).toLocaleString(), 'rows with a complete model prediction') +
+    kpiCard(Number(s.errors || 0), 'model-scored rows with feed label ERROR') +
+    kpiCard(Number(exactPending || 0), 'exact official-scorer pending markers observed') +
+    kpiCard(Number(s.unresolved_in_feed || 0), 'rows with no result.eventType (not confirmed pending)') +
     kpiCard(Number(s.risp_runs_at_stake || 0), 'scored runs with a runner on 2nd/3rd') +
-    kpiCard(Number(s.overturned_reviews || 0), 'reviews marked overturned in captured rows') +
-    kpiCard(Number(s.unresolved_in_feed || 0), 'contact plays with no result.eventType yet') +
-    kpiCard(esc(s.top_pick_agreement || '0/0'), 'top pick matched the current feed label');
+    kpiCard(esc(s.top_pick_agreement || '0/0'), 'macro top pick matched the captured feed class');
   const select = $('fGame');
   select.innerHTML = '<option value="">every game on the slate</option>' +
     (doc.games || []).map(g => `<option value="${esc(g.pk || g.game_pk)}">${esc(g.away_abbr || g.away || '')} @ ${esc(g.home_abbr || g.home || '')} — ${esc(g.state || '')}</option>`).join('');
   render();
 }
 
+function numericProbability(value) {
+  return value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value))
+    ? `${(100 * Number(value)).toFixed(1)}%` : '—';
+}
+function sortValue(value) {
+  return value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value))
+    ? Number(value) : -Infinity;
+}
+function officialFeedLabel(x) {
+  if (x.official_scoring_pending) {
+    const kind = ({primary: 'plate-appearance ruling', prior: 'prior base-running event',
+      both: 'primary and prior-event markers', description_only: 'exact registry description'}[x.scoring_pending_kind] || 'exact marker');
+    return `<span class="pill mid">Exact official-scorer pending marker</span><br><span class="muted">${esc(kind)}</span>` +
+      (x.event_type ? `<br><span class="muted">result.eventType also present: ${esc(eventTypeLabel(x.event_type))}; pending marker retained</span>` : '');
+  }
+  if (x.event_type)
+    return `<span class="pill ${x.official_call === 'error' ? 'err' : ''}">Official feed: ${esc(eventTypeLabel(x.event_type))}</span><br><code>${esc(x.event_type)}</code>`;
+  if (x.status === 'no_event_type_yet' || x.official_call === 'pending')
+    return '<span class="pill mid">No result.eventType in this capture</span><br><span class="muted">Not verified as scorer-pending</span>';
+  return '<span class="muted">No final event type captured</span>';
+}
+function probabilitySummary(x) {
+  const score = sortValue(x.score_100);
+  const hasScore = Number.isFinite(score) && x.status !== 'no_vector';
+  if (!hasScore) return `<span class="muted">No model score</span><br><span class="legend">${esc(x.prediction_unavailable_reason || 'A complete Statcast vector is required.')}</span>`;
+  const color = score >= 3 ? 'var(--bad)' : score >= 1.5 ? 'var(--accent)' : 'var(--good)';
+  const macro = ['hit', 'error', 'fielders_choice', 'out'];
+  const macroProbs = macro.map(category => {
+    const key = category === 'error' ? 'p_error_macro' : `p_${category}`;
+    return `<li>${esc(eventCategoryLabel(category))}: ${esc(numericProbability(x[key]))}</li>`;
+  }).join('');
+  const disagreement = x.event_type && !x.official_scoring_pending && x.official_call && x.top_pick &&
+    x.top_pick !== x.official_call ? '<br><span class="no">Macro top differs from captured feed class</span>' : '';
+  return `<b style="color:${color}">SCORE/100 ${score.toFixed(2)}</b><br>
+    <span>Macro top: ${esc(eventCategoryLabel(x.top_pick || ''))} (${esc(numericProbability(x.top_prob))})</span>${disagreement}
+    <details><summary>Four macro probabilities</summary><ul class="prob-list">${macroProbs}</ul></details>`;
+}
+function detailedProbabilitySummary(x) {
+  const classes = (MODEL && MODEL.event_type_model && MODEL.event_type_model.classes) || [];
+  const items = classes.map(category => ({category, probability: x[`event_p_${category}`]}))
+    .filter(item => item.probability !== null && item.probability !== undefined && item.probability !== '' && Number.isFinite(Number(item.probability)))
+    .sort((a, b) => Number(b.probability) - Number(a.probability));
+  const top = x.event_top_pick ? {category: x.event_top_pick, probability: x.event_top_prob}
+    : items[0] || null;
+  if (!top || x.status === 'no_vector')
+    return `<span class="muted">No detailed outcome probabilities</span><br><span class="legend">${esc(x.prediction_unavailable_reason || 'No complete event-model vector.')}</span>`;
+  const all = items.map(item => `<li>${esc(eventCategoryLabel(item.category))}: ${esc(numericProbability(item.probability))}</li>`).join('');
+  return `<span>Detailed top: <b>${esc(eventCategoryLabel(top.category))}</b> (${esc(numericProbability(top.probability))})</span>
+    ${all ? `<details><summary>All ${items.length} represented categories</summary><ul class="prob-list">${all}</ul></details>` : ''}
+    <div class="legend">Model probabilities are estimates, not official rulings; detailed softmax is not post-calibrated.</div>`;
+}
+
 function filtered() {
-  const g = $('fGame').value, mode = $('fShow').value, q = $('fQ').value.toLowerCase();
-  let r = ROWS.slice().sort((a, b) => (Number(b.score_100) || -1) - (Number(a.score_100) || -1));
+  const g = $('fGame').value, mode = $('fShow').value, q = $('fQ').value.trim().toLowerCase();
+  let r = ROWS.slice().sort((a, b) => {
+    const sa = sortValue(a.score_100), sb = sortValue(b.score_100);
+    return sa === sb ? 0 : sa > sb ? -1 : 1;
+  });
   if (g) r = r.filter(x => String(x.game_pk) === g);
-  if (mode === 'top') r = r.slice(0, 20);
+  if (mode === 'pending') r = r.filter(x => x.official_scoring_pending === true);
+  if (mode === 'unresolved') r = r.filter(x => x.status === 'no_event_type_yet');
+  if (mode === 'top') r = r.filter(x => sortValue(x.score_100) > -Infinity).slice(0, 20);
   if (mode === 'err') r = r.filter(x => x.official_call === 'error');
   if (mode === 'risp') r = r.filter(x => x.risp);
   if (mode === 'stake') r = r.filter(x => x.risp && x.run_scored);
   if (mode === 'rev') r = r.filter(x => x.reviewed);
   if (mode === 'over') r = r.filter(x => x.review_overturned === true || x.review_overturned === 'true');
-  if (q) r = r.filter(x => (x.description || '').toLowerCase().includes(q) || (x.batter || '').toLowerCase().includes(q));
+  if (q) r = r.filter(x => [x.description, x.batter, x.pitcher, x.event_type].some(value => String(value || '').toLowerCase().includes(q)));
   return r;
 }
 
 function render() {
   if (!LIVE) return;
   const r = filtered();
-  $('count').textContent = `${r.length} of ${ROWS.length} batted balls shown, highest score first.`;
-  $('tbl').innerHTML = `<tr><th>Game</th><th>Inn</th><th>Official feed</th><th class="right">SCORE/100</th><th>Model top pick</th>
-    <th class="right">conf.</th><th class="right">EV / LA / dist</th><th>On</th><th class="right">Outs</th><th>Play / RBI notes</th><th>Source / video</th></tr>` +
+  $('count').textContent = `${r.length} of ${ROWS.length} scoring/model rows shown, with available model scores first.`;
+  $('tbl').innerHTML = `<tr><th>Game</th><th>Inn</th><th>Batter / pitcher</th><th>Official feed state</th>
+    <th>Macro error score and probabilities</th><th>Detailed event probabilities</th><th>Contact vector</th>
+    <th>Runners</th><th class="right">Outs</th><th>Play / RBI notes</th><th>Source / video</th></tr>` +
     r.map(x => {
-      const validScore = Number.isFinite(Number(x.score_100));
-      const scoreText = validScore ? Number(x.score_100).toFixed(2) : '—';
-      const scoreColor = validScore ? (x.score_100 >= 3 ? 'var(--bad)' : x.score_100 >= 1.5 ? 'var(--accent)' : 'var(--good)') : 'var(--muted)';
-      const pct = Number.isFinite(Number(x.top_prob)) ? `${(100 * Number(x.top_prob)).toFixed(0)}%` : '—';
-      const noVector = x.status === 'no_vector';
-      return `<tr>
-        <td class="nowrap">${esc(x.matchup || '')}</td>
-        <td class="nowrap">${esc((x.half || '').charAt(0).toUpperCase())}${esc(x.inning || '')}</td>
-        <td><span class="pill ${x.official_call === 'error' ? 'err' : x.official_call === 'pending' ? 'mid' : ''}">${esc(callName(x.official_call))}</span></td>
-        <td class="right"><b style="color:${scoreColor}">${scoreText}</b></td>
-        <td class="muted">${noVector ? 'not scored (incomplete Statcast vector)' : esc(callName(x.top_pick))}${x.official_call === 'pending' ? ' <span class="mid">(no result.eventType yet)</span>' : x.top_pick && x.top_pick !== x.official_call ? ' <span class="no">(≠ feed label)</span>' : ''}</td>
-        <td class="right muted">${pct}</td>
-        <td class="right nowrap">${noVector ? '—' : `${esc(x.launch_speed)} / ${esc(x.launch_angle)}° / ${esc(x.distance)}ft`}<br>
-          <span class="muted">${esc((x.trajectory || '').replace('_', ' '))} · ${esc(x.hardness || '')}</span></td>
+      const noVector = x.status === 'no_vector' || x.prediction_available === false;
+      const vector = noVector ? '—' : `${esc(x.launch_speed ?? '—')} / ${esc(x.launch_angle ?? '—')}° / ${esc(x.distance ?? '—')} ft`;
+      const context = noVector ? '' : `<br><span class="muted">${esc(String(x.trajectory || '').replace(/_/g, ' '))} · ${esc(x.hardness || '')}</span>`;
+      const pendingPill = x.official_scoring_pending ? 'scoring-pending-row' : '';
+      const rbiNotes = x.run_scored && x.rbi_if_error
+        ? `<br><span class="muted">Conditional Rule 9.04 notes — error: ${esc(x.rbi_if_error)} · hit: ${esc(x.rbi_if_hit || '')} · FC: ${esc(x.rbi_if_fc || '')}</span>` : '';
+      const review = x.reviewed
+        ? `<br><span class="mid">reviewed (${esc(x.review_type || '')}) — overturned: ${esc(String(x.review_overturned))}</span>` : '';
+      const unavailable = x.prediction_unavailable_reason
+        ? `<br><span class="legend">${esc(x.prediction_unavailable_reason)}</span>` : '';
+      return `<tr class="${pendingPill}">
+        <td class="nowrap">${esc(x.matchup || `Game ${x.game_pk || ''}`)}</td>
+        <td class="nowrap">${esc((x.half || '').charAt(0).toUpperCase())}${esc(x.inning ?? '')}${x.at_bat !== null && x.at_bat !== undefined ? `<br><span class="muted">PA ${esc(x.at_bat)}</span>` : ''}</td>
+        <td>${esc(x.batter || '—')}<br><span class="muted">${esc(x.pitcher || '')}</span></td>
+        <td>${officialFeedLabel(x)}</td>
+        <td>${probabilitySummary(x)}</td>
+        <td>${detailedProbabilitySummary(x)}</td>
+        <td class="nowrap">${vector}${context}</td>
         <td class="nowrap">${x.runners_on === '-' || !x.runners_on ? '—' : esc(x.runners_on)}${x.risp ? ' <span class="mid">RISP</span>' : ''}</td>
-        <td class="right">${esc(x.outs_before ?? '')}</td>
-        <td>${esc(x.description || '')}
-          ${x.run_scored && x.rbi_if_error ? `<br><span class="muted">Conditional Rule 9.04 notes — error: ${esc(x.rbi_if_error)} · hit: ${esc(x.rbi_if_hit || '')} · FC: ${esc(x.rbi_if_fc || '')}</span>` : ''}
-          ${x.reviewed ? `<br><span class="mid">reviewed (${esc(x.review_type || '')}) — overturned: ${esc(String(x.review_overturned))}</span>` : ''}</td>
+        <td class="right">${esc(x.outs_before ?? '—')}</td>
+        <td>${esc(x.description || x.scoring_pending_text || 'No description supplied')}${unavailable}${rbiNotes}${review}</td>
         <td class="nowrap">${x.official_feed_url ? linkOut(x.official_feed_url, 'official feed') : ''}
           ${x.savant_url ? linkOut(x.savant_url, 'watch') : ''}</td>
       </tr>`;

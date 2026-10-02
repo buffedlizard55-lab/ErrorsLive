@@ -13,7 +13,7 @@ Design rules for this suite:
    assertions are written to FAIL if the old wording ever comes back.
  * No network. Everything here must run offline.
 """
-import csv, datetime, json, math, re, sys, tempfile
+import contextlib, csv, datetime, io, json, math, re, sys, tempfile
 from urllib.parse import urlparse
 from pathlib import Path
 
@@ -217,11 +217,30 @@ base = LogisticRegression(max_iter=4000, C=1.0).fit(Xs, yb)
 gkf = GroupKFold(5)
 oof_g = np.zeros(len(yb))
 oof_gm = np.zeros((len(yc), len(CLASSES)))
+EVENT = M['event_type_model']
+EVENT_CLASSES = EVENT['classes']
+event_type_to_class = {code: category for category, codes in EVENT['event_type_groups'].items()
+                       for code in codes}
+event_missing_types = sorted({r['event_type'] for r in num} - set(event_type_to_class))
+event_y = np.array([EVENT_CLASSES.index(event_type_to_class[r['event_type']]) for r in num])
+oof_event = np.zeros((len(event_y), len(EVENT_CLASSES)))
+oof_event_prior = np.zeros((len(event_y), len(EVENT_CLASSES)))
+check('event model groups exactly the represented eventType codes and covers every model row',
+      not event_missing_types and set(EVENT['event_type_groups']) == set(EVENT_CLASSES)
+      and EVENT['feature_spec'] == SPEC
+      and sum(len(codes) for codes in EVENT['event_type_groups'].values()) == len(event_type_to_class),
+      ', '.join(event_missing_types))
 for tr, te in gkf.split(X, yb, groups):
     fold_sc = StandardScaler().fit(X[tr])
     Xtr, Xte = fold_sc.transform(X[tr]), fold_sc.transform(X[te])
     oof_g[te] = LogisticRegression(max_iter=4000, C=1.0).fit(Xtr, yb[tr]).predict_proba(Xte)[:, 1]
     oof_gm[te] = LogisticRegression(max_iter=5000, C=1.0).fit(Xtr, yc[tr]).predict_proba(Xte)
+    event_fold = LogisticRegression(max_iter=5000, C=1.0).fit(Xtr, event_y[tr])
+    if not np.array_equal(event_fold.classes_, np.arange(len(EVENT_CLASSES))):
+        raise AssertionError('a grouped training fold omitted an event category')
+    oof_event[te] = event_fold.predict_proba(Xte)
+    event_prior = np.bincount(event_y[tr], minlength=len(EVENT_CLASSES)) / len(tr)
+    oof_event_prior[te] = event_prior
 skf = StratifiedKFold(5, shuffle=True, random_state=20260929)
 oof_r = np.zeros(len(yb))
 for tr, te in skf.split(X, yb):
@@ -246,6 +265,35 @@ check('published CI widens honestly around the grouped AUC',
 check('OOF log-loss and Brier recompute',
       abs(log_loss(yb, oof_g, labels=[0, 1]) - pp['cv_logloss']) < 5e-4
       and abs(brier_score_loss(yb, oof_g) - pp['cv_brier_raw']) < 5e-5)
+event_onehot = np.eye(len(EVENT_CLASSES))[event_y]
+event_top1 = oof_event.argmax(axis=1)
+event_top3 = np.argsort(oof_event, axis=1, kind='stable')[:, -3:]
+event_accuracy = float((event_top1 == event_y).mean())
+event_top3_accuracy = float(np.any(event_top3 == event_y[:, None], axis=1).mean())
+event_logloss = float(log_loss(event_y, oof_event, labels=list(range(len(EVENT_CLASSES)))))
+event_prior_logloss = float(log_loss(event_y, oof_event_prior, labels=list(range(len(EVENT_CLASSES)))))
+event_brier = float(np.mean(np.sum((oof_event - event_onehot) ** 2, axis=1)))
+event_prior_brier = float(np.mean(np.sum((oof_event_prior - event_onehot) ** 2, axis=1)))
+check('event grouped-CV top-1/top-3 accuracy recomputes from game-held-out predictions',
+      abs(event_accuracy - EVENT['cv_accuracy_grouped']) < 5e-7
+      and abs(event_top3_accuracy - EVENT['cv_top3_accuracy_grouped']) < 5e-7,
+      f'{event_accuracy:.6f}/{event_top3_accuracy:.6f}')
+check('event grouped-CV log-loss and multiclass Brier recompute, including prior baselines',
+      abs(event_logloss - EVENT['cv_logloss_grouped']) < 5e-7
+      and abs(event_prior_logloss - EVENT['cv_logloss_grouped_prior']) < 5e-7
+      and abs(event_brier - EVENT['cv_brier_grouped']) < 5e-7
+      and abs(event_prior_brier - EVENT['cv_brier_grouped_prior']) < 5e-7,
+      f'log-loss {event_logloss:.6f}/{event_prior_logloss:.6f}; Brier {event_brier:.6f}/{event_prior_brier:.6f}')
+check('event-model probability note says raw softmax is not post-calibrated',
+      'not post-calibrated' in EVENT['probability_note'].lower()
+      and EVENT['target_scope'] and EVENT['group'] == 'game_pk')
+trainer_source = (ROOT / 'tools/train_model.py').read_text()
+printed_event_metrics = ('event_type_accuracy_grouped', 'event_type_top3_accuracy_grouped',
+                         'event_type_logloss_grouped', 'event_type_logloss_grouped_prior',
+                         'event_type_brier_grouped', 'event_type_brier_grouped_prior',
+                         'event_type_classes')
+check('training CLI summary prints the grouped event accuracy, top-3, log-loss, Brier, and class count',
+      all(f"'{key}'" in trainer_source for key in printed_event_metrics))
 iso_oof = np.zeros(len(yb))
 for outer_tr, outer_te in gkf.split(X, yb, groups):
     x_outer, y_outer, g_outer = X[outer_tr], yb[outer_tr], groups[outer_tr]
@@ -297,7 +345,8 @@ check('grouped OOF top-1/5/10% risk bands recompute from held-out probabilities'
               and abs(b.get('lift_over_base_rate', -1) - lift) < 0.002
               for b, (_, n, found, precision, recall, lift) in zip(actual_bands, expected_bands)))
 check('honesty block states the score is a ranking aid, not a decision',
-      'does not decide' in hn['what_this_is'] and 'ranks' in hn['what_this_is'])
+      ('does not decide' in hn['what_this_is'] or 'do not decide' in hn['what_this_is'])
+      and 'ranks' in hn['what_this_is'])
 check('percentile grid is monotone 0..100',
       hn['p_error_percentile_grid'][0]['percentile'] == 0
       and hn['p_error_percentile_grid'][-1]['percentile'] == 100
@@ -404,6 +453,10 @@ check('live tool top pick matches the official call on at least 6 of every 10 ba
       agree / len(rows) >= 0.60, f'{agree}/{len(rows)} = {100*agree/len(rows):.0f}%')
 check('live tool never nominates "error" as the top pick anywhere in the game',
       all(r['top_pick'] != 'error' for r in rows))
+check('binary SCORE/100 error probability is explicit and separate from a normalized four-class head',
+      all(r.get('p_error_binary') == r.get('p_error') and
+          abs(r['p_hit'] + r['p_error_macro'] + r['p_fielders_choice'] + r['p_out'] - 1) <= 2e-4
+          for r in rows))
 risp = [r for r in rows if r['risp'] and r['run_scored']]
 check('live tool finds the 2 run-scoring plays with a runner on 2nd/3rd', len(risp) == 2, str(len(risp)))
 check('RBI-at-stake rows carry conditional Rule 9.04 notes for all three candidate rulings',
@@ -442,6 +495,83 @@ check('the no-eventType row still carries model answers and a conditional RBI re
       and prow['run_scored'] == 1 and 'Rule 9.04' in prow['rbi_if_error']
       and ('can apply' in prow['rbi_if_error']) ==
       (prow['outs_before'] < 2 and '3B' in (prow['runners_on'] or '').split(',')))
+
+# Exact StatsAPI pending markers are distinct from a missing result.eventType or approximate text.
+def _pending_play(at_bat, marker=None, result_type='', hit_data=True, description='Observed contact'):
+    events = []
+    event = {'playId': f'pending-{at_bat}'}
+    if marker == 'description':
+        event['details'] = {'description': 'Official Scorer Ruling Pending'}
+    elif marker:
+        event['details'] = {'eventType': marker}
+    if hit_data:
+        event['hitData'] = {'launchSpeed': 99.0, 'launchAngle': 18.0, 'totalDistance': 245.0,
+                            'trajectory': 'line_drive', 'hardness': 'hard'}
+    events.append(event)
+    result = {'description': description, 'rbi': 0, 'awayScore': 1, 'homeScore': 0}
+    if result_type:
+        result['eventType'] = result_type
+    return {'about': {'atBatIndex': at_bat, 'inning': 6, 'halfInning': 'top'},
+            'result': result, 'playEvents': events,
+            'matchup': {'batter': {'fullName': 'Test Batter'}, 'pitcher': {'fullName': 'Test Pitcher'}}}
+
+primary_pending = _pending_play(11, 'os_ruling_pending_primary')
+prior_pending = _pending_play(12, 'os_ruling_pending_prior')
+description_pending = _pending_play(13, 'description')
+check('pending detector accepts only the two exact registry codes and exact description',
+      ls.is_official_scoring_pending_event({'details': {'eventType': 'os_ruling_pending_primary'}})
+      and ls.is_official_scoring_pending_event({'details': {'eventType': 'os_ruling_pending_prior'}})
+      and ls.is_official_scoring_pending_event({'details': {'description': 'Official Scorer Ruling Pending'}})
+      and not ls.is_official_scoring_pending_event({'details': {'eventType': 'os_ruling_pending_primary_extra'}})
+      and not ls.is_official_scoring_pending_event({'details': {'description': 'Official scorer ruling pending'}})
+      and not ls.is_official_scoring_pending_event({'details': {'description': 'Official Scorer Ruling Pending after review'}}))
+check('missing eventType alone is not an official-scorer pending marker',
+      ls.find_official_scoring_pending_play(_pending_play(14, hit_data=False)) is None)
+primary_info = ls.find_official_scoring_pending_play(primary_pending)
+prior_info = ls.find_official_scoring_pending_play(prior_pending)
+check('pending code locations preserve primary vs prior-event scope',
+      primary_info and primary_info['primary'] and not primary_info['prior']
+      and prior_info and prior_info['prior'] and not prior_info['primary'])
+primary_rows = ls.score_feed({'liveData': {'plays': {'allPlays': [primary_pending]}}}, pk=77, scorer=scorer)
+prior_rows = ls.score_feed({'liveData': {'plays': {'allPlays': [prior_pending]}}}, pk=77, scorer=scorer)
+no_vector_rows = ls.score_feed({'liveData': {'plays': {'allPlays': [
+    _pending_play(15, 'os_ruling_pending_primary', hit_data=False)]}}}, pk=77, scorer=scorer)
+check('primary pending can carry a clearly-labelled model estimate without becoming a ruling',
+      len(primary_rows) == 1 and primary_rows[0]['status'] == 'official_scoring_pending'
+      and primary_rows[0]['official_scoring_pending'] is True
+      and primary_rows[0]['prediction_available'] is True
+      and primary_rows[0]['official_call'] == 'pending'
+      and primary_rows[0]['event_top_pick'] in M['event_type_model']['classes'])
+check('prior base-running pending is not scored as a plate-appearance outcome',
+      len(prior_rows) == 1 and prior_rows[0]['status'] == 'official_scoring_pending'
+      and prior_rows[0]['scoring_pending_kind'] == 'prior'
+      and prior_rows[0]['prediction_available'] is False
+      and 'prior base-running event' in prior_rows[0]['prediction_unavailable_reason'])
+check('pending marker without a complete Statcast vector stays visible with no invented score',
+      len(no_vector_rows) == 1 and no_vector_rows[0]['official_scoring_pending'] is True
+      and no_vector_rows[0]['prediction_available'] is False
+      and no_vector_rows[0].get('score_100') is None
+      and 'Statcast hitData vector' in no_vector_rows[0]['prediction_unavailable_reason'])
+text_pending = ls.score_feed({'liveData': {'plays': {'allPlays': [description_pending]}}}, pk=77, scorer=scorer)[0]
+check('the exact registry description is retained as a pending observation without a code',
+      text_pending['official_scoring_pending'] and text_pending['scoring_pending_kind'] == 'description_only')
+cli_output = io.StringIO()
+with contextlib.redirect_stdout(cli_output):
+    ls.print_table(primary_rows + prior_rows + no_vector_rows + [prow], title='synthetic pending cases')
+cli_text = cli_output.getvalue()
+check('CLI summary prints estimates for primary pending but never invents a score for prior/no-vector rows',
+      'PENDING/primary' in cli_text and 'PENDING/prior' in cli_text
+      and 'event estimate' in cli_text and 'estimate only; exact official-scorer pending marker observed' in cli_text
+      and 'no score: The exact pending marker is for a prior base-running event' in cli_text
+      and 'no result.eventType without marker: 1' in cli_text)
+obs_pending = ls.scoring_observations({'liveData': {'plays': {'allPlays': [primary_pending]}}},
+                                      pk=77, meta={'matchup': 'AAA @ BBB'})[0]
+check('compact observations keep official marker, matchup, batter, and feed identity separate',
+      obs_pending['official_scoring_pending'] and obs_pending['pending_kind'] == 'primary'
+      and obs_pending['game_pk'] == 77 and obs_pending['matchup'] == 'AAA @ BBB'
+      and obs_pending['batter'] == 'Test Batter'
+      and obs_pending['pending_event_refs'][0]['event_key'] == 'playId:pending-11'
+      and obs_pending['event_states'][0]['official_scoring_pending'] is True)
 spec_wr = importlib.util.spec_from_file_location('watch_rulings', ROOT / 'tools/watch_rulings.py')
 wr = importlib.util.module_from_spec(spec_wr)
 spec_wr.loader.exec_module(wr)
@@ -701,6 +831,81 @@ if(!ctx.rbiRuleNote('error',true,'home_run').includes('not a valid alternative')
           contract.returncode == 0, contract.stderr.strip()[-300:])
     check('browser home-run RBI notes avoid impossible error/FC counterfactuals',
           contract.returncode == 0, contract.stderr.strip()[-300:])
+    external_js = []
+    for name in ('site.js', 'scoring-feed.js'):
+        parsed = subprocess.run(['node', '--check', str(ROOT / 'docs' / name)],
+                                 capture_output=True, text=True)
+        if parsed.returncode:
+            external_js.append(f'{name}: {parsed.stderr.strip()[-180:]}')
+    check('shared and scoring-feed browser JavaScript parses', not external_js, ' | '.join(external_js))
+    scoring_feed_contract = r'''const fs=require('fs'),vm=require('vm');
+const ctx=vm.createContext({console});
+vm.runInContext(fs.readFileSync('docs/scoring-feed.js','utf8'),ctx);
+const S=ctx.ScoringFeed;
+const exact={about:{atBatIndex:5,inning:6,halfInning:'top'},
+  result:{description:'Pending'},playEvents:[{details:{eventType:'os_ruling_pending_primary'}}]};
+const feed={liveData:{plays:{allPlays:[exact]}}};
+const obs=S.extractObservations(feed,{gamePk:10,matchup:'AAA @ BBB'});
+if(obs.length!==1||!obs[0].official_scoring_pending||obs[0].pending_kind!=='primary'||
+   obs[0].matchup!=='AAA @ BBB') throw new Error('exact marker extraction failed');
+if(S.findOfficialScoringPendingPlay({result:{},playEvents:[{details:{eventType:'os_ruling_pending_primary_extra'}}]})!==null||
+   S.findOfficialScoringPendingPlay({result:{},playEvents:[{details:{description:'Official Scorer Ruling Pending now'}}]})!==null||
+   S.findOfficialScoringPendingPlay({result:{},playEvents:[]})!==null)
+  throw new Error('pending detector accepted a non-exact or missing marker');
+const id={game_pk:'10',at_bat:5,play_id:'p5',matchup:'AAA @ BBB'};
+let state=S.mergeDateState(S.emptyDateState(),obs,[{...id,official_scoring_pending:true,
+  prediction_available:true,score_100:2.3,top_pick:'out',top_prob:.6,
+  event_top_pick:'field_out',event_top_prob:.7}], '2026-10-02T00:00:00Z').state;
+if(state.pending[0].status!=='pending'||state.pending[0].prediction_snapshot.score_100!==2.3)
+  throw new Error('pending state or probability snapshot failed');
+state=S.mergeDateState(state,[],[], '2026-10-02T00:00:10Z').state;
+if(state.pending[0].status!=='pending') throw new Error('missing play falsely resolved pending state');
+state=S.mergeDateState(state,[{...id,event_type:'',official_scoring_pending:false,
+  description:'No call'}],[], '2026-10-02T00:00:20Z').state;
+if(state.pending[0].status!=='awaiting_result'||state.pending[0].resolved_event_type)
+  throw new Error('missing eventType was incorrectly treated as a final ruling');
+state=S.mergeDateState(state,[{...id,event_type:'field_error',official_scoring_pending:false,
+  description:'Reached on error',away_score:1,home_score:0}],[], '2026-10-02T00:00:30Z').state;
+if(state.pending[0].status!=='resolved'||state.pending[0].resolved_event_type!=='field_error')
+  throw new Error('final feed result did not resolve pending state');
+let changed=S.mergeDateState(S.emptyDateState(),[{...id,event_type:'field_out',
+  official_scoring_pending:false,description:'Out'}],[], '2026-10-02T00:01:00Z').state;
+changed=S.mergeDateState(changed,[{...id,event_type:'field_error',
+  official_scoring_pending:false,description:'Error'}],[], '2026-10-02T00:02:00Z').state;
+if(changed.changes.length!==1||changed.changes[0].from_event_type!=='field_out'||
+   changed.changes[0].to_event_type!=='field_error'||changed.changes[0].matchup!=='AAA @ BBB')
+  throw new Error('between-capture classification change was not recorded exactly');
+const priorPlay={about:{atBatIndex:6},result:{eventType:'single',description:'Single'},
+  playEvents:[{playId:'runner-6',details:{eventType:'os_ruling_pending_prior'}}]};
+const priorObs=S.extractObservations({liveData:{plays:{allPlays:[priorPlay]}}},
+  {gamePk:10,matchup:'AAA @ BBB'});
+let priorState=S.mergeDateState(S.emptyDateState(),priorObs,[], '2026-10-02T00:04:00Z').state;
+const priorBase={game_pk:'10',at_bat:6,play_id:'runner-6',matchup:'AAA @ BBB',event_type:'single',
+  official_scoring_pending:false,description:'Single',event_states:[{event_key:'playId:runner-6',
+  event_type:'',description:'',official_scoring_pending:false}]};
+priorState=S.mergeDateState(priorState,[priorBase],[], '2026-10-02T00:04:30Z').state;
+if(priorState.pending[0].status!=='awaiting_result'||priorState.pending[0].resolved_event_type)
+  throw new Error('result.eventType single falsely resolved prior base-running marker');
+priorState=S.mergeDateState(priorState,[{...priorBase,event_states:[{event_key:'playId:runner-6',
+  event_type:'stolen_base_2b',description:'Stolen base',official_scoring_pending:false}]}],[],
+  '2026-10-02T00:05:00Z').state;
+if(priorState.pending[0].status!=='resolved'||priorState.pending[0].resolved_prior_event_type!=='stolen_base_2b')
+  throw new Error('identified non-pending playEvent did not resolve prior base-running ruling');
+const descriptionFeed={liveData:{plays:{allPlays:[{about:{atBatIndex:8},result:{eventType:'field_error'},
+  playEvents:[{playId:'desc-8',details:{description:'Official Scorer Ruling Pending'}}]}]}}};
+const descriptionObs=S.extractObservations(descriptionFeed,{gamePk:10});
+let descriptionState=S.mergeDateState(S.emptyDateState(),descriptionObs,[], '2026-10-02T00:05:30Z').state;
+descriptionState=S.mergeDateState(descriptionState,[{game_pk:'10',at_bat:8,event_type:'field_error',
+  official_scoring_pending:false,description:'Error'}],[], '2026-10-02T00:06:00Z').state;
+if(descriptionState.pending[0].status!=='awaiting_result'||descriptionState.pending[0].resolved_event_type)
+  throw new Error('description-only marker was assigned an unverified scope');
+const noVector=S.mergeDateState(S.emptyDateState(),obs,[], '2026-10-02T00:03:00Z').state;
+if(noVector.pending[0].prediction_snapshot!==null) throw new Error('missing vector invented a model score');
+console.log('exact markers, pending-to-final state, classification-change record, and no-vector behavior verified');'''
+    ledger = subprocess.run(['node', '-e', scoring_feed_contract], cwd=ROOT,
+                            capture_output=True, text=True)
+    check('browser ledger preserves exact pending state, final resolution, feed changes, and missing vectors',
+          ledger.returncode == 0, ledger.stderr.strip()[-300:])
 else:
     print('  --   (node not installed: skipped the JavaScript syntax check)')
 
@@ -768,6 +973,16 @@ check('index labels percentile against grouped OOF scores, not in-sample fitted 
       and 'every batted ball in the fitted set' not in idx)
 check('live page loads the live artifact and explains the refresh command',
       'data/live_slate.json' in liv and 'tools/fetch_live.py' in liv)
+check('live page loads the exact-marker observation ledger and displays separate model heads',
+      'scoring-feed.js' in liv and 'official_scoring_pending' in liv
+      and 'event_type_model' in liv and 'event_p_' in liv
+      and 'not post-calibrated' in liv.lower())
+check('live page differentiates exact pending markers from missing result.eventType',
+      'os_ruling_pending_primary' in liv and 'os_ruling_pending_prior' in liv
+      and 'not confirmed pending' in liv and 'no such marker' in liv.lower())
+check('live browser rechecks live and recently-final feeds at the declared polling cadence',
+      'LIVE_POLL_MS = 30 * 1000' in liv and 'FINAL_RESCAN_WINDOW_MS' in liv
+      and 'FINAL_RESCAN_POLL_MS' in liv and 'firstFinalAt' in liv)
 check('live board links each play back to its official feed and watch page, including snapshots',
       "linkOut(x.official_feed_url, 'official feed')" in liv
       and "linkOut(x.savant_url, 'watch')" in liv
@@ -777,6 +992,10 @@ check('live page states the outbound-network limitation honestly',
       'outbound HTTPS' in liv and 'statsapi.mlb.com' in liv and 'fallback' in liv)
 check('model page publishes the honesty block + calibration',
       'model.json' in mod and ('honesty' in mod or 'calibration' in mod))
+check('model page renders grouped-CV detailed outcome metrics and class support from model.json',
+      'event_type_model' in mod and "eventModel.cv_accuracy_grouped" in mod
+      and "eventModel.cv_top3_accuracy_grouped" in mod and 'id="eventClasses"' in mod
+      and 'not post-calibrated' in mod.lower())
 check('model page explains the NOT-self-weighting enrichment of the audit sample',
       'NOT' in mod and 'self-weighting' in plain_text(mod).lower()
       and 'error-enriched audit sample' in plain_text(mod))
@@ -1521,14 +1740,18 @@ console.log(JSON.stringify(grid));"""
 if shutil.which('node'):
     js_rows = r"""const fs=require('fs'), vm=require('vm');
 const ctx=vm.createContext({document:{querySelector:()=>null,querySelectorAll:()=>[]}});
-vm.runInContext(fs.readFileSync('docs/site.js','utf8'),ctx);
+vm.runInNewContext(fs.readFileSync('docs/site.js','utf8'),ctx);
+vm.runInNewContext(fs.readFileSync('docs/scoring-feed.js','utf8'),ctx);
 const feed=JSON.parse(fs.readFileSync('data/source/feed_823441.json','utf8'));
 const model=JSON.parse(fs.readFileSync('docs/data/model.json','utf8'));
 const rows=ctx.scoreLiveFeed(feed,{gamePk:823441,official_feed_url:
   'https://statsapi.mlb.com/api/v1.1/game/823441/feed/live'},model);
 console.log(JSON.stringify(rows.map(r=>({at_bat:r.at_bat,event_type:r.event_type,status:r.status,
   score_100:r.score_100,top_pick:r.top_pick,official_call:r.official_call,run_scored:r.run_scored,
+  p_error_binary:r.p_error_binary,p_error_macro:r.p_error_macro,
   risp:r.risp,outs_before:r.outs_before,runners_on:r.runners_on,rbi_official:r.rbi_official,
+  event_top_pick:r.event_top_pick,event_top_prob:r.event_top_prob,
+  event_probs:Object.fromEntries(Object.keys(r).filter(k=>k.startsWith('event_p_')).map(k=>[k,r[k]])),
   rbi_if_error:r.rbi_if_error||'',rbi_if_hit:r.rbi_if_hit||'',rbi_if_fc:r.rbi_if_fc||''}))));"""
     r = subprocess.run(['node', '-e', js_rows], cwd=ROOT, capture_output=True, text=True)
     check('the browser live scorer runs the committed fixture in node', r.returncode == 0,
@@ -1543,17 +1766,57 @@ console.log(JSON.stringify(rows.map(r=>({at_bat:r.at_bat,event_type:r.event_type
                 diffs.append(f'ab {ab} missing in browser')
                 continue
             for k in ('event_type', 'status', 'score_100', 'top_pick', 'official_call', 'run_scored',
-                      'risp', 'outs_before', 'runners_on', 'rbi_if_error', 'rbi_if_hit', 'rbi_if_fc'):
+                      'risp', 'outs_before', 'runners_on', 'rbi_if_error', 'rbi_if_hit', 'rbi_if_fc',
+                      'event_top_pick', 'event_top_prob', 'p_error_binary', 'p_error_macro'):
                 if str(row.get(k, '')) != str(j.get(k, '')):
                     diffs.append(f'ab {ab} {k}: tool={row.get(k)!r} browser={j.get(k)!r}')
+            for category in M['event_type_model']['classes']:
+                k = f'event_p_{category}'
+                if abs(float(row.get(k, 0)) - float(j.get('event_probs', {}).get(k, 0))) > 1e-4:
+                    diffs.append(f'ab {ab} {k}: tool={row.get(k)!r} browser={j.get("event_probs", {}).get(k)!r}')
         check(f'the browser and the CLI agree row for row on all {len(py)} scored plays '
-              '(call, score, base/out state and RBI notes)', not diffs, ' | '.join(diffs[:3]))
+              '(macro and detailed outcomes, call, base/out state and RBI notes)', not diffs, ' | '.join(diffs[:3]))
         noted = [row for row in py.values() if row.get('rbi_if_error')]
         check('every run-scoring play carries the conditional note, with or without a runner in '
               'scoring position',
               all(row['run_scored'] for row in noted)
               and sum(1 for row in py.values() if row['run_scored']) == len(noted),
               f'{len(noted)} noted of {sum(1 for row in py.values() if row["run_scored"])} run-scoring')
+
+if shutil.which('node'):
+    live_state_contract = r'''const fs=require('fs'),vm=require('vm');
+const ctx=vm.createContext({document:{querySelector:()=>null,querySelectorAll:()=>[]}});
+vm.runInNewContext(fs.readFileSync('docs/site.js','utf8'),ctx);
+vm.runInNewContext(fs.readFileSync('docs/scoring-feed.js','utf8'),ctx);
+const model=JSON.parse(fs.readFileSync('docs/data/model.json','utf8'));
+function play(at,eventType,marker,withVector){
+ const e={playId:'play-'+at};
+ if(marker)e.details={eventType:marker};
+ if(withVector)e.hitData={launchSpeed:99,launchAngle:18,totalDistance:245,trajectory:'line_drive',hardness:'hard'};
+ const result={description:'Observed contact'};if(eventType)result.eventType=eventType;
+ return {about:{atBatIndex:at,inning:6,halfInning:'top'},result,playEvents:[e],runners:[],matchup:{}};
+}
+const feed=plays=>({liveData:{plays:{allPlays:plays}}});
+const game={gamePk:77,official_feed_url:'https://statsapi.mlb.com/api/v1.1/game/77/feed/live'};
+const primary=ctx.scoreLiveFeed(feed([play(11,'','os_ruling_pending_primary',true)]),game,model)[0];
+const prior=ctx.scoreLiveFeed(feed([play(12,'','os_ruling_pending_prior',true)]),game,model)[0];
+const missing=ctx.scoreLiveFeed(feed([play(13,'','',true)]),game,model)[0];
+const noVector=ctx.scoreLiveFeed(feed([play(14,'field_error','',false)]),game,model)[0];
+if(!primary.official_scoring_pending||primary.status!=='official_scoring_pending'||
+   !primary.prediction_available||primary.official_call!=='pending'||!primary.event_top_pick)
+ throw new Error('browser primary pending score was absent or presented as a final call');
+if(!prior.official_scoring_pending||prior.prediction_available||prior.status!=='official_scoring_pending')
+ throw new Error('browser prior-event marker was incorrectly scored as plate-appearance outcome');
+if(missing.official_scoring_pending||missing.status!=='no_event_type_yet'||!missing.prediction_available)
+ throw new Error('missing result.eventType was conflated with official pending or dropped');
+if(noVector.official_scoring_pending||noVector.status!=='no_vector'||noVector.prediction_available||
+   noVector.official_call!=='error'||noVector.score_100!==undefined)
+ throw new Error('missing Statcast vector was silently scored or erased');
+console.log('browser primary/prior pending, missing result.eventType, and missing-vector cases verified');'''
+    state_result = subprocess.run(['node', '-e', live_state_contract], cwd=ROOT,
+                                  capture_output=True, text=True)
+    check('browser live scorer keeps pending, missing eventType, and no-vector states distinct',
+          state_result.returncode == 0, state_result.stderr.strip()[-300:])
 
 # --- the committed review ledger carries exactly the current wording ------------------------
 reps = load_csv(ROOT / 'docs/data/replays.csv')

@@ -85,4 +85,12 @@ table.compact th,table.compact td{padding:4px 6px}
 a.plain{color:var(--ink)}
 .stack{display:flex;flex-direction:column;gap:8px}
 .rowflex{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-@media(max-width:640px){h1{font-size:1.5rem}.dial{min-width:150px}}
+.eventlog-card{border-left:3px solid var(--accent2);display:flex;flex-direction:column;gap:6px}
+.eventlog-card:has(.pill.mid){border-left-color:var(--accent)}
+.prob-list{margin:6px 0 4px;padding-left:20px;columns:2;column-gap:28px}
+.prob-list li{break-inside:avoid;color:var(--dim);font-size:.86rem}
+details{margin-top:4px;color:var(--dim);font-size:.86rem}
+details summary{cursor:pointer;color:var(--accent2)}
+.scoring-pending-row td{background:#211b10}
+.scoring-pending-row:hover td{background:#2b2210}
+@media(max-width:640px){h1{font-size:1.5rem}.dial{min-width:150px}.prob-list{columns:1}}
