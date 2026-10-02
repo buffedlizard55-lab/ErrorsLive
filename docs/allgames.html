@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>⚾ Live scoring feed · all games — LiveScoringErrors</title>
+<link rel="stylesheet" href="site.css">
+<meta name="description" content="A live, chat-style feed of every game on the slate with live scoring: each batted ball's model distribution for hit, out, fielder's choice, error, sacrifice and more, plus exact official-scorer pending rulings and scoring changes observed between reads of the official feed.">
+</head>
+<body>
+<header class="nav"><div class="nav-inner"></div></header>
+<main>
+  <h1>⚾ Live scoring feed · all games</h1>
+  <p class="lede">One feed for the whole slate. Every completed batted ball arrives with the committed model's
+  distribution over the outcomes the official scorer can charge — <b>single / double / triple / home run / error /
+  fielder's choice / field out / force out / double play / sacrifice fly / sacrifice bunt</b> — and the plays the
+  feed marks as an <b>official scorer ruling pending</b> are scored the same way, so you can see how the model
+  weights a hit versus an error versus a fielder's choice before the official call lands. Feed rows show exactly
+  what the official payload said; model numbers are estimates and never a ruling.</p>
+
+  <div class="filterbar">
+    <div><label for="datePicker">Game date (official MLB date)</label>
+      <input type="date" id="datePicker"></div>
+    <div class="rowflex">
+      <button class="btn" id="prevDay" type="button" title="Previous day">←</button>
+      <button class="btn" id="nextDay" type="button" title="Next day">→</button>
+      <button class="btn" id="today" type="button">Today</button>
+    </div>
+    <div><label for="gameFilter">Game</label><select id="gameFilter"><option value="">every game on the slate</option></select></div>
+    <div><label for="search">Search play text</label><input id="search" placeholder="batter, pitcher or description"></div>
+    <div class="rowflex">
+      <button class="btn" id="refresh" type="button">Refresh now</button>
+      <button class="btn" id="pause" type="button" aria-pressed="false">⏸ Pause auto-refresh</button>
+    </div>
+    <div id="status" class="muted" role="status" aria-live="polite">Loading…</div>
+  </div>
+
+  <div class="truth gold"><b>Read this before trusting a number.</b> The model estimates the final captured feed
+  label from batted-ball physics and the pre-pitch base/out state. It does not predict whether a scorer will change
+  a ruling, it never nominates “error” as its top multiclass call, and its grouped held-out error recall is zero at
+  the arg-max — the score ranks plays for review, it does not settle them. <b>⚖️ Pending</b> is only the exact
+  registry marker (<code>os_ruling_pending_primary</code> / <code>os_ruling_pending_prior</code>) or the exact
+  description “Official Scorer Ruling Pending”; a missing <code>result.eventType</code> without that marker is shown
+  as <i>no event type in this capture</i>. <b>✏️ Changes</b> are differences this browser observed between two reads
+  of the same play. Row times are when this browser <i>first saw</i> the play — the official payload has no per-play
+  timestamp — and are labelled as such.</div>
+
+  <div id="meta" class="note"></div>
+  <div id="stats" class="rowflex feed-stats"></div>
+  <nav id="tabs" class="tabs" aria-label="Filter feed"></nav>
+  <div id="flags"></div>
+  <div id="feed" class="feed-list" aria-live="polite"></div>
+  <p class="legend" id="count"></p>
+
+  <div class="note" style="margin-top:14px">
+    <b>Where each kind of row comes from.</b>
+    <b>Batted balls</b> — <code>liveData.plays.allPlays[]</code> in the official live feed; the distribution is
+    <code>docs/data/model.json</code>'s 11-class head, whose grouped held-out top-1 accuracy is printed on
+    <a href="live.html">Live board</a> and documented on <a href="model.html">Model &amp; validation</a>.
+    <b>Pending</b> — the API's own event-type registry
+    (<a href="https://statsapi.mlb.com/api/v1/eventTypes" target="_blank" rel="noopener">/api/v1/eventTypes ↗</a>),
+    detected by the shared <code>ScoringFeed</code> module exactly as on <a href="alerts.html">Live alerts</a>.
+    <b>Changes</b> — the browser observation ledger (<code>errorslive.scoring-feed.v1</code>) diffing consecutive reads;
+    the feed carries no change marker, so an initial call is only known if it was observed before it changed.
+    <b>Reviews</b> — <code>reviewDetails</code> in the official payload, labelled from the league's own
+    <a href="https://statsapi.mlb.com/api/v1/gameStatus" target="_blank" rel="noopener">status registry ↗</a> when it
+    can be fetched (otherwise the raw code is shown).
+    Official feed links on every row point at <code>statsapi.mlb.com</code>.
+  </div>
+</main>
+<footer><div class="inner">
+  <span>Model <code>docs/data/model.json</code> · pending/ledger <code>docs/scoring-feed.js</code> ·
+    data layer <code>docs/live-board.js</code></span>
+  <span>Not affiliated with MLB</span>
+</div></footer>
+<script src="site.js"></script>
+<script src="scoring-feed.js"></script>
+<script src="live-board.js"></script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let DATE = /^\d{4}-\d{2}-\d{2}$/.test(params.get('date') || '')
+  ? params.get('date') : LiveBoard.easternDateString();
+let SHOWN = DATE;  // the date actually on screen; differs from DATE when the requested day has no games
+let GAME_FILTER = params.get('game') || '';
+let TAB = 'all', QUERY = '';
+let MODEL = null, CACHE = LiveBoard.createFeedCache(), REGISTRY = {}, LEDGER = null;
+let DOC = null, EVENTS = [], PAUSED = false, TIMER = null, BUSY = false, REGISTRY_FAILED = false;
+
+function pct(v, d = 1) { return Number.isFinite(Number(v)) ? `${(100 * Number(v)).toFixed(d)}%` : '—'; }
+function numText(v, d = 2) { return Number.isFinite(Number(v)) ? Number(v).toFixed(d) : '—'; }
+
+const TABS = [
+  ['all', 'All'], ['batted_ball', '⚾ Batted balls'], ['pending', '⚖️ Scoring pending'],
+  ['change', '✏️ Scoring changes'], ['review', '🔍 Reviews'], ['abs', '⚡ ABS'],
+  ['live', '🟢 Live at-bats'],
+];
+
+function macroOf(code) {
+  if (code === 'error') return 'error';
+  if (['single', 'double', 'triple', 'home_run'].includes(code)) return 'hit';
+  if (['fielders_choice', 'fielders_choice_out'].includes(code)) return 'fc';
+  if (['field_out', 'force_out', 'double_play', 'grounded_into_double_play', 'sac_fly', 'sac_bunt',
+       'sac_fly_double_play', 'triple_play'].includes(code)) return 'out';
+  return 'other';
+}
+
+function distBar(event) {
+  const probs = Object.entries(event.event_probs || {})
+    .filter(([, v]) => Number.isFinite(Number(v)) && Number(v) > 0.005)
+    .sort((a, b) => Number(b[1]) - Number(a[1]));
+  if (!probs.length) return '';
+  const top = probs.slice(0, 6);
+  return `<div class="dist" role="img" aria-label="model distribution: ${esc(top.map(([c, v]) => `${LiveBoard.modelClassLabel(c)} ${pct(v)}`).join(', '))}">
+    ${top.map(([c, v]) => `<i class="m-${macroOf(c)}" style="width:${(100 * Number(v)).toFixed(1)}%"
+      title="${esc(LiveBoard.modelClassLabel(c))} ${esc(pct(v, 1))}"></i>`).join('')}
+  </div>`;
+}
+
+function distList(event) {
+  const items = Object.entries(event.event_probs || {})
+    .filter(([, v]) => Number.isFinite(Number(v)) && Number(v) >= 0.001)
+    .sort((a, b) => Number(b[1]) - Number(a[1]));
+  if (!items.length) return '';
+  return `<ul class="prob-list">${items.map(([c, v]) =>
+    `<li>${esc(LiveBoard.modelClassLabel(c))}: <b>${esc(pct(v))}</b></li>`).join('')}</ul>`;
+}
+
+function scoreLine(event) {
+  if (!event.prediction_available) {
+    return `<div class="legend">No model score for this row${event.prediction_unavailable_reason
+      ? ` — ${esc(event.prediction_unavailable_reason)}` : ''}.</div>`;
+  }
+  const score = Number(event.score_100);
+  const color = score >= 3 ? 'var(--bad)' : score >= 1.5 ? 'var(--accent)' : 'var(--good)';
+  const macro = [['hit', event.p_hit], ['out', event.p_out],
+    ['fielders_choice', event.p_fielders_choice], ['error', event.p_error_macro]];
+  return `<div class="rowflex">
+      <span><b style="color:${color}">SCORE/100 ${numText(score)}</b>
+        <span class="muted">P(captured feed label = error)${Number.isFinite(Number(event.error_percentile))
+          ? ` · ${esc(LiveBoard.ordinal(event.error_percentile))} percentile of fitted batted balls` : ''}</span></span>
+      <span class="muted">macro top: <b>${esc(LiveBoard.modelClassLabel(event.top_pick))}</b>
+        (${esc(pct(event.top_prob))})</span>
+    </div>
+    <div class="rowflex legend">${macro.map(([c, v]) =>
+      `<span>${esc(LiveBoard.modelClassLabel(c))} <b>${esc(pct(v))}</b></span>`).join(' · ')}</div>
+    ${distBar(event)}`;
+}
+
+function pendingBlock(event) {
+  const p = event.pending || (event.ledger_pending ? {
+    kind: event.ledger_pending.pending_kind || 'description_only',
+    codes: event.ledger_pending.pending_codes || [],
+    text: event.ledger_pending.pending_text || '',
+  } : null);
+  if (!p) return '';
+  const kindLabel = { primary: 'plate-appearance ruling', prior: 'prior base-running event',
+    both: 'primary and prior-event markers', description_only: 'exact registry description' }[p.kind] || 'exact marker';
+  const ledger = event.ledger_pending;
+  const status = ledger ? (ledger.status === 'resolved' ? 'resolved'
+    : ledger.status === 'awaiting_result' ? 'marker cleared, no final ruling observed yet' : 'pending') : 'pending';
+  const resolved = ledger && ledger.status === 'resolved'
+    ? `<div class="ok">Resolved in the feed as <b>${esc(LiveBoard.feedEventLabel(ledger.resolved_event_type || ''))}</b>
+       <code>${esc(ledger.resolved_event_type || '')}</code>
+       ${ledger.resolved_utc ? `· observed ${esc(LiveBoard.clockLabel(ledger.resolved_utc))}` : ''}
+       ${ledger.resolved_description ? `<br><span class="muted">${esc(ledger.resolved_description)}</span>` : ''}</div>`
+    : '';
+  const note = ledger && ledger.latest_note ? `<div class="legend">${esc(ledger.latest_note)}</div>` : '';
+  return `<div class="feed-pending">
+    <b>⚖️ Official scorer ruling pending — ${esc(kindLabel)}</b>
+    ${p.codes && p.codes.length ? `<code>${esc(p.codes.join(', '))}</code>` : ''}
+    <span class="pill mid">${esc(status)}</span>
+    ${p.text ? `<div class="muted">pending text: “${esc(p.text)}”</div>` : ''}
+    ${resolved}${note}
+    <div class="legend">The scorer's choice changes how the play is charged (hit vs. error vs. fielder's choice) and,
+    when a run is at stake, what Rule 9.04 allows the RBI to be.</div>
+  </div>`;
+}
+
+function changeBlock(event) {
+  const c = event.change;
+  if (!c) return '';
+  return `<div class="feed-pending">
+    <b>✏️ Scoring change observed</b>
+    <span class="pill mid">${esc(LiveBoard.feedEventLabel(c.from_event_type))} → ${esc(LiveBoard.feedEventLabel(c.to_event_type))}</span>
+    <div class="legend">First observed call: ${esc(c.initial_description || 'not captured')}
+      ${c.first_observed_utc ? `(first seen ${esc(LiveBoard.clockLabel(c.first_observed_utc))})` : ''}<br>
+      Final observed ruling: ${esc(c.final_description || 'not captured')}
+      ${c.changed_observed_utc ? `(changed ${esc(LiveBoard.clockLabel(c.changed_observed_utc))})` : ''}<br>
+      ${esc(c.note || '')}</div>
+  </div>`;
+}
+
+function reviewBlock(event) {
+  const r = event.review;
+  if (!r) return '';
+  const parts = [];
+  if (r.label) parts.push(esc(r.label));
+  if (r.code) parts.push(`<code>${esc(r.code)}</code>`);
+  if (r.overturned === true) parts.push('<span class="pill on">✓ Call overturned</span>');
+  else if (r.overturned === false) parts.push('<span class="pill">✗ Call stands / upheld</span>');
+  if (r.in_progress === true) parts.push('<span class="pill mid">under review</span>');
+  if (r.challenger) parts.push(`challenged by <b>${esc(r.challenger)}</b>`);
+  return `<div class="feed-review"><b>${r.kind === 'abs' ? '⚡ ABS challenge' :
+    r.kind === 'manager' ? '🔍 Manager challenge' : r.kind === 'crew_chief' ? '🔍 Umpire review' :
+    r.kind === 'boundary' ? '🔍 Boundary call' : '🔍 Review'}</b> ${parts.join(' · ')}</div>`;
+}
+
+function kindBadge(event) {
+  const map = {
+    batted_ball: ['⚾ Batted ball', ''], pending: ['⚖️ Scoring pending', 'pill mid'],
+    change: ['✏️ Scoring change', 'pill mid'], review: ['🔍 Review', ''],
+    abs: ['⚡ ABS', ''], live_ab: ['🟢 Live at-bat', 'pill'], no_call: ['No event type in this capture', 'pill'],
+    no_vector: ['No Statcast vector', 'pill'],
+  };
+  const [label, cls] = map[event.kind] || [event.kind, 'pill'];
+  return `<span class="${cls || 'pill'}">${esc(label)}</span>`;
+}
+
+function row(event) {
+  const when = event.observed_at ? LiveBoard.clockLabel(event.observed_at) : '';
+  const ago = event.observed_at ? LiveBoard.agoLabel(event.observed_at) : '';
+  const newest = event.observed_at && (Date.now() - new Date(event.observed_at).getTime()) < 120000;
+  const awayScore = event.scores ? event.scores.away : null;
+  const homeScore = event.scores ? event.scores.home : null;
+  const head = `${esc(event.away_abbr || '')} ${esc(awayScore === null || awayScore === undefined ? '' : String(awayScore))} –
+    ${esc(event.home_abbr || '')} ${esc(homeScore === null || homeScore === undefined ? '' : String(homeScore))}`;
+  const inning = event.inning ? `${esc(LiveBoard.halfLabel(event.half))} ${esc(String(event.inning))}` : '';
+  const batter = event.batter ? `<b>${esc(event.batter)}</b>` : '';
+  const pitcher = event.pitcher ? ` vs ${esc(event.pitcher)}` : '';
+  const vector = event.launch_speed !== null && event.launch_speed !== undefined
+    ? `${esc(String(event.launch_speed))} mph · ${esc(String(event.launch_angle))}° · ${esc(String(event.distance))} ft
+       ${event.trajectory ? `· ${esc(String(event.trajectory).replace(/_/g, ' '))}` : ''}
+       ${event.hardness ? `· ${esc(event.hardness)}` : ''}` : '';
+  const official = event.official_event_type
+    ? `<span class="pill">official feed: ${esc(LiveBoard.feedEventLabel(event.official_event_type))}</span>
+       <code>${esc(event.official_event_type)}</code>`
+    : (event.pending ? '<span class="pill mid">no final event type yet</span>' : '');
+  const reviewAttached = event.review ? reviewBlock(event) : '';
+  const rbiNotes = event.run_scored
+    ? `<div class="legend">Run scored on this play. Conditional Rule 9.04 reminders —
+        if charged an error: ${esc(event.rbi_if_error || '—')}<br>
+        if a hit: ${esc(event.rbi_if_hit || '—')}<br>
+        if a fielder's choice: ${esc(event.rbi_if_fc || '—')}</div>` : '';
+  return `<article class="feed-row ${event.kind}">
+    <div class="feed-head">
+      <span class="muted nowrap">${esc(when)}${ago ? ` · ${esc(ago)}` : ''}${newest ? ' <span class="pill on">NEW</span>' : ''}</span>
+      <a class="chip" href="scoreboard.html?date=${encodeURIComponent(DATE)}">${esc(head)}</a>
+      <span class="nowrap">${inning}${event.at_bat !== null && event.at_bat !== undefined ? ` · PA ${esc(String(event.at_bat))}` : ''}</span>
+      ${kindBadge(event)}
+      ${official}
+    </div>
+    <div class="feed-title">${batter}${pitcher}${vector ? `<div class="muted">${vector}</div>` : ''}
+      ${event.bases && event.bases !== '-' ? `· runners ${esc(event.bases)} · ${esc(String(event.outs_before ?? 0))} out` : ''}</div>
+    <div class="feed-desc">${esc(event.description || 'No description supplied in the payload.')}</div>
+    ${event.kind === 'batted_ball' || event.prediction_available ? scoreLine(event) : ''}
+    ${pendingBlock(event)}
+    ${changeBlock(event)}
+    ${reviewAttached}
+    ${rbiNotes}
+    <div class="rowflex">
+      <a class="chip" href="allgames.html?date=${encodeURIComponent(SHOWN)}&game=${esc(event.game_pk)}">focus this game</a>
+      ${event.savant_url ? `<a class="chip" href="${esc(event.savant_url)}" target="_blank" rel="noopener">video on Savant ↗</a>` : ''}
+      <a class="chip" href="${esc(event.official_feed_url)}" target="_blank" rel="noopener">official feed ↗</a>
+      <span class="legend">${esc(event.matchup || '')}${event.state ? ` · ${esc(event.state)}` : ''}</span>
+    </div>
+  </article>`;
+}
+
+function filtered() {
+  return LiveBoard.filterEvents(EVENTS, TAB, GAME_FILTER, QUERY);
+}
+
+function renderTabs() {
+  const counts = {};
+  TABS.forEach(([key]) => { counts[key] = LiveBoard.filterEvents(EVENTS, key, GAME_FILTER, QUERY).length; });
+  $('tabs').innerHTML = TABS.map(([key, label]) =>
+    `<button class="tab ${TAB === key ? 'on' : ''}" data-tab="${key}">${esc(label)} (${counts[key]})</button>`).join('');
+  $('tabs').querySelectorAll('button.tab').forEach(button => {
+    button.addEventListener('click', () => { TAB = button.dataset.tab; render(); });
+  });
+}
+
+function render() {
+  if (!DOC) return;
+  SHOWN = (DOC && DOC.date) || DATE;
+  const rows = filtered();
+  $('stats').innerHTML = [
+    `<span class="pill">${EVENTS.length} events</span>`,
+    `<span class="pill">⚾ ${DOC.stats.batted_balls} batted balls scored</span>`,
+    `<span class="pill mid">⚖️ ${DOC.stats.pending} pending</span>`,
+    `<span class="pill mid">✏️ ${DOC.stats.changes} scoring changes</span>`,
+    `<span class="pill">🔍 ${DOC.stats.reviews} reviews${DOC.stats.overturned ? ` · ${DOC.stats.overturned} overturned` : ''}</span>`,
+    `<span class="pill">⚡ ${DOC.stats.abs} ABS</span>`,
+    `<span class="pill">${DOC.games.length} games</span>`,
+  ].join('');
+  $('count').textContent = `${rows.length} of ${EVENTS.length} events shown on ${SHOWN}.` +
+    (GAME_FILTER ? ' Filtered to one game.' : '');
+  $('feed').innerHTML = rows.length ? rows.map(row).join('')
+    : `<div class="card">No events for this filter yet.${EVENTS.length ? '' : ` The official schedule returned
+       ${DOC.games.length} game(s) for ${esc(SHOWN)}; feeds appear once games start, and completed plays stay in the
+       payload after the game ends.`}</div>`;
+}
+
+function gameOptions() {
+  const select = $('gameFilter');
+  const options = (DOC ? DOC.games : []).map(record =>
+    `<option value="${esc(record.game_pk)}">${esc(record.matchup)} — ${esc(record.game.state || '')}</option>`).join('');
+  select.innerHTML = `<option value="">every game on the slate</option>${options}`;
+  select.value = GAME_FILTER;
+  if (select.value !== GAME_FILTER) GAME_FILTER = '';
+}
+
+async function refresh(reason) {
+  if (BUSY) return;
+  BUSY = true;
+  $('status').textContent = 'reading the official schedule and feeds…';
+  try {
+    if (!MODEL) MODEL = await loadJSON('data/model.json');
+    if (!Object.keys(REGISTRY).length) {
+      try { REGISTRY = await LiveBoard.fetchReviewRegistry(); }
+      catch (error) { REGISTRY_FAILED = true; }
+    }
+    DOC = await LiveBoard.pollDay({
+      date: DATE, model: MODEL, cache: CACHE, storage: window.localStorage,
+      registry: REGISTRY, ledger: LEDGER,
+      percentileFn: p => errorPercentile(MODEL, p),
+    });
+    LEDGER = DOC.ledger;
+    SHOWN = DOC.date || DATE;
+    EVENTS = DOC.events;
+    gameOptions();
+    const failures = (DOC.failures || []).length + (DOC.feed_failures || []).length;
+    $('meta').innerHTML = `<b>${esc(SHOWN)}</b> · ${DOC.games.length} game(s) · updated
+      <b>${esc(LiveBoard.clockLabel(DOC.generated_utc))}</b> ${reason ? `(${esc(reason)})` : ''}.
+      Row times are first-seen observations by this browser, not official timestamps.
+      ${DOC.fell_back ? `<br><span class="no">No games are scheduled on ${esc(DATE)} — showing the most recent slate
+        with games instead. <a href="allgames.html?date=${encodeURIComponent(DATE)}">Show ${esc(DATE)} anyway</a>
+        (it will be empty).</span>` : ''}
+      ${REGISTRY_FAILED ? '<br><span class="no">The official status registry could not be fetched, so review rows show raw codes instead of labels.</span>' : ''}`;
+    $('flags').innerHTML = flagBox((DOC.failures || []).concat(DOC.feed_failures || []));
+    renderTabs();
+    render();
+    $('status').textContent = `updated ${LiveBoard.clockLabel(DOC.generated_utc)}` +
+      (failures ? ` · ${failures} request(s) failed` : '');
+  } catch (error) {
+    $('status').textContent = `refresh failed (${error.message || error})`;
+    if (!EVENTS.length) {
+      $('feed').innerHTML = '<div class="warn">The official Stats API could not be read from this browser. ' +
+        'Nothing is shown rather than an invented event.</div>';
+    }
+  } finally {
+    BUSY = false;
+  }
+}
+
+function anyLive() {
+  return Boolean(DOC && (DOC.games || []).some(record => record.game.abstract_state === 'Live'));
+}
+function scheduleNext() {
+  clearTimeout(TIMER);
+  if (PAUSED) return;
+  const wait = anyLive() ? LiveBoard.LIVE_POLL_MS : LiveBoard.IDLE_POLL_MS;
+  TIMER = setTimeout(async () => {
+    if (document.visibilityState === 'visible') await refresh('auto');
+    scheduleNext();
+  }, wait);
+}
+
+function setDate(date) {
+  DATE = date;
+  $('datePicker').value = DATE;
+  const url = new URL(location.href);
+  url.searchParams.set('date', DATE);
+  history.replaceState(null, '', url);
+  CACHE = LiveBoard.createFeedCache();
+  DOC = null; EVENTS = []; LEDGER = null;
+  $('feed').innerHTML = '<div class="card">Loading…</div>';
+  refresh('date change').finally(scheduleNext);
+}
+
+(async function init() {
+  $('datePicker').value = DATE;
+  $('datePicker').addEventListener('change', e => setDate(e.target.value || LiveBoard.easternDateString()));
+  $('prevDay').addEventListener('click', () => setDate(LiveBoard.addDays(DATE, -1)));
+  $('nextDay').addEventListener('click', () => setDate(LiveBoard.addDays(DATE, 1)));
+  $('today').addEventListener('click', () => setDate(LiveBoard.easternDateString()));
+  $('refresh').addEventListener('click', () => refresh('manual'));
+  $('gameFilter').addEventListener('change', e => {
+    GAME_FILTER = e.target.value;
+    const url = new URL(location.href);
+    if (GAME_FILTER) url.searchParams.set('game', GAME_FILTER); else url.searchParams.delete('game');
+    history.replaceState(null, '', url);
+    render();
+  });
+  $('search').addEventListener('input', e => { QUERY = e.target.value.trim(); renderTabs(); render(); });
+  $('pause').addEventListener('click', () => {
+    PAUSED = !PAUSED;
+    $('pause').textContent = PAUSED ? '▶ Resume auto-refresh' : '⏸ Pause auto-refresh';
+    $('pause').setAttribute('aria-pressed', String(PAUSED));
+    scheduleNext();
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !PAUSED) refresh('tab visible').finally(scheduleNext);
+  });
+  await refresh('initial');
+  scheduleNext();
+})();
+</script>
+</body>
+</html>

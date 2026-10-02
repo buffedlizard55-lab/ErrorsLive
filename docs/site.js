@@ -5,6 +5,8 @@
    to the features cannot silently desynchronise the page from the tool. */
 const NAV = [
   ['index.html', 'Score a batted ball'],
+  ['scoreboard.html', 'Scoreboard'],
+  ['allgames.html', 'Scoring feed'],
   ['live.html', 'Live board'],
   ['alerts.html', 'Live alerts'],
   ['replays.html', 'Replays & runs'],
@@ -243,7 +245,12 @@ function scoreLiveFeed(feed, game, model) {
     const probs = score.probs;
     const eventProbs = score.eventProbs || {};
     const runScored = (play.runners || []).some(r => r && r.movement && r.movement.end === 'score');
-    const review = play.reviewDetails || (events.find(e => e && e.reviewDetails) || {}).reviewDetails || {};
+    // An empty object is truthy in JavaScript (it is falsy in the Python mirror), so an
+    // absent reviewDetails must be normalised to null before `reviewed` is derived from it.
+    const reviewCandidate = play.reviewDetails ||
+      (events.find(e => e && e.reviewDetails) || {}).reviewDetails || null;
+    const review = reviewCandidate && typeof reviewCandidate === 'object' &&
+      Object.keys(reviewCandidate).length ? reviewCandidate : null;
     const ruled = Boolean(eventType) && !pending;
     row.status = pending ? 'official_scoring_pending' : ruled ? 'scored' : 'no_event_type_yet';
     Object.assign(row, {
@@ -264,9 +271,9 @@ function scoreLiveFeed(feed, game, model) {
         && score.top === macroClass(eventType)),
       runners_on: bases.join(',') || '-', risp: Number(bases.some(b => b === '2B' || b === '3B')),
       outs_before: state.outs, run_scored: Number(runScored), rbi_official: result.rbi ?? 0,
-      reviewed: Number(Boolean(review)),
-      review_overturned: Object.hasOwn(review, 'isOverturned') ? review.isOverturned : '',
-      review_type: review.reviewType || '',
+      reviewed: Number(review !== null),
+      review_overturned: review && Object.hasOwn(review, 'isOverturned') ? review.isOverturned : '',
+      review_type: review ? review.reviewType || '' : '',
     });
     Object.entries(eventProbs).forEach(([category, probability]) => {
       row[`event_p_${category}`] = Math.round(probability * 10000) / 10000;

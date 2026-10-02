@@ -757,8 +757,10 @@ rul = (ROOT / 'docs/rules.html').read_text()
 met = (ROOT / 'docs/methods.html').read_text()
 rdm = (ROOT / 'docs/roadmap.html').read_text()
 rpl = (ROOT / 'docs/replays.html').read_text()
+sch = (ROOT / 'docs/scoreboard.html').read_text()
+alg = (ROOT / 'docs/allgames.html').read_text()
 PAGES = {'index': idx, 'live': liv, 'replays': rpl, 'model': mod, 'overturned': ovt,
-         'rules': rul, 'methods': met, 'roadmap': rdm}
+         'rules': rul, 'methods': met, 'roadmap': rdm, 'scoreboard': sch, 'allgames': alg}
 
 for n, pg in PAGES.items():
     check(f'{n}: loads the shared nav and stylesheet', 'site.js' in pg and 'site.css' in pg)
@@ -789,6 +791,8 @@ DATA_FILES = {
     'model': ['data/model.json'],
     'overturned': ['data/nydn_site.json'],
     'methods': ['data/ingest_summary.json', 'data/ruling_changes.json'],
+    'scoreboard': ['data/model.json'],
+    'allgames': ['data/model.json'],
 }
 for page, files in DATA_FILES.items():
     src = PAGES[page]
@@ -832,12 +836,12 @@ if(!ctx.rbiRuleNote('error',true,'home_run').includes('not a valid alternative')
     check('browser home-run RBI notes avoid impossible error/FC counterfactuals',
           contract.returncode == 0, contract.stderr.strip()[-300:])
     external_js = []
-    for name in ('site.js', 'scoring-feed.js'):
+    for name in ('site.js', 'scoring-feed.js', 'live-board.js'):
         parsed = subprocess.run(['node', '--check', str(ROOT / 'docs' / name)],
                                  capture_output=True, text=True)
         if parsed.returncode:
             external_js.append(f'{name}: {parsed.stderr.strip()[-180:]}')
-    check('shared and scoring-feed browser JavaScript parses', not external_js, ' | '.join(external_js))
+    check('shared, scoring-feed and live-board browser JavaScript parses', not external_js, ' | '.join(external_js))
     scoring_feed_contract = r'''const fs=require('fs'),vm=require('vm');
 const ctx=vm.createContext({console});
 vm.runInContext(fs.readFileSync('docs/scoring-feed.js','utf8'),ctx);
@@ -1692,6 +1696,167 @@ for label, text in (('README', (ROOT / 'README.md').read_text()), ('roadmap.html
             bad.append(f"top {m.group(1)}% recall != {100 * row['recall']:.1f}")
     check(f'{label}: every review-queue figure matches model.json', not bad, ' | '.join(bad))
 
+# ---------------------------------------------------------------- R. live scoreboard + all-games feed
+print('== R. the live scoreboard and the all-games scoring feed ==')
+board_src = (ROOT / 'docs' / 'live-board.js').read_text()
+for n, pg in (('scoreboard', sch), ('allgames', alg)):
+    check(f'{n}: loads the shared nav, stylesheet and live-board data layer',
+          all(x in pg for x in ('site.js', 'site.css', 'live-board.js')) and 'data/model.json' in pg)
+    check(f'{n}: cites the official Stats API and the model file it reads',
+          'statsapi.mlb.com' in pg and 'model.json' in pg)
+check('scoreboard page: is in the shared navigation',
+      "['scoreboard.html', 'Scoreboard']" in (ROOT / 'docs' / 'site.js').read_text())
+check('all-games feed: is in the shared navigation',
+      "['allgames.html', 'Scoring feed']" in (ROOT / 'docs' / 'site.js').read_text())
+flat_feed = flat(alg).lower()
+check('all-games feed: keeps an exact pending marker distinct from a missing event type',
+      'os_ruling_pending_primary' in alg and 'no event type in this capture' in flat_feed)
+check('all-games feed: labels row times as first-seen observations, not official timestamps',
+      'first seen' in flat_feed or 'first-seen' in flat_feed)
+check('all-games feed: says model numbers are estimates and never a ruling',
+      'never a ruling' in flat_feed and 'estimate' in flat_feed)
+check('scoreboard: says the model ranking is not a forecast of a scoring change',
+      'not a forecast' in flat(sch).lower() or 'never rulings' in flat(sch).lower())
+check('live-board.js names the sanctioned observation-log key it writes',
+      'errorslive.live-board.seen.v1' in board_src)
+
+# --- top-level identifiers shared across scripts -------------------------------------------
+# Two classic scripts on one page share one global lexical scope: `const num` in site.js and
+# `function num` in a page is a fatal SyntaxError that neither `node --check` file-by-file nor
+# the per-page parse check can see (a real defect found while building the feed — the pages now
+# use numText()).
+DECL = re.compile(r'^(?:const|let|var|class|function)\s+([A-Za-z_$][\w$]*)', re.M)
+
+
+def top_level_names(code):
+    return set(DECL.findall(code))
+
+
+shared_names = set()
+for name in ('site.js', 'scoring-feed.js', 'live-board.js'):
+    shared_names |= top_level_names((ROOT / 'docs' / name).read_text())
+for page_name, page_src in (('scoreboard', sch), ('allgames', alg)):
+    clashes = set()
+    for block in re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', page_src, re.S):
+        clashes |= top_level_names(block) & shared_names
+    check(f'{page_name}: its inline script redeclares no shared top-level identifier',
+          not clashes, ', '.join(sorted(clashes)))
+
+if shutil.which('node'):
+    board_contract = r"""const fs=require('fs'),vm=require('vm');
+const fixture=JSON.parse(fs.readFileSync('data/source/feed_823441.json','utf8'));
+const model=JSON.parse(fs.readFileSync('docs/data/model.json','utf8'));
+const schedule={dates:[{date:'2026-10-01',games:[{
+  gamePk:823441,gameDate:'2026-10-01T23:05:00Z',gameType:'F',
+  status:{abstractGameState:'Final',detailedState:'Final',codedGameState:'F'},
+  teams:{away:{team:{id:121,name:'New York Mets',abbreviation:'NYM'},score:1,leagueRecord:{wins:60,losses:90}},
+         home:{team:{id:143,name:'Philadelphia Phillies',abbreviation:'PHI'},score:6,leagueRecord:{wins:88,losses:62}}},
+  linescore:{teams:{away:{runs:1,hits:6,errors:1,leftOnBase:7},home:{runs:6,hits:9,errors:0,leftOnBase:8}},
+             currentInning:9,inningState:'Bottom',balls:0,strikes:0,outs:3},
+  review:{hasChallenges:true,away:{used:1,remaining:0},home:{used:0,remaining:2}},
+  venue:{name:'Citizens Bank Park'},description:'NL Wild Card Game 1'}]}]};
+const registry=[{statusCode:'MF',detailedState:'Manager challenge: Close play at 1st',reason:'Close play at 1st',
+  codedGameState:'M',abstractGameState:'Live'},
+  {statusCode:'MJ',detailedState:'Player challenge: Pitch Result',reason:'Pitch Result',
+   codedGameState:'M',abstractGameState:'Live'}];
+const calls=[];
+async function fakeFetch(url){calls.push(String(url));
+  if(String(url).includes('/schedule'))return{ok:true,status:200,statusText:'OK',json:async()=>schedule};
+  if(String(url).includes('/gameStatus'))return{ok:true,status:200,statusText:'OK',json:async()=>registry};
+  if(String(url).includes('/feed/live'))return{ok:true,status:200,statusText:'OK',json:async()=>fixture};
+  throw new Error('unexpected url '+url);}
+const store=new Map();
+const localStorage={getItem:k=>(store.has(k)?store.get(k):null),setItem:(k,v)=>store.set(k,String(v))};
+const ctx=vm.createContext({console,fetch:fakeFetch,AbortController,URL,setTimeout,clearTimeout,
+  document:{querySelector:()=>null,querySelectorAll:()=>[]},localStorage});
+vm.runInContext(fs.readFileSync('docs/site.js','utf8'),ctx);
+vm.runInContext(fs.readFileSync('docs/scoring-feed.js','utf8'),ctx);
+vm.runInContext(fs.readFileSync('docs/live-board.js','utf8'),ctx);
+(async function(){
+  const reg=await ctx.LiveBoard.fetchReviewRegistry();
+  if(reg.MF.detailed_state!=='Manager challenge: Close play at 1st')
+    throw new Error('official status registry was not mapped to labels');
+  const doc=await ctx.LiveBoard.pollDay({date:'2026-10-01',model,storage:localStorage,registry:reg,
+    percentileFn:p=>ctx.errorPercentile(model,p),nowIso:'2026-10-02T01:00:00Z'});
+  const s=doc.stats;
+  if(doc.games.length!==1||s.batted_balls!==46||s.predictions!==46||s.pending!==0||s.changes!==0||
+     s.reviews!==1||s.abs!==6||s.overturned!==2)
+    throw new Error('fixture day pipeline produced unexpected counts: '+JSON.stringify(s));
+  const g=doc.games[0];
+  if(g.summary.reviewed!==3||g.summary.overturned!==2||g.summary.feed_errors!==1)
+    throw new Error('reviewed/overturned/error counts do not match the fixture');
+  const batters=doc.events.filter(e=>e.kind==='batted_ball');
+  if(batters.length!==46)throw new Error('batted-ball events missing');
+  for(const e of batters){
+    const probs=Object.values(e.event_probs);
+    if(probs.length!==11)throw new Error('event '+e.key+' does not carry all 11 outcome probabilities');
+    const total=probs.reduce((a,b)=>a+b,0);
+    if(Math.abs(total-1)>0.002)throw new Error('event '+e.key+' probabilities sum to '+total);
+    if(!e.observed_at||e.observed_at!=='2026-10-02T01:00:00Z')
+      throw new Error('first-seen stamp missing or invented');
+    if('timestamp' in e||'official_time' in e)
+      throw new Error('a play event invented an official timestamp');
+  }
+  const seen=JSON.parse(store.get('errorslive.live-board.seen.v1'));
+  if(Object.keys(seen.dates['2026-10-01']).length!==doc.events.length)
+    throw new Error('first-seen observation log did not persist every event key');
+  if(ctx.LiveBoard.filterEvents(doc.events,'batted_ball','','').length!==46)
+    throw new Error('batted-ball tab filter lost rows');
+  if(ctx.LiveBoard.filterEvents(doc.events,'abs','','').length!==6)
+    throw new Error('ABS tab filter lost rows');
+  const reviewRow=doc.events.find(e=>e.review&&e.review.code==='MF');
+  if(!reviewRow||reviewRow.review.label!=='Manager challenge: Close play at 1st'||reviewRow.review.overturned!==true)
+    throw new Error('play-level review row did not carry the registry label and the official overturn flag');
+  // pending must stay pending: a primary marker with a vector is scored but never given a final call
+  function synthetic(marker,vector){
+    const details={};if(marker)details.eventType=marker;if(vector)details.hitData={
+      launchSpeed:99,launchAngle:18,totalDistance:245,trajectory:'line_drive',hardness:'hard'};
+    const play={about:{atBatIndex:3,inning:7,halfInning:'top'},result:{description:'Observed contact'},
+      playEvents:[details],runners:[],matchup:{}};
+    play.playEvents[0].playId='synthetic-3';
+    return {liveData:{plays:{allPlays:[play]}}};
+  }
+  const game=ctx.LiveBoard.normalizeScheduleGame({gamePk:99,teams:{away:{team:{name:'A',abbreviation:'AAA'}},
+    home:{team:{name:'B',abbreviation:'BBB'}}},status:{abstractGameState:'Live',detailedState:'In Progress'}});
+  const pendingRecord=ctx.LiveBoard.buildGameRecord(game,
+    {feed:synthetic('os_ruling_pending_primary',true),url:'https://statsapi.mlb.com/x',state:'Live'},model,null);
+  pendingRecord.feed=synthetic('os_ruling_pending_primary',true);
+  const pendingEvents=ctx.LiveBoard.buildEvents({games:[pendingRecord],model,ledger:{pending:[],changes:[]},
+    registry:{},seen:{},nowIso:'2026-10-02T02:00:00Z',percentileFn:p=>ctx.errorPercentile(model,p)}).events;
+  const pending=pendingEvents.find(e=>e.kind==='pending');
+  if(!pending||pending.pending.kind!=='primary'||pending.official_event_type!=='')
+    throw new Error('pending marker was not kept distinct from a final event type');
+  if(Object.keys(pending.event_probs).length!==11)
+    throw new Error('a pending play with a vector was not scored across all 11 outcomes');
+  const noVectorRecord=ctx.LiveBoard.buildGameRecord(game,
+    {feed:synthetic('',false),url:'https://statsapi.mlb.com/x',state:'Live'},model,null);
+  noVectorRecord.feed=synthetic('',false);
+  const noVector=ctx.LiveBoard.buildEvents({games:[noVectorRecord],model,ledger:{pending:[],changes:[]},
+    registry:{},seen:{},nowIso:'2026-10-02T02:00:00Z'}).events.find(e=>e.kind==='live_ab'||e.prediction_available===false);
+  if(noVector&&noVector.prediction_available===true)
+    throw new Error('a play without a Statcast vector was scored anyway');
+  console.log('live board verified: 46 scored batted balls, registry labels, first-seen log, tabs and pending state');})();"""
+    board_result = subprocess.run(['node', '-e', board_contract], cwd=ROOT, capture_output=True, text=True)
+    check('live-board data layer scores the committed fixture and keeps pending/no-vector states honest',
+          board_result.returncode == 0, board_result.stderr.strip()[-400:])
+
+    review_contract = r"""const fs=require('fs'),vm=require('vm');
+const ctx=vm.createContext({document:{querySelector:()=>null,querySelectorAll:()=>[]}});
+vm.runInContext(fs.readFileSync('docs/site.js','utf8'),ctx);
+vm.runInContext(fs.readFileSync('docs/scoring-feed.js','utf8'),ctx);
+const feed=JSON.parse(fs.readFileSync('data/source/feed_823441.json','utf8'));
+const model=JSON.parse(fs.readFileSync('docs/data/model.json','utf8'));
+const rows=ctx.scoreLiveFeed(feed,{gamePk:823441,official_feed_url:'x'},model);
+const reviewed=rows.filter(r=>r.reviewed===1);
+if(reviewed.length!==3)
+  throw new Error('reviewed flag is not the count of plays carrying reviewDetails ('+reviewed.length+')');
+for(const r of reviewed)if(!['MJ','MF'].includes(r.review_type))
+  throw new Error('reviewed row lost its reviewType');
+console.log('reviewed flag matches the payload: '+reviewed.length+' plays, '+reviewed.map(r=>r.review_type).join(','));"""
+    review_result = subprocess.run(['node', '-e', review_contract], cwd=ROOT, capture_output=True, text=True)
+    check('the browser reviewed flag counts plays with reviewDetails, not every play',
+          review_result.returncode == 0, review_result.stderr.strip()[-300:])
+
 # ---------------------------------------------------------------- Q. the RBI note, one wording
 print('== Q. the conditional RBI note is identical in the tool, the collector and the browser ==')
 spec_ing = importlib.util.spec_from_file_location('ingest_official',
@@ -1751,6 +1916,7 @@ console.log(JSON.stringify(rows.map(r=>({at_bat:r.at_bat,event_type:r.event_type
   p_error_binary:r.p_error_binary,p_error_macro:r.p_error_macro,
   risp:r.risp,outs_before:r.outs_before,runners_on:r.runners_on,rbi_official:r.rbi_official,
   event_top_pick:r.event_top_pick,event_top_prob:r.event_top_prob,
+  reviewed:r.reviewed,review_type:r.review_type,review_overturned:r.review_overturned,
   event_probs:Object.fromEntries(Object.keys(r).filter(k=>k.startsWith('event_p_')).map(k=>[k,r[k]])),
   rbi_if_error:r.rbi_if_error||'',rbi_if_hit:r.rbi_if_hit||'',rbi_if_fc:r.rbi_if_fc||''}))));"""
     r = subprocess.run(['node', '-e', js_rows], cwd=ROOT, capture_output=True, text=True)
@@ -1767,7 +1933,8 @@ console.log(JSON.stringify(rows.map(r=>({at_bat:r.at_bat,event_type:r.event_type
                 continue
             for k in ('event_type', 'status', 'score_100', 'top_pick', 'official_call', 'run_scored',
                       'risp', 'outs_before', 'runners_on', 'rbi_if_error', 'rbi_if_hit', 'rbi_if_fc',
-                      'event_top_pick', 'event_top_prob', 'p_error_binary', 'p_error_macro'):
+                      'event_top_pick', 'event_top_prob', 'p_error_binary', 'p_error_macro',
+                      'reviewed', 'review_type', 'review_overturned'):
                 if str(row.get(k, '')) != str(j.get(k, '')):
                     diffs.append(f'ab {ab} {k}: tool={row.get(k)!r} browser={j.get(k)!r}')
             for category in M['event_type_model']['classes']:
