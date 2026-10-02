@@ -409,8 +409,552 @@
    }
   }
  },
+ "event_type_model": {
+  "classes": [
+   "single",
+   "double",
+   "triple",
+   "home_run",
+   "error",
+   "fielders_choice",
+   "field_out",
+   "force_out",
+   "double_play",
+   "sac_fly",
+   "sac_bunt"
+  ],
+  "event_type_groups": {
+   "single": [
+    "single"
+   ],
+   "double": [
+    "double"
+   ],
+   "triple": [
+    "triple"
+   ],
+   "home_run": [
+    "home_run"
+   ],
+   "error": [
+    "field_error"
+   ],
+   "fielders_choice": [
+    "fielders_choice",
+    "fielders_choice_out"
+   ],
+   "field_out": [
+    "field_out"
+   ],
+   "force_out": [
+    "force_out"
+   ],
+   "double_play": [
+    "double_play",
+    "grounded_into_double_play",
+    "sac_fly_double_play"
+   ],
+   "sac_fly": [
+    "sac_fly"
+   ],
+   "sac_bunt": [
+    "sac_bunt"
+   ]
+  },
+  "feature_names": [
+   "EV_mph",
+   "LA_deg",
+   "dist_ft",
+   "traj_ground_ball",
+   "traj_line_drive",
+   "traj_fly_ball",
+   "traj_popup",
+   "traj_bunt_grounder",
+   "hard_soft",
+   "hard_medium",
+   "hard_hard",
+   "on_1b",
+   "on_2b",
+   "on_3b",
+   "outs_before",
+   "inning_c",
+   "bat_L",
+   "pitch_L"
+  ],
+  "feature_spec": [
+   {
+    "name": "EV_mph",
+    "type": "ev"
+   },
+   {
+    "name": "LA_deg",
+    "type": "la"
+   },
+   {
+    "name": "dist_ft",
+    "type": "dist"
+   },
+   {
+    "name": "traj_ground_ball",
+    "type": "traj:ground_ball"
+   },
+   {
+    "name": "traj_line_drive",
+    "type": "traj:line_drive"
+   },
+   {
+    "name": "traj_fly_ball",
+    "type": "traj:fly_ball"
+   },
+   {
+    "name": "traj_popup",
+    "type": "traj:popup"
+   },
+   {
+    "name": "traj_bunt_grounder",
+    "type": "traj:bunt_grounder"
+   },
+   {
+    "name": "hard_soft",
+    "type": "hard:soft"
+   },
+   {
+    "name": "hard_medium",
+    "type": "hard:medium"
+   },
+   {
+    "name": "hard_hard",
+    "type": "hard:hard"
+   },
+   {
+    "name": "on_1b",
+    "type": "base:1B"
+   },
+   {
+    "name": "on_2b",
+    "type": "base:2B"
+   },
+   {
+    "name": "on_3b",
+    "type": "base:3B"
+   },
+   {
+    "name": "outs_before",
+    "type": "outs"
+   },
+   {
+    "name": "inning_c",
+    "type": "inning"
+   },
+   {
+    "name": "bat_L",
+    "type": "bat:L"
+   },
+   {
+    "name": "pitch_L",
+    "type": "pitch:L"
+   }
+  ],
+  "scaler_mean": [
+   87.8243229822,
+   13.5744223002,
+   167.0446268953,
+   0.408660531,
+   0.2355823346,
+   0.2691518241,
+   0.0727007879,
+   0.0126133881,
+   0.0300933589,
+   0.8526120638,
+   0.1172945772,
+   0.20744223,
+   0.1261338807,
+   0.079454413,
+   0.957094617,
+   4.920843541,
+   0.4809971529,
+   0.3324174005
+  ],
+  "scaler_scale": [
+   15.3076226737,
+   28.9668431888,
+   134.3429588209,
+   0.4915863112,
+   0.4243622253,
+   0.4435190184,
+   0.2596447253,
+   0.1115987926,
+   0.1708442234,
+   0.3544922177,
+   0.3217709735,
+   0.4054749699,
+   0.332000188,
+   0.2704466847,
+   0.8168018645,
+   2.5324859916,
+   0.4996387613,
+   0.4710796879
+  ],
+  "intercept": {
+   "single": 5.7933905878,
+   "double": 4.148907264,
+   "triple": 1.0878244709,
+   "home_run": -7.4374071797,
+   "error": 2.2316293839,
+   "fielders_choice": -1.5496772129,
+   "field_out": 7.0686164571,
+   "force_out": -0.5703487478,
+   "double_play": 0.5077733189,
+   "sac_fly": -6.5084482017,
+   "sac_bunt": -4.7722601404
+  },
+  "coef": {
+   "single": {
+    "EV_mph": -0.478710138,
+    "LA_deg": -0.0339908954,
+    "dist_ft": -0.8863856087,
+    "traj_ground_ball": 0.2217888141,
+    "traj_line_drive": 0.9937045063,
+    "traj_fly_ball": 0.1446971142,
+    "traj_popup": 0.0254665689,
+    "traj_bunt_grounder": 0.1097609184,
+    "hard_soft": 0.0424884575,
+    "hard_medium": -0.1806704473,
+    "hard_hard": 0.1764837871,
+    "on_1b": -0.2458032074,
+    "on_2b": 0.1515493315,
+    "on_3b": -0.2044618203,
+    "outs_before": 0.2198319823,
+    "inning_c": -0.0335411641,
+    "bat_L": 0.0161859987,
+    "pitch_L": 0.0100388841
+   },
+   "double": {
+    "EV_mph": -0.033196437,
+    "LA_deg": -0.8725081159,
+    "dist_ft": 0.6617480487,
+    "traj_ground_ball": -0.7870248099,
+    "traj_line_drive": -0.0662975162,
+    "traj_fly_ball": -0.3967922543,
+    "traj_popup": 0.2551975989,
+    "traj_bunt_grounder": -0.5124769705,
+    "hard_soft": -0.0921971278,
+    "hard_medium": -0.1875084546,
+    "hard_hard": 0.2555284391,
+    "on_1b": -0.2500171709,
+    "on_2b": -0.1058154019,
+    "on_3b": 0.1520727348,
+    "outs_before": 0.1340651609,
+    "inning_c": -0.0085464155,
+    "bat_L": 0.0669965206,
+    "pitch_L": 0.0463531018
+   },
+   "triple": {
+    "EV_mph": 0.5056211199,
+    "LA_deg": -1.7604262056,
+    "dist_ft": 1.3328914452,
+    "traj_ground_ball": -0.1801423202,
+    "traj_line_drive": 0.2059203919,
+    "traj_fly_ball": 0.2910023918,
+    "traj_popup": -0.3833078635,
+    "traj_bunt_grounder": -0.218267974,
+    "hard_soft": -0.3654883648,
+    "hard_medium": -0.0665210906,
+    "hard_hard": 0.2673416556,
+    "on_1b": -0.1784663107,
+    "on_2b": 0.0524201729,
+    "on_3b": -0.2112579322,
+    "outs_before": 0.2829557679,
+    "inning_c": 0.0637618271,
+    "bat_L": 0.2824443414,
+    "pitch_L": 0.0456909044
+   },
+   "home_run": {
+    "EV_mph": 5.0003604879,
+    "LA_deg": 0.0121387463,
+    "dist_ft": 6.6027672585,
+    "traj_ground_ball": 0.3786899713,
+    "traj_line_drive": -0.6629483149,
+    "traj_fly_ball": -0.0778844519,
+    "traj_popup": 0.4194386454,
+    "traj_bunt_grounder": 0.3673867567,
+    "hard_soft": 0.5686646697,
+    "hard_medium": 0.4776371257,
+    "hard_hard": -0.8281409443,
+    "on_1b": -0.1359801664,
+    "on_2b": -0.1785592051,
+    "on_3b": -0.2707494076,
+    "outs_before": 0.4156603024,
+    "inning_c": -0.0397145305,
+    "bat_L": 0.0205136825,
+    "pitch_L": -0.0353184645
+   },
+   "error": {
+    "EV_mph": -0.8552538271,
+    "LA_deg": -0.3587040758,
+    "dist_ft": -0.6380731079,
+    "traj_ground_ball": 0.3670858936,
+    "traj_line_drive": -0.1756411138,
+    "traj_fly_ball": -0.1372863859,
+    "traj_popup": 0.470783205,
+    "traj_bunt_grounder": -0.1355972653,
+    "hard_soft": -0.0233369137,
+    "hard_medium": -0.0865337592,
+    "hard_hard": 0.1077242012,
+    "on_1b": -0.2317685478,
+    "on_2b": 0.1086286915,
+    "on_3b": -0.4049043792,
+    "outs_before": 0.4125202945,
+    "inning_c": 0.1512375692,
+    "bat_L": -0.1152343813,
+    "pitch_L": 0.0682166672
+   },
+   "fielders_choice": {
+    "EV_mph": -0.7215052718,
+    "LA_deg": 0.2191399193,
+    "dist_ft": -3.136897089,
+    "traj_ground_ball": 0.4936449355,
+    "traj_line_drive": -0.6971067319,
+    "traj_fly_ball": 0.5735583807,
+    "traj_popup": -0.4736436089,
+    "traj_bunt_grounder": 0.1119546555,
+    "hard_soft": 0.3114930299,
+    "hard_medium": 0.3901881367,
+    "hard_hard": -0.5952539492,
+    "on_1b": -0.0042749677,
+    "on_2b": 0.3813875253,
+    "on_3b": 0.2290347043,
+    "outs_before": -0.1479902433,
+    "inning_c": 0.063112908,
+    "bat_L": -0.1236675056,
+    "pitch_L": -0.0365953269
+   },
+   "field_out": {
+    "EV_mph": -0.780861194,
+    "LA_deg": -0.7598744651,
+    "dist_ft": -0.0123007791,
+    "traj_ground_ball": -0.7866596158,
+    "traj_line_drive": -0.6563949464,
+    "traj_fly_ball": -0.2065346861,
+    "traj_popup": 0.6453119439,
+    "traj_bunt_grounder": -0.4106104391,
+    "hard_soft": -0.0355760286,
+    "hard_medium": -0.1056442196,
+    "hard_hard": 0.1352763806,
+    "on_1b": -1.0706772447,
+    "on_2b": -0.2343926894,
+    "on_3b": -0.7698729488,
+    "outs_before": 0.3583299178,
+    "inning_c": -0.0146040772,
+    "bat_L": 0.078242962,
+    "pitch_L": -0.008093383
+   },
+   "force_out": {
+    "EV_mph": -0.7593136556,
+    "LA_deg": 0.2976233098,
+    "dist_ft": -2.839470171,
+    "traj_ground_ball": 0.2553838926,
+    "traj_line_drive": -0.2854520102,
+    "traj_fly_ball": -0.2022268408,
+    "traj_popup": 0.0158788149,
+    "traj_bunt_grounder": -0.0677725653,
+    "hard_soft": -0.1163695711,
+    "hard_medium": -0.0763792267,
+    "hard_hard": 0.1459327109,
+    "on_1b": 1.5948982707,
+    "on_2b": -0.1088404392,
+    "on_3b": -0.4267393776,
+    "outs_before": 0.3209347566,
+    "inning_c": -0.0181808111,
+    "bat_L": 0.0105657396,
+    "pitch_L": 0.0836857382
+   },
+   "double_play": {
+    "EV_mph": -0.4679318943,
+    "LA_deg": 0.8860113292,
+    "dist_ft": -3.1061657147,
+    "traj_ground_ball": 0.4372276847,
+    "traj_line_drive": 1.0093245482,
+    "traj_fly_ball": 0.2381803578,
+    "traj_popup": -1.136188028,
+    "traj_bunt_grounder": -0.2627646014,
+    "hard_soft": -0.1169619764,
+    "hard_medium": -0.0632374335,
+    "hard_hard": 0.1317690518,
+    "on_1b": 1.3049959628,
+    "on_2b": -0.3795868484,
+    "on_3b": -0.4789017663,
+    "outs_before": -0.4185371346,
+    "inning_c": 0.0161727582,
+    "bat_L": -0.1456274086,
+    "pitch_L": 0.006379134
+   },
+   "sac_fly": {
+    "EV_mph": -0.2581748824,
+    "LA_deg": 2.4611950431,
+    "dist_ft": 2.5041238716,
+    "traj_ground_ball": -0.1431668253,
+    "traj_line_drive": 0.3018702827,
+    "traj_fly_ball": -0.1544292342,
+    "traj_popup": -0.0377933189,
+    "traj_bunt_grounder": 0.1587193922,
+    "hard_soft": -0.1175937148,
+    "hard_medium": 0.045306796,
+    "hard_hard": 0.0125222616,
+    "on_1b": -1.2550133877,
+    "on_2b": -0.3879229093,
+    "on_3b": 2.5316007073,
+    "outs_before": -0.9614905736,
+    "inning_c": -0.090160428,
+    "bat_L": -0.0190588443,
+    "pitch_L": -0.0406035305
+   },
+   "sac_bunt": {
+    "EV_mph": -1.1510343075,
+    "LA_deg": -0.0906045898,
+    "dist_ft": -0.4822381535,
+    "traj_ground_ball": -0.2568276207,
+    "traj_line_drive": 0.0330209044,
+    "traj_fly_ball": -0.0722843911,
+    "traj_popup": 0.1988560423,
+    "traj_bunt_grounder": 0.8596680929,
+    "hard_soft": -0.0551224599,
+    "hard_medium": -0.146637427,
+    "hard_hard": 0.1908164054,
+    "on_1b": 0.4721067697,
+    "on_2b": 0.7011317722,
+    "on_3b": -0.1458205144,
+    "outs_before": -0.6162802307,
+    "inning_c": -0.0895376364,
+    "bat_L": -0.0713611049,
+    "pitch_L": -0.1397537247
+   }
+  },
+  "cv_accuracy_grouped": 0.731709,
+  "cv_top3_accuracy_grouped": 0.963749,
+  "cv_logloss_grouped": 0.732629,
+  "cv_logloss_grouped_prior": 1.320083,
+  "cv_brier_grouped": 0.373377,
+  "cv_brier_grouped_prior": 0.596737,
+  "per_class": {
+   "single": {
+    "n": 6449,
+    "prevalence": 0.213501,
+    "top1_predicted": 4909,
+    "top1_precision": 0.578326,
+    "top1_recall": 0.440223,
+    "auc_ovr": 0.831561,
+    "average_precision_ovr": 0.584958,
+    "mean_predicted_probability": 0.2135
+   },
+   "double": {
+    "n": 1782,
+    "prevalence": 0.058995,
+    "top1_predicted": 685,
+    "top1_precision": 0.548905,
+    "top1_recall": 0.210999,
+    "auc_ovr": 0.847279,
+    "average_precision_ovr": 0.361582,
+    "mean_predicted_probability": 0.058955
+   },
+   "triple": {
+    "n": 171,
+    "prevalence": 0.005661,
+    "top1_predicted": 0,
+    "top1_precision": null,
+    "top1_recall": 0.0,
+    "auc_ovr": 0.842931,
+    "average_precision_ovr": 0.050446,
+    "mean_predicted_probability": 0.005647
+   },
+   "home_run": {
+    "n": 1333,
+    "prevalence": 0.04413,
+    "top1_predicted": 1277,
+    "top1_precision": 0.860611,
+    "top1_recall": 0.824456,
+    "auc_ovr": 0.994284,
+    "average_precision_ovr": 0.915452,
+    "mean_predicted_probability": 0.044125
+   },
+   "error": {
+    "n": 241,
+    "prevalence": 0.007979,
+    "top1_predicted": 0,
+    "top1_precision": null,
+    "top1_recall": 0.0,
+    "auc_ovr": 0.797039,
+    "average_precision_ovr": 0.029218,
+    "mean_predicted_probability": 0.007984
+   },
+   "fielders_choice": {
+    "n": 183,
+    "prevalence": 0.006058,
+    "top1_predicted": 5,
+    "top1_precision": 0.0,
+    "top1_recall": 0.0,
+    "auc_ovr": 0.9649,
+    "average_precision_ovr": 0.116441,
+    "mean_predicted_probability": 0.006045
+   },
+   "field_out": {
+    "n": 17882,
+    "prevalence": 0.592002,
+    "top1_predicted": 21145,
+    "top1_precision": 0.788035,
+    "top1_recall": 0.931831,
+    "auc_ovr": 0.885931,
+    "average_precision_ovr": 0.903221,
+    "mean_predicted_probability": 0.592034
+   },
+   "force_out": {
+    "n": 824,
+    "prevalence": 0.027279,
+    "top1_predicted": 673,
+    "top1_precision": 0.410104,
+    "top1_recall": 0.334951,
+    "auc_ovr": 0.961533,
+    "average_precision_ovr": 0.362296,
+    "mean_predicted_probability": 0.027258
+   },
+   "double_play": {
+    "n": 853,
+    "prevalence": 0.028239,
+    "top1_predicted": 939,
+    "top1_precision": 0.458999,
+    "top1_recall": 0.505275,
+    "auc_ovr": 0.946658,
+    "average_precision_ovr": 0.4107,
+    "mean_predicted_probability": 0.02828
+   },
+   "sac_fly": {
+    "n": 303,
+    "prevalence": 0.010031,
+    "top1_predicted": 335,
+    "top1_precision": 0.740299,
+    "top1_recall": 0.818482,
+    "auc_ovr": 0.998333,
+    "average_precision_ovr": 0.85811,
+    "mean_predicted_probability": 0.01003
+   },
+   "sac_bunt": {
+    "n": 185,
+    "prevalence": 0.006125,
+    "top1_predicted": 238,
+    "top1_precision": 0.714286,
+    "top1_recall": 0.918919,
+    "auc_ovr": 0.998853,
+    "average_precision_ovr": 0.753447,
+    "mean_predicted_probability": 0.006144
+   }
+  },
+  "n_splits": 5,
+  "group": "game_pk",
+  "probability_note": "Raw multinomial logistic probabilities, not post-calibrated. Out-of-fold metrics split by game within the same model window; they are not future-season guarantees.",
+  "target_scope": "One of 11 event categories recorded by result.eventType in the collected model window. Categories group only the exact eventType codes listed in event_type_groups; any code outside those groups is out of scope."
+ },
  "honesty": {
-  "what_this_is": "A pre-decision estimate for the final macro-class recorded in the feed, plus the distribution over four classes. It is not trained to predict whether an initial scoring call will later be reclassified. It ranks; it does not decide.",
+  "what_this_is": "Three pre-decision estimates for the final feed category: a binary error probability, a separately fitted four-class macro distribution, and a separate 11-category result-type distribution. The /100 value ranks balls by the binary error probability; the four-class error probability is from a different head and need not match it. None is trained to predict whether an initial scoring call will later be reclassified. They estimate; they do not decide.",
   "oof_top1_accuracy": 0.7471,
   "oof_error_nominated_top1": 0,
   "oof_error_recall": 0.0,

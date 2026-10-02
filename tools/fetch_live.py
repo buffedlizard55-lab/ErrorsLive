@@ -76,13 +76,19 @@ def split_matchup(matchup):
 
 
 def game_stats(rows):
-    """Per-game counts the pages print, derived only from the scored rows."""
+    """Per-game counts, with explicit pending markers kept separate from unresolved feed state."""
     played = [r for r in rows if r.get('status') == 'scored']
-    unresolved = [r for r in rows if r.get('status') == 'no_event_type_yet']
+    pending = [r for r in rows if r.get('official_scoring_pending') is True]
+    unresolved = [r for r in rows if r.get('status') == 'no_event_type_yet'
+                  and not r.get('official_scoring_pending')]
     return {'batted_balls': len(played), 'unresolved_in_feed': len(unresolved),
+            'official_scoring_pending': len(pending),
+            'pending_primary': sum(1 for r in pending if r.get('scoring_pending_kind') in ('primary', 'both')),
+            'pending_prior': sum(1 for r in pending if r.get('scoring_pending_kind') in ('prior', 'both')),
+            'predictions_available': sum(1 for r in rows if r.get('prediction_available')),
             'errors': sum(1 for r in played if r['official_call'] == 'error'),
             'top_pick_agrees': sum(r['model_agrees_with_call'] for r in played),
-            'risp_runs_at_stake': sum(1 for r in played if r['risp'] and r['run_scored']),
+            'risp_runs_at_stake': sum(1 for r in played if r.get('risp') and r.get('run_scored')),
             'overturned_reviews': sum(1 for r in played if r.get('review_overturned') is True)}
 
 
@@ -115,9 +121,12 @@ def main(argv=None):
             if vpath.exists():
                 led = {g['pk']: g for g in json.loads(vpath.read_text()).get('games', [])}
             g = led.get(pk, {})
+            matchup = f"{g.get('away', '')} @ {g.get('home', '')}".strip(' @')
+            observations = ls.scoring_observations(feed, pk=pk, meta={
+                'matchup': matchup, 'official_feed_url': f'{STATS}/api/v1.1/game/{pk}/feed/live'})
             games.append({
                 'game_pk': pk,
-                'matchup': f"{g.get('away', '')} @ {g.get('home', '')}".strip(' @'),
+                'matchup': matchup,
                 'game_day': g.get('date', ''),
                 'state': 'Final (committed fixture)',
                 'official_feed_url': f'{STATS}/api/v1.1/game/{pk}/feed/live',
@@ -129,7 +138,7 @@ def main(argv=None):
                 'linescore_url': g.get('api', ''),
                 'linescore_away': g.get('rA'), 'linescore_home': g.get('rH'),
                 'pk': pk, 'away_abbr': g.get('away', ''), 'home_abbr': g.get('home', ''),
-                'model_rows': rows, 'plays': rows, 'source': f,
+                'model_rows': rows, 'plays': rows, 'scoring_observations': observations, 'source': f,
                 'url': f'{STATS}/api/v1.1/game/{pk}/feed/live',
                 'savant': f'{SAVANT}/gamefeed?gamePk={pk}',
                 **game_stats(rows)})
@@ -143,6 +152,10 @@ def main(argv=None):
                 feed = ls.fetch_feed(m['game_pk'])
                 rows = ls.score_feed(feed, pk=m['game_pk'], scorer=sc,
                                      meta={'source': m.get('official_feed_url', '')})
+                observations = ls.scoring_observations(feed, pk=m['game_pk'], meta={
+                    'matchup': m.get('matchup', ''),
+                    'official_feed_url': m.get('official_feed_url', ''),
+                })
                 plays = feed['liveData']['plays']['allPlays']
                 info = {'plays': len(plays),
                         'final_away': plays[-1]['result'].get('awayScore'),
@@ -152,12 +165,17 @@ def main(argv=None):
                         'home_abbr': split_matchup(m.get('matchup'))[1],
                         'linescore_away': m.get('away_score'), 'linescore_home': m.get('home_score')}
                 games.append({**m, **info, 'model_rows': rows, 'plays': rows,
+                              'scoring_observations': observations,
                               'url': m.get('official_feed_url', ''), 'savant': m.get('savant_url', ''),
                               **game_stats(rows)})
             except Exception as e:                                   # noqa: BLE001
                 failures.append({'game_pk': m['game_pk'], 'error': f'{type(e).__name__}: {e}'[:200]})
 
-    played = [r for g in games for r in g.get('model_rows', []) if r.get('status') == 'scored']
+    all_model_rows = [r for g in games for r in g.get('model_rows', [])]
+    played = [r for r in all_model_rows if r.get('status') == 'scored']
+    pending = [r for r in all_model_rows if r.get('official_scoring_pending') is True]
+    unresolved = [r for r in all_model_rows if r.get('status') == 'no_event_type_yet'
+                  and not r.get('official_scoring_pending')]
     agree = sum(r['model_agrees_with_call'] for r in played)
     verified = 0
     for g in games:
@@ -182,6 +200,8 @@ def main(argv=None):
                   'auc_grouped': model['primary'].get('cv_auc'),
                   'auc_ci95': model['primary'].get('cv_auc_ci95'),
                   'error_recall': model['honesty'].get('oof_error_recall'),
+                  'event_type_classes': model['event_type_model'].get('classes', []),
+                  'event_type_accuracy_grouped': model['event_type_model'].get('cv_accuracy_grouped'),
                   'dataset_note': model['meta'].get('dataset_note', '')},
         'summary': {
             'games': len(games),
@@ -190,8 +210,11 @@ def main(argv=None):
             'errors': sum(1 for r in played if r['official_call'] == 'error'),
             'risp_runs_at_stake': sum(1 for r in played if r['risp'] and r['run_scored']),
             'overturned_reviews': sum(1 for r in played if r.get('review_overturned') is True),
-            'unresolved_in_feed': sum(1 for g in games for r in g.get('model_rows', [])
-                                     if r.get('status') == 'no_event_type_yet'),
+            'official_scoring_pending': len(pending),
+            'pending_primary': sum(1 for r in pending if r.get('scoring_pending_kind') in ('primary', 'both')),
+            'pending_prior': sum(1 for r in pending if r.get('scoring_pending_kind') in ('prior', 'both')),
+            'predictions_available': sum(1 for r in all_model_rows if r.get('prediction_available')),
+            'unresolved_in_feed': len(unresolved),
             'top_pick_agreement': f'{agree}/{len(played)}' if played else '0/0',
             'failures': len(failures),
         },
@@ -205,7 +228,9 @@ def main(argv=None):
     out = ROOT / a.out
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(doc, indent=1))
-    flat = [{k: v for k, v in r.items() if not isinstance(v, (list, dict))} for r in played]
+    # Keep pending and no-vector rows in the CSV too: absence of a model score is useful evidence,
+    # and dropping those rows would make the export look more complete than the feed was.
+    flat = [{k: v for k, v in r.items() if not isinstance(v, (list, dict))} for r in all_model_rows]
     keys = []
     for r in flat:
         for k in r:

@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Train + cross-validate the scoring models and write docs/data/model.json.
 
-Two models, both logistic (interpretable, calibrated, monotone where the rule is a threshold):
+Three logistic heads share contact physics + pre-pitch context:
 
-  primary    P(result = ERROR | contact physics + pre-pitch context)
-  secondary  P(result in {hit, error, fielders_choice, out}) — the four macro classes an official
-             scorer chooses between, so the published bars always sum to 100%.
+  primary       P(final feed macro_class = ERROR) — the /100 review-ranking score
+  secondary     P(hit / error / fielder's choice / out) — the four broad scoring classes
+  event_type    P(one of 11 represented event categories), including sac bunt, sac fly, single,
+                double, triple and home run. Grouped categories and their source eventType codes
+                are serialized into model.json. Event-type probabilities are not post-calibrated.
 
 DATASET
   Prefers docs/data/bip_official.csv — every captured batted ball in the configured model window
@@ -55,6 +57,25 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'docs' / 'data' / 'model.json'
 SEED = 20260929
 CLASSES = ['hit', 'error', 'fielders_choice', 'out']
+# Finer result classes for the live feed. These are exact official StatsAPI result.eventType
+# values grouped only where the committed model window has too few observations for a separate
+# category. The mapping is serialized into model.json so the browser and CLI use the same target.
+EVENT_TYPE_GROUPS = {
+    'single': ['single'],
+    'double': ['double'],
+    'triple': ['triple'],
+    'home_run': ['home_run'],
+    'error': ['field_error'],
+    'fielders_choice': ['fielders_choice', 'fielders_choice_out'],
+    'field_out': ['field_out'],
+    'force_out': ['force_out'],
+    'double_play': ['double_play', 'grounded_into_double_play', 'sac_fly_double_play'],
+    'sac_fly': ['sac_fly'],
+    'sac_bunt': ['sac_bunt'],
+}
+EVENT_CLASSES = list(EVENT_TYPE_GROUPS)
+EVENT_TYPE_TO_CLASS = {event_type: label for label, codes in EVENT_TYPE_GROUPS.items()
+                       for event_type in codes}
 TRAJ = ['ground_ball', 'line_drive', 'fly_ball', 'popup', 'bunt_grounder']
 HARD = ['soft', 'medium', 'hard']
 
@@ -165,6 +186,12 @@ def main():
     X, states = build_matrix(rows, spec)
     yb = np.array([1 if r['macro_class'] == 'error' else 0 for r in rows])
     yc = np.array([CLASSES.index(r['macro_class']) for r in rows])
+    unsupported_event_types = sorted({r.get('event_type', '') for r in rows
+                                      if r.get('event_type', '') not in EVENT_TYPE_TO_CLASS})
+    if unsupported_event_types:
+        raise SystemExit('event-outcome model mapping is incomplete for modelling rows: '
+                         + ', '.join(unsupported_event_types))
+    event_y = np.array([EVENT_CLASSES.index(EVENT_TYPE_TO_CLASS[r['event_type']]) for r in rows])
     groups = np.array([r['game_pk'] for r in rows])
     feat_names = [f['name'] for f in spec]
     print(f'dataset {dataset} ({kind}): {len(rows)} batted balls, {yb.sum()} errors '
@@ -174,12 +201,15 @@ def main():
     Xs = sc.transform(X)
     base = LogisticRegression(max_iter=4000, C=1.0).fit(Xs, yb)
     multi = LogisticRegression(max_iter=5000, C=1.0).fit(Xs, yc)
+    event_multi = LogisticRegression(max_iter=5000, C=1.0).fit(Xs, event_y)
 
     # ---- cross-validation: grouped (headline) + stratified random (comparator) ----
     n_splits = 5
     gkf = GroupKFold(n_splits=n_splits)
     oof_g = np.zeros(len(yb))
     oof_g_m = np.zeros((len(yb), len(CLASSES)))
+    oof_event = np.zeros((len(yb), len(EVENT_CLASSES)))
+    oof_event_prior = np.zeros((len(yb), len(EVENT_CLASSES)))
     for tr, te in gkf.split(X, yb, groups):
         # Preprocessing is learned from training games only. Fitting the scaler above the CV loop
         # would let held-out feature distributions influence every fold's coefficients.
@@ -189,6 +219,12 @@ def main():
         oof_g[te] = m.predict_proba(xte)[:, 1]
         mm = LogisticRegression(max_iter=5000, C=1.0).fit(xtr, yc[tr])
         oof_g_m[te] = mm.predict_proba(xte)
+        em = LogisticRegression(max_iter=5000, C=1.0).fit(xtr, event_y[tr])
+        if not np.array_equal(em.classes_, np.arange(len(EVENT_CLASSES))):
+            raise RuntimeError('an event-outcome class is absent from a grouped training fold')
+        oof_event[te] = em.predict_proba(xte)
+        prior = np.bincount(event_y[tr], minlength=len(EVENT_CLASSES)) / len(tr)
+        oof_event_prior[te] = prior
 
     skf = StratifiedKFold(n_splits, shuffle=True, random_state=SEED)
     oof_r = np.zeros(len(yb))
@@ -451,6 +487,37 @@ def main():
         sel = yc == i
         per_class[c] = {'n': int(sel.sum()), 'auc': a,
                         'recall': round(float((oof_g_m[sel].argmax(axis=1) == i).mean()), 4)}
+    event_top = oof_event.argmax(axis=1)
+    event_top3 = np.argsort(oof_event, axis=1, kind='stable')[:, -3:]
+    event_onehot = np.eye(len(EVENT_CLASSES))[event_y]
+    event_accuracy = float((event_top == event_y).mean())
+    event_top3_accuracy = float(np.any(event_top3 == event_y[:, None], axis=1).mean())
+    event_logloss = float(log_loss(event_y, oof_event, labels=list(range(len(EVENT_CLASSES)))))
+    event_prior_logloss = float(log_loss(event_y, oof_event_prior,
+                                         labels=list(range(len(EVENT_CLASSES)))))
+    event_brier = float(np.mean(np.sum((oof_event - event_onehot) ** 2, axis=1)))
+    event_prior_brier = float(np.mean(np.sum((oof_event_prior - event_onehot) ** 2, axis=1)))
+    event_per_class = {}
+    for i, category in enumerate(EVENT_CLASSES):
+        support = int((event_y == i).sum())
+        predicted = int((event_top == i).sum())
+        correct = int(((event_top == i) & (event_y == i)).sum())
+        try:
+            event_auc = float(roc_auc_score((event_y == i).astype(int), oof_event[:, i]))
+        except ValueError:
+            event_auc = None
+        event_per_class[category] = {
+            'n': support,
+            'prevalence': round(support / len(event_y), 6),
+            'top1_predicted': predicted,
+            'top1_precision': round(correct / predicted, 6) if predicted else None,
+            'top1_recall': round(correct / support, 6) if support else None,
+            'auc_ovr': round(event_auc, 6) if event_auc is not None else None,
+            'average_precision_ovr': round(float(average_precision_score(
+                (event_y == i).astype(int), oof_event[:, i])), 6),
+            'mean_predicted_probability': round(float(oof_event[:, i].mean()), 6),
+        }
+
     top1 = oof_g_m.argmax(axis=1)
     error_nominated = int((top1 == CLASSES.index('error')).sum())
     top_risk = []
@@ -540,11 +607,40 @@ def main():
         'cv_logloss': round(float(log_loss(yc, oof_g_m, labels=list(range(len(CLASSES))))), 6),
         'per_class': per_class,
     }
+    event_type_model = {
+        'classes': EVENT_CLASSES,
+        'event_type_groups': EVENT_TYPE_GROUPS,
+        'feature_names': feat_names,
+        'feature_spec': spec,
+        'scaler_mean': [round(float(v), 10) for v in sc.mean_],
+        'scaler_scale': [round(float(v), 10) for v in sc.scale_],
+        'intercept': {c: round(float(event_multi.intercept_[i]), 10)
+                      for i, c in enumerate(EVENT_CLASSES)},
+        'coef': {c: {n: round(float(event_multi.coef_[i][j]), 10) for j, n in enumerate(feat_names)}
+                 for i, c in enumerate(EVENT_CLASSES)},
+        'cv_accuracy_grouped': round(event_accuracy, 6),
+        'cv_top3_accuracy_grouped': round(event_top3_accuracy, 6),
+        'cv_logloss_grouped': round(event_logloss, 6),
+        'cv_logloss_grouped_prior': round(event_prior_logloss, 6),
+        'cv_brier_grouped': round(event_brier, 6),
+        'cv_brier_grouped_prior': round(event_prior_brier, 6),
+        'per_class': event_per_class,
+        'n_splits': n_splits,
+        'group': 'game_pk',
+        'probability_note': ('Raw multinomial logistic probabilities, not post-calibrated. '
+                             'Out-of-fold metrics split by game within the same model window; '
+                             'they are not future-season guarantees.'),
+        'target_scope': ('One of 11 event categories recorded by result.eventType in the collected '
+                         'model window. Categories group only the exact eventType codes listed in '
+                         'event_type_groups; any code outside those groups is out of scope.'),
+    }
     honesty = {
-        'what_this_is': ('A pre-decision estimate for the final macro-class recorded in the feed, '
-                         'plus the distribution over four classes. It is not trained to predict '
-                         'whether an initial scoring call will later be reclassified. It ranks; it '
-                         'does not decide.'),
+        'what_this_is': ('Three pre-decision estimates for the final feed category: a binary error '
+                         'probability, a separately fitted four-class macro distribution, and a '
+                         'separate 11-category result-type distribution. The /100 value ranks balls '
+                         'by the binary error probability; the four-class error probability is from '
+                         'a different head and need not match it. None is trained to predict whether '
+                         'an initial scoring call will later be reclassified. They estimate; they do not decide.'),
         'oof_top1_accuracy': round(float((top1 == yc).mean()), 4),
         'oof_error_nominated_top1': error_nominated,
         'oof_error_recall': per_class['error']['recall'],
@@ -563,7 +659,8 @@ def main():
                  'honest headline is that ruling errors OUT is what this model does well.'),
     }
     out = {
-        'meta': meta, 'primary': primary, 'multiclass': multiclass, 'honesty': honesty,
+        'meta': meta, 'primary': primary, 'multiclass': multiclass,
+        'event_type_model': event_type_model, 'honesty': honesty,
         'surface': surface, 'curve': curve, 'correlations': corr, 'context_stats': context_stats,
         'risk_bands': {'description': 'error-likelihood bands from the grouped OOF distribution',
                        'edges': grid},
@@ -598,6 +695,13 @@ def main():
                       'brier': primary['cv_brier_raw'], 'top1': honesty['oof_top1_accuracy'],
                       'error_nominated_top1': error_nominated,
                       'p_error_max_x100': honesty['p_error_training_max_x100'],
+                      'event_type_accuracy_grouped': event_type_model['cv_accuracy_grouped'],
+                      'event_type_top3_accuracy_grouped': event_type_model['cv_top3_accuracy_grouped'],
+                      'event_type_logloss_grouped': event_type_model['cv_logloss_grouped'],
+                      'event_type_logloss_grouped_prior': event_type_model['cv_logloss_grouped_prior'],
+                      'event_type_brier_grouped': event_type_model['cv_brier_grouped'],
+                      'event_type_brier_grouped_prior': event_type_model['cv_brier_grouped_prior'],
+                      'event_type_classes': len(EVENT_CLASSES),
                       'features': len(feat_names)}, indent=1))
     return 0
 

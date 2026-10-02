@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
-"""LIVE scoring board — turn a raw MLB live feed into a /100 scoring-prediction per batted ball.
+"""Score MLB feed events with separate macro-error and detailed outcome estimates.
 
-For every ball in play it prints, BEFORE the human scoring judgement is final:
+For represented batted-ball events, the tool reports (when a complete Statcast vector exists):
 
-  SCORE /100        100 x P(final feed label = ERROR) (binary logistic; the same number as the site)
-  P(hit) P(fc) P(out)                             (4-class multinomial)
-  top pick          the most likely macro call and how confident we are
+  SCORE /100        100 x P(final feed macro-class = ERROR) (binary logistic)
+  macro probabilities and top pick for hit / error / fielder's choice / out
+  11-category event probabilities and top category (single, double, triple, HR, outs, etc.)
+  exact official-scorer-pending marker state, kept distinct from a missing result.eventType
   runners on        bases occupied BEFORE the ball was hit (2nd/3rd -> RBI is at stake)
   RBI notes          conditional Rule 9.04 reminders, not counterfactual scorer decisions
+
+Model outputs are estimates of the final captured feed class, not official rulings or predictions
+of whether a provisional scorer decision will later change. A prior-event pending marker is not
+scored as a plate-appearance outcome; missing vectors remain visible without invented probabilities.
 
 Usage
   python3 tools/live_score.py --feed data/source/feed_823441.json
@@ -30,9 +35,9 @@ ROOT = Path(__file__).resolve().parent.parent
 MODEL = ROOT / 'docs' / 'data' / 'model.json'
 API = 'https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live'
 SCHED = 'https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={d}&gameType=R,F,D,L,W'
-SLIM = ('liveData,plays,allPlays,result,eventType,description,rbi,awayScore,homeScore,atBatIndex,'
+SLIM = ('liveData,plays,allPlays,result,eventType,event,description,rbi,awayScore,homeScore,atBatIndex,'
         'about,atBatIndex,halfInning,inning,isComplete,batter,fullName,pitcher,matchup,batSide,'
-        'pitchHand,code,runners,movement,start,end,outBase,isOut,playEvents,playId,count,outs,'
+        'pitchHand,code,runners,movement,start,end,outBase,isOut,playEvents,playId,details,type,count,outs,'
         'hitData,launchSpeed,launchAngle,totalDistance,trajectory,hardness,'
         'reviewDetails,isOverturned,reviewType')
 
@@ -40,6 +45,8 @@ HIT_TYPES = {'single', 'double', 'triple', 'home_run'}
 FC_TYPES = {'fielders_choice', 'fielders_choice_out'}
 OUT_TYPES = {'field_out', 'force_out', 'grounded_into_double_play', 'double_play', 'sac_fly',
              'sac_bunt', 'sac_fly_double_play', 'triple_play'}
+OFFICIAL_PENDING_CODES = {'os_ruling_pending_primary', 'os_ruling_pending_prior'}
+OFFICIAL_PENDING_TEXT = 'Official Scorer Ruling Pending'
 RISP_BASES = {'2B', '3B'}
 LEGACY_SPEC = [{'name': 'EV_mph', 'type': 'ev'}, {'name': 'LA_deg', 'type': 'la'},
                {'name': 'dist_ft', 'type': 'dist'}] + \
@@ -58,6 +65,59 @@ def macro_class(et):
     if et in OUT_TYPES:
         return 'out'
     return 'other'
+
+
+def is_official_scoring_pending_event(candidate):
+    """Match only the exact official eventTypes registry codes/description.
+
+    Verified source: GET https://statsapi.mlb.com/api/v1/eventTypes. The codes may
+    appear on an event's `details` or on `play.result`; no substring/text guess is used.
+    """
+    if not isinstance(candidate, dict):
+        return False
+    details = candidate.get('details') if isinstance(candidate.get('details'), dict) else {}
+    result = candidate.get('result') if isinstance(candidate.get('result'), dict) else {}
+    values = [details.get('eventType'), details.get('event'), details.get('description'),
+              candidate.get('eventType'), candidate.get('event'), candidate.get('type'),
+              result.get('eventType'), result.get('event'), result.get('description')]
+    return any(isinstance(value, str) and
+               (value in OFFICIAL_PENDING_CODES or value == OFFICIAL_PENDING_TEXT)
+               for value in values)
+
+
+def find_official_scoring_pending_play(play):
+    """Return exact pending markers on one play, or None when no marker was observed."""
+    if not isinstance(play, dict):
+        return None
+    events, codes = [], []
+    for event in play.get('playEvents', []) or []:
+        if not isinstance(event, dict):
+            continue
+        details = event.get('details') if isinstance(event.get('details'), dict) else {}
+        values = [details.get('eventType'), details.get('event'), details.get('description'),
+                  event.get('eventType'), event.get('event'), event.get('type')]
+        if any(isinstance(value, str) and
+               (value in OFFICIAL_PENDING_CODES or value == OFFICIAL_PENDING_TEXT)
+               for value in values):
+            events.append(event)
+            for value in values:
+                if isinstance(value, str) and value in OFFICIAL_PENDING_CODES and value not in codes:
+                    codes.append(value)
+
+    result = play.get('result') if isinstance(play.get('result'), dict) else {}
+    result_values = [result.get('eventType'), result.get('event'), result.get('description')]
+    at_result = any(isinstance(value, str) and
+                    (value in OFFICIAL_PENDING_CODES or value == OFFICIAL_PENDING_TEXT)
+                    for value in result_values)
+    if at_result:
+        for value in result_values:
+            if isinstance(value, str) and value in OFFICIAL_PENDING_CODES and value not in codes:
+                codes.append(value)
+    if not events and not at_result:
+        return None
+    return {'pending_events': events, 'pending_codes': codes,
+            'primary': 'os_ruling_pending_primary' in codes,
+            'prior': 'os_ruling_pending_prior' in codes, 'at_result': at_result}
 
 
 def feature_value(ftype, st):
@@ -100,6 +160,17 @@ class Scorer:
         mc = m['multiclass']
         self.classes = list(mc['coef'].keys())
         self.mc_int, self.mc_coef = mc['intercept'], mc['coef']
+        self.event_model = m.get('event_type_model') or {}
+        self.event_classes = list(self.event_model.get('classes', []))
+        self.event_int = self.event_model.get('intercept', {})
+        self.event_coef = self.event_model.get('coef', {})
+        self.event_spec = self.event_model.get('feature_spec') or self.spec
+        self.event_names = self.event_model.get('feature_names') or [f['name'] for f in self.event_spec]
+        self.event_mean = self.event_model.get('scaler_mean', self.mean)
+        self.event_scale = self.event_model.get('scaler_scale', self.scale)
+        self.event_type_groups = self.event_model.get('event_type_groups', {})
+        self.event_type_to_class = {code: label for label, codes in self.event_type_groups.items()
+                                    for code in codes}
 
     def vector(self, state):
         return [feature_value(f['type'], state) for f in self.spec]
@@ -117,6 +188,25 @@ class Scorer:
         probs = {c: e / tot for c, e in zip(self.classes, exps)}
         top = max(probs, key=probs.get)
         return p_err, probs, top
+
+    def predict_event_state(self, state):
+        """Return the separately trained 11-category event distribution and its top class."""
+        if not self.event_classes:
+            return {}, None
+        x = [feature_value(f['type'], state) for f in self.event_spec]
+        z = [(x[i] - self.event_mean[i]) / (self.event_scale[i] or 1.0)
+             for i in range(len(x))]
+        logits = {
+            category: self.event_int[category] + sum(
+                z[i] * self.event_coef[category][self.event_names[i]] for i in range(len(z)))
+            for category in self.event_classes
+        }
+        max_logit = max(logits.values())
+        exps = {category: math.exp(logits[category] - max_logit) for category in self.event_classes}
+        total = sum(exps.values()) or 1.0
+        probs = {category: value / total for category, value in exps.items()}
+        top = max(probs, key=probs.get)
+        return probs, top
 
     def predict(self, ev, la, dist, traj, hard, bases=(), outs=0, inning=5, bat='', pitch=''):
         """Backwards-compatible entry point (the five Statcast inputs, plus optional context)."""
@@ -190,64 +280,128 @@ def rbi_if_ruled(cls, run_scored, official_et, bases=(), outs=0):
 
 
 def score_feed(feed, pk=None, scorer=None, meta=None):
-    """Walk a feed/live payload and emit one row per batted ball in play."""
+    """Score supported batted balls and expose exact official scorer-pending markers."""
     sc = scorer or Scorer()
-    plays = feed['liveData']['plays']['allPlays']
+    plays = (((feed.get('liveData') or {}).get('plays') or {}).get('allPlays') or [])
     rows = []
+    feed_url = API.format(pk=pk) if pk is not None else ''
     for pl in plays:
-        res = pl['result']
-        # In a live feed a play can have contact data but no `eventType`. Preserve that observable
-        # API state; it does not prove an official scorer's private queue status.
+        if not isinstance(pl, dict):
+            continue
+        res = pl.get('result') if isinstance(pl.get('result'), dict) else {}
         et = res.get('eventType') or ''
-        hd = next((e['hitData'] for e in pl.get('playEvents', []) if 'hitData' in e), None)
+        pending = find_official_scoring_pending_play(pl)
+        pending_codes = pending['pending_codes'] if pending else []
+        pending_primary = bool(pending and pending['primary'])
+        pending_prior = bool(pending and pending['prior'])
+        pending_kind = ('both' if pending_primary and pending_prior else
+                        'primary' if pending_primary else 'prior' if pending_prior else
+                        'description_only' if pending else '')
+        events = pl.get('playEvents') if isinstance(pl.get('playEvents'), list) else []
+        hd = next((e['hitData'] for e in events if isinstance(e, dict)
+                   and isinstance(e.get('hitData'), dict)), None)
+        model_type_known = et in sc.event_type_to_class if sc.event_type_to_class else macro_class(et) != 'other'
+        # Include every exact scorer-pending marker even if Statcast has no vector. Also retain
+        # completed supported outcomes with missing vectors so the feed can show their call honestly.
+        if hd is None and not pending and not model_type_known:
+            continue
+
+        about = pl.get('about') if isinstance(pl.get('about'), dict) else {}
+        matchup = pl.get('matchup') if isinstance(pl.get('matchup'), dict) else {}
+        batter = matchup.get('batter') if isinstance(matchup.get('batter'), dict) else {}
+        pitcher = matchup.get('pitcher') if isinstance(matchup.get('pitcher'), dict) else {}
+        pid = next((e.get('playId') for e in reversed(events)
+                    if isinstance(e, dict) and e.get('playId')), '')
+        marker_text = OFFICIAL_PENDING_TEXT
+        if pending:
+            marker = pending['pending_events'][0] if pending['pending_events'] else None
+            details = marker.get('details') if isinstance(marker, dict) else {}
+            if isinstance(details, dict):
+                marker_text = details.get('description') or details.get('event') or marker_text
+            if pending['at_result']:
+                marker_text = res.get('description') or res.get('event') or marker_text
+        row = {
+            'game_pk': pk, 'at_bat': about.get('atBatIndex'), 'official_feed_url': feed_url,
+            'inning': about.get('inning'), 'half': about.get('halfInning'),
+            'event_type': et,
+            'official_call': 'pending' if pending or not et else macro_class(et),
+            'status': ('official_scoring_pending' if pending else
+                       'no_event_type_yet' if not et else 'no_vector'),
+            'official_scoring_pending': bool(pending),
+            'scoring_pending_kind': pending_kind,
+            'scoring_pending_codes': ','.join(pending_codes),
+            'scoring_pending_text': marker_text if pending else '',
+            'prediction_available': False, 'prediction_unavailable_reason': '',
+            'description': res.get('description') or res.get('event') or marker_text,
+            'batter': batter.get('fullName', ''), 'pitcher': pitcher.get('fullName', ''),
+            'away_score': res.get('awayScore'), 'home_score': res.get('homeScore'),
+            'play_id': pid,
+            'savant_url': f'https://baseballsavant.mlb.com/sporty-videos?playId={pid}' if pid else '',
+        }
+        # os_ruling_pending_prior is a base-running ruling, not the plate-appearance label. Only
+        # a primary marker licenses applying the batted-ball classification model to a pending play.
+        event_model_eligible = not pending or pending_primary
         if hd is None:
+            if pending and pending_prior and not pending_primary:
+                row['prediction_unavailable_reason'] = (
+                    'The exact pending marker is for a prior base-running event, not a plate-appearance ruling.')
+            elif not pending and not et:
+                continue
+            else:
+                row['prediction_unavailable_reason'] = 'The feed has not supplied a Statcast hitData vector.'
+            rows.append(row)
             continue
+
         need = ('launchSpeed', 'launchAngle', 'totalDistance')
-        if not all(k in hd for k in need):
-            rows.append({'game_pk': pk, 'at_bat': pl.get('about', {}).get('atBatIndex'),
-                         'event_type': et, 'official_call': macro_class(et), 'status': 'no_vector',
-                         'description': res.get('description', ''),
-                         'official_feed_url': API.format(pk=pk) if pk is not None else ''})
+        if not all(k in hd and hd[k] is not None and hd[k] != '' for k in need):
+            row['prediction_unavailable_reason'] = 'The Statcast hitData vector is incomplete.'
+            rows.append(row)
             continue
+        if et and not pending and not model_type_known:
+            row['prediction_unavailable_reason'] = (
+                'This result.eventType is outside the represented training categories.')
+            rows.append(row)
+            continue
+        if not event_model_eligible:
+            row['prediction_unavailable_reason'] = (
+                'The exact pending marker is for a prior base-running event, not a plate-appearance ruling.')
+            rows.append(row)
+            continue
+
         st = state_from_play(pl, hd)
         bases = sorted(st['bases'])
         run_scored = any(isinstance(r, dict) and isinstance(r.get('movement'), dict)
                          and r['movement'].get('end') == 'score' for r in pl.get('runners', []))
         p_err, probs, top = sc.predict_state(st)
+        event_probs, event_top = sc.predict_event_state(st)
         rev = pl.get('reviewDetails') or next(
-            (e['reviewDetails'] for e in pl.get('playEvents', []) if 'reviewDetails' in e), {})
-        pid = ''
-        for ev in pl.get('playEvents', []):
-            if ev.get('playId'):
-                pid = ev['playId']
-        ruling_in = bool(et)
-        row = {
-            'game_pk': pk, 'at_bat': pl.get('about', {}).get('atBatIndex'),
-            'official_feed_url': API.format(pk=pk) if pk is not None else '',
-            'inning': pl.get('about', {}).get('inning'),
-            'half': pl.get('about', {}).get('halfInning'),
-            'event_type': et, 'official_call': macro_class(et) if ruling_in else 'pending',
-            'status': 'scored' if ruling_in else 'no_event_type_yet',
-            'description': res.get('description', ''),
+            (e['reviewDetails'] for e in events if isinstance(e, dict) and 'reviewDetails' in e), {})
+        ruling_in = bool(et) and not pending
+        row.update({
+            'status': 'official_scoring_pending' if pending else
+                      'scored' if ruling_in else 'no_event_type_yet',
+            'prediction_available': True, 'prediction_unavailable_reason': '',
             'launch_speed': hd['launchSpeed'], 'launch_angle': hd['launchAngle'],
             'distance': hd['totalDistance'], 'trajectory': hd.get('trajectory', ''),
-            'hardness': hd.get('hardness', ''),
-            'score_100': round(100 * p_err, 2),
+            'hardness': hd.get('hardness', ''), 'score_100': round(100 * p_err, 2),
             'p_hit': round(probs['hit'], 4), 'p_error': round(p_err, 4),
+            'p_error_binary': round(p_err, 4), 'p_error_macro': round(probs['error'], 4),
             'p_fielders_choice': round(probs['fielders_choice'], 4), 'p_out': round(probs['out'], 4),
             'top_pick': top, 'top_prob': round(probs[top], 4),
-            'model_agrees_with_call': int(ruling_in and top == macro_class(et)),
+            'event_top_pick': event_top,
+            'event_top_prob': round(event_probs[event_top], 4) if event_top else None,
+            'model_agrees_with_call': int(ruling_in and macro_class(et) in sc.classes
+                                          and top == macro_class(et)),
             'runners_on': ','.join(bases) or '-', 'risp': int(bool(RISP_BASES & set(bases))),
-            'outs_before': st['outs'],
-            'run_scored': int(run_scored), 'rbi_official': res.get('rbi', 0),
-            'reviewed': int(bool(rev)),
-            'review_overturned': rev.get('isOverturned', ''), 'review_type': rev.get('reviewType', ''),
-            'play_id': pid,
-            'savant_url': f'https://baseballsavant.mlb.com/sporty-videos?playId={pid}' if pid else '',
-        }
-        if row['run_scored']:
-            # Rule 9.04 governs every run batted in, so the conditional note belongs on every
-            # run-scoring play — not only the ones with a runner in scoring position.
+            'outs_before': st['outs'], 'run_scored': int(run_scored),
+            'rbi_official': res.get('rbi', 0), 'reviewed': int(bool(rev)),
+            'review_overturned': rev.get('isOverturned', '') if isinstance(rev, dict) else '',
+            'review_type': rev.get('reviewType', '') if isinstance(rev, dict) else '',
+        })
+        for category, probability in event_probs.items():
+            row[f'event_p_{category}'] = round(probability, 4)
+        if run_scored:
+            # Rule 9.04 governs every run-scoring play — not only runners in scoring position.
             row['rbi_if_error'] = rbi_if_ruled('error', True, et, st['bases'], st['outs'])
             row['rbi_if_hit'] = rbi_if_ruled('hit', True, et, st['bases'], st['outs'])
             row['rbi_if_fc'] = rbi_if_ruled('fielders_choice', True, et, st['bases'], st['outs'])
@@ -256,6 +410,81 @@ def score_feed(feed, pk=None, scorer=None, meta=None):
         for r in rows:
             r.update(meta)
     return rows
+
+
+def scoring_observations(feed, pk=None, meta=None):
+    """Compact official play states for pending-resolution and scoring-change comparisons.
+
+    The values remain exactly as the API supplied them. They are not classifier features or
+    inferred rulings.
+    """
+    plays = (((feed.get('liveData') or {}).get('plays') or {}).get('allPlays') or [])
+    feed_url = API.format(pk=pk) if pk is not None else ''
+    out = []
+    for play in plays:
+        if not isinstance(play, dict):
+            continue
+        result = play.get('result') if isinstance(play.get('result'), dict) else {}
+        about = play.get('about') if isinstance(play.get('about'), dict) else {}
+        matchup = play.get('matchup') if isinstance(play.get('matchup'), dict) else {}
+        batter = matchup.get('batter') if isinstance(matchup.get('batter'), dict) else {}
+        pitcher = matchup.get('pitcher') if isinstance(matchup.get('pitcher'), dict) else {}
+        pending = find_official_scoring_pending_play(play)
+        events = play.get('playEvents') if isinstance(play.get('playEvents'), list) else []
+        play_id = next((e.get('playId') for e in reversed(events)
+                        if isinstance(e, dict) and e.get('playId')), '')
+
+        def event_reference(event):
+            if not isinstance(event, dict):
+                return ''
+            if event.get('playId') is not None and event.get('playId') != '':
+                return f"playId:{event['playId']}"
+            if isinstance(event.get('index'), int):
+                return f"index:{event['index']}"
+            return ''
+
+        pending_event_refs = []
+        if pending:
+            for event in pending['pending_events']:
+                key = event_reference(event)
+                if key:
+                    pending_event_refs.append({'event_key': key,
+                                               'play_id': str(event.get('playId', '')),
+                                               'index': event.get('index')})
+        event_states = []
+        for event in events:
+            key = event_reference(event)
+            if not key:
+                continue
+            details = event.get('details') if isinstance(event.get('details'), dict) else {}
+            event_states.append({
+                'event_key': key,
+                'event_type': details.get('eventType') or event.get('eventType') or '',
+                'description': details.get('description') or '',
+                'official_scoring_pending': is_official_scoring_pending_event(event),
+            })
+        observation = {
+            'game_pk': pk, 'at_bat': about.get('atBatIndex'),
+            'inning': about.get('inning'), 'half': about.get('halfInning'),
+            'event_type': result.get('eventType') or '',
+            'description': result.get('description') or result.get('event') or '',
+            'official_scoring_pending': bool(pending),
+            'pending_codes': pending['pending_codes'] if pending else [],
+            'pending_kind': ('both' if pending and pending['primary'] and pending['prior'] else
+                             'primary' if pending and pending['primary'] else
+                             'prior' if pending and pending['prior'] else
+                             'description_only' if pending else ''),
+            'pending_text': OFFICIAL_PENDING_TEXT if pending else '',
+            'pending_event_refs': pending_event_refs, 'event_states': event_states,
+            'batter': batter.get('fullName', ''), 'pitcher': pitcher.get('fullName', ''),
+            'matchup': (meta or {}).get('matchup', ''),
+            'away_score': result.get('awayScore'), 'home_score': result.get('homeScore'),
+            'play_id': play_id, 'official_feed_url': feed_url,
+        }
+        if meta:
+            observation.update(meta)
+        out.append(observation)
+    return out
 
 
 # ---------------------------------------------------------------- fetch helpers
@@ -291,35 +520,68 @@ def todays_games():
 # ---------------------------------------------------------------- reporting
 def print_table(rows, title=''):
     if not rows:
-        print('  (no batted balls with a Statcast vector)')
+        print('  (no represented scoring events in this feed)')
         return
     if title:
         print(f'\n{title}')
-    print(f"  {'AB':>3} {'call':<7} {'SCORE/100':>9} {'top pick':<16} {'p':>5} "
-          f"{'EV':>5} {'LA':>6} {'dist':>5} {'traj':<14} {'hard':<7} {'on':<7} {'o':>1} {'RBI':>3}  ok")
+    print(f"  {'AB':>3} {'feed state':<16} {'eventType':<22} {'SCORE/100':>9} "
+          f"{'macro estimate':<24} {'event estimate':<25} {'EV/LA/dist':<19} "
+          f"{'on':<7} {'o':>1} {'RBI':>3}  ok")
     for r in rows:
-        if r.get('status') != 'scored':
-            print(f"  {str(r.get('at_bat','')):>3} {r.get('event_type','?'):<7} "
-                  f"{'--':>9} {'(no hitData vector)':<16}")
+        pending = r.get('official_scoring_pending') is True
+        if pending:
+            state = f"PENDING/{r.get('scoring_pending_kind') or 'exact'}"
+        elif r.get('status') == 'no_event_type_yet':
+            state = 'NO eventType'
+        elif r.get('prediction_available'):
+            state = 'feed result'
+        else:
+            state = 'NO model vector'
+        event_type = r.get('event_type') or '—'
+        if not r.get('prediction_available'):
+            print(f"  {str(r.get('at_bat') if r.get('at_bat') is not None else '—'):>3} "
+                  f"{state:<16} {event_type:<22} {'--':>9} {'(no estimate)':<24} {'—':<25}")
+            reason = r.get('prediction_unavailable_reason')
+            if reason:
+                print(f"      no score: {reason}")
             continue
-        flag = 'Y' if r['model_agrees_with_call'] else 'n'
-        print(f"  {str(r['at_bat']):>3} {r['official_call']:<7} {r['score_100']:>9} "
-              f"{r['top_pick']:<16} {r['top_prob']:>5.2f} {r['launch_speed']:>5} "
-              f"{r['launch_angle']:>6} {r['distance']:>5} {r['trajectory']:<14} "
-              f"{r['hardness']:<7} {r['runners_on']:<7} {r['outs_before']:>1} {r['rbi_official']:>3}  {flag}")
+        score = float(r['score_100'])
+        macro = f"{r['top_pick']} ({100 * r['top_prob']:.1f}%)"
+        detailed = f"{r.get('event_top_pick') or 'unavailable'}"
+        if r.get('event_top_prob') is not None:
+            detailed += f" ({100 * r['event_top_prob']:.1f}%)"
+        vector = (f"{r.get('launch_speed', '—')}/{r.get('launch_angle', '—')}/"
+                  f"{r.get('distance', '—')}")
+        flag = ('Y' if r.get('model_agrees_with_call') else 'n') if r.get('status') == 'scored' else '-'
+        print(f"  {str(r.get('at_bat') if r.get('at_bat') is not None else '—'):>3} "
+              f"{state:<16} {event_type:<22} {score:>9.2f} {macro:<24} {detailed:<25} "
+              f"{vector:<19} {r.get('runners_on', '—'):<7} {r.get('outs_before', '—'):>1} "
+              f"{r.get('rbi_official', 0):>3}  {flag}")
+        if pending:
+            print('      estimate only; exact official-scorer pending marker observed, not a ruling')
     scored = [r for r in rows if r.get('status') == 'scored']
     if scored:
         n = len(scored)
         agree = sum(r['model_agrees_with_call'] for r in scored)
         err = [r for r in scored if r['official_call'] == 'error']
         caught = sum(r['model_agrees_with_call'] for r in err)
-        print(f"  -- {n} batted balls | model top pick == official call {agree}/{n} "
-              f"({100*agree/n:.1f}%) | errors {caught}/{len(err)} called 'error' by the model")
+        print(f"  -- {n} resolved feed labels with predictions | macro top pick == feed class "
+              f"{agree}/{n} ({100*agree/n:.1f}%) | errors {caught}/{len(err)} nominated 'error'")
+    pending = [r for r in rows if r.get('official_scoring_pending') is True]
+    unresolved = [r for r in rows if r.get('status') == 'no_event_type_yet'
+                  and not r.get('official_scoring_pending')]
+    if pending or unresolved:
+        primary = sum(r.get('scoring_pending_kind') in ('primary', 'both') for r in pending)
+        prior = sum(r.get('scoring_pending_kind') in ('prior', 'both') for r in pending)
+        print(f"  -- exact official-scorer pending markers: {len(pending)} "
+              f"(primary {primary}, prior {prior}); no result.eventType without marker: {len(unresolved)}")
     for r in rows:
         if r.get('reviewed') and r.get('review_overturned') is True:
-            print(f"  ** challenge OVERTURNED on AB {r['at_bat']} "
-                  f"({r['review_type']}) — model score was {r['score_100']}/100, "
-                  f"final call '{r['official_call']}'")
+            score_text = (f"model SCORE/100 {r['score_100']}" if r.get('prediction_available')
+                          else 'no model score available')
+            print(f"  ** challenge OVERTURNED on AB {r.get('at_bat', '—')} "
+                  f"({r.get('review_type', '')}) — {score_text}; captured eventType "
+                  f"'{r.get('event_type') or 'not supplied'}'")
 
 
 def write_csv(rows, path):
@@ -383,8 +645,9 @@ def main(argv=None):
         if len(feeds) > 1:
             n = len(scored)
             agree = sum(r['model_agrees_with_call'] for r in scored)
+            agreement = f'{agree}/{n} ({100 * agree / n:.1f}%)' if n else 'no resolved feed labels with predictions'
             print(f'\nTOTAL: {len(feeds)} games, {n} batted balls scored, '
-                  f'model top pick == official call {agree}/{n} ({100*agree/n:.1f}%)')
+                  f'model top pick == official call {agreement}')
         risp = [r for r in scored if r['risp'] and r['run_scored']]
         if risp:
             print(f'RBI-at-stake plays (runner on 2nd/3rd and a run scored): {len(risp)}')
