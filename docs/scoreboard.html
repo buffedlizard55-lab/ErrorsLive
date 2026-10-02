@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live scoreboard — every game, with its scoring watch — LiveScoringErrors</title>
+<link rel="stylesheet" href="site.css">
+<meta name="description" content="Live MLB scoreboard for any date: scores, inning, count, runners, hits/errors and each game's scoring watch — official-scorer pending rulings, observed scoring changes, reviews and the model's error-risk ranking.">
+</head>
+<body>
+<header class="nav"><div class="nav-inner"></div></header>
+<main>
+  <h1>Live scoreboard — every game, plus its scoring watch</h1>
+  <p class="lede">Reads the official MLB schedule and game feeds in your browser and shows every game on the
+  selected date with live score, inning, count, runners and hits/errors — next to the scoring story this repo
+  tracks: exact <b>official-scorer pending</b> markers, <b>scoring changes</b> observed between two reads of the
+  feed, reviews carried in the payload, and the committed model's batted-ball distribution
+  (hit / out / fielder's choice / error / sacrifice…). Polling is best-effort, not real time. Works for any date;
+  today's slate is whatever the official schedule returns.</p>
+
+  <div class="filterbar">
+    <div><label for="datePicker">Game date (official MLB date)</label>
+      <input type="date" id="datePicker"></div>
+    <div class="rowflex">
+      <button class="btn" id="prevDay" type="button" title="Previous day">←</button>
+      <button class="btn" id="nextDay" type="button" title="Next day">→</button>
+      <button class="btn" id="today" type="button">Today</button>
+    </div>
+    <div class="rowflex">
+      <button class="btn" id="refresh" type="button">Refresh now</button>
+      <button class="btn" id="pause" type="button" aria-pressed="false">⏸ Pause auto-refresh</button>
+    </div>
+    <div id="status" class="muted" role="status" aria-live="polite">Loading…</div>
+  </div>
+
+  <div class="truth gold"><b>What the badges mean — and what they do not.</b>
+    <b>⚖️ Official-scorer pending</b> appears only for the exact MLB StatsAPI registry values
+    <code>os_ruling_pending_primary</code> / <code>os_ruling_pending_prior</code> or the exact description
+    “Official Scorer Ruling Pending”. A play with no <code>result.eventType</code> but no such marker is shown as
+    <i>no event type in this capture</i> and is <b>not</b> reported as a pending decision.
+    <b>✏️ Scoring changes</b> are differences between two reads of the same play by this browser's ledger — the feed
+    publishes no change marker, so an initial call and a final ruling are known only from consecutive observations.
+    <b>Model numbers</b> estimate the final captured feed label from batted-ball physics and pre-pitch state; they are
+    review aids, <b>never rulings</b>, and the official feed remains the record.</div>
+
+  <div id="meta" class="note"></div>
+  <div id="kpis" class="grid cols3"><div class="card">Loading…</div></div>
+  <div id="flags"></div>
+
+  <h2 id="gamesHeader">Games</h2>
+  <p class="legend">Cards are one per game for the selected date. “Batted balls” counts plays the shared scorer
+  returned with a final captured class; “model predictions” counts rows with a complete Statcast vector. The
+  top-error-risk play is ranked by the binary model's estimated probability that the captured feed label is
+  <i>error</i> (SCORE/100) with its percentile among the fitted batted balls — a ranking, not a forecast of a
+  scoring change.</p>
+  <div id="cards" class="grid cols2"></div>
+
+  <h2>Run it yourself</h2>
+  <div class="note">
+    <p style="margin:0 0 8px">This page reads only public MLB endpoints (<code>statsapi.mlb.com</code>), the committed
+    model (<code>data/model.json</code>) and this browser's own observation ledger. If an endpoint is unreachable the
+    page keeps what it has and shows the failure — it does not fabricate a game.</p>
+    <p style="margin:0"><a href="allgames.html">⚾ All-games scoring feed →</a> ·
+      <a href="live.html">Live scoring board (table)</a> ·
+      <a href="methods.html">Methods &amp; audit</a> ·
+      <a href="rules.html">Rules &amp; RBI</a></p>
+  </div>
+</main>
+<footer><div class="inner">
+  <span>Official data: MLB StatsAPI <code>/schedule</code> + <code>/feed/live</code> · model
+    <code>data/model.json</code> · ledger <code>errorslive.scoring-feed.v1</code></span>
+  <span>Not affiliated with MLB</span>
+</div></footer>
+<script src="site.js"></script>
+<script src="scoring-feed.js"></script>
+<script src="live-board.js"></script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let DATE = /^\d{4}-\d{2}-\d{2}$/.test(params.get('date') || '')
+  ? params.get('date') : LiveBoard.easternDateString();
+let SHOWN = DATE;  // the date actually on screen; differs from DATE when the requested day has no games
+let MODEL = null, CACHE = LiveBoard.createFeedCache(), REGISTRY = {}, LEDGER = null;
+let DOC = null, PAUSED = false, TIMER = null, BUSY = false, REGISTRY_FAILED = false;
+
+function pct(v, d = 1) {
+  return Number.isFinite(Number(v)) ? `${(100 * Number(v)).toFixed(d)}%` : '—';
+}
+function numText(v, d = 2) { return Number.isFinite(Number(v)) ? Number(v).toFixed(d) : '—'; }
+
+function statePill(game) {
+  const s = game.abstract_state;
+  if (s === 'Live') return '<span class="pill on">LIVE</span>';
+  if (s === 'Final') return '<span class="pill">FINAL</span>';
+  const when = game.game_date ? new Date(game.game_date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '';
+  return `<span class="pill">${esc(game.state || 'Scheduled')}${when ? ' · ' + esc(when) : ''}</span>`;
+}
+
+function challengeLine(game, record) {
+  const parts = [];
+  const mgr = (side, used, remaining) => {
+    if (used === null && remaining === null) return;
+    parts.push(`${side} ${remaining ?? '—'} left (${used ?? '—'} used)`);
+  };
+  mgr(game.away_abbr || 'AWAY', game.review_away_used, game.review_away_remaining);
+  mgr(game.home_abbr || 'HOME', game.review_home_used, game.review_home_remaining);
+  const abs = record.review_info && record.review_info.abs;
+  const absParts = [];
+  if (abs && abs.away) absParts.push(`${game.away_abbr || 'AWAY'} ${abs.away.remaining ?? '—'} left (${abs.away.usedSuccessful ?? '—'}✓ ${abs.away.usedFailed ?? '—'}✗)`);
+  if (abs && abs.home) absParts.push(`${game.home_abbr || 'HOME'} ${abs.home.remaining ?? '—'} left (${abs.home.usedSuccessful ?? '—'}✓ ${abs.home.usedFailed ?? '—'}✗)`);
+  const out = [];
+  if (parts.length) out.push(`Manager challenges: ${parts.join(' · ')}`);
+  if (absParts.length) out.push(`ABS challenges: ${absParts.join(' · ')}`);
+  return out.join(' — ');
+}
+
+function card(record) {
+  const g = record.game;
+  const s = record.summary;
+  const link = `allgames.html?date=${encodeURIComponent(SHOWN)}&game=${encodeURIComponent(g.game_pk)}`;
+  const live = record.live || {};
+  const awayScore = g.away_score ?? '–', homeScore = g.home_score ?? '–';
+  const sit = [];
+  if (g.abstract_state === 'Live') {
+    if (g.inning) sit.push(`${LiveBoard.halfLabel(g.inning_state === 'Top' ? 'top' : g.inning_state === 'Bottom' ? 'bottom' : (g.is_top === true ? 'top' : g.is_top === false ? 'bottom' : ''))} ${g.inning}`);
+    const balls = live.balls ?? g.balls, strikes = live.strikes ?? g.strikes, outs = live.outs ?? g.outs;
+    if (balls !== null || strikes !== null) sit.push(`count ${balls ?? '–'}-${strikes ?? '–'}`);
+    if (outs !== null && outs !== undefined) sit.push(`${outs} out${outs === 1 ? '' : 's'}`);
+    const runners = live.runners && live.runners !== '-' ? live.runners : [g.on_first ? '1B' : '', g.on_second ? '2B' : '', g.on_third ? '3B' : ''].filter(Boolean).join(',');
+    if (runners) sit.push(`runners ${runners}`);
+  } else if (g.abstract_state === 'Preview') {
+    if (g.away_probable || g.home_probable) sit.push(`probable: ${g.away_probable || '—'} vs ${g.home_probable || '—'}`);
+  } else if (g.state) {
+    sit.push(g.state);
+  }
+  const batterLine = live.batter
+    ? `At bat: <b>${esc(live.batter)}</b> · Pitching: <b>${esc(live.pitcher || '—')}</b>`
+    : (g.current_batter ? `At bat: <b>${esc(g.current_batter)}</b> · Pitching: <b>${esc(g.current_pitcher || '—')}</b>` : '');
+  const badges = [];
+  if (record.pending_count) badges.push(`<span class="pill mid">⚖️ ${record.pending_count} pending</span>`);
+  if (record.change_count) badges.push(`<span class="pill mid">✏️ ${record.change_count} scoring change${record.change_count === 1 ? '' : 's'}</span>`);
+  if (s.batted_balls) badges.push(`<span class="pill">⚾ ${s.batted_balls} batted balls</span>`);
+  if (s.predictions_available) badges.push(`<span class="pill">${s.predictions_available} model predictions</span>`);
+  if (s.feed_errors) badges.push(`<span class="pill err">${s.feed_errors} feed error${s.feed_errors === 1 ? '' : 's'}</span>`);
+  if (s.reviewed) badges.push(`<span class="pill">🔍 ${s.reviewed} review${s.reviewed === 1 ? '' : 's'}${s.overturned ? ` · ${s.overturned} overturned` : ''}</span>`);
+  const top = record.top_risk;
+  const topLine = top
+    ? `<div class="note"><b>Highest error-risk batted ball</b> — ${esc(top.batter || 'batter')} vs
+       ${esc(top.pitcher || 'pitcher')}: <b>SCORE/100 ${numText(top.score_100)}</b>
+       (${esc(top.event_top_pick ? LiveBoard.modelClassLabel(top.event_top_pick) : 'no detailed pick')}
+       ${top.event_top_prob !== null && top.event_top_prob !== undefined ? esc(pct(top.event_top_prob)) : ''})
+       · captured feed class <b>${esc(top.official_call || '—')}</b>
+       <br><span class="muted">${esc(top.description || '')}</span></div>`
+    : '';
+  const challenges = challengeLine(g, record);
+  return `<div class="card game-card">
+    <div class="game-head">
+      <span class="team"><b>${esc(g.away_abbr || g.away_name || 'AWAY')}</b> <span class="score">${esc(String(awayScore))}</span>
+        <span class="muted">${esc(g.away_record || '')}</span></span>
+      <span class="team"><b>${esc(g.home_abbr || g.home_name || 'HOME')}</b> <span class="score">${esc(String(homeScore))}</span>
+        <span class="muted">${esc(g.home_record || '')}</span></span>
+      ${statePill(g)}
+    </div>
+    ${sit.length ? `<div class="game-sub">${esc(sit.join(' · '))}</div>` : ''}
+    ${batterLine ? `<div class="game-sub">${batterLine}</div>` : ''}
+    <div class="game-sub muted">Hits: ${g.away_hits ?? '–'}–${g.home_hits ?? '–'} · Errors: ${g.away_errors ?? '–'}–${g.home_errors ?? '–'} · LOB: ${g.away_lob ?? '–'}–${g.home_lob ?? '–'}${g.venue ? ` · ${esc(g.venue)}` : ''}</div>
+    <div class="rowflex">${badges.join(' ') || '<span class="muted">No completed scoring rows captured yet.</span>'}</div>
+    ${topLine}
+    ${challenges ? `<div class="legend">${esc(challenges)} <span class="muted">— read as-is from the official counters; absent counters are not zero-filled.</span></div>` : ''}
+    ${record.feed_available ? '' : '<div class="warn">No feed captured for this game in this poll (scheduled games have no play data yet).</div>'}
+    <div class="rowflex">
+      <a class="chip" href="${esc(link)}">⚾ scored feed for this game →</a>
+      <a class="chip" href="${esc(record.feed_url)}" target="_blank" rel="noopener">official feed ↗</a>
+      <a class="chip" href="https://www.mlb.com/gameday/${esc(g.game_pk)}" target="_blank" rel="noopener">Gameday ↗</a>
+      <a class="chip" href="https://baseballsavant.mlb.com/gamefeed?gamePk=${esc(g.game_pk)}" target="_blank" rel="noopener">Savant ↗</a>
+    </div>
+  </div>`;
+}
+
+function render() {
+  if (!DOC) return;
+  SHOWN = DOC.date || DATE;
+  const games = DOC.games || [];
+  const live = games.filter(r => r.game.abstract_state === 'Live').length;
+  const totalBatted = games.reduce((n, r) => n + (r.summary.batted_balls || 0), 0);
+  const predictions = games.reduce((n, r) => n + (r.summary.predictions_available || 0), 0);
+  const pending = games.reduce((n, r) => n + (r.pending_count || 0), 0);
+  const changes = games.reduce((n, r) => n + (r.change_count || 0), 0);
+  const reviews = games.reduce((n, r) => n + (r.summary.reviewed || 0), 0);
+  const NOTE_TEXT = (DOC.notes || []).filter(n => !(DOC.fell_back && /^No games were scheduled/.test(n))).join(' ');
+  $('meta').innerHTML = `<b>MLB game date ${esc(SHOWN)}</b> · ${games.length} game${games.length === 1 ? '' : 's'}
+    (${live} live) · read from the official schedule and feeds at <b>${esc(LiveBoard.clockLabel(DOC.generated_utc))}</b>.
+    ${DOC.fell_back ? `<br><span class="no">No games are scheduled on ${esc(DATE)} — this is the most recent slate
+      with games, shown instead. <a href="scoreboard.html?date=${encodeURIComponent(DATE)}">Show ${esc(DATE)} anyway</a>
+      (it will be empty).</span>` : ''}
+    ${REGISTRY_FAILED ? '<br><span class="no">The official status registry could not be fetched, so review rows show raw codes instead of labels.</span>' : ''}
+    ${NOTE_TEXT ? `<br><span class="no">${esc(NOTE_TEXT)}</span>` : ''}`;
+  $('kpis').innerHTML =
+    kpiCard(String(games.length), 'games on this date') +
+    kpiCard(String(live), 'currently live') +
+    kpiCard(String(totalBatted), 'batted balls with a captured final class') +
+    kpiCard(String(predictions), 'rows with a complete model prediction') +
+    kpiCard(String(pending), 'exact official-scorer pending markers observed') +
+    kpiCard(String(changes), 'scoring changes observed between reads') +
+    kpiCard(String(reviews), 'reviewed plays carried in the payload');
+  $('flags').innerHTML = flagBox((DOC.failures || []).concat(DOC.feed_failures || []));
+  $('cards').innerHTML = games.length
+    ? games.map(card).join('')
+    : `<div class="card"><b>No games on ${esc(DATE)}.</b><div class="legend">The official schedule returned zero games
+       for this date, and the previous ${LiveBoard.SLATE_LOOKBACK_DAYS} days contain no slate with games either. This is
+       a normal answer (off-days, the gap between playoff rounds, or a date outside the season). Try the date arrows, or
+       open the <a href="allgames.html?date=${encodeURIComponent(DATE)}">all-games feed</a> for the same date.</div></div>`;
+  $('gamesHeader').textContent = games.length ? `Games (${games.length})` : 'Games — none scheduled';
+}
+
+async function refresh(reason) {
+  if (BUSY) return;
+  BUSY = true;
+  $('status').textContent = 'reading the official schedule and feeds…';
+  try {
+    if (!MODEL) MODEL = await loadJSON('data/model.json');
+    if (!Object.keys(REGISTRY).length) {
+      try {
+        REGISTRY = await LiveBoard.fetchReviewRegistry();
+      } catch (error) {
+        REGISTRY_FAILED = true;
+      }
+    }
+    DOC = await LiveBoard.pollDay({
+      date: DATE, model: MODEL, cache: CACHE, storage: window.localStorage,
+      registry: REGISTRY, ledger: LEDGER,
+      percentileFn: p => errorPercentile(MODEL, p),
+    });
+    LEDGER = DOC.ledger;
+    render();
+    const failures = (DOC.failures || []).length + (DOC.feed_failures || []).length;
+    $('status').textContent = `updated ${LiveBoard.clockLabel(DOC.generated_utc)}${reason ? ` (${reason})` : ''}` +
+      (failures ? ` · ${failures} request(s) failed` : '');
+  } catch (error) {
+    if (DOC) {
+      $('status').textContent = `refresh failed (${error.message || error}); showing the last successful read`;
+      $('flags').innerHTML = flagBox([`refresh failed: ${error.message || error}`]);
+    } else {
+      $('status').textContent = `could not read the official feed (${error.message || error})`;
+      $('cards').innerHTML = '<div class="warn">The official Stats API could not be reached from this browser. ' +
+        'Nothing is shown rather than an invented game.</div>';
+    }
+  } finally {
+    BUSY = false;
+  }
+}
+
+function anyLive() {
+  return Boolean(DOC && (DOC.games || []).some(r => r.game.abstract_state === 'Live'));
+}
+function scheduleNext() {
+  clearTimeout(TIMER);
+  if (PAUSED) return;
+  const wait = anyLive() ? LiveBoard.LIVE_POLL_MS : LiveBoard.IDLE_POLL_MS;
+  TIMER = setTimeout(async () => {
+    if (document.visibilityState === 'visible') await refresh('auto');
+    scheduleNext();
+  }, wait);
+}
+
+function setDate(date) {
+  DATE = date;
+  $('datePicker').value = DATE;
+  const url = new URL(location.href);
+  url.searchParams.set('date', DATE);
+  history.replaceState(null, '', url);
+  CACHE = LiveBoard.createFeedCache();
+  DOC = null;
+  LEDGER = null;
+  $('cards').innerHTML = '<div class="card">Loading…</div>';
+  refresh('date change').finally(scheduleNext);
+}
+
+(async function init() {
+  $('datePicker').value = DATE;
+  $('datePicker').addEventListener('change', e => setDate(e.target.value || LiveBoard.easternDateString()));
+  $('prevDay').addEventListener('click', () => setDate(LiveBoard.addDays(DATE, -1)));
+  $('nextDay').addEventListener('click', () => setDate(LiveBoard.addDays(DATE, 1)));
+  $('today').addEventListener('click', () => setDate(LiveBoard.easternDateString()));
+  $('refresh').addEventListener('click', () => refresh('manual'));
+  $('pause').addEventListener('click', () => {
+    PAUSED = !PAUSED;
+    $('pause').textContent = PAUSED ? '▶ Resume auto-refresh' : '⏸ Pause auto-refresh';
+    $('pause').setAttribute('aria-pressed', String(PAUSED));
+    scheduleNext();
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !PAUSED) refresh('tab visible').finally(scheduleNext);
+  });
+  await refresh('initial');
+  scheduleNext();
+})();
+</script>
+</body>
+</html>

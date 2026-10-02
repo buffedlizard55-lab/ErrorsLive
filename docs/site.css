@@ -94,3 +94,38 @@ details summary{cursor:pointer;color:var(--accent2)}
 .scoring-pending-row td{background:#211b10}
 .scoring-pending-row:hover td{background:#2b2210}
 @media(max-width:640px){h1{font-size:1.5rem}.dial{min-width:150px}.prob-list{columns:1}}
+
+/* ---------- live scoreboard + all-games scoring feed (docs/live-board.js) ---------- */
+.game-card{display:flex;flex-direction:column;gap:8px}
+.game-head{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline}
+.game-head .team{display:flex;gap:8px;align-items:baseline}
+.game-head .score{font-size:1.7rem;font-weight:900;font-variant-numeric:tabular-nums}
+.game-sub{font-size:.9rem}
+.feed-stats{gap:6px;margin:10px 0}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.tab{background:var(--panel2);border:1px solid var(--line);border-radius:99px;color:var(--dim);
+  padding:5px 12px;cursor:pointer;font:inherit;font-size:.85rem}
+.tab:hover{border-color:var(--accent2);color:var(--ink)}
+.tab.on{background:var(--accent);border-color:var(--accent);color:#1a1400;font-weight:700}
+.feed-list{display:flex;flex-direction:column;gap:12px}
+.feed-row{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 16px;
+  display:flex;flex-direction:column;gap:6px}
+.feed-row.pending{border-left:4px solid var(--accent)}
+.feed-row.change{border-left:4px solid var(--accent2)}
+.feed-row.review,.feed-row.abs{border-left:4px solid #7aa2ff}
+.feed-row.live_ab{border-left:4px solid var(--good)}
+.feed-head{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:.86rem}
+.feed-title{font-size:.98rem}
+.feed-desc{color:var(--ink);font-size:.92rem}
+.feed-pending{background:#211b10;border:1px solid #5a4a15;border-radius:10px;padding:8px 12px;
+  display:flex;flex-direction:column;gap:4px;font-size:.88rem}
+.feed-review{background:#141d33;border:1px solid #2c4a7d;border-radius:10px;padding:8px 12px;font-size:.9rem}
+.dist{display:flex;height:12px;border-radius:99px;overflow:hidden;background:var(--panel2);margin:2px 0}
+.dist i{display:block;height:100%}
+.dist i.m-hit{background:#2fbf71}
+.dist i.m-out{background:#5a7fbf}
+.dist i.m-error{background:#e03131}
+.dist i.m-fc{background:#e08a31}
+.dist i.m-other{background:#6b7280}
+.prob-list{columns:2;column-gap:28px;margin:4px 0 0;padding-left:18px;list-style:disc}
+@media(max-width:640px){.prob-list{columns:1}}

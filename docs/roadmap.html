@@ -40,6 +40,26 @@
     field-level contracts between each page and the JSON it loads. A hand-typed number cannot survive.</li>
   </ul>
 
+  <h2>2026-10-02: a live scoreboard and an all-games scoring feed</h2>
+  <ul>
+    <li><b><a href="scoreboard.html">Scoreboard</a> and <a href="allgames.html">Scoring feed</a> are new.</b>
+    Both read the official schedule and a fields-projected live feed in the visitor's browser and reuse the exact
+    scoring, pending-detection and change-ledger code paths the rest of the site already ships
+    (<code>docs/live-board.js</code> is the one shared data layer). The feed shows every captured batted ball with the
+    model's 11 outcome categories, scores a play while its official-scorer ruling is still pending, and carries the
+    ledger's observed scoring changes — an initial call versus the final ruling — with an attribution note.</li>
+    <li><b>A real defect the DOM check found.</b> <code>scoreLiveFeed()</code> reported every play as “reviewed”:
+    absent <code>reviewDetails</code> became <code>{}</code>, which is truthy in JavaScript but falsy in the Python
+    twin. The committed artifacts were correct, so nothing published was wrong, but the browser rows were — fixed in
+    <code>docs/site.js</code>, and the browser-vs-CLI row-for-row check now includes the three review fields whose
+    omission hid it. A fatal global-identifier collision between a page and <code>site.js</code> was caught the same
+    way (jsdom render) and is now a standing audit check.</li>
+    <li><b>Evidence.</b> The data layer runs clean over all 24 committed official captures (1,271 scored rows, 1,396
+    feed events, 125 review/ABS objects); audit section R runs the whole day pipeline offline on the committed 823441
+    capture with a mocked network and asserts exact counts, 11 probabilities per scored row, the pending/no-vector
+    states and the first-seen observation log. A real-browser smoke test of the two new pages is still open.</li>
+  </ul>
+
   <h2>2026-09-30 (2): the RBI question answered by measurement</h2>
   <ul>
     <li><b><a href="rbi.html">RBI stakes, measured</a> is new.</b> <code>tools/rbi_evidence.py</code> derives
@@ -225,6 +245,14 @@
       schedule source</td></tr>
     <tr><td class="right">8</td><td>Add score differential and leverage index to the feature set</td>
       <td>modelling situation-dependent scoring</td><td>nothing — the feed carries the score</td></tr>
+    <tr><td class="right">11</td><td>Real-browser smoke test of <code>scoreboard.html</code> and
+      <code>allgames.html</code> on the deployed Pages site, including a live slate with an exact pending marker and a
+      scoring change observed across two polls</td><td>confidence that the two new pages behave on a real network and
+      a real feed</td><td>a day with games and a decision by the Official Scorer; the current 2026-10-02 slate is
+      empty, so the pages can only be exercised against a past date or a live slate</td></tr>
+    <tr><td class="right">12</td><td>Move the first-seen observation log out of localStorage with the rest of the
+      ledger if a hosted poller is ever available</td><td>row times that survive a different browser</td>
+      <td>the payload has no per-play time; only an observation can supply one, and only where an observer runs</td></tr>
   </table>
   </div>
 
@@ -234,7 +262,8 @@
     recompute the published numbers and the page/data contracts; section O recomputes every measured RBI cell;
     section P checks that the numbers quoted in prose match the artifacts the pages load, that every internal
     link resolves and that every external link points at an official host; section Q proves the browser and the
-    CLI agree row for row.</li>
+    CLI agree row for row; section R runs the live-board data layer through the committed capture with a mocked
+    network and checks the scoreboard/feed contracts.</li>
     <li><code>python3 tools/run_all.py</code> — rebuilds every committed artifact offline; CI fails if a single
     byte changes.</li>
     <li><code>data/ingest/ingest_report.json</code> — the collector's own run report, including every flagged
@@ -243,7 +272,7 @@
     returns, so the claims about videos and old seasons are checkable.</li>
   </ul>
 </main>
-<footer><div class="inner"><span>Pass log and backlog reviewed 2026-09-30. A real-browser Pages smoke test of the live board, the alert console and the new <a href="rbi.html" style="color:inherit">RBI stakes</a> page remains open.</span>
+<footer><div class="inner"><span>Pass log and backlog reviewed 2026-10-02. A real-browser Pages smoke test of the live board, the alert console, the <a href="rbi.html" style="color:inherit">RBI stakes</a> page and the new <a href="scoreboard.html" style="color:inherit">scoreboard</a> / <a href="allgames.html" style="color:inherit">scoring feed</a> remains open.</span>
 <span>Own the Outcome</span></div></footer>
 <script src="site.js"></script>
 </body>
