@@ -26447,7 +26447,7 @@ game_pk,at_bat,inning,half,outs_before,on_1b,on_2b,on_3b,runners_on,risp,bat_sid
 824624,54,7,bottom,0,0,0,0,0,0,R,R,field_out,out,0,54.1,-33.0,4.0,ground_ball,soft,1,0,,,d027914c-512b-3753-ac16-9cd26ecbbd84
 824624,56,7,bottom,2,0,0,0,0,0,R,R,double,hit,0,106.6,17.0,350.0,line_drive,hard,1,0,,,39adee77-2cde-3eed-9085-72426df95710
 824624,58,7,bottom,2,0,0,0,0,0,R,R,field_out,out,0,94.2,20.0,271.0,line_drive,medium,1,0,,,2241d0e8-360e-3cb0-a6b0-5a8cf78d3460
-824624,59,8,top,0,0,0,0,0,0,R,R,field_out,out,0,,,,fly_ball,medium,0,0,,,89e36c03-cd52-3112-8ea3-62aab107c6f6
+824624,59,8,top,0,0,0,0,0,0,R,R,field_out,out,0,100.6,38.0,329.0,fly_ball,medium,1,0,,,89e36c03-cd52-3112-8ea3-62aab107c6f6
 824624,60,8,top,1,0,0,0,0,0,R,R,field_out,out,0,101.7,-31.0,5.0,ground_ball,medium,1,0,,,f93b13c9-af80-301a-8dd2-913f1c2920e1
 824624,61,8,top,2,0,0,0,0,0,L,R,field_out,out,0,86.6,-2.0,34.0,ground_ball,medium,1,0,,,d49120ba-44ba-35d7-9419-b4d1a8055289
 824624,66,9,top,1,0,0,0,0,0,L,L,single,hit,0,93.6,-15.0,9.0,ground_ball,medium,1,0,,,e42bcafd-0ecf-3573-8870-a068ba455891
@@ -27333,7 +27333,7 @@ game_pk,at_bat,inning,half,outs_before,on_1b,on_2b,on_3b,runners_on,risp,bat_sid
 824785,40,5,bottom,1,1,0,0,1,0,R,R,home_run,hit,2,109.2,24.0,412.0,fly_ball,medium,1,0,,,a69ef9c1-4b5b-3510-9e3c-9d54e2b6ef96
 824785,44,6,top,0,1,0,0,1,0,R,R,single,hit,0,106.8,15.0,252.0,line_drive,hard,1,0,,,31de959e-c978-316c-a688-3c0791333cc6
 824785,45,6,top,0,1,1,0,2,1,R,L,field_out,out,0,63.7,-9.0,11.0,ground_ball,medium,1,0,,,74ddd6d1-64f5-3e15-b2d1-789692c8939c
-824785,47,6,top,2,0,1,1,2,1,R,L,single,hit,1,105.3,-30.0,5.0,ground_ball,medium,1,0,,,1fdcd635-8e7c-30e5-b1b8-63c2872dbb42
+824785,47,6,top,2,0,1,1,2,1,R,L,field_error,error,0,105.3,-30.0,5.0,ground_ball,medium,1,0,,,1fdcd635-8e7c-30e5-b1b8-63c2872dbb42
 824785,48,6,top,2,1,0,0,1,0,R,L,single,hit,0,106.1,-1.0,45.0,ground_ball,medium,1,0,,,5f43c452-bb4d-3645-9669-e84985ee372d
 824785,49,6,top,2,0,0,0,0,0,R,R,field_out,out,0,84.8,31.0,297.0,fly_ball,medium,1,0,,,3f8d7083-3a74-39e2-aa61-724892c28d9e
 824785,50,6,bottom,0,0,0,0,0,0,R,R,field_out,out,0,51.5,-26.0,7.0,ground_ball,medium,1,0,,,5c84eaf4-9895-3385-b2e1-0212fc9bfecf
@@ -27922,7 +27922,7 @@ game_pk,at_bat,inning,half,outs_before,on_1b,on_2b,on_3b,runners_on,risp,bat_sid
 824707,29,4,bottom,2,0,0,0,0,0,R,L,field_out,out,0,97.8,33.0,342.0,fly_ball,medium,1,0,,,43d1b733-a7a5-3b9c-a9c1-39f6a32d8e23
 824707,30,5,top,0,0,0,0,0,0,R,L,field_out,out,0,101.5,40.0,312.0,fly_ball,hard,1,0,,,4d101fe8-8743-387c-9263-c86ec3d5f43c
 824707,32,5,top,2,0,0,0,0,0,L,L,field_out,out,0,92.3,-7.0,16.0,ground_ball,medium,1,0,,,d3d11835-ab37-354d-a2aa-3f46c0123a0b
-824707,33,5,bottom,0,0,0,0,0,0,R,L,field_error,error,0,88.4,-1.0,45.0,ground_ball,medium,1,0,,,638baaef-251b-30f7-9420-b14c2868f43b
+824707,33,5,bottom,0,0,0,0,0,0,R,L,single,hit,0,88.4,-1.0,45.0,ground_ball,medium,1,0,,,638baaef-251b-30f7-9420-b14c2868f43b
 824707,34,5,bottom,0,1,0,0,1,0,L,L,field_out,out,0,30.9,57.0,56.0,bunt_popup,medium,1,0,,,752e0655-beff-3ceb-92de-4d9f2ded1d37
 824707,36,5,bottom,2,0,0,0,0,0,R,L,field_out,out,0,68.5,6.0,79.0,ground_ball,medium,1,0,,,d411c697-2c2c-3477-b774-77ad27381fca
 824707,37,6,top,0,0,0,0,0,0,R,L,single,hit,0,97.2,1.0,53.0,ground_ball,medium,1,0,,,1d55354d-2bc8-3ac7-abc2-37d3d44c7fbb
@@ -28433,7 +28433,7 @@ game_pk,at_bat,inning,half,outs_before,on_1b,on_2b,on_3b,runners_on,risp,bat_sid
 823491,62,8,top,0,0,0,0,0,0,R,R,single,hit,0,108.7,1.0,57.0,ground_ball,medium,1,0,,,263df0c2-9bb6-32c7-b09a-32d4898a52f3
 823491,63,8,top,0,0,0,0,0,0,R,R,field_out,out,0,57.7,44.0,165.0,popup,medium,1,0,,,5c16d822-7428-34da-8a87-9d724d840ac0
 823491,65,8,top,1,0,0,0,0,0,R,R,field_out,out,0,49.1,27.0,112.0,popup,medium,1,0,,,d9eeda6b-0b1b-36ea-901a-9aa85fb48c20
-823491,66,8,top,2,1,1,1,3,1,L,R,single,hit,1,104.2,-4.0,32.0,ground_ball,medium,1,0,,,1193516e-6da8-38a9-9f89-3f3fb05af7f0
+823491,66,8,top,2,1,1,1,3,1,L,R,field_error,error,0,104.2,-4.0,32.0,ground_ball,medium,1,0,,,1193516e-6da8-38a9-9f89-3f3fb05af7f0
 823491,68,8,bottom,0,0,0,0,0,0,L,R,single,hit,0,95.4,17.0,228.0,line_drive,medium,1,0,,,2c0f3f88-3f43-3314-a65a-fc0d2acc8a1e
 823491,69,8,bottom,0,0,0,0,0,0,R,R,field_out,out,0,85.4,45.0,307.0,fly_ball,medium,1,0,,,24b735eb-9473-32ee-bd54-ef9a4da15995
 823491,70,8,bottom,1,0,0,0,0,0,R,R,field_out,out,0,88.4,51.0,232.0,fly_ball,medium,1,0,,,aef16357-6b2a-32e1-b515-f7b1a0573012
@@ -28628,7 +28628,7 @@ game_pk,at_bat,inning,half,outs_before,on_1b,on_2b,on_3b,runners_on,risp,bat_sid
 824058,49,5,top,2,0,0,0,0,0,L,L,field_out,out,0,94.6,28.0,373.0,fly_ball,medium,1,0,,,4ddbee2b-0f31-3734-b29f-158ccb4037c1
 824058,50,5,bottom,0,0,0,0,0,0,L,R,field_out,out,0,96.3,33.0,366.0,fly_ball,medium,1,0,,,85e786ec-16c3-3e31-9e0e-aa08b9059c07
 824058,51,5,bottom,1,0,0,0,0,0,R,R,field_out,out,0,74.5,14.0,133.0,line_drive,medium,1,0,,,a35e33a8-c5a1-386b-b3f3-3ce44e48eaf2
-824058,52,5,bottom,2,0,0,0,0,0,L,R,field_error,error,0,59.6,23.0,124.0,ground_ball,medium,1,0,,,ab5d8d60-439e-3961-8d55-8981e034045d
+824058,52,5,bottom,2,0,0,0,0,0,L,R,single,hit,0,59.6,23.0,124.0,ground_ball,medium,1,0,,,ab5d8d60-439e-3961-8d55-8981e034045d
 824058,53,5,bottom,2,1,0,0,1,0,L,R,force_out,out,0,79.0,-9.0,19.0,ground_ball,medium,1,0,,,0c78d7d4-2302-37d4-9e69-c0f9a90281a2
 824058,54,6,top,0,0,0,0,0,0,R,L,single,hit,0,87.0,7.0,127.0,ground_ball,medium,1,0,,,07b316a0-6208-3e84-91fe-8f0b573d213a
 824058,55,6,top,0,1,0,0,1,0,L,L,force_out,out,0,89.7,-20.0,7.0,ground_ball,medium,1,0,,,88216609-740b-3b1c-9d91-f2a9450e1e18
@@ -28937,7 +28937,7 @@ game_pk,at_bat,inning,half,outs_before,on_1b,on_2b,on_3b,runners_on,risp,bat_sid
 822678,54,7,bottom,2,0,0,0,0,0,R,L,field_out,out,0,103.9,-3.0,32.0,ground_ball,medium,1,0,,,fca55f42-e2d2-3a15-bdf0-cb1cee38dbd1
 822678,55,8,top,0,0,0,0,0,0,R,R,field_out,out,0,105.3,15.0,275.0,line_drive,hard,1,0,,,c04bcc9b-d259-3467-9db2-a3bd40bb7d47
 822678,56,8,top,1,0,0,0,0,0,L,R,double,hit,0,96.8,10.0,191.0,line_drive,medium,1,0,,,e0f5d403-7c66-390b-a219-b29b9cf64b19
-822678,58,8,top,2,0,1,0,1,1,L,R,field_error,error,0,76.2,-4.0,23.0,ground_ball,medium,1,0,,,cddac673-5f55-35c6-a8ba-0d6d3b04ab8e
+822678,58,8,top,2,0,1,1,2,1,L,R,single,hit,0,76.2,-4.0,23.0,ground_ball,medium,1,0,,,cddac673-5f55-35c6-a8ba-0d6d3b04ab8e
 822678,60,8,bottom,0,0,0,0,0,0,L,R,field_out,out,0,78.9,66.0,136.0,popup,medium,1,0,,,00296d39-f7db-3273-95d9-112ab7dae14a
 822678,61,8,bottom,1,0,0,0,0,0,L,R,field_out,out,0,89.2,84.0,46.0,popup,medium,1,0,,,901139bb-d5f5-3ec0-a88d-605c1c140c92
 822678,62,8,bottom,2,0,0,0,0,0,L,R,field_out,out,0,99.2,-20.0,10.0,ground_ball,medium,1,0,,,709c7907-e667-37de-9f6b-d01e86c19cd6
@@ -28957,7 +28957,7 @@ game_pk,at_bat,inning,half,outs_before,on_1b,on_2b,on_3b,runners_on,risp,bat_sid
 822759,16,2,bottom,2,0,0,0,0,0,L,R,field_out,out,0,104.7,6.0,130.0,line_drive,medium,1,0,,,3bc97ad8-6299-3299-896e-e5033a39bdc5
 822759,18,3,top,0,1,0,0,1,0,L,R,single,hit,0,37.5,-67.0,3.0,bunt_grounder,medium,1,0,,,1b326985-12af-3f2d-954c-d58a957023c7
 822759,19,3,top,0,0,0,0,0,0,L,R,field_out,out,0,93.4,11.0,147.0,line_drive,medium,1,0,,,58f9ad1f-ddb1-3b53-96bd-6a4a39ae15b8
-822759,20,3,top,1,1,1,1,3,1,R,R,fielders_choice,fielders_choice,0,94.4,-6.0,14.0,ground_ball,medium,1,0,,,8bf51274-0c05-33e0-bac5-66df808715c7
+822759,20,3,top,1,1,1,1,3,1,R,R,fielders_choice,fielders_choice,1,94.4,-6.0,14.0,ground_ball,medium,1,0,,,8bf51274-0c05-33e0-bac5-66df808715c7
 822759,21,3,top,1,1,0,1,2,1,R,R,double,hit,1,105.5,23.0,317.0,fly_ball,hard,1,0,,,cf1b4e57-6caa-3a76-8e7a-e56cfaef96b9
 822759,25,3,bottom,1,0,0,0,0,0,L,R,double,hit,0,79.3,34.0,243.0,fly_ball,medium,1,0,,,47e7a102-fb17-33b5-9e97-f2881be85e8b
 822759,26,3,bottom,1,0,1,0,1,1,L,R,field_out,out,0,87.1,-4.0,24.0,ground_ball,medium,1,0,,,6e123c71-daec-30e0-9667-73d12dcf88fb

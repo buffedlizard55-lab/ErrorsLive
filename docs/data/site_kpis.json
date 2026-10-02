@@ -64,7 +64,7 @@
  "model_dataset": {
   "bip": 30298,
   "games": 590,
-  "errors": 243,
+  "errors": 242,
   "fielders_choice": 183
  },
  "replays": {
@@ -102,13 +102,13 @@
   "games": 2430,
   "plays": 184328,
   "bip": 124620,
-  "errors": 1042,
+  "errors": 1041,
   "fc": 727,
-  "numeric_ok": 123978,
+  "numeric_ok": 123979,
   "class_counts": {
    "out": 82994,
-   "hit": 39848,
-   "error": 1042,
+   "hit": 39849,
+   "error": 1041,
    "fielders_choice": 727,
    "other": 9
   },
@@ -194,10 +194,10 @@
    "": 1792,
    "404": 321
   },
-  "elapsed_s": 136.2
+  "elapsed_s": 145.7
  },
  "ingest_meta": {
-  "generated_utc": "2026-09-30T18:25:02+00:00",
+  "generated_utc": "2026-10-02T23:07:13+00:00",
   "windows": [
    {
     "start": "2026-03-25",

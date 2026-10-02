@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-30T18:25:02+00:00",
+ "generated_utc": "2026-10-02T23:07:13+00:00",
  "endpoints": {
   "feed": "https://statsapi.mlb.com/api/v1.1/game/{pk}/feed/live?fields=liveData,plays,allPlays,about,atBatIndex...",
   "linescore": "https://statsapi.mlb.com/api/v1/game/{pk}/linescore",
@@ -38,13 +38,13 @@
   "games": 2430,
   "plays": 184328,
   "bip": 124620,
-  "errors": 1042,
+  "errors": 1041,
   "fc": 727,
-  "numeric_ok": 123978,
+  "numeric_ok": 123979,
   "class_counts": {
    "out": 82994,
-   "hit": 39848,
-   "error": 1042,
+   "hit": 39849,
+   "error": 1041,
    "fielders_choice": 727,
    "other": 9
   },
@@ -130,6 +130,6 @@
    "": 1792,
    "404": 321
   },
-  "elapsed_s": 136.2
+  "elapsed_s": 145.7
  }
 }
