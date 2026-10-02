@@ -1,6 +1,6 @@
 {
  "mode": "live-slate",
- "generated_utc": "2026-10-02T20:01:34Z",
+ "generated_utc": "2026-10-02T22:16:56Z",
  "note": "Fetched from the official schedule + feed endpoints.",
  "game_day": "2026-10-02",
  "game_date": "2026-10-02",
@@ -16,6 +16,20 @@
    0.8056
   ],
   "error_recall": 0.0,
+  "event_type_classes": [
+   "single",
+   "double",
+   "triple",
+   "home_run",
+   "error",
+   "fielders_choice",
+   "field_out",
+   "force_out",
+   "double_play",
+   "sac_fly",
+   "sac_bunt"
+  ],
+  "event_type_accuracy_grouped": 0.731709,
   "dataset_note": "Whole-population model-window sample (2026-08-15 through 2026-09-27): every captured batted ball in each selected game, so the error rate is the observed class rate for this window; it is not the full collector-window rate."
  },
  "summary": {
@@ -25,6 +39,10 @@
   "errors": 0,
   "risp_runs_at_stake": 0,
   "overturned_reviews": 0,
+  "official_scoring_pending": 0,
+  "pending_primary": 0,
+  "pending_prior": 0,
+  "predictions_available": 0,
   "unresolved_in_feed": 0,
   "top_pick_agreement": "0/0",
   "failures": 0
