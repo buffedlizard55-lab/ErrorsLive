@@ -1,0 +1,93 @@
+/* Focused ErrorsLive scoring feed; kept separate from the copied PBP theme. */
+.scoring-focus-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 22px 48px;
+}
+.scoring-focus-main h1 {
+  margin: 4px 0 8px;
+  font-size: clamp(24px, 4vw, 34px);
+}
+.scoring-focus-main .lede {
+  max-width: 850px;
+  color: var(--muted);
+}
+.focus-note {
+  margin: 16px 0 18px;
+  padding: 13px 16px;
+  border: 1px solid rgba(210, 153, 34, .55);
+  border-left: 4px solid var(--yellow);
+  border-radius: 9px;
+  background: rgba(210, 153, 34, .09);
+  color: var(--text);
+  font-size: 14px;
+}
+.focus-note b { color: #ffd166; }
+.page-scoring-focus .active-strip-wrap[hidden] { display: none; }
+.page-scoring-focus .reviews-summary-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+.page-scoring-focus .tabs {
+  padding: 8px 0 14px;
+}
+.page-scoring-focus .feed-list { gap: 12px; }
+.page-scoring-focus .feed-row { border-left: 3px solid var(--accent); }
+.page-scoring-focus .feed-row.feed-type-pending_scoring { border-left-color: var(--yellow); }
+.page-scoring-focus .model-event { border-left-color: #e03131; }
+.page-scoring-focus .model-panel {
+  margin: 12px 0;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(47, 129, 247, .07);
+}
+.page-scoring-focus .model-panel > strong { display: block; font-size: 14px; }
+.page-scoring-focus .model-panel p { margin: 7px 0; font-size: 13px; color: var(--muted); }
+.model-score-headline {
+  margin: 6px 0 2px;
+  color: #7dd3a0;
+  font-size: clamp(21px, 3vw, 28px);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.model-probabilities { display: flex; flex-wrap: wrap; gap: 7px; margin: 9px 0; }
+.model-probabilities span {
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.model-probabilities span.model-probability-top {
+  border-color: var(--green);
+  background: rgba(46, 160, 67, .16);
+  color: #a8f0c5;
+  font-weight: 800;
+}
+.model-detail-list { margin-top: 8px; }
+.model-detail-list summary,
+.focus-details summary { cursor: pointer; color: var(--accent); font-weight: 700; }
+.model-probabilities-detail { margin-top: 9px; }
+.focus-details {
+  margin: 22px 0 4px;
+  padding: 13px 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 13px;
+}
+.focus-details ul { margin-bottom: 0; padding-left: 20px; }
+.focus-details li + li { margin-top: 6px; }
+.page-scoring-focus .status-line { color: var(--muted); padding: 12px 0; }
+.page-scoring-focus .site-footer { margin-top: 22px; }
+@media (max-width: 640px) {
+  .scoring-focus-main { padding: 18px 14px 36px; }
+  .page-scoring-focus .reviews-summary-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .page-scoring-focus .feed-row { padding: 12px; }
+}

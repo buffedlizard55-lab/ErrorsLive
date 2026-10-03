@@ -1,29 +1,17 @@
 /* Shared helpers for the LiveScoringErrors pages.
-   Data files are served from ./data/. The model math here is mirrored by tools/live_score.py, and
-   tests/test_pipeline.py asserts the two implementations agree to 1e-9 on every archived batted
-   ball. Both sides build their feature vector from `primary.feature_spec` in model.json, so a change
-   to the features cannot silently desynchronise the page from the tool. */
+   The public navigation stays intentionally small: scoreboard, focused
+   scoring feed and model details. Supporting research pages remain reachable
+   from their citations and technical links, not the first-use workflow. */
 const NAV = [
   ['pbp/index.html', 'Scoreboard'],
-  ['pbp/reviews.html', 'Scoring feed'],
-  ['index.html', 'Score a batted ball'],
-  ['live.html', 'Live board'],
-  ['allgames.html', 'All-games feed'],
-  ['scoreboard.html', 'Full scoreboard'],
-  ['alerts.html', 'Live alerts'],
-  ['replays.html', 'Replays & runs'],
-  ['model.html', 'Model & validation'],
-  ['overturned.html', 'Archive 2014–18'],
-  ['rules.html', 'Rules & RBI'],
-  ['rbi.html', 'RBI stakes, measured'],
-  ['methods.html', 'Methods & audit'],
-  ['roadmap.html', 'Limitations'],
+  ['pbp/reviews.html', 'Errors + scoring pending'],
+  ['model.html', 'Model details'],
 ];
 (function buildNav() {
   const host = document.querySelector('.nav-inner');
   if (!host) return;
   host.insertAdjacentHTML('beforeend',
-    '<a class="brand" href="index.html">Live<span>Scoring</span>Errors</a>' +
+    '<a class="brand" href="index.html">ErrorsLive</a>' +
     NAV.map(([h, t]) => `<a class="navlink" href="${h}" data-p="${h}">${t}</a>`).join(''));
   const here = (location.pathname.split('/').pop() || 'index.html');
   document.querySelectorAll(`a.navlink[data-p="${here}"]`).forEach(a => a.classList.add('on'));
@@ -152,10 +140,6 @@ function rbiRuleNote(cls, runScored, officialEvent, bases = [], outs = 0) {
 }
 
 function scoreLiveFeed(feed, game, model) {
-  /* A missing model must silence the estimates, not the official rows: with
-     no committed model the rows below still render, each with
-     prediction_available = false and the reason on the row. */
-  model = model || {};
   const plays = (((feed || {}).liveData || {}).plays || {}).allPlays || [];
   const source = game.official_feed_url || '';
   const pk = game.gamePk || game.pk || '';
@@ -247,6 +231,9 @@ function scoreLiveFeed(feed, game, model) {
       outs: outs === undefined ? 0 : Number(outs), inning: about.inning || 5,
       bat: (matchup.batSide || {}).code || '', pitch: (matchup.pitchHand || {}).code || '',
     };
+    const score = evalModel(model, state);
+    const probs = score.probs;
+    const eventProbs = score.eventProbs || {};
     const runScored = (play.runners || []).some(r => r && r.movement && r.movement.end === 'score');
     // An empty object is truthy in JavaScript (it is falsy in the Python mirror), so an
     // absent reviewDetails must be normalised to null before `reviewed` is derived from it.
@@ -256,16 +243,6 @@ function scoreLiveFeed(feed, game, model) {
       Object.keys(reviewCandidate).length ? reviewCandidate : null;
     const ruled = Boolean(eventType) && !pending;
     row.status = pending ? 'official_scoring_pending' : ruled ? 'scored' : 'no_event_type_yet';
-    // With no committed model the row stops here: officially observed, honestly unscored.
-    if (!model || !model.primary || !Array.isArray(model.primary.feature_spec) ||
-        !model.primary.feature_spec.length) {
-      row.prediction_unavailable_reason = 'The committed model file is unavailable, so this row is shown without an estimate.';
-      rows.push(row);
-      continue;
-    }
-    const score = evalModel(model, state);
-    const probs = score.probs;
-    const eventProbs = score.eventProbs || {};
     Object.assign(row, {
       prediction_available: true, prediction_unavailable_reason: '',
       launch_speed: hd.launchSpeed, launch_angle: hd.launchAngle, distance: hd.totalDistance,

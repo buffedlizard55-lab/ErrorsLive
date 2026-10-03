@@ -1,8 +1,10 @@
-# LiveScoringErrors
+# ErrorsLive — MLB scoring watch
 
-Can an MLB official scorer's decision — **hit vs. error vs. fielder's choice** — be predicted from
-Statcast batted-ball physics, in real time? This repository contains the data pipeline, the
-statistical model, and the public site.
+The public first-use flow is an all-games MLB scoreboard plus a focused scoring feed for current
+official field errors, exact primary official-scorer-pending rulings, and error-involving classification
+changes that the browser actually observed. The existing model estimates a final captured outcome
+class; it does **not** estimate the probability that an error call will be changed. This repository
+also contains the underlying data pipeline, model research, and historical audit pages.
 
 **Site (GitHub Pages):** https://buffedlizard55-lab.github.io/ErrorsLive/
 **Sister dataset researched:** https://github.com/nydailynews/mlb-overturned-calls (2014–2018 manager-replay overturns)
@@ -76,11 +78,11 @@ statistical model, and the public site.
 | a | Can a batted ball be classified as hit / error / fielder's choice / out before the feed settles? | The model estimates the final captured feed label; grouped out-of-fold ROC AUC is **0.7808** (95% CI **0.7542–0.8056**) and average precision is **0.02652** (95% grouped-bootstrap interval **0.02004–0.03754**) against a **0.798%** error-rate baseline. It never nominates “error” as the top multiclass call, so the score is a review ranking, not a ruling or a forecast of a later scorer change. The published queue table states the cost of a review, not a verdict. See `docs/model.html` and `docs/data/model.json`. |
 | a′ | Can the site identify a scorer's internal pending queue? | No public queue is exposed. `tools/watch_rulings.py` records only the observable API state `hitData` present with no `result.eventType`, then records later feed-value differences. A difference proves only that captured fields changed between observations—not that a decision was pending, why it changed, or exactly when. See `docs/methods.html` and `data/ingest/ruling_changes.csv`. |
 | b | What are the RBI consequences of error vs. hit vs. fielder's choice? | `docs/rules.html` now reproduces the **verbatim 2026 text** of Rule 9.04(a)(1)–(3), (b)(1)–(2) and (c) from the official PDF (page 115), Rule 9.05(b)(1) (page 116) for the hit / fielder's-choice boundary, Rule 9.12 and its Comment (pages 127–128) for what an error is and is not, and Rule 9.01(a) (pages 107–108) for the scorer's clock: preliminary during play, final or revised within 24 hours, a 72-hour Club appeal, and no change after that. The headline answer: an error does **not** automatically mean no RBI — Rule 9.04(a)(3) credits one when, before two outs, an error is made on a play on which a runner from third base ordinarily would score. Live RBI notes remain conditional reminders, not rulings. |
-| c | Can each live batted ball receive a score out of 100? | Yes: `100 × P(final captured feed label = error)`, with class probabilities and pre-pitch context. `docs/index.html` has a calculator; `docs/live.html` attempts direct browser polling; `tools/live_score.py` is the offline CLI twin. The audit suite now compares the two implementations **row for row** on the committed fixture — call, score, base/out state, the review flag and the Rule 9.04 RBI notes. `docs/scoreboard.html` and `docs/allgames.html` (added 2026-10-02) put the same rows in front of the whole slate: a live scoreboard with a per-game scoring watch, and a chat-style all-games feed in which every captured batted ball carries the model's 11-outcome distribution (single / double / triple / home run / error / fielder's choice / field out / force out / double play / sac fly / sac bunt), and every exact official-scorer pending marker is scored the same way while it is still undecided. |
+| c | Can the site show model guidance on an eligible live scoring play? | The focused feed shows the committed model's final-label outcome estimate only for current official `field_error` plays and exact primary scorer-pending rulings with valid inputs. It does not show unrelated batted balls, and the error-row hit score is **not** a probability that the error will be rescored. Error-involving changes are shown only when this browser observed both classifications. See `docs/pbp/reviews.html` and the adapter tests in `tests/pbp-integration.test.cjs`. |
 | d | Can users inspect overturned calls and watch/download video for run-impact cases? | `docs/replays.html` indexes the ingested 2026 review window (**11,528** reviews, **6,149** marked overturned, **428** overturned reviews on which the final feed records a runner scoring). **17** overturned rows are heuristic run-impact candidates; **0** passed the separate movement/score consistency diagnostic. Every candidate row now has an **inline player** (the mp4 streams from the league's own `sporty-clips.mlb.com` host, nothing is re-hosted) plus a download control; rows whose play id exposes no file rendition say so and open Baseball Savant instead. Neither count is a verified list of runs removed — and the site says so on the row. The 2014–2018 archive is on `docs/overturned.html`. |
 | e | Is there a GitHub Pages site? | Yes: `/docs`, published at <https://buffedlizard55-lab.github.io/ErrorsLive/>. |
-| f | Is “Own the Outcome” a focal point? | The home page and methods page state it; in practice the pipeline records flags and failed fetches instead of silently smoothing them over, and the site surfaces model limits beside headline metrics. |
-| g | Can collection run with minimal manual checking? | Best-effort automation is configured: browser refresh about every 2 minutes while live, static fallback refresh on a 30-minute schedule, active ruling observations every 15 minutes, and a daily recheck of recent games. `docs/alerts.html` turns those observations into a change feed — polls in the browser, diffs each capture against the previous one, raises typed alerts (ruling appeared, ruling changed, RBI moved, review overturned, run scored with a runner in scoring position), optionally notifies and beeps, and exports the ledger; the CI-side ledger in `docs/data/alerts.json` is the fallback when a browser cannot reach the league. The watcher defects found in this session (`TypeError` from comparing CSV text to API integers; a format-change flood of 12,349 phantom rows; duplicated plays from a game listed under two dates) are fixed, regression-tested, and verified in production — the status file reports `ok: true` and a re-run of the same window reports 0 changes. GitHub schedules are not guaranteed real-time delivery; see the workflows and limitations below. |
+| f | Is “Own the Outcome” a focal point? | The methods page states it; in practice the pipeline records flags and failed fetches instead of silently smoothing them over, and the focused landing/feed disclose the model's scope and limitations beside the main actions. |
+| g | Can collection run with minimal manual checking? | The focused scoreboard and feed poll the public API directly (5-second cadence while games are active, slower on an idle slate); their only scoring rows are current official errors, exact primary scorer-pending rulings, and observed error-involving changes. CI collection and older research/alert pages remain available separately, but schedules are not real-time delivery and the legacy general-review alert console is not part of the first-use flow. See the workflows and limitations below. |
 | h | What remains? | See `docs/roadmap.html` and “Limitations and next steps” below. |
 
 ## Data provenance — scope is explicit
@@ -90,17 +92,14 @@ statistical model, and the public site.
 - **Collection vs. model scope:** `data/ingest/games.csv` spans 2,430 games from 2026-03-25 to 2026-09-27. `docs/data/bip_official.csv` is the selected full-population modeling window, 2026-08-15 to 2026-09-27: 30,298 batted balls from 590 games, of which 92 lack a complete vector and are quarantined. The model uses 30,206 complete rows (241 errors; 0.798%). The separate `docs/data/bip.csv` is a 24-game error-enriched audit set (1,271 rows, 24 errors); it is not used as a population estimate.
 - **Per-play video:** Baseball Savant's `sporty-videos?playId={playId}` page; where the official content endpoint exposed a matching rendition, the direct MP4 is offered. The current run-impact-candidate set has 17 rows with video links. Video availability is not universal, and links are not a verdict that a run was removed.
 - **Measured RBI evidence:** `tools/rbi_evidence.py` derives `docs/data/rbi_evidence.json` from the same batted-ball table the model uses (30,206 complete rows, 2026-08-15 → 2026-09-27): the observed RBI rate per final call and per base/out state with 95% Wilson intervals, the Rule 9.04(a)(3) gate test, and every error-ruled play in the window that still earned an RBI, each with its play id and official feed URL. Every cell is recomputed from `docs/data/bip_official.csv` by `tests/test_pipeline.py`. The three `rbi_if_*` note columns of `docs/data/replays.csv` are re-derived by `tools/refresh_rbi_notes.py`, so the committed ledger always matches the wording the collector would write today.
-- **Live scoreboard and all-games feed (added 2026-10-02):** `docs/scoreboard.html` and `docs/allgames.html`
-  read the official schedule (`hydrate=review,linescore,decisions,probablePitcher,team` — verified live 2026-10-02,
-  including team abbreviations, records, probable pitchers, the live count/outs/batter/pitcher and the official
-  manager-challenge counters) and a fields-projected `feed/live` for every Live and recently Final game, all in the
-  visitor's browser. Scoring, pending detection and the change ledger are the *same* code paths as `docs/live.html`
-  (`docs/site.js` + `docs/scoring-feed.js`) behind one shared data layer, `docs/live-board.js`, so the scoreboard and
-  the feed cannot disagree about a play. The feeds carry no per-play timestamp, so a row's time is when that browser
-  first observed the play, labelled “first seen” — never presented as an official time. Offline, the audit suite runs
-  the data layer against the committed 823441 capture with a mocked network and asserts the exact counts (46 scored
-  batted balls, 3 reviewed plays, 2 overturned, 6 ABS review objects, 11 probabilities per scored row), and a
-  jsdom smoke test of both pages was run during the build but is not part of CI (jsdom is not a repo dependency).
+- **Focused live scoreboard and scoring feed:** `docs/pbp/index.html` shows the selected date's games;
+  `docs/pbp/reviews.html` admits only current official `field_error` plays, observed classification changes with an
+  error on either side, and exact `os_ruling_pending_primary` scorer markers. It excludes manager challenges,
+  umpire/replay reviews, ABS, boundary calls, prior base-running pending markers and ordinary batted balls.
+  The score on an error row is a final-label estimate, not a forecast that the scorer will change that error.
+  The browser uses the public schedule and play-by-play endpoints; the model is experimental and its validation
+  audit remains unresolved. `tests/pbp-integration.test.cjs` exercises the focused filters, missing-input behavior,
+  observed error changes, duplicate suppression and the pending-row model panel.
 - **Replay review evidence:** the modern ingest window has 11,528 review rows, 6,149 marked overturned, 17 heuristic run-impact candidates, and zero rows passing the independent runner-movement/score-delta consistency diagnostic. The heuristic count is not confirmed scoreboard impact.
 - **Rules:** the official [2026 Official Baseball Rules PDF](https://mktg.mlbstatic.com/mlb/official-information/2026-official-baseball-rules.pdf), MLB's [Error](https://www.mlb.com/glossary/standard-stats/error) and [Runs Batted In](https://www.mlb.com/glossary/standard-stats/runs-batted-in) glossaries, and [MLB Official Scoring Changes](https://www.mlb.com/official-information/scoring-changes). Rule 9.04(a)(1)–(3), (b)(1)–(2), (c), Rule 9.05(b)(1) and Comment, Rule 9.12(a)(1) and Comment and Rule 9.01(a) are quoted **verbatim**, each at its printed page, on `docs/rules.html`; `docs/data/rbi_evidence.json` carries the same quotations beside the measured RBI table and the audit suite asserts the two copies match. The one caveat is unchanged: this sandbox cannot re-fetch the PDF, so a future edition changing the wording needs the quotation, the JSON and the test updated together.
 - **2014–2018 replay archive:** `github.com/nydailynews/mlb-overturned-calls`, vendored under `data/source/nydn/` so the build works offline. This is not the repository named in the user's malformed link; that path previously returned 404 and should be network-checked again before relying on it.
@@ -361,17 +360,19 @@ See `docs/roadmap.html` for the ordered backlog and evidence ledger. Next eviden
 
 ## 2026-10-02 — copied PBP scoreboard + model integration
 
-The MIT-licensed MLB-Live-PBP UI is now vendored under `docs/pbp/`, pinned to
-`7eac3717fa1feea1053591e3a961b809728c373e`. Existing pages are retained. See
-[the integration verification report](docs/pbp-integration.md)
-and [source attribution](docs/pbp/UPSTREAM.md).
+The MIT-licensed MLB-Live-PBP UI is vendored under `docs/pbp/`, pinned to
+`7eac3717fa1feea1053591e3a961b809728c373e`. Open `docs/pbp/index.html` for the
+simple game scoreboard or `docs/pbp/reviews.html` for official errors, observed
+error changes and exact primary scoring-pending rulings. Other existing research
+pages are retained but are not the first-use workflow. See [the integration
+verification report](docs/pbp-integration.md) and [source attribution](docs/pbp/UPSTREAM.md).
 
-**Audit warning:** the untouched baseline and this working tree both produce 26
-model/data/RBI audit failures. The new UI explicitly flags estimates as experimental;
-this integration does not validate the model or predict ruling-change probabilities.
-`npm ci && npm test` runs the new DOM integration tests and copied official-scoring
-regression tests. The new pages are static and use browser-local observation logs,
-not the upstream server's cross-browser collector.
+**Audit warning:** the current Python audit reports 26 model/data/RBI failures
+in sections C and O. The new UI explicitly flags estimates as experimental; this
+integration does not validate the model or predict ruling-change probabilities.
+`npm ci && npm test` runs the DOM integration tests and official-scoring regression
+tests. The focused pages are static and use browser-local observation logs, not an
+always-on or cross-browser collector.
 
 ## 2026-10-02 — simplified scoring watch (the primary pages)
 

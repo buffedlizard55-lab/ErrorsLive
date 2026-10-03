@@ -3,84 +3,80 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ErrorsLive — Scoring Feed · live scoring errors &amp; official pending rulings</title>
-  <meta name="description" content="One simple feed for the whole MLB slate: official-scorer pending rulings and scoring changes only, each with the model's hit score — will the play land as a hit, an out, a fielder's choice or a sacrifice?">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23fff' stroke='%23e03131' stroke-width='6'/%3E%3Cpath d='M50 4 A46 46 0 0 1 96 50 M50 96 A46 46 0 0 1 4 50 M4 50 A46 46 0 0 1 50 4 M96 50 A46 46 0 0 1 50 96' stroke='%23e03131' stroke-width='2.5' fill='none'/%3E%3C/svg%3E">
+  <title>Errors + official scoring pending — ErrorsLive</title>
+  <meta name="description" content="An all-games feed limited to official field errors and exact primary MLB official-scorer-pending rulings, with the current model's scoring-outcome estimates.">
   <link rel="preconnect" href="https://statsapi.mlb.com" crossorigin>
-  <link rel="dns-prefetch" href="https://statsapi.mlb.com">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/scoring-focus.css">
 </head>
-<body class="page-reviews">
+<body class="page-reviews page-scoring-focus">
   <header class="topbar">
     <div class="brand">
       <span class="brand-ball">⚾</span>
       <span>ErrorsLive</span>
-      <span class="brand-sub">scoring feed · errors &amp; pending rulings · all games</span>
+      <span class="brand-sub">scoring feed · all games</span>
     </div>
     <a class="btn btn-ghost" href="index.html">← Scoreboard</a>
     <div class="date-nav">
-      <button class="btn btn-ghost" id="prev-day" title="Previous day">←</button>
-      <input type="date" id="date-picker" aria-label="Game date">
-      <button class="btn btn-ghost" id="next-day" title="Next day">→</button>
-      <button class="btn" id="today-btn">Today</button>
+      <button class="btn btn-ghost" onclick="ReplayFeed.prevDay()" title="Previous day">←</button>
+      <input type="date" id="date-picker" onchange="ReplayFeed.pickDate()" aria-label="Game date">
+      <button class="btn btn-ghost" onclick="ReplayFeed.nextDay()" title="Next day">→</button>
+      <button class="btn" onclick="ReplayFeed.today()">Today</button>
     </div>
     <div id="date-label" class="date-label"></div>
     <div class="feed-controls">
-      <button id="sound-toggle-btn" class="btn btn-ghost" title="Chime when a new pending ruling, error or scoring change appears">🔇 Sound Off</button>
       <button id="refresh-btn" class="btn">Refresh</button>
       <span class="countdown" id="countdown" title="Seconds until the next poll"></span>
-      <div class="live-pill" title="Polling the MLB StatsAPI">
+      <div class="live-pill" title="Polling MLB's public StatsAPI">
         <span id="live-dot" class="live-dot"></span><span>LIVE</span>
       </div>
     </div>
   </header>
 
-  <p class="integration-nav"><a href="../index.html">← ErrorsLive tools</a> · <a href="index.html">Scoreboard</a> · <a href="../model.html">Model limitations</a> · <a href="../rules.html">Scoring rules</a></p>
-  <div id="banner" class="banner"></div>
+  <main class="reviews-main scoring-focus-main">
+    <h1>Errors + official scoring pending</h1>
+    <p class="lede">A focused feed for all games on the selected date. It shows current official field-error calls,
+      error-involving scoring changes this page actually observed, and exact primary official-scorer-pending rulings.</p>
 
-  <main class="reviews-main">
-    <p class="sw-howto"><b>How to read it.</b> This feed watches exactly two things: <b>⏳ official-scorer
-      pending rulings</b> (hit / error / fielder's choice not yet decided) and <b>✏️ scoring errors</b> —
-      plays the official feed currently rules an error, plus rulings observed to change between polls.
-      Every row gets one number: the model's <b>HIT score</b> — its probability that this batted ball ends
-      up scored a hit. On an error row a low score means the model reads a genuine error; a high score
-      flags a play a scorer might rescind. It is a research estimate from Statcast shape, not the
-      probability that a ruling changes. When a pending ruling lands, the row shows whether the model's
-      pre-ruling lean matched.</p>
+    <aside class="focus-note" role="note">
+      <b>How to read the score.</b> For an official error, the “Hit outcome score” is the model's estimated share
+      for a final hit label from the ball's recorded data. It is <b>not</b> the chance that an existing error will
+      be changed to a hit: the current model was not trained on error-to-hit transitions. For an active official
+      scoring-pending ruling, the model shows its most likely outcome group and detailed class. All estimates are
+      experimental; they are not official scorer rulings, and the model validation audit is unresolved.
+    </aside>
 
-    <section id="feed-stats" class="reviews-summary-bar"></section>
-
-    <nav id="feed-tabs" class="tabs" aria-label="Filter feed"></nav>
-
+    <section id="feed-stats" class="reviews-summary-bar" aria-label="Scoring feed counts"></section>
+    <nav id="feed-tabs" class="tabs" aria-label="Filter scoring feed"></nav>
     <section id="feed-list" class="feed-list" aria-live="polite"></section>
+    <div id="status-line" class="status-line" role="status" aria-live="polite"></div>
 
-    <div id="status-line" class="status-line"></div>
+    <details class="focus-details">
+      <summary>What this feed includes and excludes</summary>
+      <ul>
+        <li><b>Current error:</b> the play's official <code>result.eventType</code> is <code>field_error</code>.</li>
+        <li><b>Official scoring pending:</b> only the exact <code>os_ruling_pending_primary</code> event-type code is scored. The <code>os_ruling_pending_prior</code> code concerns a prior base-running event, so it is excluded from batter-outcome predictions.</li>
+        <li><b>Error reclassification:</b> shown only when this browser observed an error on one poll and a different official classification on a later poll. A final-only feed cannot recover an unobserved initial call.</li>
+        <li><b>Not shown:</b> manager challenges, umpire reviews, ABS challenges, boundary calls, and ordinary non-error plays.</li>
+        <li><b>No score:</b> if the model or required Statcast measurements are missing or invalid, the play stays visible without an invented estimate.</li>
+      </ul>
+    </details>
   </main>
 
   <footer class="site-footer">
-    <p>
-      Pending rulings are the exact registry marker <code>os_ruling_pending_primary</code> (plate appearance)
-      / <code>os_ruling_pending_prior</code> (base running) from <code>GET /api/v1/eventTypes</code>; scoring
-      changes are observed by snapshotting every completed play's official
-      <code>result.eventType</code> and diffing it against previous polls — the feed carries no change marker,
-      so a change is only ever a difference between two observations. A pending ruling decides how the play is
-      charged and never removes a run from the score. Row times are when <em>this browser</em> first observed
-      the play — the payload carries no per-play timestamp. The HIT score comes from the committed model in
-      <a href="../model.html">this repository</a> (11-outcome head, hit = single + double + triple + home run);
-      it is a research estimate with unresolved validation audits, not an official decision or a forecast of a
-      ruling. Verdicts (✓/✗) compare only scores captured <em>before</em> the ruling landed. Everything else
-      the old replay feed tracked (ABS, manager challenges, umpire reviews, boundary calls) remains on the
-      <a href="../allgames.html">full feed</a> and <a href="game.html">per-game pages</a>.
-      Unofficial fan project; live data via the public MLB StatsAPI
-      (<a href="https://statsapi.mlb.com" target="_blank" rel="noopener">statsapi.mlb.com</a>).
-      Not affiliated with MLB or MLB Advanced Media.
-    </p>
+    <p>Data: the public <a href="https://statsapi.mlb.com" target="_blank" rel="noopener">MLB StatsAPI</a> and its
+      <a href="https://statsapi.mlb.com/api/v1/eventTypes" target="_blank" rel="noopener">official event-type registry</a>.
+      Model estimates use the committed ErrorsLive model; the current implementation does not estimate scorer-change odds.
+      Not affiliated with MLB or MLB Advanced Media.</p>
   </footer>
 
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/reviews.js"></script>
+  <script src="assets/js/feed-log.js"></script>
   <script src="../site.js"></script>
   <script src="../scoring-feed.js"></script>
-  <script src="../live-board.js"></script>
-  <script src="assets/js/scoring-watch.js"></script>
-  <script src="assets/js/scoring-feed-page.js"></script>
+  <script src="assets/js/scoring-model.js"></script>
+  <script src="assets/js/reviews-feed.js"></script>
 </body>
 </html>

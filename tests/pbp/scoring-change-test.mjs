@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /* ============================================================================
- * scoring-change-test.mjs — deterministic tests for the OFFICIAL SCORING
- * CHANGE tracker (hit ↔ error, single ↔ double, out ↔ hit, base hit →
- * fielder's choice + error, …) in the all-games Replay Feed.
+ * scoring-change-test.mjs — deterministic tests for the official scoring
+ * change tracker and the focused-feed admission rule. The tracker compares
+ * observed classifications; the public feed admits only changes with Error
+ * on at least one side.
  *
- * Run: node tools/scoring-change-test.mjs
+ * Run: node tests/pbp/scoring-change-test.mjs
  *
  * VERIFICATION BASIS (what this file checks against — all fetched live from
  * statsapi.mlb.com on 2026-09-04):
@@ -646,13 +647,22 @@ assert.equal(finalScanDecision({ firstFinalObservedAt: 0, lastScanAt: 0 }, true,
     'ingestGame passes both hot-tier constants to finalScanDecision');
 }
 
-/* ===================== 11. Feed integration contracts (All feed, alerts) == */
+/* ============ 11. Focused feed contracts (only error-involving changes) === */
 
-const scoringReview = r3.added[0].review;
-assert.equal(visibleInAllFeed({ typeKey: 'scoring_change' }), true,
-  'scoring changes appear in the All feed (explicit requirement)');
-assert.equal(shouldAlertForReview({ typeKey: 'scoring_change' }), true,
-  'a new scoring change triggers the alert chime (not ABS)');
+const scoringReview = r3.added[0].review; // the fixture is a double → single change
+assert.equal(visibleInAllFeed(scoringReview), false,
+  'a hit-to-hit reclassification is outside the focused feed');
+assert.equal(shouldAlertForReview(scoringReview), false,
+  'unrelated scoring changes do not trigger a feed alert');
+const observedErrorChange = {
+  typeKey: 'scoring_change',
+  initial: { category: 'hit' },
+  final: { category: 'error' },
+};
+assert.equal(visibleInAllFeed(observedErrorChange), true,
+  'an observed change involving an official Error classification is in scope');
+assert.equal(shouldAlertForReview(observedErrorChange), true,
+  'only a focused error change may trigger the optional alert helper');
 assert.equal(runsRemovableFromReview(scoringReview), 0,
   'a scoring change never claims runs at risk (not a replay review)');
 assert.equal(runsRemovableFromReview({ typeKey: 'scoring_change', inProgress: false }), 0);

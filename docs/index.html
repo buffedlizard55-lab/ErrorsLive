@@ -1,273 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LiveScoringErrors — will the scorer rule it a hit, an error, or a fielder's choice?</title>
-<link rel="stylesheet" href="site.css">
-<meta name="description" content="Estimate, out of 100, whether an MLB batted ball will carry a final official feed label of error, using Statcast contact data and pre-pitch context. Includes conditional, scorer-reviewed RBI notes.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ErrorsLive — MLB scorer watch</title>
+  <meta name="description" content="A focused MLB scoreboard and all-games feed for official field errors and primary official-scorer-pending rulings.">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="site-focus.css">
 </head>
 <body>
-<header class="nav"><div class="nav-inner"></div></header>
-<main>
-  <h1>How will the scorer rule it?</h1>
-  <p class="lede">A batted ball leaves the bat with a measurable exit velocity, launch angle, distance,
-  trajectory and contact hardness — and a base/out state the scorer already knows. Between contact and the
-  official ruling there is a judgment call about <em>“ordinary effort”</em>
-  (<a href="https://www.mlb.com/glossary/standard-stats/error" target="_blank" rel="noopener">MLB's official error definition</a>).
-  The model uses those permitted inputs to estimate whether the latest captured official feed label is an error.
-  It does not predict whether an initial call will later be reclassified. The live board fetches the public
-  <a href="https://statsapi.mlb.com/api/v1.1/game/823441/feed/live" target="_blank" rel="noopener">MLB Stats API feed</a>
-  directly when browser access is available, and the <a href="alerts.html">alert console</a> watches it for you —
-  it polls, diffs each capture against the last, and raises an alert when a ruling appears, changes, or moves an RBI,
-  with the rule text and the video link attached.</p>
+  <header class="nav"><div class="nav-inner"></div></header>
+  <main>
+    <h1>Live MLB scoring watch</h1>
+    <p class="lede">Start with two views: the full-game scoreboard, or a focused feed for official field errors and
+      official scorer decisions that are still pending.</p>
 
-  <div class="grid cols2" style="margin-top:6px">
-    <div class="card" style="border-color:var(--accent)"><h3>⭐ Scoreboard — the simple start</h3><p class="muted">Every game, its score, and a scoring watch per game:
-      official-scorer rulings pending, errors on the board, observed scoring changes. Nothing else on the page.
-      <a href="pbp/index.html">Open the scoreboard →</a></p></div>
-    <div class="card" style="border-color:var(--accent)"><h3>⭐ Scoring feed — one score per row</h3><p class="muted">Only live scoring errors and official pending rulings, all games,
-      newest first. Each row carries one number: the model's HIT score — will the play land as a hit, an out, a
-      fielder's choice or a sacrifice? <a href="pbp/reviews.html">Open the scoring feed →</a></p></div>
-  </div>
-
-  <h2 style="margin-top:18px">Deeper tools</h2>
-  <div class="grid cols2">
-    <div class="card"><h3>Live board</h3><p class="muted">Every batted ball in today's games, scored before the feed
-      settles, with the base/out state and the conditional RBI notes. <a href="live.html">Open the live board →</a></p></div>
-    <div class="card"><h3>Live alerts</h3><p class="muted">A change feed: what the official API said last time, what it
-      says now, and what moved — with browser notifications, sound and an exportable ledger.
-      <a href="alerts.html">Open the alert console →</a></p></div>
-    <div class="card"><h3>Full scoreboard</h3><p class="muted">Every game on any date, with its scoring watch: exact
-      official-scorer pending markers, observed scoring changes, reviews, hits/errors and the highest error-risk
-      batted ball per game. <a href="scoreboard.html">Open the scoreboard →</a></p></div>
-    <div class="card"><h3>All-games scoring feed (full)</h3><p class="muted">One live feed for the whole slate: each batted
-      ball with its 11-outcome distribution — hit, out, fielder's choice, error, sacrifice and more — plus pending
-      rulings scored while undecided and scoring changes as they are observed.
-      <a href="allgames.html">Open the scoring feed →</a></p></div>
-  </div>
-
-  <div class="truth gold" id="honesty"><b>Loading the model…</b></div>
-
-  <div class="grid cols2">
-    <div class="card" id="calc">
-      <h3>1 · Describe the batted ball</h3>
-      <div class="grid cols3">
-        <div><label>Exit velocity (mph)</label><input id="ev" type="number" min="20" max="125" step="0.1" value="98.4"></div>
-        <div><label>Launch angle (°)</label><input id="la" type="number" min="-90" max="90" step="0.5" value="-6"></div>
-        <div><label>Distance (ft)</label><input id="dist" type="number" min="0" max="520" step="1" value="26"></div>
-        <div><label>Trajectory</label><select id="traj">
-          <option value="ground_ball" selected>ground_ball</option><option value="line_drive">line_drive</option>
-          <option value="fly_ball">fly_ball</option><option value="popup">popup</option>
-          <option value="bunt_grounder">bunt_grounder</option></select></div>
-        <div><label>Hardness</label><select id="hard">
-          <option value="medium" selected>medium</option><option value="soft">soft</option><option value="hard">hard</option></select></div>
-        <div><label>Outs</label><select id="outs"><option>0</option><option>1</option><option selected>2</option></select></div>
-      </div>
-      <div class="grid cols3" style="margin-top:10px">
-        <div><label>Runner on 1st</label><select id="b1"><option value="0" selected>no</option><option value="1">yes</option></select></div>
-        <div><label>Runner on 2nd</label><select id="b2"><option value="0" selected>no</option><option value="1">yes</option></select></div>
-        <div><label>Runner on 3rd</label><select id="b3"><option value="0" selected>no</option><option value="1">yes</option></select></div>
-      </div>
-      <p class="legend" style="margin-top:10px">Load a real batted ball from the archive (each preset is an
-      actual play from the committed official feeds):
-      <a href="#" data-preset="98.4,-6,26,ground_ball,medium,2,000">98.4 / −6° illustrative grounder</a> ·
-      <a href="#" data-preset="105.9,-5,23,ground_ball,hard,0,000">105.9 / −5° — ruled ERROR, game 823441</a> ·
-      <a href="#" data-preset="78.2,54,226,fly_ball,medium,1,000">78.2 / 54° — ruled ERROR, game 824903</a> ·
-      <a href="#" data-preset="74.1,61,195,popup,medium,0,100">74.1 / 61° — ruled ERROR, game 824994</a>
-      </p>
+    <div class="grid cols2 home-actions">
+      <a class="card home-action" href="pbp/index.html">
+        <span class="home-action-icon">⚾</span>
+        <span><b>All-games scoreboard</b><small>Scores, inning and game status for the selected date.</small></span>
+        <span class="home-arrow">Open →</span>
+      </a>
+      <a class="card home-action" href="pbp/reviews.html">
+        <span class="home-action-icon">✏️</span>
+        <span><b>Errors + scoring pending</b><small>Only official field-error calls, observed error changes, and primary scorer-pending rulings.</small></span>
+        <span class="home-arrow">Open →</span>
+      </a>
     </div>
-    <div class="card">
-      <h3>2 · Model output</h3>
-      <div class="scorebox">
-        <div class="dial">
-          <div class="num" id="score">–</div>
-          <div class="cap">P(final feed label = <b>ERROR</b>) ×100<br><span class="muted" id="pctLabel"></span></div>
-        </div>
-        <div style="flex:1;min-width:230px" id="bars"></div>
-      </div>
-      <div class="mini" id="scale"></div>
-      <p class="legend" style="margin:10px 0 0">The four model classes are hit / error / fielder's choice / out.
-      Their probabilities sum to 100% for rows in that training scope; rare feed event types and incomplete
-      Statcast vectors may fall outside the model's scored rows.</p>
-      <p class="note" id="rbi" style="margin-top:10px"></p>
-      <p class="muted" style="font-size:.8rem;margin-bottom:0" id="modelProvenance">–</p>
+
+    <section class="truth gold">
+      <b>Important: the “Hit outcome score” is not rescore odds.</b>
+      The committed model estimates an outcome class from batted-ball data. For an official error, the displayed
+      hit score is the model's estimate for a final hit label; it is <b>not</b> a trained probability that an
+      already-issued error call will change to a hit. The current model has no validated error-to-hit transition
+      forecast. The scores are experimental; see <a href="model.html">model details and limitations</a>.
+    </section>
+
+    <div class="note">
+      <b>Scope for this first version</b>
+      <ul>
+        <li>“Official scoring pending” is included only when the MLB StatsAPI reports the exact
+          <code>os_ruling_pending_primary</code> plate-appearance code. The separate prior base-running marker is not scored as a batter ruling.</li>
+        <li>Error changes appear only when the browser observed an earlier and later official feed classification. A final-only payload cannot reconstruct an unseen initial call.</li>
+        <li>Manager challenges, umpire reviews, ABS challenges, boundary calls and ordinary batted balls are kept out of the focused feed.</li>
+      </ul>
+      <p style="margin-bottom:0">Data are read from the public <a href="https://statsapi.mlb.com" target="_blank" rel="noopener">MLB StatsAPI</a>.
+        This is an unofficial fan project, not affiliated with MLB.</p>
     </div>
-  </div>
 
-  <h2>Today's slate, scored from the official feed</h2>
-  <div id="slate">Loading <code>data/live_slate.json</code>…</div>
-
-  <h2>Why a hit-vs-error ruling matters — the RBI stakes</h2>
-  <p class="lede">A run with a runner on 2nd or 3rd does not settle the batter's RBI by itself. Rule 9.04 of the
-  2026 Official Baseball Rules decides it, and its text is quoted verbatim on <a href="rules.html">Rules &amp; RBI</a>:
-  an error-dependent run earns <b>no</b> RBI under 9.04(a)(1) — <i>unless</i> 9.04(a)(3) applies, which credits one
-  “when, before two are out, an error is made on a play on which a runner from third base ordinarily would score”.
-  That “ordinarily would score” is the scorer's counterfactual and is not in the feed, so the site shows conditional
-  notes, never automatic answers. <a href="rbi.html">RBI stakes, measured</a> tabulates what the feed actually
-  credited for each final call and base/out state.</p>
-
-  <h2>What the model actually found</h2>
-  <div class="grid cols3" id="kpis"><div class="card">Loading model.json…</div></div>
-  <div class="truth" id="finding"><b>Loading…</b></div>
-
-  <h2>Where to go next</h2>
-  <div class="grid cols3">
-    <div class="card"><h3><a class="plain" href="live.html">Live board</a></h3>
-      <p class="muted">The browser polls current MLB feeds when CORS access permits, with a timestamped static fallback,
-      base/out state, and conditional RBI notes.</p></div>
-    <div class="card"><h3><a class="plain" href="replays.html">Replays &amp; runs removed</a></h3>
-      <p class="muted">Reviewed plays plus rows flagged as run-affected by a documented heuristic; open each official
-      feed record and the available per-play watch/download links.</p></div>
-    <div class="card"><h3><a class="plain" href="rbi.html">RBI stakes, measured</a></h3>
-      <p class="muted">What the official feed actually credits for a hit, an error and a fielder's choice, by
-      base/out state — with Wilson intervals, the Rule 9.04 gate test, and every error-ruled play in the window
-      that still earned an RBI.</p></div>
-    <div class="card"><h3><a class="plain" href="methods.html">Methods &amp; audit</a></h3>
-      <p class="muted">Where every number comes from, how the CI ingest verifies each game against the league's
-      own linescore, and what is flagged as unverified.</p></div>
-  </div>
-
-  <div class="ownout">
-    <b>Own the Outcome.</b> We own results end to end — not just our individual slice of the work. When problems
-    arise and we have the means to act, we do so without waiting for permission or assignment. We treat failure
-    and success as signals and use them to improve. At Arena, we stay accountable to the final outcome.
-    <br><br><span class="muted">Applied here: metrics are regenerated from their committed sources; official feed
-    mismatches and collection failures are surfaced, not smoothed over; and the model's limitations are published
-    beside its results.</span>
-  </div>
-</main>
-<footer><div class="inner">
-  <span>Data: <a href="https://statsapi.mlb.com/api/v1.1/game/823441/feed/live" target="_blank" rel="noopener">MLB Stats API</a> ·
-    model + site generated by <code>tools/run_all.py</code></span>
-  <span>Not affiliated with MLB</span>
-</div></footer>
-<script src="site.js"></script>
-<script>
-let MODEL = null;
-const $ = id => document.getElementById(id);
-
-function state() {
-  const bases = [];
-  if ($('b1').value === '1') bases.push('1B');
-  if ($('b2').value === '1') bases.push('2B');
-  if ($('b3').value === '1') bases.push('3B');
-  return { ev: +$('ev').value, la: +$('la').value, dist: +$('dist').value, traj: $('traj').value,
-           hard: $('hard').value, outs: +$('outs').value, inning: 5, bases, bat: '', pitch: '' };
-}
-
-function render() {
-  const st = state();
-  const { pErr, probs, top } = evalModel(MODEL, st);
-  const pct = errorPercentile(MODEL, pErr);
-  $('score').textContent = (100 * pErr).toFixed(2);
-  $('pctLabel').textContent = (pct === null ? '' : `that is the ${pct}th percentile of grouped out-of-fold scores (validation reference)`);
-  const order = ['hit', 'error', 'fielders_choice', 'out'];
-  const colors = { hit: 'var(--good)', error: 'var(--bad)', fielders_choice: 'var(--accent)', out: 'var(--accent2)' };
-  $('bars').innerHTML = order.map(c => `
-    <div style="margin-bottom:8px">
-      <div class="rowflex" style="justify-content:space-between">
-        <span style="font-size:.86rem">${callName(c)}${c === top ? ' <span class="pill on">top pick</span>' : ''}</span>
-        <b style="font-variant-numeric:tabular-nums">${(100 * probs[c]).toFixed(2)}%</b>
-      </div>
-      <div class="bar"><i style="inset:0 ${100 - 100 * probs[c]}% 0 0;background:${colors[c]}"></i></div>
-    </div>`).join('');
-  const n = MODEL.meta.n_error, N = MODEL.meta.n_model;
-  $('scale').innerHTML = `
-    <div class="v">${(100 * pErr).toFixed(2)}</div><div class="k">score /100 = 100 × P(final feed label = error)</div>
-    <div class="v">${pct === null ? '–' : pct}<small style="font-size:.7em">th pct</small></div><div class="k">percentile reference: grouped out-of-fold scores across ${N.toLocaleString()} model rows</div>
-    <div class="v">${n}</div><div class="k">ruled errors in that set (${MODEL.meta.error_rate_pct}% base rate)</div>`;
-  const risp = st.bases.includes('2B') || st.bases.includes('3B');
-  $('rbi').innerHTML = risp
-    ? `Runner on 2nd/3rd. RBI depends on the final scoring and Rule 9.04. An error-dependent run earns no
-       RBI under 9.04(a)(1), but 9.04(a)(3) credits one when, before two are out, a runner from third
-       ordinarily would score - a counterfactual the feed does not record. A hit or fielder's choice can
-       receive an RBI, subject to the rule's exceptions. This model cannot decide that counterfactual.
-       See <a href="rules.html">the verbatim rule text</a> and <a href="rbi.html">the measured RBI stakes</a>.
-       P(final feed label = error): <b>${(100 * pErr).toFixed(2)}%</b>.`
-    : `No runner on 2nd/3rd in the selected state; this calculator does not infer an RBI counterfactual.`;
-}
-
-function preset(p) {
-  const [ev, la, dist, traj, hard, outs, bases] = p.split(',');
-  $('ev').value = ev; $('la').value = la; $('dist').value = dist; $('traj').value = traj;
-  $('hard').value = hard; $('outs').value = outs;
-  $('b1').value = bases[0] === '1' ? '1' : '0';
-  $('b2').value = bases[1] === '1' ? '1' : '0';
-  $('b3').value = bases[2] === '1' ? '1' : '0';
-  render();
-}
-
-(async function init() {
-  MODEL = await loadJSON('data/model.json');
-  const m = MODEL.meta, h = MODEL.honesty, p = MODEL.primary, corr = MODEL.correlations || {};
-  const q0 = (h.review_queue_oof || [])[0];          // the smallest published review band
-  const top5 = Object.entries(corr).sort((a, b) => Math.abs(b[1].r) - Math.abs(a[1].r)).slice(0, 4);
-  $('honesty').innerHTML = `<b>Read this first — what the number can and cannot do.</b> Across the
-    ${m.n_model.toLocaleString()} training rows, the <i>training-fit</i> P(error) range is
-    <b>${h.p_error_training_min_x100}–${h.p_error_training_max_x100} per 100</b> (not a held-out range),
-    and out-of-fold the model nominates “error” as its most likely ruling <b>${h.oof_error_nominated_top1} times</b>.
-    So this is a <i>ranking</i> tool, not a verdict: use it to decide which batted ball deserves a second look,
-    never to declare a call. The <a href="model.html">model page</a> publishes the review queue as cost against
-    benefit: watching the highest-scored 0.5% of held-out plays (${(q0 && q0.plays_to_review !== undefined) ? q0.plays_to_review.toLocaleString() : '–'}
-    plays) found <b>${q0 ? q0.errors_found : '–'} of the ${h.oof_top1_accuracy !== undefined ? m.n_error : m.n_error} errors</b>
-    at <b>${q0 ? (100 * q0.precision).toFixed(2) : '–'}%</b> precision — ${q0 ? q0.lift_over_base_rate : '–'}× the base rate.
-    That is the honest way to read this model: not “it calls errors”, but “it sorts them.”`;
-  $('modelProvenance').innerHTML = `Fitted on <b>${m.n_model.toLocaleString()} Statcast batted balls</b> from
-    ${m.games} games (${esc(m.dataset)}). ${esc(m.dataset_note)} Validated with GroupKFold by game;
-    grouped out-of-fold ROC AUC <b>${p.cv_auc}</b> (95% CI ${p.cv_auc_ci95[0]}–${p.cv_auc_ci95[1]}),
-    average precision <b>${(100 * p.cv_average_precision_grouped).toFixed(3)}%</b>
-    (95% grouped-bootstrap interval ${(p.cv_average_precision_ci95 || []).map(v => (100 * v).toFixed(3) + '%').join('–')})
-    versus a <b>${m.error_rate_pct}%</b> prevalence baseline;
-    stratified random-fold ROC AUC comparator ${p.cv_auc_random_kfold}.`;
-  $('finding').innerHTML = `<b>Model associations.</b> The fitted model and model-free surface show how observed
-    contact/context features relate to the final feed label; these are associations, not causal effects.
-    See the <a href="model.html">validation and feature diagnostics</a>.
-    Strongest single correlations with an error ruling: ${top5.map(([k, v]) =>
-      `${esc(k)} (${v.type} r=${v.r})`).join(', ')}.
-    What is <b>not</b> in the model: fielder positioning, hang time, who was playing where and the scorer's own
-    judgment. The probability scale is small because errors are rare in the fitted window; use the displayed
-    percentile and validation results rather than treating the score as a verdict.`;
-  $('kpis').innerHTML =
-    kpiCard(p.cv_auc, `grouped out-of-fold ROC AUC (95% CI ${p.cv_auc_ci95[0]}–${p.cv_auc_ci95[1]})`) +
-    kpiCard((100 * p.cv_average_precision_grouped).toFixed(3) + '%', `grouped OOF average precision · prevalence baseline ${m.error_rate_pct}%`) +
-    kpiCard(m.n_model.toLocaleString(), `batted balls with a full Statcast vector · ${m.n_error} ruled errors (${m.error_rate_pct}%)`) +
-    kpiCard(`${Math.round(100 * (MODEL.multiclass.per_class.out?.recall ?? 0))}%`, `out-of-fold recall for the “out” call — the model's bread and butter`);
-  document.querySelectorAll('[data-preset]').forEach(a =>
-    a.addEventListener('click', e => { e.preventDefault(); preset(a.dataset.preset); }));
-  ['ev', 'la', 'dist', 'traj', 'hard', 'outs', 'b1', 'b2', 'b3'].forEach(id => $(id).addEventListener('input', render));
-  render();
-
-  const live = (await loadMaybe('data/live_slate.json'))
-    || (await loadMaybe('data/live_now.json'));
-  if (!live) { $('slate').innerHTML = '<div class="note">No static snapshot is available. Open the <a href="live.html">Live Board</a> to try direct browser access to MLB Stats API.</div>'; return; }
-  const s = live.summary;
-  $('slate').innerHTML = `
-    <div class="note">Snapshot generated <b>${esc(live.generated_utc || 'offline build')}</b> for game date
-      <b>${esc(live.game_date)}</b>; ${s.games_verified_vs_linescore}/${s.games} games re-checked against the league's own
-      linescore endpoint. Mode: <b>${esc(live.mode || 'unknown')}</b> — <span class="muted">${esc(live.note || '')}</span>
-      <a href="live.html">Open the auto-refreshing live board →</a></div>
-    ${flagBox(live.flags)}
-    <div class="grid cols3" style="margin-top:12px">
-      ${kpiCard(s.games, 'games on the slate')}
-      ${kpiCard(s.batted_balls.toLocaleString(), 'batted balls scored pre-ruling')}
-      ${kpiCard(s.errors, 'plays the official scorer ruled errors')}
-      ${kpiCard(s.risp_runs_at_stake, 'plays where a run scored with a runner on 2nd/3rd — RBI at stake')}
-      ${kpiCard(s.overturned_reviews, 'reviews marked overturned in the snapshot')}
-      ${kpiCard(s.unresolved_in_feed || 0, 'contact plays with no eventType in the captured feed')}
-      ${kpiCard(s.top_pick_agreement, 'batted balls where the model’s top pick matched the official call')}
-    </div>
-    <div class="scroll" style="margin-top:12px"><table class="compact">
-      <tr><th>Game</th><th>State</th><th class="right">Batted balls</th><th class="right">Errors</th>
-      <th class="right">Top pick agrees</th><th class="right">RBI at stake</th><th class="right">Challenges overturned</th><th>Official</th></tr>
-      ${live.games.map(g => `<tr><td>${esc(g.away_abbr || g.away)} @ ${esc(g.home_abbr || g.home)}</td>
-        <td><span class="pill">${esc(g.state || '')}</span>${g.verified ? '' : ' <span class="no">unverified</span>'}</td>
-        <td class="right">${g.batted_balls}</td><td class="right">${g.errors}</td>
-        <td class="right">${g.top_pick_agrees}/${g.batted_balls}</td><td class="right">${g.risp_runs_at_stake}</td>
-        <td class="right">${g.overturned_reviews}</td>
-        <td>${linkOut(g.url, 'mlb.com')} ${linkOut(g.savant, 'savant')}</td></tr>`).join('')}
-    </table></div>`;
-})();
-</script>
+    <p class="muted" style="margin-top:18px;font-size:.9rem">
+      More detail: <a href="methods.html">methods and audit</a> ·
+      <a href="rules.html">official scoring rules</a> ·
+      <a href="rbi.html">measured RBI evidence</a> ·
+      <a href="pbp-integration.md">PBP integration notes</a>.
+    </p>
+  </main>
+  <footer><div class="inner"><span>ErrorsLive · experimental estimates, official feed remains the record</span><span>Not affiliated with MLB</span></div></footer>
+  <script src="site.js"></script>
 </body>
 </html>

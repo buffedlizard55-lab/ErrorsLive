@@ -117,15 +117,14 @@ check('games.csv rows are all in the official ledger',
       all(int(r['game_pk']) in ver and r['official_url'] == ver[int(r['game_pk'])]['api']
           for r in load_csv(ROOT / 'docs/data/games.csv')))
 
-# error-vs-trajectory headline quoted on the home page
-errs = [r for r in bip if r['macro_class'] == 'error']
-gb_all = sum(1 for r in bip if r['trajectory'] == 'ground_ball')
-gb_err = sum(1 for r in errs if r['trajectory'] == 'ground_ball')
-lift = (gb_err / gb_all) / ((len(errs) - gb_err) / (len(bip) - gb_all))
-check('home page headline: 20 of 24 errors are ground balls', gb_err == 20 and len(errs) == 24)
-check('home page headline: 6.8x lift for ground balls', abs(lift - 6.8) < 0.05, f'{lift:.2f}x')
-check('home page headline: ground balls are 42.3% of batted balls',
-      abs(100 * gb_all / len(bip) - 42.3) < 0.05, f'{100*gb_all/len(bip):.2f}%')
+# The compact landing page leads with the requested live workflow and states
+# the forecast limitation; exploratory sample headlines remain in the audit
+# artifacts rather than crowding the first-use interface.
+home_flat = flat((ROOT / 'docs/index.html').read_text()).lower()
+check('home page links the all-games scoreboard and focused errors/pending feed',
+      'all-games scoreboard' in home_flat and 'errors + scoring pending' in home_flat)
+check('home page does not describe final-label hit estimates as error-rescore odds',
+      'not a trained probability' in home_flat and 'error call will change to a hit' in home_flat)
 
 # ---------------------------------------------------------------- C. model
 print('== C. model.json — recomputed from the dataset it names, not restated ==')
@@ -785,7 +784,7 @@ check('roadmap records the self-weighting correction as history',
 
 # --- every page's data dependency must exist and be the artifact it claims ---
 DATA_FILES = {
-    'index': ['data/model.json', 'data/live_now.json', 'data/live_slate.json'],
+    'index': ['pbp/index.html', 'pbp/reviews.html', 'model.html'],
     'live': ['data/live_now.json', 'data/live_slate.json'],
     'replays': ['data/replays_site.json', 'data/replays.csv', 'data/replay_videos.csv'],
     'model': ['data/model.json'],
@@ -946,35 +945,16 @@ check('every run-affected page row carries a watch link and an official feed lin
 check('replays page offers both a watch and a download path',
       'watch' in rpl and ('download mp4' in rpl or 'download' in rpl))
 
-# --- required content --------------------------------------------------------
-check('index carries the honesty banner and the own-the-outcome block',
-      'honesty' in idx and 'Own the Outcome' in idx)
-check('index renders its KPIs from the model file, not typed numbers',
-      'data/model.json' in idx and 'id="kpis"' in idx)
-presets = [(m.group(1), m.group(2)) for m in
-           re.finditer(r'data-preset="([^"]+)"[^>]*>([^<]*)<', idx)]
-ALL_BIP = [r for r in bip + load_csv(ROOT / 'docs/data/bip_official.csv')
-           if r.get('numeric_ok') == '1']
-
-
-def preset_is_real(preset):
-    ev, la, dist, traj, hard = preset.split(',')[:5]
-    return any(abs(float(r['launch_speed']) - float(ev)) < 0.05
-               and abs(float(r['launch_angle']) - float(la)) < 0.05
-               and abs(float(r['distance']) - float(dist)) < 0.5
-               and r['trajectory'] == traj and r['hardness'] == hard for r in ALL_BIP)
-
-
-typed = [p for p, label in presets if 'illustrative' not in label.lower()]
-check(f'every non-illustrative index preset is a real batted ball ({len(typed)} of {len(presets)})',
-      bool(typed) and all(preset_is_real(p) for p in typed),
-      ' | '.join(p for p in typed if not preset_is_real(p)))
-check('the illustrative preset is labelled as such on the page',
-      any('illustrative' in label.lower() for _, label in presets)
-      and any(preset_is_real(p) for p, label in presets if 'illustrative' not in label.lower()))
-check('index labels percentile against grouped OOF scores, not in-sample fitted scores',
-      'grouped out-of-fold scores' in idx and 'errorPercentile' in idx
-      and 'every batted ball in the fitted set' not in idx)
+# --- required content for the deliberately small first-use workflow ----------
+idx_flat = flat(idx).lower()
+check('index opens with the scoreboard and focused scoring feed',
+      'all-games scoreboard' in idx_flat and 'errors + scoring pending' in idx_flat)
+check('index states that the model does not forecast whether an error call changes',
+      'not a trained probability' in idx_flat and 'error call will change to a hit' in idx_flat)
+check('index links model limitations and keeps the generic calculator off the front door',
+      'href="model.html"' in idx and 'id="calc"' not in idx and 'data-preset' not in idx)
+check('index retains links to the rule text and measured RBI evidence',
+      'href="rules.html"' in idx and 'href="rbi.html"' in idx)
 check('live page loads the live artifact and explains the refresh command',
       'data/live_slate.json' in liv and 'tools/fetch_live.py' in liv)
 check('live page loads the exact-marker observation ledger and displays separate model heads',
@@ -1319,8 +1299,9 @@ else:
 alerts_page = (ROOT / 'docs/alerts.html').read_text()
 check('alerts page: loads the shared site script and the pure alert engine',
       'site.js' in alerts_page and 'alerts.js' in alerts_page)
-check('alerts page: is in the shared navigation',
-      "['alerts.html', 'Live alerts']" in (ROOT / 'docs/site.js').read_text())
+check('focused scoring feed replaces the old alert console in the first-use navigation',
+      "['pbp/reviews.html', 'Errors + scoring pending']" in (ROOT / 'docs/site.js').read_text()
+      and "['alerts.html', 'Live alerts']" not in (ROOT / 'docs/site.js').read_text())
 DATA_FILES['alerts'] = ['data/model.json', 'data/alerts.json', 'data/live_now.json']
 PAGES['alerts'] = alerts_page
 check('alerts page: loads the committed model, the CI ledger and the snapshot fallback',
@@ -1630,8 +1611,8 @@ print('== P. every number a page claims must match the artifact it loads ==')
 rbi_page = (ROOT / 'docs/rbi.html').read_text()
 PAGES['rbi'] = rbi_page
 check('rbi page: loads the shared nav and stylesheet', 'site.js' in rbi_page and 'site.css' in rbi_page)
-check('rbi page: is in the shared navigation',
-      "['rbi.html', 'RBI stakes, measured']" in (ROOT / 'docs/site.js').read_text())
+check('rbi evidence remains reachable from the landing page without crowding the main nav',
+      'href="rbi.html"' in idx and "['rbi.html', 'RBI stakes, measured']" not in (ROOT / 'docs/site.js').read_text())
 check('rbi page: renders from data/rbi_evidence.json instead of typed numbers',
       "loadMaybe('data/rbi_evidence.json')" in rbi_page
       and not re.search(r'\b(33\.68|1\.24|10\.38|98\.54|60\.00|30,206|241)\b', rbi_page))
@@ -1704,10 +1685,10 @@ for n, pg in (('scoreboard', sch), ('allgames', alg)):
           all(x in pg for x in ('site.js', 'site.css', 'live-board.js')) and 'data/model.json' in pg)
     check(f'{n}: cites the official Stats API and the model file it reads',
           'statsapi.mlb.com' in pg and 'model.json' in pg)
-check('scoreboard page: is in the shared navigation',
-      "['scoreboard.html', 'Full scoreboard']" in (ROOT / 'docs' / 'site.js').read_text())
-check('all-games feed: is in the shared navigation',
-      "['allgames.html', 'All-games feed']" in (ROOT / 'docs' / 'site.js').read_text())
+check('focused PBP scoreboard is in the shared navigation',
+      "['pbp/index.html', 'Scoreboard']" in (ROOT / 'docs' / 'site.js').read_text())
+check('focused PBP scoring feed is in the shared navigation',
+      "['pbp/reviews.html', 'Errors + scoring pending']" in (ROOT / 'docs' / 'site.js').read_text())
 flat_feed = flat(alg).lower()
 check('all-games feed: keeps an exact pending marker distinct from a missing event type',
       'os_ruling_pending_primary' in alg and 'no event type in this capture' in flat_feed)
