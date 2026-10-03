@@ -1705,9 +1705,9 @@ for n, pg in (('scoreboard', sch), ('allgames', alg)):
     check(f'{n}: cites the official Stats API and the model file it reads',
           'statsapi.mlb.com' in pg and 'model.json' in pg)
 check('scoreboard page: is in the shared navigation',
-      "['scoreboard.html', 'Scoreboard']" in (ROOT / 'docs' / 'site.js').read_text())
+      "['scoreboard.html', 'Full scoreboard']" in (ROOT / 'docs' / 'site.js').read_text())
 check('all-games feed: is in the shared navigation',
-      "['allgames.html', 'Scoring feed']" in (ROOT / 'docs' / 'site.js').read_text())
+      "['allgames.html', 'All-games feed']" in (ROOT / 'docs' / 'site.js').read_text())
 flat_feed = flat(alg).lower()
 check('all-games feed: keeps an exact pending marker distinct from a missing event type',
       'os_ruling_pending_primary' in alg and 'no event type in this capture' in flat_feed)

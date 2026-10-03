@@ -4,12 +4,12 @@
    ball. Both sides build their feature vector from `primary.feature_spec` in model.json, so a change
    to the features cannot silently desynchronise the page from the tool. */
 const NAV = [
+  ['pbp/index.html', 'Scoreboard'],
+  ['pbp/reviews.html', 'Scoring feed'],
   ['index.html', 'Score a batted ball'],
-  ['pbp/index.html', 'PBP scoreboard'],
-  ['pbp/reviews.html', 'Replay + scoring'],
-  ['scoreboard.html', 'Scoreboard'],
-  ['allgames.html', 'Scoring feed'],
   ['live.html', 'Live board'],
+  ['allgames.html', 'All-games feed'],
+  ['scoreboard.html', 'Full scoreboard'],
   ['alerts.html', 'Live alerts'],
   ['replays.html', 'Replays & runs'],
   ['model.html', 'Model & validation'],
@@ -152,6 +152,10 @@ function rbiRuleNote(cls, runScored, officialEvent, bases = [], outs = 0) {
 }
 
 function scoreLiveFeed(feed, game, model) {
+  /* A missing model must silence the estimates, not the official rows: with
+     no committed model the rows below still render, each with
+     prediction_available = false and the reason on the row. */
+  model = model || {};
   const plays = (((feed || {}).liveData || {}).plays || {}).allPlays || [];
   const source = game.official_feed_url || '';
   const pk = game.gamePk || game.pk || '';
@@ -243,9 +247,6 @@ function scoreLiveFeed(feed, game, model) {
       outs: outs === undefined ? 0 : Number(outs), inning: about.inning || 5,
       bat: (matchup.batSide || {}).code || '', pitch: (matchup.pitchHand || {}).code || '',
     };
-    const score = evalModel(model, state);
-    const probs = score.probs;
-    const eventProbs = score.eventProbs || {};
     const runScored = (play.runners || []).some(r => r && r.movement && r.movement.end === 'score');
     // An empty object is truthy in JavaScript (it is falsy in the Python mirror), so an
     // absent reviewDetails must be normalised to null before `reviewed` is derived from it.
@@ -255,6 +256,16 @@ function scoreLiveFeed(feed, game, model) {
       Object.keys(reviewCandidate).length ? reviewCandidate : null;
     const ruled = Boolean(eventType) && !pending;
     row.status = pending ? 'official_scoring_pending' : ruled ? 'scored' : 'no_event_type_yet';
+    // With no committed model the row stops here: officially observed, honestly unscored.
+    if (!model || !model.primary || !Array.isArray(model.primary.feature_spec) ||
+        !model.primary.feature_spec.length) {
+      row.prediction_unavailable_reason = 'The committed model file is unavailable, so this row is shown without an estimate.';
+      rows.push(row);
+      continue;
+    }
+    const score = evalModel(model, state);
+    const probs = score.probs;
+    const eventProbs = score.eventProbs || {};
     Object.assign(row, {
       prediction_available: true, prediction_unavailable_reason: '',
       launch_speed: hd.launchSpeed, launch_angle: hd.launchAngle, distance: hd.totalDistance,

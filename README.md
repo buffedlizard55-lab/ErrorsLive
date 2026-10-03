@@ -362,9 +362,8 @@ See `docs/roadmap.html` for the ordered backlog and evidence ledger. Next eviden
 ## 2026-10-02 — copied PBP scoreboard + model integration
 
 The MIT-licensed MLB-Live-PBP UI is now vendored under `docs/pbp/`, pinned to
-`7eac3717fa1feea1053591e3a961b809728c373e`. Open `docs/pbp/index.html` for the
-scoreboard or `docs/pbp/reviews.html` for replay events and scored batted balls.
-Existing pages are retained. See [the integration verification report](docs/pbp-integration.md)
+`7eac3717fa1feea1053591e3a961b809728c373e`. Existing pages are retained. See
+[the integration verification report](docs/pbp-integration.md)
 and [source attribution](docs/pbp/UPSTREAM.md).
 
 **Audit warning:** the untouched baseline and this working tree both produce 26
@@ -373,3 +372,37 @@ this integration does not validate the model or predict ruling-change probabilit
 `npm ci && npm test` runs the new DOM integration tests and copied official-scoring
 regression tests. The new pages are static and use browser-local observation logs,
 not the upstream server's cross-browser collector.
+
+## 2026-10-02 — simplified scoring watch (the primary pages)
+
+Following the brief ("the site is very confusing… give a simple score on whether
+the model thinks that an error will be rescored to a hit, and official pending
+scoring only"), the two vendored entry pages were rewritten as the simplified
+scoring watch, now the site's primary experience:
+
+- **`docs/pbp/index.html` — scoreboard.** One card per game (score, inning,
+  current batter) with three scoring badges: official-scorer rulings pending,
+  errors currently on the board, and observed scoring changes.
+- **`docs/pbp/reviews.html` — scoring feed.** Only two event types across the
+  whole slate: **official pending scoring** (`os_ruling_pending_primary` /
+  `os_ruling_pending_prior`) and **live scoring errors** (plays the feed
+  currently rules `field_error`, plus observed rescoring between polls). Each
+  row carries one simple score: the model's **HIT nn%** — its probability this
+  batted ball ends up scored a hit (11-outcome head, hit = single + double +
+  triple + home run) — with the full hit / error / fielder's choice / out /
+  sac-fly / sac-bunt distribution. On an error row the same number answers
+  "could this be rescored to a hit?"; it is not the probability that a ruling
+  changes. Verdicts (✓/✗) use only scores captured before a ruling landed, and
+  the day tally counts only those.
+
+Both pages run on the shared data layer (`docs/live-board.js` →
+`docs/site.js scoreLiveFeed()` + `docs/scoring-feed.js` ledger) so they cannot
+disagree with the full pages about a play. `scoreLiveFeed()` now returns an
+honestly unscored row (with the reason) when the model file is unavailable
+instead of throwing. ABS, manager challenges, umpire reviews and boundary calls
+remain on the full feed (`docs/allgames.html`) and per-game pages
+(`docs/pbp/game.html`). Verification: six new integration tests pass, the two
+upstream-origin suites pass, and `tests/test_pipeline.py` still reports exactly
+the same 26 pre-existing baseline failures (no new ones); the scorer was
+re-verified end-to-end on live 2026 postseason data (game 849844). Details in
+[the integration report](docs/pbp-integration.md).
