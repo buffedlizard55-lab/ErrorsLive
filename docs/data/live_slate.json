@@ -1,10 +1,10 @@
 {
  "mode": "live-slate",
- "generated_utc": "2026-10-03T03:04:55Z",
+ "generated_utc": "2026-10-03T04:21:58Z",
  "note": "Fetched from the official schedule + feed endpoints.",
- "game_day": "2026-10-02",
- "game_date": "2026-10-02",
- "source": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-10-02&endDate=2026-10-02",
+ "game_day": "2026-10-03",
+ "game_date": "2026-10-03",
+ "source": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-10-03&endDate=2026-10-03",
  "model": {
   "dataset": "docs/data/bip_official.csv",
   "n_model": 30206,
@@ -45,9 +45,31 @@
   "predictions_available": 0,
   "unresolved_in_feed": 0,
   "top_pick_agreement": "0/0",
-  "failures": 0
+  "failures": 4
  },
- "flags": [],
- "failures": [],
+ "flags": [
+  "849829: IndexError: list index out of range",
+  "849828: IndexError: list index out of range",
+  "849835: IndexError: list index out of range",
+  "849830: IndexError: list index out of range"
+ ],
+ "failures": [
+  {
+   "game_pk": 849829,
+   "error": "IndexError: list index out of range"
+  },
+  {
+   "game_pk": 849828,
+   "error": "IndexError: list index out of range"
+  },
+  {
+   "game_pk": 849835,
+   "error": "IndexError: list index out of range"
+  },
+  {
+   "game_pk": 849830,
+   "error": "IndexError: list index out of range"
+  }
+ ],
  "games": []
 }
