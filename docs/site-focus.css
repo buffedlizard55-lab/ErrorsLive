@@ -1,0 +1,22 @@
+/* Minimal front door for the focused MLB scoring watch. */
+.home-actions { margin: 22px 0; }
+a.home-action {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: center;
+  min-height: 120px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color .15s ease, transform .15s ease;
+}
+a.home-action:hover { border-color: var(--accent2); transform: translateY(-2px); }
+.home-action-icon { font-size: 2rem; }
+.home-action b { display: block; font-size: 1.1rem; }
+.home-action small { display: block; margin-top: 4px; color: var(--dim); font-size: .9rem; }
+.home-arrow { color: var(--accent2); font-weight: 800; white-space: nowrap; }
+.home-actions + .truth { margin-top: 14px; }
+@media (max-width: 520px) {
+  a.home-action { grid-template-columns: auto 1fr; }
+  .home-arrow { grid-column: 2; }
+}

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MLB Live Scoreboard</title>
-  <meta name="description" content="Live MLB scoreboard and game play-by-play powered by the public MLB StatsAPI — the same data behind mlb.com Gameday.">
+  <title>MLB Scoreboard — ErrorsLive</title>
+  <meta name="description" content="All-games MLB scoreboard from the public MLB StatsAPI, paired with a focused official scoring-errors feed.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23fff' stroke='%23e03131' stroke-width='6'/%3E%3Cpath d='M50 4 A46 46 0 0 1 96 50 M50 96 A46 46 0 0 1 4 50 M4 50 A46 46 0 0 1 50 4 M96 50 A46 46 0 0 1 50 96' stroke='%23e03131' stroke-width='2.5' fill='none'/%3E%3C/svg%3E">
   <!-- Open the data host while the stylesheet is still parsing: each page's
        first request is a cross-origin call to statsapi.mlb.com (assets/js/api.js),
@@ -24,10 +24,10 @@
   <header class="topbar">
     <div class="brand">
       <span class="brand-ball">⚾</span>
-      <span>ErrorsLive PBP</span>
-      <span class="brand-sub">scoreboard · play-by-play</span>
+      <span>ErrorsLive</span>
+      <span class="brand-sub">MLB scoreboard</span>
     </div>
-    <a class="btn btn-feed" href="reviews.html" title="Live replay review feed for every game">🚨 Replay Feed</a>
+    <a class="btn btn-feed" href="reviews.html" title="Only official field errors and primary scoring-pending rulings">✏️ Errors + pending</a>
     <div class="date-nav">
       <button class="btn btn-ghost" onclick="Scoreboard.prevDay()" title="Previous day">←</button>
       <input type="date" id="date-picker" onchange="Scoreboard.pickDate()" aria-label="Game date">
@@ -37,7 +37,7 @@
     <div id="date-label" class="date-label"></div>
   </header>
 
-  <p class="integration-nav"><a href="../index.html">← ErrorsLive tools</a> · <a href="reviews.html">Replay + scoring feed</a> · <a href="../model.html">Model limitations</a></p>
+  <p class="integration-nav"><a href="../index.html">← ErrorsLive home</a> · <a href="reviews.html">Errors + official scoring pending</a></p>
   <div id="banner" class="banner"></div>
   <nav id="tabs" class="tabs" aria-label="Filter games"></nav>
 
@@ -56,8 +56,6 @@
 
   <script src="assets/js/api.js"></script>
   <script src="assets/js/ui.js"></script>
-  <script src="assets/js/reviews.js"></script>
-  <script src="assets/js/feed-log.js"></script>
   <script src="assets/js/scoreboard.js"></script>
 </body>
 </html>

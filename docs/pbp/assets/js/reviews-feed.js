@@ -1,28 +1,16 @@
 /* ============================================================================
- * reviews-feed.js — All-Games Replay Review Feed ("chatroom" style)
+ * reviews-feed.js — ErrorsLive focused scoring feed
  * ----------------------------------------------------------------------------
- * Pulls review/challenge events (Manager Challenges, Crew Chief Reviews,
- * Umpire Reviews, ABS pitch challenges, and boundary-call reviews) from
- * EVERY game on the selected date and renders them as a live, chat-style
- * feed. New events appear at the top with a highlight; in-progress reviews
- * pulse until they resolve.
+ * Polls the selected date's live and recently-final game feeds, then renders
+ * only current official field errors, exact primary scorer-pending rulings,
+ * and error-involving classification changes actually observed between polls.
+ * Manager challenges, replay/umpire reviews, ABS challenges, boundary calls,
+ * prior base-running pending markers and ordinary batted balls are not visible
+ * feed categories. The existing review parser is reused for official pending
+ * markers and play context; it does not make excluded review rows eligible.
  *
- * Data flow (all shapes verified against statsapi.mlb.com, 2026-08-19):
- *   1. Schedule (hydrate=review,linescore,decisions) -> teams + status +
- *      per-team manager-challenge counts (game.review.away/home.used/remaining).
- *      NOTE: the schedule's `teams.*.team` objects carry ONLY { id, name, link }
- *      — no `abbreviation`. `name` is the official full club name ("Detroit
- *      Tigers") and is what gets rendered; official abbreviations are resolved
- *      separately from MLB.getTeams() (GET /api/v1/teams). Nothing is guessed.
- *   2. Per live/final game: playByPlay (allPlays + currentPlay) -> the same
- *      review payload the game page reads from feed/live:
- *        - play.reviewDetails            (manager challenges: codes "MA"/"MF")
- *        - playEvents[].reviewDetails    (ABS pitch challenges: code "MJ")
- *        - playEvents[].details.hasReview
- *        - currentPlay.reviewDetails     (in-progress review)
- *   3. MLBReviews.extractReviews() normalizes each game's events; the diff
- *      helpers below (buildEventKey / mergeFeedEvents) turn them into a
- *      single, deduped, chronologically-ordered live feed.
+ * Model estimates use the separate ScoringModel adapter. Its final-label
+ * distribution is not a probability that an existing error will be changed.
  * ==========================================================================*/
 'use strict';
 
@@ -352,12 +340,11 @@ function sortFeedEntries(entries) {
 }
 
 /**
- * Poll gap in ms. Active reviews use the short cadence so an outcome flip
- * is not waiting on the ordinary live interval. Values are passed in so
- * this stays a pure function (the page IIFE owns the constants).
+ * Poll gap in ms. An active primary scorer-pending ruling can use the
+ * focused short cadence; otherwise live games use the live interval.
  */
-function pollIntervalMs({ hasLive, hasActiveReview, liveMs, reviewMs, idleMs }) {
-  if (hasActiveReview) return reviewMs;
+function pollIntervalMs({ hasLive, hasActivePending, liveMs, pendingMs, idleMs }) {
+  if (hasActivePending) return pendingMs;
   if (hasLive) return liveMs;
   return idleMs;
 }
@@ -374,99 +361,14 @@ function waitAfterScan(intervalMs, elapsedMs) {
 }
 
 /**
- * Fetch order for the all-games scanner. Lower number = sooner.
- *   0 — the official status already says challenge/review, or we already have
- *       an in-progress entry for that game (catch the outcome first)
- *   1 — other live games
- *   2 — finals / everything else
- * Uses the registry-based isReviewStatusCode() (statusCode/codedGameState)
- * plus the boolean the caller already computed from feed state — no guessed
- * fields, and "Instant Replay" (crew-chief, IH) now counts.
+ * Fetch order for the focused feed: active primary scorer-pending plays
+ * first, then other live games, then final games.
  */
-function reviewFetchPriority(game, hasInProgress) {
-  if (hasInProgress || isReviewStatusCode(game && game.status)) return 0;
+function focusedFetchPriority(game, hasActiveScoringPending) {
+  if (hasActiveScoringPending) return 0;
   const state = game && game.status && game.status.abstractGameState;
   if (state === 'Live') return 1;
   return 2;
-}
-
-/**
- * Is this official game `status` a review/challenge state?
- *
- * Deliberate self-contained copy of MLBReviews.isReviewGameStatus() — the
- * same "pure helper layer needs no other module loaded" pattern this file
- * already uses for runsRemovableFromReview(). tools/review-status-test.mjs
- * §3 loads both modules and asserts this copy, plus the game.js /
- * scoreboard.js / ui.js copies, agree with MLBReviews on every entry of the
- * official registry (and on every non-review state), so they cannot drift.
- *
- * Authority: GET https://statsapi.mlb.com/api/v1/gameStatus (verified live
- * 2026-09-02). Every review state is either
- *   statusCode MH/MA/MF/… (codedGameState "M", manager + player challenges),
- *   statusCode NH/NA/NF/… (codedGameState "N", umpire reviews), or
- *   statusCode "IH"       (codedGameState "I", "Instant Replay").
- * codedGameState "M"/"N" are used by NO other state, and "I" alone is plain
- * "In Progress", so it must not match. The text test is the last-resort
- * fallback for a payload that carries only detailedState, and it now includes
- * "instant replay" — the verbatim registry wording for IH, which the old
- * /challenge|review/i test missed entirely.
- */
-function isReviewStatusCode(status) {
-  if (!status || typeof status !== 'object') return false;
-  const code = String(status.statusCode || '').trim().toUpperCase();
-  if (/^[MN][A-Z]$/.test(code) || code === 'IH') return true;
-  const coded = String(status.codedGameState || '').trim().toUpperCase();
-  if (coded === 'M' || coded === 'N') return true;
-  return /challenge|review|instant replay/i.test(String(status.detailedState || ''));
-}
-
-/**
- * Diff one review-status sweep against the previous one. Pure: reads
- * `prevCodes` (Map gamePk -> statusCode seen last sweep) and `nextGames`
- * (the games array from MLB.getReviewStatus), returns the games whose REVIEW
- * state changed plus the code map for the next call.
- *
- * A game is reported when it
- *   - enters a review state (the event the feed exists to surface),
- *   - leaves one (the ruling landed — the outcome), or
- *   - moves between two different review codes (a new challenge on the same
- *     game, e.g. MA "Tag play" -> MF "Close play at 1st"): that is a second
- *     review, not a repeat of the first.
- * Everything else (In Progress -> Delayed, Pre-Game -> In Progress, a game
- * disappearing from the slate) is not a review signal and is not reported —
- * but its code is still tracked so the next sweep compares correctly.
- */
-function reviewStatusFlips(prevCodes, nextGames) {
-  const prev = prevCodes instanceof Map ? prevCodes : new Map();
-  const codes = new Map();
-  const changed = [];
-  (Array.isArray(nextGames) ? nextGames : []).forEach((game) => {
-    if (!game || game.gamePk == null) return;
-    const status = game.status || {};
-    const code = String(status.statusCode || '').trim().toUpperCase() || null;
-    const pk = game.gamePk;
-    codes.set(pk, code);
-    const isReview = isReviewStatusCode(status);
-    const prevCode = prev.has(pk) ? prev.get(pk) : undefined;
-    // undefined = never seen: a game that is ALREADY under review on the very
-    // first sweep is a real, reportable event (the page may have been opened
-    // mid-review), so it is not suppressed.
-    const wasReview = prevCode !== undefined &&
-      isReviewStatusCode({ statusCode: prevCode });
-    if (isReview === wasReview && (!isReview || code === prevCode)) return;
-    changed.push({
-      gamePk: pk,
-      statusCode: code,
-      codedGameState: String(status.codedGameState || '').trim().toUpperCase() || null,
-      detailedState: status.detailedState || null,
-      reason: typeof status.reason === 'string' && status.reason.trim()
-        ? status.reason.trim() : null,
-      review: isReview,
-      started: isReview && !wasReview,
-      ended: !isReview && wasReview,
-    });
-  });
-  return { changed, codes };
 }
 
 /** Run `fn` over items with a fixed concurrency cap. Preserves completion of every item. */
@@ -556,41 +458,35 @@ function gameTeamsLabel(game, teamsById) {
 }
 
 /**
- * Whether a review should trigger the audio alert (gentle raindrop chime).
- * Requirement: challenges, reviews, boundary calls, official-scorer pending
- * rulings AND official scoring changes, but NOT ABS. ABS is typeKey 'abs'.
- * Everything else (manager, crew_chief, boundary, review, rules, umpire,
- * pending_scoring, scoring_change) qualifies — an official-scorer pending
- * ruling is exactly what the user wants to hear about immediately, and so is
- * a hit/error/out reclassification observed between polls. Pure — no DOM.
+ * The focused feed accepts only the primary plate-appearance pending marker.
+ * The prior-event marker is a base-running decision, not a batter's scoring
+ * ruling, so it is intentionally outside this first version.
  */
-function shouldAlertForReview(review) {
-  if (!review || typeof review.typeKey !== 'string') return false;
-  return review.typeKey !== 'abs';
+function isPrimaryPendingReview(review) {
+  return Boolean(review && review.typeKey === 'pending_scoring' &&
+    Array.isArray(review.pendingCodes) &&
+    review.pendingCodes.includes('os_ruling_pending_primary'));
 }
 
-/**
- * Whether a feed entry belongs in the "All" section of the Replay Feed.
- *
- * Requirement: All shows manager challenges, crew-chief/umpire reviews,
- * boundary calls, "under review" status entries, run-at-risk entries AND
- * official scoring changes — but NOT ABS pitch challenges. ABS stays fully
- * tracked (its own "ABS" filter tab, the "ABS Challenges" stat, and the
- * official challenges-remaining counters) but lives in its own section, and
- * it stays silent (shouldAlertForReview() above). Scoring changes show up in
- * the All feed (by explicit request) and in their own "Scoring Changes" tab.
- *
- * `typeKey === 'abs'` is produced ONLY from the official StatsAPI code
- * "MJ" or explicit ABS text in the official play descriptions
- * (normalizeType in reviews.js — see docs/verification-report.md §2).
- * So this hides exactly the official ABS pitch-challenge category and
- * nothing else.
- *
- * Unknown / malformed entries fail open (visible in All): an unrecognized
- * event must never be silently hidden. Pure function — no DOM.
- */
+/** A classification change is in scope only when an observed side is Error. */
+function isErrorScoringChange(review) {
+  return Boolean(review && review.typeKey === 'scoring_change' &&
+    ((review.initial && review.initial.category === 'error') ||
+     (review.final && review.final.category === 'error')));
+}
+
+function isScoringFocusReview(review) {
+  return isPrimaryPendingReview(review) || isErrorScoringChange(review);
+}
+
+/* Optional alerts follow the same narrow scope as the visible feed. */
+function shouldAlertForReview(review) {
+  return isScoringFocusReview(review);
+}
+
+/* The default/all view is deliberately not a general replay-review feed. */
 function visibleInAllFeed(review) {
-  return !review || review.typeKey !== 'abs';
+  return isScoringFocusReview(review);
 }
 
 /**
@@ -649,7 +545,7 @@ function runsRemovableFromReview(review) {
  * is the banner, row badge, stat, filter tab and desktop notification.
  */
 function shouldRunRiskAlert(review) {
-  return runsRemovableFromReview(review) > 0;
+  return isScoringFocusReview(review) && runsRemovableFromReview(review) > 0;
 }
 
 /**
@@ -1684,25 +1580,10 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
 /* ------------------------------------------------------------ page logic */
 
 (() => {
-  // Cadence is the gap between poll STARTS (scan duration is subtracted in
-  // waitAfterScan). The StatsAPI is pull-only — a shorter poll only reduces
-  // how long a landed review sits unseen. Hidden tabs still pause.
-  //   live games          : 250ms (2026-09-05: was 500ms — this is the same
-  //                          cadence the page already used whenever ANY
-  //                          review was in flight, now applied to all live
-  //                          action. It puts EVERY scan-borne category —
-  //                          official-scoring-pending first detection, live
-  //                          scoring-change diffs, ABS challenge rows,
-  //                          runs-at-risk detail, review outcome rows — at
-  //                          the same ≤250ms + one round trip floor the
-  //                          status watcher already gives review flips.)
-  //   a review in flight  : 250ms (outcome flips are what the feed is for;
-  //                          in-review games are fetched first, so the flip
-  //                          lands ~1 request after poll start)
-  //   no live games       : 5s
-  // ErrorsLive static deployment: bounded polling; no sub-second full-slate scans.
+  // Poll-cycle intervals include scan time: active games and active primary
+  // scoring-pending rulings refresh every 5 seconds; an idle slate every 30.
+  // Hidden tabs pause polling, and there is no separate replay-status watcher.
   const LIVE_POLL_MS = 5000;
-  const REVIEW_POLL_MS = 5000;
   const IDLE_POLL_MS = 30000;
   // The schedule is re-fetched at most once per SCHEDULE_TTL_MS (the slate
   // for one date is static; only status/counters change). It is refreshed IN
@@ -1741,50 +1622,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
   // outcome in particular — lands sooner. Same host (HTTP/2), same
   // CORS-open endpoint.
   const FETCH_CONCURRENCY = 4;
-  /* ----------------------------------------------------------------------
-   * REVIEW-STATUS WATCHER — the latency fix.
-   *
-   * The official game status is the EARLIEST signal that a review exists:
-   * MLB flips statusCode to an M-code, an N-code or IH the instant a review
-   * is CALLED, while
-   * the play text the parser also reads ("Tigers challenged (tag play), call
-   * on the field was overturned: …") is written when the review RESOLVES.
-   * Registry: GET /api/v1/gameStatus, verified live 2026-09-02.
-   *
-   * Before this watcher, the only status the feed could see came off the
-   * 3s SCHEDULE_TTL_MS cache above — so a review could sit undetected for up
-   * to ~3s after MLB published it, and the "under review" row only appeared
-   * on the next poll that happened to refresh the schedule. The watcher
-   * polls a `fields`-projected, hydration-free schedule (MLB.getReviewStatus
-   * — gamePk + status for the whole slate, ~2.4 KB / 1 chunk, verified live
-   * 2026-09-02 against the 8-chunk hydrated schedule getSchedule() uses) on
-   * its own timer, merges the fresh status into `games`, and on any review
-   * flip kicks an out-of-band scan instead of waiting for the next tick.
-   *
-   *   worst case before : ~3000ms (schedule cache) + up to 500ms poll
-   *   worst case after  : ~125ms (watcher) + one round trip
-   *
-   * It runs on its own timer rather than inside load() so it adds ZERO
-   * serialized latency to the playByPlay scan, and it is only fast while a
-   * game is actually live — a review cannot start on a game that has not
-   * started, so an idle slate backs off to 5s.
-   *
-   * 250ms → 125ms (2026-09-26): this ONE request is the earliest signal that
-   * exists for a challenge / review / boundary call / "under review" state —
-   * no other endpoint can know sooner — so with the app's own budget as the
-   * only constraint it is the request that best repays a tighter interval.
-   * The payload is the fields-projected, hydration-free whole-slate status
-   * (~2.4 KB), so 8/s costs ~19 KB/s against a host we are already reading
-   * 60 playByPlay requests/s from; the fetch is guarded against overlap
-   * (`reviewStatusInFlight`), so a slow response simply stretches the
-   * effective cadence instead of stacking requests. See
-   * docs/api-compliance.md for the full footprint and the terms this stays
-   * inside.
-   * ------------------------------------------------------------------- */
-  const REVIEW_STATUS_POLL_MS = 5000;
-  const REVIEW_STATUS_IDLE_MS = 5000;
-  const REVIEW_STATUS_TIMEOUT_MS = 2500;
-
   // Official scoring changes often land AFTER a game goes Final (MLB's own
   // log says changes occur "following the conclusion of the listed games").
   // Finals are re-scanned for scoring changes for this long after the page
@@ -1835,26 +1672,10 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
   // last attempt was made (enforces TEAMS_RETRY_MS between attempts).
   let teamsDirectorySeason = null;
   let teamsDirectoryAttemptedAt = 0;
-  // Review-status watcher state: its own timer, an in-flight guard (a sweep
-  // must never overlap itself and stack requests), the last observed
-  // gamePk -> statusCode map, and a flag that tells load() a review flipped
-  // while a scan was already running so it re-scans immediately on exit.
-  let reviewStatusTimer = null;
-  let reviewStatusInFlight = false;
-  let reviewStatusCodes = new Map();
-  let reviewStatusFlipPending = false;
-  // gamePks whose out-of-band priority scan (kickPriorityScan) is running, so
-  // the same flipped game is never fetched twice over itself.
-  const priorityScanInFlight = new Set();
   // One alert (chime + notification) per poll at most — but fired the moment
   // the FIRST game response reports it, instead of after the slowest game.
   let pollAlertFired = false;
   const feedState = { seen: new Map(), order: [] };
-  // gamePk -> { counts: normalizeChallengeCounts(...), issues: [], updatedAt }
-  // Official per-team challenge counters (manager `review` + `absChallenges`)
-  // for every game that has at least one feed event. Counters are read from
-  // the payloads only — never derived by counting feed rows ourselves.
-  const challengeCounts = new Map();
   // Official scoring-change tracker state:
   //   gamePk -> Map<atBatIndex(String), tracked>  — the observed classification
   //   snapshot of every completed play, so the next poll can diff against it.
@@ -2206,19 +2027,8 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
   let runRiskNotifyTimer = null;
   let notifyEnabled = false;
 
-  try {
-    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('replayFeedSoundEnabled') : null;
-    audioEnabled = stored === '1' || stored === 'true';
-  } catch (_) {
-    audioEnabled = false;
-  }
-
-  try {
-    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('replayFeedNotifyEnabled') : null;
-    notifyEnabled = stored === '1' || stored === 'true';
-  } catch (_) {
-    notifyEnabled = false;
-  }
+  // Alerts are disabled in the focused first version; old browser preferences
+  // are intentionally not restored from the previous general replay feed.
 
   function todayStr() {
     const d = new Date();
@@ -2241,7 +2051,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     ScoringModel.clear();
     feedState.order.length = 0;
     settledGames = new Set();
-    challengeCounts.clear();
     scoringSnapshots.clear();
     scoringGraceFinals.clear();
     scoringIrregularities.clear();
@@ -2261,11 +2070,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     scheduleDate = null;
     lastScheduleAt = 0;
     scheduleInFlight = null;
-    // The watcher's code map belongs to the old date too: keeping it would
-    // make the new date's first sweep look like "nothing changed" for a game
-    // whose gamePk collides, and suppress a review that is already running.
-    reviewStatusCodes = new Map();
-    reviewStatusFlipPending = false;
     // A date with a logged feed restores it now, so navigating dates (or
     // back to today) shows every entry logged on that date.
     restorePersistedLog();
@@ -2669,13 +2473,9 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
   /**
    * Official team directory for `season`, awaited for at most TEAMS_WAIT_MS.
    *
-   * Cosmetic data must never gate the scan: while this is awaited — and on
-   * essentially every poll it resolves from api.js's per-season promise cache
-   * on the first microtask — the playByPlay wave cannot start and
-   * requestInFlight stays true, so watcher-triggered scans are dropped.
-   * Bounding the wait means the worst case a slow /teams can add to a poll is
-   * TEAMS_WAIT_MS, not api.js's 8s+8s default; the directory still applies as
-   * soon as it arrives (applyTeamDirectory).
+   * The abbreviation lookup is cosmetic, so it must not delay play-by-play
+   * scanning. Bound the wait; if the directory arrives later, apply it when
+   * ready without blocking the focused feed.
    */
   async function resolveTeamDirectory(season) {
     if (!MLB.getTeams) return;
@@ -2728,66 +2528,16 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
   }
 
   /**
-   * Out-of-band scan of the games a status flip just named — the fix for the
-   * one remaining multi-100ms tail in the feed's own detection path
-   * (2026-09-26).
-   *
-   * Why it exists: the status watcher fires at 250ms, but its flip handler
-   * calls load(), which is a NO-OP while a scan is already running (the
-   * requestInFlight guard) — so the row for a review that flips DURING a wave
-   * could only land when that whole wave finished, i.e. after the slowest game
-   * in it (per-game PBP_TIMEOUT_MS is 3000ms, and a single stalled game
-   * resolves or times out at that point). Speculatively waiting is what the
-   * user's report is about: the review is already live on MLB's side.
-   *
-   * This fetches ONLY the flipped game(s), immediately, outside the wave: one
-   * request per flip (not per game in the slate), so the banner/row/chime
-   * follow the 250ms status strip by one round trip no matter what the
-   * in-flight poll is doing. Games already being priority-scanned are skipped,
-   * so a flapping status cannot stack requests. The in-flight wave may also
-   * fetch the same game; its response is merged idempotently by
-   * `<gamePk>:<event id>` key (mergeFeedEvents/mergeScoringChanges and
-   * admitScoringEntries all dedupe), so the duplicate costs one request on a
-   * rare event and can never duplicate a row.
-   */
-  function kickPriorityScan(gamePks) {
-    if (!gamePks || !gamePks.length) return;
-    const wanted = new Set(gamePks);
-    const targets = candidateGames(games).filter((g) => wanted.has(g.gamePk));
-    if (!targets.length) return;
-    // This is its own detection wave, so it gets its own single chime: a
-    // review that flips mid-poll would otherwise stay silent, because the
-    // in-flight poll already spent its one alert. Counters from that poll are
-    // cleared first so an event that has already chimed cannot chime again.
-    pendingAlertableCount = 0;
-    pollAlertFired = false;
-    targets.forEach((game) => {
-      const pk = game.gamePk;
-      if (priorityScanInFlight.has(pk)) return;
-      priorityScanInFlight.add(pk);
-      ingestGame(game)
-        .then(() => {
-          // ingestGame already rendered its own updates + alerted; this keeps
-          // the footer stats honest if the page was otherwise idle.
-          renderStatusLine();
-        })
-        .catch(() => { /* the next poll retries; never surface a page error */ })
-        .finally(() => { priorityScanInFlight.delete(pk); });
-    });
-  }
-
-  /**
    * Fetch + ingest one batch of games with the existing priority ordering.
    * Returns the number of games successfully ingested (a game that failed
    * fetch returns false; a settled Final is a no-op success).
    */
   async function scanGames(list, requestDate) {
     const candidates = candidateGames(list);
-    // Games already under review first, then other live games, then finals.
-    // That cuts the wait for an outcome flip on a 15-game slate.
+    // Exact primary scorer-pending plays first, then other live games, then finals.
     candidates.sort((a, b) =>
-      reviewFetchPriority(a, gameHasInProgress(a.gamePk)) -
-      reviewFetchPriority(b, gameHasInProgress(b.gamePk)));
+      focusedFetchPriority(a, gameHasInProgress(a.gamePk)) -
+      focusedFetchPriority(b, gameHasInProgress(b.gamePk)));
     let success = 0;
     await mapPool(candidates, FETCH_CONCURRENCY, async (g) => {
       if (requestDate !== dateStr) return;
@@ -2800,10 +2550,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     if (requestInFlight) return;
     const requestDate = dateStr;
     requestInFlight = true;
-    // This scan is now the one that will see the flip the watcher reported, so
-    // the "re-scan after me" request is satisfied and must not fire a second
-    // redundant scan in the finally block.
-    reviewStatusFlipPending = false;
     lastCycleStartedAt = Date.now();
     const statusLine = $('#status-line');
     setLivePulse(true);
@@ -2829,39 +2575,13 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
       if (requestDate !== dateStr) return;
       if (scheduleGames) games = scheduleGames;
 
-      // Official team directory for the schedule's season: the schedule's own
-      // team objects have NO abbreviation (verified live 2026-08-19), so
-      // official abbreviations are resolved here — never fabricated. If this
-      // request fails, official full names still render from the schedule and
-      // abbreviation chips simply stay hidden. (Cached in api.js after the
-      // first poll, so this is a no-op wait on essentially every cycle.)
-      //
-      // LATENCY GUARD (2026-09-26): this lookup is COSMETIC (abbreviation
-      // chips), so it must never hold the poll. It is awaited for at most
-      // TEAMS_WAIT_MS — one short round trip is plenty for a first paint; a
-      // directory that is slower than that is applied the moment it lands
-      // (applyTeamDirectory → re-render) instead of stalling the scan. Without
-      // the bound, an api.js getJSON() default (timeout 8000ms, retries 1,
-      // 150ms backoff = up to ~16.2s on a stalled /teams) would keep
-      // requestInFlight true for that whole time: the 250ms status watcher
-      // would keep sweeping (its timer is independent) but every
-      // watcher-triggered scan would be dropped by the guard, delaying the
-      // full row — batter/pitcher, score impact, runs at risk — by seconds.
+      // Team abbreviations are optional presentation data; the official full
+      // names already come from the schedule. resolveTeamDirectory() bounds
+      // the wait and applies any later response without blocking the feed.
       const season = (games.find((g) => g && g.season) || {}).season
         || requestDate.slice(0, 4);
       await resolveTeamDirectory(season);
       if (requestDate !== dateStr) return;
-
-      // Manager-challenge counters ride along on the schedule refresh
-      // (hydrate=review — shape verified live 2026-08-28: every game carries
-      // review.away/home.used/remaining). When the schedule is served from the
-      // 3s cache nothing changes here — the per-game feed/live side-fetch in
-      // ingestGame keeps counters fresh when an event actually moves them.
-      if (scheduleGames) {
-        games.forEach((g) => {
-          if (g && g.gamePk != null && g.review) updateGameCounts(g.gamePk, g.review, null, false);
-        });
-      }
 
       let freshSuccess = 0;
       if (scheduleGames) {
@@ -2918,56 +2638,8 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     } finally {
       requestInFlight = false;
       setLivePulse(false);
-      if (requestDate !== dateStr) {
-        load();
-      } else if (reviewStatusFlipPending) {
-        // The watcher saw a review flip while this scan was already running,
-        // so its `load()` call was dropped by the requestInFlight guard.
-        // Re-scan immediately instead of waiting for the next scheduled tick —
-        // this is the difference between the row landing one poll later and
-        // landing now. Cleared here so it can only ever cost ONE extra scan.
-        reviewStatusFlipPending = false;
-        load();
-      }
+      if (requestDate !== dateStr) load();
     }
-  }
-
-  /**
-   * Merge freshly observed official counters into the per-game tracker.
-   * A poll that carries only one source (schedule → manager only; feed/live →
-   * both) must not erase the other source's last observed values, so the two
-   * halves are retained independently. Any irregularity (a used-counter going
-   * down mid-game) is recorded once and kept visible for review.
-   */
-  function updateGameCounts(gamePk, managerSource, absSource, isFeedLive) {
-    const prev = challengeCounts.get(gamePk) || null;
-    // The schedule's review hydration and feed/live's gameData.review carry
-    // the same counters, but the schedule can lag behind the live feed. Once
-    // feed/live manager counters have been observed for a game, a
-    // schedule-only poll may not overwrite them (or a stale cache would raise
-    // a false "counter decreased" flag).
-    let effectiveManager = managerSource;
-    if (!isFeedLive && prev && prev.managerFromFeedLive) effectiveManager = null;
-    const fresh = normalizeChallengeCounts(effectiveManager, absSource);
-    if (!fresh) return;
-    const merged = {
-      manager: fresh.manager || (prev && prev.counts && prev.counts.manager) || null,
-      abs: fresh.abs || (prev && prev.counts && prev.counts.abs) || null,
-    };
-    const issues = prev ? challengeCountIrregularities(prev.counts, merged) : [];
-    const allIssues = prev && prev.issues ? [...prev.issues] : [];
-    issues.forEach((issue) => { if (!allIssues.includes(issue)) allIssues.push(issue); });
-    if (issues.length) {
-      console.warn(`challenge counters irregularity (game ${gamePk}) — flagged for review:`, issues);
-    }
-    challengeCounts.set(gamePk, {
-      counts: merged,
-      issues: allIssues,
-      updatedAt: Date.now(),
-      managerFromFeedLive: (isFeedLive && !!fresh.manager) ||
-        !!(prev && prev.managerFromFeedLive),
-      absAttempted: isFeedLive || !!(prev && prev.absAttempted),
-    });
   }
 
   /**
@@ -3027,18 +2699,15 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
    * Final that was correctly skipped), false when the playByPlay fetch failed.
    */
   /**
-   * Attribution + team-label context for one game's scoring-change diff,
-   * read entirely from the feed's own observed state:
-   *   reviewedPlays        — at-bats that EVER had a replay-review entry in
-   *                          this feed (the change likely belongs to that
-   *                          review, whose row already exists)
-   *   activeReviewIndexes  — at-bats with a review IN PROGRESS right now
-   *   pendingScoringIndexes — at-bats carrying an official-scorer PENDING
-   *                          marker right now (the change is the ruling)
-   *   teamLabels           — official away/home {id, name, abbrev} for the
-   *                          batting-team chip (schedule + /teams directory).
+   * Build official team labels and exact-primary-pending context for the
+   * scoring-change tracker. Other replay categories are deliberately hidden
+   * and must not replace an observed error-involving change row.
    */
   function scoringContextFor(game, gamePk) {
+    // Replay events are intentionally hidden from this focused feed. Their
+    // presence must not suppress an independently observed error-involving
+    // classification change on the same play. Keep the legacy context shape
+    // for the pure tracker, but only primary scorer-pending markers qualify.
     const activeReviewIndexes = new Set();
     const pendingScoringIndexes = new Set();
     const reviewedPlays = new Set();
@@ -3046,15 +2715,7 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
       if (!entry || entry.gamePk !== gamePk || !entry.review) return;
       const r = entry.review;
       if (r.atBatIndex == null || r.typeKey === SCORING_CHANGE_TYPE_KEY) return;
-      if (r.typeKey === 'pending_scoring') {
-        if (r.inProgress) pendingScoringIndexes.add(r.atBatIndex);
-        return;
-      }
-      // Any replay-review entry ever observed for this at-bat (active or
-      // resolved): a classification change on the same play is attributed
-      // to that review rather than double-tracked as a scorer change.
-      reviewedPlays.add(r.atBatIndex);
-      if (r.inProgress) activeReviewIndexes.add(r.atBatIndex);
+      if (isPrimaryPendingReview(r) && r.inProgress) pendingScoringIndexes.add(r.atBatIndex);
     });
     const label = (side) => {
       const t = gameSideTeam(game, side);
@@ -3182,7 +2843,10 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     const reviewData = window.MLBReviews
       ? window.MLBReviews.extractReviews(pseudoFeed)
       : { reviews: [], activeReview: null };
-    const result = mergeFeedEvents(feedState, gamePk, reviewData.reviews, reviewData.playsByAtBatIndex);
+    // Reuse the verified parser for exact scorer-pending markers, but do not
+    // admit its manager/umpire/ABS/replay rows into this focused feed state.
+    const focusedPending = (reviewData.reviews || []).filter(isPrimaryPendingReview);
+    const result = mergeFeedEvents(feedState, gamePk, focusedPending, reviewData.playsByAtBatIndex);
 
     // Official scoring-change tracker: diff every completed play's official
     // classification (hit / error / out / bases / runner error movements)
@@ -3209,7 +2873,9 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     // mergeScoringChanges() returns the minted rows split into added/updated
     // ({gamePk, review} pairs); admit merges them into feedState idempotently
     // by stable key.
-    const scoringResult = admitScoringEntries([...scoring.added, ...scoring.updated], game);
+    const focusedScoringChanges = [...scoring.added, ...scoring.updated]
+      .filter((entry) => isErrorScoringChange(entry && entry.review));
+    const scoringResult = admitScoringEntries(focusedScoringChanges, game);
     const combined = {
       added: [...result.added, ...scoringResult.added],
       updated: [...result.updated, ...scoringResult.updated],
@@ -3224,22 +2890,9 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
       scheduleFeedLogSave();
     }
 
-    // Official challenges-remaining counters. The schedule already supplied
-    // the manager `review` half; the ABS half only lives in feed/live's
-    // gameData.absChallenges (verified 2026-08-28: absent from the schedule,
-    // absent entirely in pre-ABS seasons). One tiny fields-projected request
-    // per game, and only for games that actually have feed events — a game
-    // with no challenges/reviews has nothing to annotate. Counters only move
-    // when a challenge/review lands or resolves (both are feed-event changes),
-    // so re-fetch only when this game's events changed or counters were never
-    // captured; the 1–2s live cadence is not doubled for a quiet game.
-    const hasEntries = [...feedState.seen.values()].some((e) => e.gamePk === gamePk);
-    const eventsChanged = combined.added.length || combined.updated.length || combined.ended.length;
-    const tracked = challengeCounts.get(gamePk);
-    const needsCounts = hasEntries &&
-      (eventsChanged || !tracked || !tracked.absAttempted);
-    // Count new alertable events for the chime (challenges/reviews/boundary,
-    // official scoring changes — not ABS)
+    // Count only focused scoring events for the optional chime. The page's
+    // first-version UI has no alert controls; challenge/review events are not
+    // part of this feed's visible scope.
     if (combined.added && combined.added.length) {
       const alertable = combined.added.filter((e) => {
         try {
@@ -3259,37 +2912,13 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     feedState.seen.forEach((entry) => {
       if (entry.gamePk === gamePk) entry.matchupLabel = matchupLabel;
     });
-    // The review row itself is the update the user is waiting for — paint it
-    // NOW, before any side-fetch. The challenges-remaining counters that
-    // accompany a changed event are a non-blocking side-fetch: merging them
-    // earlier would cost one extra request round-trip on exactly the poll
-    // where the outcome flipped. The tracker merges as soon as the response
-    // lands; the next cycle re-renders the row with fresh counters.
+    // Paint focused scoring updates as soon as they are observed. No review
+    // banner, challenge counter or run-at-risk panel is part of this feed.
     if (combined.added.length || combined.updated.length || combined.ended.length) {
-      // renderFeedUpdates() already repaints the header stats, the LIVE REVIEW
-      // strip and the ⚠️ RUNS AT RISK banner (it calls renderStats /
-      // renderActiveStrip / renderTabs after rebuilding the rows), so all of
-      // those land with the FIRST response that carries them — not after the
-      // slowest game in the wave. Verified by tools/review-watcher-test.mjs
-      // §4b, which holds one game's playByPlay pending for 4s while a second
-      // game's review banner is asserted on screen.
       renderFeedUpdates(combined);
     }
-    // Alert now (chime + desktop notification) if this game's response
-    // carries the first new/at-risk event of the poll — render above already
-    // painted, sound must not wait for the slowest game in the slate.
-    maybeAlertNow();
-    if (needsCounts && MLB.getChallengeCounts) {
-      MLB.getChallengeCounts(gamePk)
-        .then((countsFeed) => {
-          const gd = (countsFeed && countsFeed.gameData) || {};
-          updateGameCounts(gamePk, gd.review || null, gd.absChallenges || null, true);
-        })
-        .catch((countErr) => {
-          // Keep the last observed counters; never zero-fill on a failed poll.
-          console.warn(`challenge counters unavailable this poll (game ${gamePk})`, countErr);
-        });
-    }
+    // The first version keeps the legacy alert controls disabled; this call
+    // has no effect unless a caller explicitly enables the hidden API option.
     return true;
   }
 
@@ -3333,7 +2962,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
 
   function render() {
     renderStats();
-    renderActiveStrip();
     renderTabs();
     renderFeed();
     updateDateLabel();
@@ -3348,271 +2976,47 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
       b.appendChild(el('strong', 'review-stat-value', String(value)));
       return b;
     };
-    // "Events" counts the All section: every review category EXCEPT ABS
-    // pitch challenges, which have their own stat (and their own tab)
-    // right next to it. The remaining outcome/status stats are page-wide
-    // trackers and keep counting ABS entries too — ABS is still tracked.
-    wrap.appendChild(stat('Events', entries.filter((e) => visibleInAllFeed(e.review)).length));
-    wrap.appendChild(stat('ABS Challenges', entries.filter((e) => e.review.typeKey === 'abs').length, 'stat-abs'));
-    wrap.appendChild(stat('Manager Challenges', entries.filter((e) => e.review.typeKey === 'manager').length, 'stat-manager'));
-    wrap.appendChild(stat('Boundary Calls', entries.filter((e) => e.review.typeKey === 'boundary').length, 'stat-boundary'));
-    // Official-scorer pending rulings (hit / error / fielder's choice
-    // undecided). The value is the number of rulings pending RIGHT NOW; the
-    // tooltip also reports how many have been tracked today so the feed is
-    // transparent about the history it keeps.
-    const osEntries = entries.filter((e) => e.review.typeKey === 'pending_scoring');
-    if (osEntries.length) {
-      const osActive = osEntries.filter((e) => e.review.inProgress).length;
-      const item = stat('Scoring Pending', osActive, 'stat-os-pending');
-      item.title = `${osEntries.length} official-scorer ruling${osEntries.length === 1 ? '' : 's'} tracked today, ${osActive} still pending. ` +
-        'A ruling decides how the play is charged (hit / error / fielder\u2019s choice) — it never removes a run from the score. ' +
-        'Detected only from the official StatsAPI event types os_ruling_pending_primary / os_ruling_pending_prior ("Official Scorer Ruling Pending", GET /api/v1/eventTypes).';
-      wrap.appendChild(item);
-    }
-    // Official scoring changes (hit ↔ error, single ↔ double, out ↔ hit,
-    // …) observed by diffing the official play-by-play between polls.
-    const scEntries = entries.filter((e) => e.review.typeKey === 'scoring_change');
-    if (scEntries.length) {
-      let irregularTotal = 0;
-      scoringIrregularities.forEach((notes) => { irregularTotal += notes.length; });
-      const item = stat('Scoring Changes', scEntries.length, 'stat-scoring-change');
-      item.title = `${scEntries.length} official scoring change${scEntries.length === 1 ? '' : 's'} tracked today — plays whose official hit/error/out ` +
-        'classification changed between polls (initial call and final ruling both observed). ' +
-        'Detected only by diffing the official play-by-play payload; the API carries no scoring-change marker. ' +
-        `Official log: mlb.com/official-information/scoring-changes.` +
-        (irregularTotal ? ` ${irregularTotal} irregularit${irregularTotal === 1 ? 'y' : 'ies'} flagged for review (see the Scoring Changes tab).` : '');
-      wrap.appendChild(item);
-    }
-    wrap.appendChild(stat('Overturned', entries.filter((e) => e.review.outcome === 'overturned').length, 'stat-overturned'));
-    wrap.appendChild(stat('Stands / Upheld', entries.filter((e) => e.review.outcome === 'stands').length, 'stat-stands'));
-    // \"Under Review\" is a replay-review counter; official-scorer pending
-    // rulings are counted by their own Scoring Pending stat above.
-    const inProgress = entries.filter((e) => e.review.inProgress && e.review.typeKey !== 'pending_scoring');
-    if (inProgress.length) {
-      wrap.appendChild(stat('Under Review', inProgress.length, 'stat-active-pulse'));
-    }
-    // Runs that active reviews could take back off the scoreboard right now.
-    // Only shown when there is something to show — a 0 here is noise.
-    const atRisk = runRiskTotal();
-    if (atRisk > 0) {
-      const item = stat('Runs at Risk', atRisk, 'stat-run-risk');
-      item.title = 'Runs already credited on the scoreboard that an active review could remove. ' +
-        'Counted only from scoring movements the official payload ties to the reviewed event. ' +
-        'Not a prediction of the ruling.';
-      wrap.appendChild(item);
-    }
+    const currentErrors = ScoringModel.entries('errors').length;
+    const activePending = entries.filter((e) => isPrimaryPendingReview(e.review) &&
+      e.review.inProgress === true).length;
+    const errorChanges = entries.filter((e) => isErrorScoringChange(e.review)).length;
+    wrap.appendChild(stat('Games', games.length));
+    wrap.appendChild(stat('Current official errors', currentErrors, 'stat-scoring-change'));
+    wrap.appendChild(stat('Primary scoring rulings pending', activePending, 'stat-os-pending'));
+    wrap.appendChild(stat('Error reclassifications observed', errorChanges, 'stat-overturned'));
   }
 
-  function renderActiveStrip() {
-    const wrap = UI.clear($('#active-strip'));
-    renderRunRiskBanner(wrap);
-
-    // Official-scorer pending rulings — their own live strip, distinct from
-    // replay reviews ("LIVE REVIEW" would be wrong for a scoring decision).
-    const osEntries = [];
-    feedState.seen.forEach((entry) => {
-      if (entry.review && entry.review.typeKey === 'pending_scoring' &&
-          entry.review.inProgress) osEntries.push(entry);
-    });
-    if (osEntries.length) {
-      const osBar = el('div', 'feed-active-strip feed-active-strip-os');
-      osBar.appendChild(el('span', 'feed-active-badge feed-active-badge-os', '⚖️ SCORING PENDING'));
-      osEntries.forEach((entry) => {
-        const g = games.find((x) => x.gamePk === entry.gamePk);
-        if (!g) return;
-        const item = el('a', 'feed-active-link feed-active-link-os', '',
-          { href: `game.html?gamePk=${entry.gamePk}` });
-        item.appendChild(el('span', 'feed-active-game', matchupFor(entry, g)));
-        item.appendChild(el('span', 'feed-active-type', entry.review.reviewType));
-        if (entry.review.reason) {
-          item.appendChild(el('span', 'feed-active-reason', entry.review.reason));
-        }
-        if (entry.review.battingTeamAbbrev || entry.review.battingTeamName) {
-          const teamChip = el('span', 'feed-active-team',
-            `Batting: ${entry.review.battingTeamAbbrev || entry.review.battingTeamName}`);
-          if (entry.review.battingTeamName) teamChip.title = entry.review.battingTeamName;
-          item.appendChild(teamChip);
-        }
-        osBar.appendChild(item);
-      });
-      wrap.appendChild(osBar);
-    }
-
-    const activeGames = new Map();
-
-    feedState.seen.forEach((entry, key) => {
-      // Official-scorer pending rulings have their own strip above; they are
-      // never labeled "LIVE REVIEW" (a scoring decision is not a replay).
-      if (entry.review.inProgress && entry.review.typeKey !== 'pending_scoring') {
-        if (!activeGames.has(entry.gamePk)) activeGames.set(entry.gamePk, []);
-        activeGames.get(entry.gamePk).push(entry);
-      }
-    });
-    // A game whose official status says it is under review right now —
-    // statusCode M*/N*/IH (registry-verified), not a word match, so a
-    // crew-chief "Instant Replay" appears here too.
-    games.forEach((g) => {
-      if (isReviewStatusCode(g && g.status) && !activeGames.has(g.gamePk)) {
-        activeGames.set(g.gamePk, []);
-      }
-    });
-
-    if (!activeGames.size) return;
-    const bar = el('div', 'feed-active-strip');
-    bar.appendChild(el('span', 'feed-active-badge', '🚨 LIVE REVIEW'));
-    activeGames.forEach((entries, gamePk) => {
-      const g = games.find((x) => x.gamePk === gamePk);
-      if (!g) return;
-      const label = entries.length
-        ? entries[0].review.reviewType
-        : (g.status && g.status.detailedState) || 'Review';
-      const item = el('a', 'feed-active-link', '',
-        { href: `game.html?gamePk=${gamePk}` });
-      item.appendChild(el('span', 'feed-active-game',
-        matchupFor(null, g)));
-      item.appendChild(el('span', 'feed-active-type', label));
-      // Official reason: from the feed row when we have one, else straight off
-      // the game status (`status.reason` — "Tag play", "Home run", "Pitch
-      // Result", …, all verbatim from GET /api/v1/gameStatus). That is what
-      // makes this strip informative on the very first poll after the status
-      // flips, before the play description carries any review text at all.
-      const statusReason = !entries.length &&
-        typeof (g.status && g.status.reason) === 'string' && g.status.reason.trim()
-        ? g.status.reason.trim() : null;
-      const reasonText = entries.length ? entries[0].review.reason : statusReason;
-      if (reasonText) {
-        item.appendChild(el('span', 'feed-active-reason', reasonText));
-      }
-      if (entries.length && window.MLBReviews && window.MLBReviews.scoreImpactPresentation) {
-        const impact = window.MLBReviews.scoreImpactPresentation(entries[0].review);
-        if (impact) {
-          const riskCls = runsRemovableFromReview(entries[0].review) > 0
-            ? ' feed-active-impact-risk'
-            : '';
-          item.appendChild(el('span', `feed-active-impact${riskCls}`, impact.title));
-        }
-      }
-      if (entries.some((e) => runsRemovableFromReview(e.review) > 0)) {
-        item.classList.add('feed-active-link-risk');
-      }
-      // Current official challenges-remaining for the game under review.
-      const tracked = challengeCounts.get(gamePk);
-      const countsLine = tracked
-        ? gameChallengeLine(tracked.counts, gameSideLabels(g), 'Challenges left')
-        : null;
-      if (countsLine) {
-        item.appendChild(el('span', 'feed-active-challenges', countsLine));
-      }
-      bar.appendChild(item);
-    });
-    wrap.appendChild(bar);
+  function focusPlayKey(entry) {
+    if (!entry) return '';
+    const atBat = entry.modelRow ? entry.modelRow.at_bat
+      : entry.review && entry.review.atBatIndex;
+    if (atBat !== null && atBat !== undefined) return `${String(entry.gamePk)}:${String(atBat)}`;
+    const id = entry.review && entry.review.id;
+    return id ? `${String(entry.gamePk)}:${String(id)}` : '';
   }
 
-  /**
-   * Top-of-page banner: every game where an active review could take a run
-   * back off the scoreboard. This is the persistent visual half of the "alert
-   * me ASAP" requirement — the chime fires once, this stays up for as long as
-   * the run is actually at risk and disappears the moment the review resolves.
-   *
-   * Every number and score printed here comes from MLBReviews.runRiskSummary(),
-   * i.e. straight from the observed payload. When the payload does not support
-   * an alternate score, that half of the line is simply omitted rather than
-   * being guessed.
-   */
-  function renderRunRiskBanner(wrap) {
-    const entries = runRiskEntries();
-    if (!entries.length) return;
-    const total = entries.reduce((sum, e) => sum + runsRemovableFromReview(e.review), 0);
-
-    const banner = el('div', 'run-risk-banner');
-    const head = el('div', 'run-risk-banner-head');
-    head.appendChild(el('span', 'run-risk-icon', '⚠️'));
-    head.appendChild(el('strong', 'run-risk-headline',
-      `${total} ${total === 1 ? 'RUN' : 'RUNS'} AT RISK`));
-    head.appendChild(el('span', 'run-risk-sub',
-      entries.length === 1
-        ? 'An active review could remove a run already on the scoreboard'
-        : `Active reviews in ${entries.length} games could remove runs already on the scoreboard`));
-    banner.appendChild(head);
-
-    const list = el('div', 'run-risk-list');
-    entries.forEach((entry) => {
-      const game = games.find((g) => g.gamePk === entry.gamePk) || null;
-      const summary = window.MLBReviews && window.MLBReviews.runRiskSummary
-        ? window.MLBReviews.runRiskSummary(entry.review)
-        : null;
-      const runs = summary ? summary.runs : runsRemovableFromReview(entry.review);
-      const item = el('a', 'run-risk-item', '', {
-        href: `game.html?gamePk=${entry.gamePk}`,
-        title: `Open game — ${matchupFor(entry, game)}`,
-      });
-      item.appendChild(el('span', 'run-risk-count',
-        `${runs} ${runs === 1 ? 'RUN' : 'RUNS'}`));
-      item.appendChild(el('span', 'run-risk-game', matchupFor(entry, game)));
-      if (entry.review.reviewType) {
-        item.appendChild(el('span', 'run-risk-type', entry.review.reviewType));
-      }
-      if (entry.review.inningLabel) {
-        item.appendChild(el('span', 'run-risk-inn', entry.review.inningLabel));
-      }
-      if (summary && summary.teamLabel) {
-        item.appendChild(el('span', 'run-risk-team',
-          `${summary.teamLabel} scored the run${runs === 1 ? '' : 's'}`));
-      }
-      if (summary && summary.startScore) {
-        item.appendChild(el('span', 'run-risk-score',
-          summary.possibleScore
-            ? `Call stands: ${summary.startScore} · If removed: ${summary.possibleScore}`
-            : `Score when review started: ${summary.startScore}`));
-      }
-      if (summary && summary.runnerNames.length) {
-        item.appendChild(el('span', 'run-risk-runners',
-          `Credited: ${summary.runnerNames.join(', ')}`));
-      }
-      list.appendChild(item);
-    });
-    banner.appendChild(list);
-    banner.appendChild(el('div', 'run-risk-note',
-      'Runs are counted only from scoring movements the official play payload ties to the reviewed ' +
-      'event. Whether replay actually removes them is not predicted here.'));
-    wrap.appendChild(banner);
+  function focusEntries(scope = filter) {
+    const reviewEntries = [...feedState.seen.values()].filter((entry) => matchesFilter(entry, scope));
+    const representedPlays = new Set(reviewEntries.map(focusPlayKey).filter(Boolean));
+    const modelEntries = ScoringModel.entries(scope).filter((entry) =>
+      !representedPlays.has(focusPlayKey(entry)));
+    return [...reviewEntries, ...modelEntries];
   }
 
   function renderTabs() {
-    const entries = [...feedState.seen.values()];
     const counts = {
-      // "All" shows every category EXCEPT ABS pitch challenges, so its
-      // tab count must match what that section actually renders. ABS
-      // entries are still tracked and counted on their own tab below.
-      all: entries.filter((e) => visibleInAllFeed(e.review)).length + ScoringModel.entries().length,
-      abs: entries.filter((e) => e.review.typeKey === 'abs').length,
-      manager: entries.filter((e) => e.review.typeKey === 'manager').length,
-      crew: entries.filter((e) => e.review.typeKey === 'crew_chief').length,
-      boundary: entries.filter((e) => e.review.typeKey === 'boundary').length,
-      // \"Under Review\" is a REPLAY-review surface; official-scorer pending
-      // rulings are counted on their own Scoring Pending tab.
-      live: entries.filter((e) => e.review.inProgress && e.review.typeKey !== 'pending_scoring').length,
-      runrisk: entries.filter((e) => runsRemovableFromReview(e.review) > 0).length,
-      pending_scoring: entries.filter((e) => e.review.typeKey === 'pending_scoring').length,
-      scoring: entries.filter((e) => e.review.typeKey === 'scoring_change').length,
+      all: focusEntries('all').length,
+      errors: focusEntries('errors').length,
+      pending_scoring: focusEntries('pending_scoring').length,
     };
     const tabs = [
-      ['all', `All (${counts.all})`],
-      ...ScoringModel.categories.map(([key, label]) => [key, `${label} (${ScoringModel.entries(key).length})`]),
-      ['scoring', `✏️ Scoring Changes (${counts.scoring})`],
-      ['pending_scoring', `⚖️ Scoring Pending (${counts.pending_scoring})`],
-      ['abs', `ABS (${counts.abs})`],
-      ['manager', `Challenges (${counts.manager})`],
-      ['crew', `Reviews (${counts.crew})`],
-      ['boundary', `Boundary Calls (${counts.boundary})`],
-      ['live', `● Under Review (${counts.live})`],
-      ['runrisk', `⚠️ Runs at Risk (${counts.runrisk})`],
+      ['all', `All scoring events (${counts.all})`],
+      ['errors', `Errors + observed changes (${counts.errors})`],
+      ['pending_scoring', `⚖️ Official scoring pending (${counts.pending_scoring})`],
     ];
-
     const wrap = UI.clear($('#feed-tabs'));
     tabs.forEach(([key, label]) => {
-      const riskCls = key === 'runrisk' && counts.runrisk > 0 ? ' tab-run-risk' : '';
-      wrap.appendChild(el('button', `tab ${filter === key ? 'tab-on' : ''}${riskCls}`, label, {
+      wrap.appendChild(el('button', `tab ${filter === key ? 'tab-on' : ''}`, label, {
         onclick: `ReplayFeed.setFilter('${key}')`,
       }));
     });
@@ -3620,18 +3024,22 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
 
   function renderFeed() {
     const wrap = UI.clear($('#feed-list'));
-    const entries = [...[...feedState.seen.values()].filter(matchesFilter), ...ScoringModel.entries(filter)];
+    const entries = focusEntries(filter);
     if (!entries.length) {
-      wrap.appendChild(el('div', 'empty',
-        !games.length
-          ? 'No games scheduled for this date.'
-          : filter === 'scoring'
-            ? 'No official scoring changes observed yet — the tracker snapshots every completed play and diffs each poll; when the official scorer changes a hit/error/out ruling, the initial call and final ruling appear here.'
-            : 'No challenges or replay reviews in this category yet — events will appear here live.'));
+      let message;
+      if (!games.length) message = 'No games scheduled for this date.';
+      else if (filter === 'pending_scoring') {
+        message = 'No exact primary official-scorer pending ruling is present in the current feed. A missing result.eventType by itself is not treated as pending.';
+      } else if (filter === 'errors') {
+        message = 'No official field-error calls or observed error reclassifications in the selected games yet.';
+      } else {
+        message = 'No official field errors or exact primary scoring-pending rulings in the selected games yet.';
+      }
+      wrap.appendChild(el('div', 'empty', message));
       return;
     }
-    if (filter === 'scoring') renderScoringIrregularities(wrap);
-    sortFeedEntries(entries).forEach((entry) => wrap.appendChild(entry.modelRow ? ScoringModel.render(entry) : feedRow(entry)));
+    sortFeedEntries(entries).forEach((entry) =>
+      wrap.appendChild(entry.modelRow ? ScoringModel.render(entry) : feedRow(entry)));
   }
 
   /**
@@ -3666,19 +3074,11 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     wrap.appendChild(flag);
   }
 
-  function matchesFilter(entry) {
-    // The All section shows every category EXCEPT ABS pitch challenges:
-    // challenges, reviews, boundary calls, under review, runs at risk, and
-    // official scoring changes (which also have their own ✏️ tab below).
-    // ABS entries stay tracked in the feed state — they render under the
-    // "ABS" tab (and wherever else their category applies: the Under
-    // Review tab, active strip, run-at-risk surfaces).
-    if (filter === 'all') return visibleInAllFeed(entry && entry.review);
-    if (filter === 'live') return entry.review.inProgress && entry.review.typeKey !== 'pending_scoring';
-    if (filter === 'runrisk') return runsRemovableFromReview(entry.review) > 0;
-    if (filter === 'pending_scoring') return entry.review.typeKey === 'pending_scoring';
-    if (filter === 'scoring') return entry.review.typeKey === 'scoring_change';
-    return entry.review.typeKey === filter;
+  function matchesFilter(entry, scope = filter) {
+    const review = entry && entry.review;
+    if (scope === 'errors') return isErrorScoringChange(review);
+    if (scope === 'pending_scoring') return isPrimaryPendingReview(review) && review.inProgress === true;
+    return isScoringFocusReview(review);
   }
 
   /**
@@ -3803,35 +3203,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
       }
     }
 
-    // Challenges-remaining tracker. Rendered only for the two review types
-    // that are charged to a team's official counter (ABS pitch challenges →
-    // gameData.absChallenges; manager challenges → the `review` object), and
-    // only from counters actually observed in the payloads — a missing
-    // counter renders nothing, never 0. The counters are the game's CURRENT
-    // official values (they move as later challenges happen), which is why
-    // the line says "now".
-    const tracked = challengeCounts.get(entry.gamePk);
-    if (tracked && (r.typeKey === 'abs' || r.typeKey === 'manager')) {
-      const side = game ? teamSideInGame(game, r.teamId) : null;
-      const line = teamChallengeLine(tracked.counts, side, teamAbbrev || teamFullName, r.typeKey, 'now');
-      const both = gameChallengeLine(tracked.counts, gameSideLabels(game), 'Challenges left now');
-      const text = line || both;
-      if (text) {
-        const meta = el('div', 'feed-challenges');
-        meta.appendChild(el('span', 'feed-challenges-line', text));
-        if (line && both) meta.title = both;
-        body.appendChild(meta);
-      }
-      if (tracked.issues && tracked.issues.length) {
-        const flag = el('div', 'feed-challenges feed-challenges-flag',
-          `⚠️ Counter irregularity flagged for review: ${tracked.issues.join('; ')}`);
-        flag.title = 'The official used-challenge counter for this game moved backwards between ' +
-          'polls, which should be impossible within one game. The raw observed values are shown ' +
-          'unmodified — nothing is corrected or guessed.';
-        body.appendChild(flag);
-      }
-    }
-
     if ((r.batter && r.batter.fullName) || (r.pitcher && r.pitcher.fullName)) {
       const foot = el('div', 'feed-foot');
       if (r.batter && r.batter.fullName) foot.appendChild(el('span', 'feed-player', `Batter: ${r.batter.fullName}`));
@@ -3842,7 +3213,12 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
       body.appendChild(foot);
     }
 
-    if (['pending_scoring', 'scoring_change'].includes(r.typeKey))
+    // Show a model estimate only while an exact primary scoring ruling is
+    // still pending. Once the official result lands, this card becomes a
+    // factual resolution row; a post-ruling score is not presented as a
+    // forecast. Error reclassifications are shown as observed transitions,
+    // never as model-predicted changes.
+    if (r.typeKey === 'pending_scoring' && r.inProgress && isPrimaryPendingReview(r))
       body.appendChild(ScoringModel.panel(ScoringModel.get(entry.gamePk, r.atBatIndex)));
     row.appendChild(body);
     return row;
@@ -3908,15 +3284,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
         `Official score after play: ${r.scoreAfter.away}–${r.scoreAfter.home}` +
         (changedScore ? ` (was ${r.initialScoreAfter.away}–${r.initialScoreAfter.home} on the initial call)` : '')));
     }
-    if (r.mechanism && isUsableName(r.mechanism.label)) {
-      const mech = el('div', 'feed-scoring-line feed-scoring-mechanism', r.mechanism.label);
-      mech.title = r.mechanism.key === 'replay_review'
-        ? 'The play carries the official replay-review flag (about.hasReview) or a review was active for this at-bat when the change landed. The outcome is tracked on its replay-review row in this feed.'
-        : r.mechanism.key === 'pending_ruling'
-          ? 'The play carried the official "Official Scorer Ruling Pending" marker before this change — also tracked on its ⚖️ Scoring Pending row.'
-          : 'No replay review was observed for this play. Per MLB\u2019s official log, scoring changes are made by the Official Scorer, the Elias Sports Bureau, or after a player/club review: mlb.com/official-information/scoring-changes.';
-      block.appendChild(mech);
-    }
     if (Array.isArray(r.flags) && r.flags.length) {
       const flag = el('div', 'feed-challenges feed-challenges-flag', `⚠️ ${r.flags.join('; ')}`);
       flag.title = 'Flagged for review — shown exactly as observed, never corrected or guessed.';
@@ -3942,9 +3309,8 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
       if (row) row.classList.add('feed-new');
     });
 
-    // Keep the header stats + active strip + tabs in sync.
+    // Keep the summary counts and focused tabs in sync.
     renderStats();
-    renderActiveStrip();
     renderTabs();
   }
 
@@ -3977,24 +3343,18 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     return found;
   }
 
-  function hasActiveReviewSignal() {
-    let inFeed = false;
-    feedState.seen.forEach((entry) => {
-      if (entry.review && entry.review.inProgress) inFeed = true;
-    });
-    if (inFeed) return true;
-    // Registry-based: the official statusCode/codedGameState, so a crew-chief
-    // "Instant Replay" (IH) drops the poll to the fast cadence too.
-    return games.some((g) => isReviewStatusCode(g && g.status));
+  function hasActiveScoringPending() {
+    return [...feedState.seen.values()].some((entry) =>
+      isPrimaryPendingReview(entry.review) && entry.review.inProgress === true);
   }
 
   function currentInterval() {
     const hasLive = games.some((g) => g.status && g.status.abstractGameState === 'Live');
     return pollIntervalMs({
       hasLive,
-      hasActiveReview: hasActiveReviewSignal(),
+      hasActivePending: hasActiveScoringPending(),
       liveMs: LIVE_POLL_MS,
-      reviewMs: REVIEW_POLL_MS,
+      pendingMs: LIVE_POLL_MS,
       idleMs: IDLE_POLL_MS,
     });
   }
@@ -4003,9 +3363,11 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     const line = $('#status-line');
     if (!line) return;
     const interval = currentInterval() / 1000;
+    const errors = ScoringModel.entries('errors').length;
+    const pending = [...feedState.seen.values()].filter((entry) =>
+      isPrimaryPendingReview(entry.review) && entry.review.inProgress === true).length;
     line.textContent =
-      `${games.length} game${games.length === 1 ? '' : 's'} · ` +
-      `${feedState.order.length} review event${feedState.order.length === 1 ? '' : 's'} · ` +
+      `${games.length} games · ${errors} current errors · ${pending} primary scoring rulings pending · ` +
       `updated ${new Date().toLocaleTimeString()} · refreshing every ${interval}s`;
   }
 
@@ -4024,8 +3386,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
   function stopPolling() {
     clearTimeout(pollTimer);
     clearInterval(countdownTimer);
-    // The watcher has its own timer; a hidden tab must stop sweeping too.
-    stopReviewStatus();
     const node = $('#countdown');
     if (node) node.textContent = '';
   }
@@ -4048,108 +3408,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
       }
     }, wait);
     startCountdown(wait);
-  }
-
-  /* ------------------------------------------------ review-status watcher */
-
-  /**
-   * Watcher cadence. Fast only while a review is possible: a review cannot
-   * start on a game that has not started, so a slate with nothing Live backs
-   * off to 5s and the watcher costs nothing overnight.
-   */
-  function reviewStatusIntervalMs() {
-    const canReview = games.some((g) => g && g.status &&
-      (g.status.abstractGameState === 'Live' || isReviewStatusCode(g.status)));
-    return canReview ? REVIEW_STATUS_POLL_MS : REVIEW_STATUS_IDLE_MS;
-  }
-
-  function scheduleReviewStatus() {
-    clearTimeout(reviewStatusTimer);
-    // A hidden tab parks at the idle cadence instead of spinning at 250ms
-    // (stopPolling() normally clears this timer outright; this is the safety
-    // net for a tab hidden between ticks).
-    const wait = document.hidden
-      ? REVIEW_STATUS_IDLE_MS : reviewStatusIntervalMs();
-    reviewStatusTimer = setTimeout(() => {
-      if (document.hidden) { scheduleReviewStatus(); return; }
-      pollReviewStatus();
-    }, wait);
-  }
-
-  function stopReviewStatus() {
-    clearTimeout(reviewStatusTimer);
-    reviewStatusTimer = null;
-  }
-
-  /**
-   * One sweep. Never throws: the ordinary schedule cache keeps refreshing
-   * status on its 3s tick no matter what happens here, so a failed sweep is
-   * silently retried on the next tick rather than surfaced as an error.
-   */
-  async function pollReviewStatus() {
-    // No endpoint = no feature (api.js always ships it on reviews.html). Stop
-    // rather than park a timer that can never do anything.
-    if (!MLB.getReviewStatus) return;
-    // A sweep must never overlap itself: the in-flight one reschedules in its
-    // own finally, so this call simply drops.
-    if (reviewStatusInFlight) return;
-    const requestDate = dateStr;
-    reviewStatusInFlight = true;
-    try {
-      const list = await MLB.getReviewStatus(requestDate,
-        { timeout: REVIEW_STATUS_TIMEOUT_MS, retries: 0 });
-      if (requestDate !== dateStr) return;
-      const diff = reviewStatusFlips(reviewStatusCodes, list);
-      reviewStatusCodes = diff.codes;
-      if (diff.changed.length) {
-        mergeReviewStatusIntoGames(list);
-        reviewStatusFlipPending = true;
-        // Paint the "LIVE REVIEW" strip from the status alone, right now —
-        // the full feed row (batter/pitcher, score impact, runs at risk)
-        // follows from the out-of-band scan kicked off just below. Only the
-        // strip is touched: a full render() here could race the in-flight
-        // scan's incremental row updates.
-        renderActiveStrip();
-        // Was a full-slate scan already running? load() below is a no-op in
-        // that case (requestInFlight), so the flipped game(s) are fetched
-        // out of band right now instead of waiting for that wave to finish
-        // (up to PBP_TIMEOUT_MS on a stalled game) — see kickPriorityScan.
-        const waveInFlight = requestInFlight;
-        load();
-        // Every changed game is worth fetching NOW — a review being CALLED
-        // (change.review, change.started) and one RESOLVING (change.ended, the
-        // ruling the user is waiting for) are both carried by that game's
-        // playByPlay, and candidateGames() inside kickPriorityScan filters out
-        // anything that is not Live/Final.
-        if (waveInFlight) kickPriorityScan(diff.changed.map((change) => change.gamePk));
-      }
-    } catch (err) {
-      // Deliberately quiet: see the doc comment above.
-    } finally {
-      reviewStatusInFlight = false;
-      scheduleReviewStatus();
-    }
-  }
-
-  /**
-   * Copy the watcher's fresh official status onto the matching `games`
-   * entries so every consumer of `games` — ingestGame's pseudo-feed,
-   * reviewFetchPriority, hasActiveReviewSignal, renderActiveStrip — sees the
-   * current status without waiting for the 3s hydrated-schedule refresh.
-   * Merged field-by-field: a projected sweep must never delete a status field
-   * the hydrated schedule supplied.
-   */
-  function mergeReviewStatusIntoGames(list) {
-    const byStatus = new Map();
-    (list || []).forEach((g) => {
-      if (g && g.gamePk != null && g.status) byStatus.set(g.gamePk, g.status);
-    });
-    games.forEach((g) => {
-      if (!g || g.gamePk == null) return;
-      const fresh = byStatus.get(g.gamePk);
-      if (!fresh) return;
-      g.status = Object.assign({}, g.status || {}, fresh);
-    });
   }
 
   function syncUrl() {
@@ -4219,9 +3477,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         load();
-        // Catch up on anything that started while the tab was hidden — one
-        // sweep now, then back to the watcher cadence.
-        pollReviewStatus();
         // A stream that gave up (endpoint absent, or a long outage) is retried
         // when the tab comes back; a healthy one is left connected.
         if (!feedLogUnsubscribe) startFeedLogStream();
@@ -4250,10 +3505,6 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
     // written instead of on the next 15s pull. No-op on static hosting.
     startFeedLogStream();
     load();
-    // First sweep immediately rather than one cadence later: a page opened
-    // mid-review must show the review on the first paint, and the sweep also
-    // seeds reviewStatusCodes so later polls diff correctly.
-    pollReviewStatus();
   });
 
   /* Node test export (pure helpers only). */
@@ -4263,9 +3514,9 @@ function pruneFeedLogIndex(index, keepDateStr, maxDates) {
       completePendingScoringReview,
       sortFeedEntries, gameTeamsLabel,
       isUsableName, officialTeamName, gameSideTeam,
-      pollIntervalMs, waitAfterScan, reviewFetchPriority, mapPool,
-      isReviewStatusCode, reviewStatusFlips,
+      pollIntervalMs, waitAfterScan, focusedFetchPriority, mapPool,
       shouldAlertForReview, visibleInAllFeed,
+      isPrimaryPendingReview, isErrorScoringChange, isScoringFocusReview,
       runsRemovableFromReview, shouldRunRiskAlert, diffRunRiskKeys,
       normalizeChallengeCounts, challengeCountIrregularities,
       teamSideInGame, teamChallengeLine, gameChallengeLine,

@@ -1,23 +1,11 @@
 /* Shared helpers for the LiveScoringErrors pages.
-   Data files are served from ./data/. The model math here is mirrored by tools/live_score.py, and
-   tests/test_pipeline.py asserts the two implementations agree to 1e-9 on every archived batted
-   ball. Both sides build their feature vector from `primary.feature_spec` in model.json, so a change
-   to the features cannot silently desynchronise the page from the tool. */
+   The public navigation stays intentionally small: scoreboard, focused
+   scoring feed and model details. Supporting research pages remain reachable
+   from their citations and technical links, not the first-use workflow. */
 const NAV = [
-  ['index.html', 'Score a batted ball'],
-  ['pbp/index.html', 'PBP scoreboard'],
-  ['pbp/reviews.html', 'Replay + scoring'],
-  ['scoreboard.html', 'Scoreboard'],
-  ['allgames.html', 'Scoring feed'],
-  ['live.html', 'Live board'],
-  ['alerts.html', 'Live alerts'],
-  ['replays.html', 'Replays & runs'],
-  ['model.html', 'Model & validation'],
-  ['overturned.html', 'Archive 2014–18'],
-  ['rules.html', 'Rules & RBI'],
-  ['rbi.html', 'RBI stakes, measured'],
-  ['methods.html', 'Methods & audit'],
-  ['roadmap.html', 'Limitations'],
+  ['pbp/index.html', 'Scoreboard'],
+  ['pbp/reviews.html', 'Errors + scoring pending'],
+  ['model.html', 'Model details'],
 ];
 (function buildNav() {
   const host = document.querySelector('.nav-inner');
