@@ -14,21 +14,21 @@
   "overturned",
   "review_type"
  ],
- "games": 0,
- "live_games": 0,
+ "games": 1,
+ "live_games": 1,
  "final_games": 0,
- "plays": 0,
+ "plays": 6,
  "unresolved_in_feed": 0,
  "changes": 0,
  "failures": [],
- "detected_utc": "2026-10-03T13:35:54Z",
+ "detected_utc": "2026-10-03T17:37:10Z",
  "exit_code": 0,
  "tool": "tools/watch_rulings.py",
  "tool_version": 2,
  "python": "3.12.3",
  "ruling_snapshot.csv": {
-  "rows": 11151,
-  "bytes": 3113303
+  "rows": 11157,
+  "bytes": 3114923
  },
  "ruling_changes.csv": {
   "rows": 1122,
