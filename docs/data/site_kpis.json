@@ -194,10 +194,10 @@
    "": 1792,
    "404": 321
   },
-  "elapsed_s": 90.9
+  "elapsed_s": 143.2
  },
  "ingest_meta": {
-  "generated_utc": "2026-10-03T04:20:23+00:00",
+  "generated_utc": "2026-10-03T04:29:21+00:00",
   "windows": [
    {
     "start": "2026-03-25",
