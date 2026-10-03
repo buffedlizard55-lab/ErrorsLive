@@ -29,8 +29,7 @@ const ScoringModel = (() => {
   function isPrimaryPending(row) {
     if (!row || row.official_scoring_pending !== true) return false;
     const codes = String(row.scoring_pending_codes || '').split(',').filter(Boolean);
-    return codes.includes('os_ruling_pending_primary') ||
-      row.scoring_pending_kind === 'primary' || row.scoring_pending_kind === 'both';
+    return codes.includes('os_ruling_pending_primary');
   }
 
   function isCurrentFieldError(row) {

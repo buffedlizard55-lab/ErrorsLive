@@ -11,7 +11,7 @@ const NAV = [
   const host = document.querySelector('.nav-inner');
   if (!host) return;
   host.insertAdjacentHTML('beforeend',
-    '<a class="brand" href="index.html">Live<span>Scoring</span>Errors</a>' +
+    '<a class="brand" href="index.html">ErrorsLive</a>' +
     NAV.map(([h, t]) => `<a class="navlink" href="${h}" data-p="${h}">${t}</a>`).join(''));
   const here = (location.pathname.split('/').pop() || 'index.html');
   document.querySelectorAll(`a.navlink[data-p="${here}"]`).forEach(a => a.classList.add('on'));
