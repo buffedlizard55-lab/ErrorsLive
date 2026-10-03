@@ -1,14 +1,10 @@
 {
  "ok": false,
- "attempted_utc": "2026-10-03T09:19:21Z",
+ "attempted_utc": "2026-10-03T14:21:43Z",
  "exit_code": 1,
  "error": "One or more game feeds failed; the previous complete snapshot was retained.",
- "failure_count": 4,
+ "failure_count": 3,
  "failures": [
-  {
-   "game_pk": 849829,
-   "error": "IndexError: list index out of range"
-  },
   {
    "game_pk": 849828,
    "error": "IndexError: list index out of range"
