@@ -1,10 +1,19 @@
 {
- "ok": true,
- "attempted_utc": "2026-10-06T00:30:34Z",
- "snapshot_generated_utc": "2026-10-06T00:30:35Z",
- "game_date": "2026-10-05",
- "games": 2,
- "unresolved_in_feed": 0,
- "failure_count": 0,
- "snapshot_retained": false
+ "ok": false,
+ "attempted_utc": "2026-10-06T07:02:18Z",
+ "exit_code": 1,
+ "error": "One or more game feeds failed; the previous complete snapshot was retained.",
+ "failure_count": 2,
+ "failures": [
+  {
+   "game_pk": 849819,
+   "error": "IndexError: list index out of range"
+  },
+  {
+   "game_pk": 849826,
+   "error": "IndexError: list index out of range"
+  }
+ ],
+ "previous_snapshot_utc": "2026-10-06T00:30:35Z",
+ "snapshot_retained": true
 }
