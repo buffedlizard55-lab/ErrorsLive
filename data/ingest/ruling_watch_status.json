@@ -1,6 +1,6 @@
 {
  "ok": true,
- "mode": "live-and-final",
+ "mode": "live-only",
  "window": [
   "2026-09-19",
   "2026-10-09"
@@ -14,14 +14,14 @@
   "overturned",
   "review_type"
  ],
- "games": 145,
+ "games": 0,
  "live_games": 0,
- "final_games": 145,
- "plays": 7611,
+ "final_games": 0,
+ "plays": 0,
  "unresolved_in_feed": 0,
- "changes": 2,
+ "changes": 0,
  "failures": [],
- "detected_utc": "2026-10-09T11:56:38Z",
+ "detected_utc": "2026-10-09T14:53:47Z",
  "exit_code": 0,
  "tool": "tools/watch_rulings.py",
  "tool_version": 2,
