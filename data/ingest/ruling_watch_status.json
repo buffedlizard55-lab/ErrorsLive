@@ -2,8 +2,8 @@
  "ok": true,
  "mode": "live-only",
  "window": [
-  "2026-09-19",
-  "2026-10-09"
+  "2026-09-20",
+  "2026-10-10"
  ],
  "fields_compared": [
   "event_type",
@@ -21,14 +21,14 @@
  "unresolved_in_feed": 0,
  "changes": 0,
  "failures": [],
- "detected_utc": "2026-10-09T14:53:47Z",
+ "detected_utc": "2026-10-10T10:24:08Z",
  "exit_code": 0,
  "tool": "tools/watch_rulings.py",
  "tool_version": 2,
  "python": "3.12.3",
  "ruling_snapshot.csv": {
-  "rows": 7611,
-  "bytes": 2126613
+  "rows": 6777,
+  "bytes": 1892367
  },
  "ruling_changes.csv": {
   "rows": 1129,
