@@ -1,10 +1,10 @@
 {
  "mode": "live-slate",
- "generated_utc": "2026-10-10T00:08:39Z",
+ "generated_utc": "2026-10-10T20:55:48Z",
  "note": "Fetched from the official schedule + feed endpoints.",
- "game_day": "2026-10-09",
- "game_date": "2026-10-09",
- "source": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-10-09&endDate=2026-10-09",
+ "game_day": "2026-10-10",
+ "game_date": "2026-10-10",
+ "source": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-10-10&endDate=2026-10-10",
  "model": {
   "dataset": "docs/data/bip_official.csv",
   "n_model": 30206,
@@ -33,8 +33,8 @@
   "dataset_note": "Whole-population model-window sample (2026-08-15 through 2026-09-27): every captured batted ball in each selected game, so the error rate is the observed class rate for this window; it is not the full collector-window rate."
  },
  "summary": {
-  "games": 0,
-  "games_verified_vs_linescore": 0,
+  "games": 1,
+  "games_verified_vs_linescore": 1,
   "batted_balls": 0,
   "errors": 0,
   "risp_runs_at_stake": 0,
@@ -49,5 +49,65 @@
  },
  "flags": [],
  "failures": [],
- "games": []
+ "games": [
+  {
+   "game_pk": 849831,
+   "matchup": "CWS @ CLE",
+   "away": "Chicago White Sox",
+   "home": "Cleveland Guardians",
+   "game_type": "D",
+   "state": "Pre-Game",
+   "abstract_state": "Preview",
+   "away_score": 0,
+   "home_score": 0,
+   "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/849831/feed/live",
+   "savant_url": "https://baseballsavant.mlb.com/gamefeed?gamePk=849831",
+   "schedule_url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-10-10&endDate=2026-10-10&hydrate=linescore,team&gameType=R,F,D,L,W",
+   "plays": [],
+   "final_away": 0,
+   "final_home": 0,
+   "pk": 849831,
+   "away_abbr": "CWS",
+   "home_abbr": "CLE",
+   "linescore_away": 0,
+   "linescore_home": 0,
+   "model_rows": [],
+   "scoring_observations": [
+    {
+     "game_pk": 849831,
+     "at_bat": 0,
+     "inning": 1,
+     "half": "top",
+     "event_type": "game_advisory",
+     "description": "Status Change - Pre-Game",
+     "official_scoring_pending": false,
+     "pending_codes": [],
+     "pending_kind": "",
+     "pending_text": "",
+     "pending_event_refs": [],
+     "event_states": [],
+     "batter": "Sam Antonacci",
+     "pitcher": "Gavin Williams",
+     "matchup": "CWS @ CLE",
+     "away_score": 0,
+     "home_score": 0,
+     "play_id": "",
+     "official_feed_url": "https://statsapi.mlb.com/api/v1.1/game/849831/feed/live"
+    }
+   ],
+   "url": "https://statsapi.mlb.com/api/v1.1/game/849831/feed/live",
+   "savant": "https://baseballsavant.mlb.com/gamefeed?gamePk=849831",
+   "batted_balls": 0,
+   "unresolved_in_feed": 0,
+   "official_scoring_pending": 0,
+   "pending_primary": 0,
+   "pending_prior": 0,
+   "predictions_available": 0,
+   "errors": 0,
+   "top_pick_agrees": 0,
+   "risp_runs_at_stake": 0,
+   "overturned_reviews": 0,
+   "verified": 1
+  }
+ ]
 }
