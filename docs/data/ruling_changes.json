@@ -2,14 +2,14 @@
  "available": true,
  "source": "data/ingest/ruling_changes.csv + ruling_snapshot.csv (tools/watch_rulings.py, CI)",
  "watched": {
-  "plays": 1652,
+  "plays": 1660,
   "window": [
    "2026-09-29",
-   "2026-10-17"
+   "2026-10-18"
   ],
   "unresolved_in_feed": 0,
   "status_ok": true,
-  "status_updated_utc": "2026-10-18T13:34:14Z",
+  "status_updated_utc": "2026-10-18T21:31:21Z",
   "mode": "live-only",
   "status_error": ""
  },
