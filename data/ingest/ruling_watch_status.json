@@ -2,8 +2,8 @@
  "ok": true,
  "mode": "live-only",
  "window": [
-  "2026-09-28",
-  "2026-10-18"
+  "2026-09-29",
+  "2026-10-19"
  ],
  "fields_compared": [
   "event_type",
@@ -21,7 +21,7 @@
  "unresolved_in_feed": 0,
  "changes": 0,
  "failures": [],
- "detected_utc": "2026-10-19T01:42:31Z",
+ "detected_utc": "2026-10-19T06:52:56Z",
  "exit_code": 0,
  "tool": "tools/watch_rulings.py",
  "tool_version": 2,
