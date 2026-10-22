@@ -1,10 +1,10 @@
 {
  "mode": "live-slate",
- "generated_utc": "2026-10-22T02:38:00Z",
+ "generated_utc": "2026-10-22T08:24:35Z",
  "note": "Fetched from the official schedule + feed endpoints.",
- "game_day": "2026-10-21",
- "game_date": "2026-10-21",
- "source": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-10-21&endDate=2026-10-21",
+ "game_day": "2026-10-22",
+ "game_date": "2026-10-22",
+ "source": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=2026-10-22&endDate=2026-10-22",
  "model": {
   "dataset": "docs/data/bip_official.csv",
   "n_model": 30206,
