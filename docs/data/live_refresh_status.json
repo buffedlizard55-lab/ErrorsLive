@@ -1,9 +1,9 @@
 {
  "ok": true,
- "attempted_utc": "2026-10-25T00:24:50Z",
- "snapshot_generated_utc": "2026-10-25T00:24:50Z",
- "game_date": "2026-10-24",
- "games": 1,
+ "attempted_utc": "2026-10-25T05:01:16Z",
+ "snapshot_generated_utc": "2026-10-25T05:01:16Z",
+ "game_date": "2026-10-25",
+ "games": 0,
  "unresolved_in_feed": 0,
  "failure_count": 0,
  "snapshot_retained": false
