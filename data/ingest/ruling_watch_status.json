@@ -17,18 +17,18 @@
  "games": 1,
  "live_games": 1,
  "final_games": 0,
- "plays": 0,
+ "plays": 51,
  "unresolved_in_feed": 0,
  "changes": 0,
  "failures": [],
- "detected_utc": "2026-10-24T23:56:46Z",
+ "detected_utc": "2026-10-25T03:20:22Z",
  "exit_code": 0,
  "tool": "tools/watch_rulings.py",
  "tool_version": 2,
  "python": "3.14.4",
  "ruling_snapshot.csv": {
-  "rows": 1164,
-  "bytes": 327074
+  "rows": 1215,
+  "bytes": 340935
  },
  "ruling_changes.csv": {
   "rows": 1130,
